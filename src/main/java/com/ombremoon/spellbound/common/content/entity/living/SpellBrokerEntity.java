@@ -1,8 +1,7 @@
 package com.ombremoon.spellbound.common.content.entity.living;
 
+import com.ombremoon.spellbound.common.content.entity.SBMerchant;
 import com.ombremoon.spellbound.common.content.entity.SBMerchantType;
-import com.ombremoon.spellbound.common.content.world.SBTrades;
-import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
@@ -12,10 +11,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;

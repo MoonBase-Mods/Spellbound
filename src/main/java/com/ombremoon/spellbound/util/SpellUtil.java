@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.common.content.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
+import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -120,6 +121,9 @@ public class SpellUtil {
         } else {
             entity.setData(SBData.OWNER_ID, owner.getId());
         }
+
+        if (entity instanceof LivingEntity livingEntity)
+            BrainUtils.setMemory(livingEntity, SBMemoryTypes.SUMMON_OWNER.get(), owner);
     }
 
     /**

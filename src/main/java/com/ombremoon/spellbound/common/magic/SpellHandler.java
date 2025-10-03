@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaCache;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.PortalCache;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
@@ -64,7 +64,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private final Map<SkillBuff<?>, Integer> skillBuffs = new Object2IntOpenHashMap<>();
     private final Set<Integer> glowEntities = new IntOpenHashSet();
     private IntOpenHashSet openArenas = new IntOpenHashSet();
-    private final ArenaCache arenaCache = new ArenaCache(this);
     public int castTick;
     private boolean channelling;
     private int stationaryTicks;
@@ -596,12 +595,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.openArenas.add(arenaId);
     }
 
-    public void closeArena() {
-        this.openArenas.remove(this.arenaCache.getArenaID());
-    }
-
-    public ArenaCache getLastArena() {
-        return this.arenaCache;
+    public void closeArena(int arenaId) {
+        this.openArenas.remove(arenaId);
     }
 
     /**
@@ -679,7 +674,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
         compoundTag.put("OpenArenas", arenaList);
-        compoundTag.put("ArenaCache", this.arenaCache.serializeNBT(provider));
 
         return compoundTag;
     }
@@ -722,7 +716,5 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
             this.openArenas = set;
         }
-
-        this.arenaCache.deserializeNBT(provider, nbt);
     }
 }

@@ -1,10 +1,16 @@
 package com.ombremoon.spellbound.common.magic.acquisition.bosses;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
+import com.ombremoon.spellbound.common.content.world.dimension.DimensionCreator;
 import com.ombremoon.spellbound.common.content.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.slf4j.Logger;
@@ -24,11 +31,16 @@ import java.util.UUID;
 
 public class ArenaSavedData extends SavedData {
     public static final Logger LOGGER = Constants.LOG;
+
+    //Global
     private final Map<Integer, UUID> arenaMap = new Int2ObjectOpenHashMap<>();
     private int arenaId;
+    private final Multimap<UUID, Integer> closedArenas = ArrayListMultimap.create();
 
     //For arena levels
+    private final PortalCache portalCache = new PortalCache();
     public boolean spawnedArena;
+    public boolean fightStarted;
     private ResourceLocation spellLocation;
     private BossFightInstance<?, ?> currentBossFight;
 
@@ -49,7 +61,7 @@ public class ArenaSavedData extends SavedData {
     }
 
     public int getCurrentId() {
-        return this.arenaId;
+        return this.portalCache.getArenaID();
     }
 
     public UUID getOrCreateUuid(MinecraftServer server, int arenaId) {
@@ -87,8 +99,13 @@ public class ArenaSavedData extends SavedData {
     }
 
     public void spawnInArena(ServerLevel level, Entity entity) {
-        if (this.currentBossFight != null)
+        if (this.currentBossFight != null) {
             DynamicDimensionFactory.spawnInArena(level, entity, this.currentBossFight.getBossFight());
+            if (!this.fightStarted) {
+                this.currentBossFight.start(level);
+                this.fightStarted = true;
+            }
+        }
     }
 
     public void handleBossFightLogic(ServerLevel level) {
@@ -100,29 +117,72 @@ public class ArenaSavedData extends SavedData {
         this.currentBossFight = null;
     }
 
-    public void initializeArena(ServerLevel level, ResourceLocation spellLocation, BossFight bossFight) {
+    public void initializeArena(ServerLevel level, Player player, int arenaId, BlockPos portalPos, ResourceKey<Level> portalLevel, ResourceLocation spellLocation, BossFight bossFight) {
         this.spellLocation = spellLocation;
         this.currentBossFight = bossFight.createFight(level);
+        this.portalCache.loadCache(player, arenaId, portalPos, portalLevel);
         this.setDirty();
+    }
+
+    public void destroyPortal(ServerLevel level) {
+        DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
+        ServerLevel portalLevel = level.getServer().getLevel(this.portalCache.getPortalLevel());
+        this.portalCache.destroyPortal(portalLevel);
+    }
+
+    public PortalCache getPortalCache() {
+        return this.portalCache;
     }
 
     public BossFightInstance<?, ?> getCurrentBossFight() {
         return this.currentBossFight;
     }
 
+    public void cacheClosedArena(UUID owner, int id) {
+        this.closedArenas.put(owner, id);
+    }
+
+    public void closeCachedArenas(Player player) {
+        for (var entry : this.closedArenas.asMap().entrySet()) {
+            var arenas = entry.getValue();
+            arenas.removeIf(id -> {
+                var handler = SpellUtil.getSpellHandler(player);
+                if (entry.getKey().equals(player.getUUID())) {
+                    handler.closeArena(id);
+                    return true;
+                }
+                return false;
+            });
+
+            if (arenas.isEmpty())
+                this.closedArenas.removeAll(entry.getKey());
+        }
+    }
+
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        ListTag tagList = new ListTag();
+        ListTag arenaMapTag = new ListTag();
         for (var entry : arenaMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putInt("ArenaId", entry.getKey());
             entryTag.putUUID("ArenaUUID", entry.getValue());
-            tagList.add(entryTag);
+            arenaMapTag.add(entryTag);
         }
-        tag.put("Arenas", tagList);
+        tag.put("Arenas", arenaMapTag);
+
+        ListTag closedArenaTag = new ListTag();
+        for (var entry : closedArenas.asMap().entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putUUID("ArenaOwner", entry.getKey());
+            entryTag.putIntArray("OpenArenas", entry.getValue().stream().toList());
+            closedArenaTag.add(entryTag);
+        }
+        tag.put("ClosedArenas", closedArenaTag);
         tag.putInt("CurrentArenaId", this.arenaId);
 
         tag.putBoolean("SpawnedArena", this.spawnedArena);
+        tag.put("PortalCache", this.portalCache.serializeNBT());
+        tag.putBoolean("FightStarted", this.fightStarted);
         if (this.spellLocation != null) {
             ResourceLocation.CODEC
                     .encodeStart(NbtOps.INSTANCE, this.spellLocation)
@@ -151,9 +211,19 @@ public class ArenaSavedData extends SavedData {
             UUID uuid = compoundTag.getUUID("ArenaUUID");
             this.arenaMap.put(id, uuid);
         }
+        final ListTag openArenaTag = nbt.getList("ArenasToClose", 10);
+        for (int i = 0, l = openArenaTag.size(); i < l; i++) {
+            CompoundTag compoundTag = openArenaTag.getCompound(i);
+            UUID uuid = compoundTag.getUUID("ArenaOwner");
+            for (int id : compoundTag.getIntArray("ClosedArenas")) {
+                this.closedArenas.put(uuid, id);
+            }
+        }
         this.arenaId = nbt.getInt("CurrentArenaId");
 
         this.spawnedArena = nbt.getBoolean("SpawnedArena");
+        this.portalCache.deserializeNBT(nbt);
+        this.fightStarted = nbt.getBoolean("FightStarted");
         if (nbt.contains("ArenaSpell", 10)) {
             ResourceLocation.CODEC
                     .parse(new Dynamic<>(NbtOps.INSTANCE, nbt.get("ArenaSpell")))

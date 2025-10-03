@@ -42,7 +42,8 @@ public class DebugItem extends Item implements Loggable {
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
         if (!level.isClientSide) {
             ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
-            log(((EntityBasedBossFight.Instance)data.getCurrentBossFight()).getBosses((ServerLevel) level));
+            log(data.getPortalCache().getOwner());
+            log(data.getCurrentBossFight());
 //            ((EntityBasedBossFight.Instance)data.getCurrentBossFight()).initializeWinCondition((ServerLevel) level, ((EntityBasedBossFight.Instance) data.getCurrentBossFight()).getBossFight());
         } else {
 //            SBShaders.HEAT_DISTORTION_SHADER.toggleShader();

@@ -1,9 +1,8 @@
-package com.ombremoon.spellbound.common.content.entity.living;
+package com.ombremoon.spellbound.common.content.entity;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.DataResult;
 import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.common.content.entity.SBMerchantType;
 import com.ombremoon.spellbound.common.content.world.SBTrades;
 import com.ombremoon.spellbound.common.events.custom.ModifySpellTradesEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -71,7 +70,7 @@ public abstract class SBMerchant extends PathfinderMob implements Merchant, Smar
      * Type of merchant, used to determine trades
      * @return Type of this merchant
      */
-    abstract SBMerchantType getMerchantType();
+    protected abstract SBMerchantType getMerchantType();
 
     /**
      * Gets all available trades or populates list if none available

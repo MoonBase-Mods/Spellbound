@@ -17,9 +17,8 @@ import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockManage
 import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaCache;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.PortalCache;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFightInstance;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -31,19 +30,12 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.PlayerRespawnLogic;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.DimensionTransition;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -90,11 +82,12 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof LivingEntity livingEntity) {
+            Level level = livingEntity.level();
             var handler = SpellUtil.getSpellHandler(livingEntity);
             handler.initData(livingEntity);
 
             if (livingEntity instanceof Player player) {
-                if (!player.level().isClientSide) {
+                if (!level.isClientSide) {
                     handler.sync();
 
                     var holder = SpellUtil.getSkills(player);
@@ -103,15 +96,8 @@ public class NeoForgeEvents {
                     var tree = player.getData(SBData.UPGRADE_TREE);
                     tree.update(player, tree.getUnlockedSkills());
 
-                    ArenaCache cache = handler.getLastArena();
-                    Level arenaLevel = player.getServer().getLevel(cache.getArenaLevel());
-
-                    if (arenaLevel == null)
-                        return;
-
-                    if (handler.isArenaOwner(cache.getArenaID()) && !ArenaSavedData.isArena(event.getLevel()) && cache.leftArena()) {
-                        cache.destroyPortal(arenaLevel);
-                    }
+                    ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
+                    data.closeCachedArenas(player);
                 }
             }
         }
@@ -121,13 +107,15 @@ public class NeoForgeEvents {
     public static void onPlayerLeaveWorld(EntityLeaveLevelEvent event) {
         Level level = event.getLevel();
         if (event.getEntity() instanceof Player player && !level.isClientSide) {
-            var caster = SpellUtil.getSpellHandler(player);
-            caster.endSpells();
+            ServerLevel serverLevel = (ServerLevel) level;
+            var handler = SpellUtil.getSpellHandler(player);
+            handler.endSpells();
 
-            var cache = caster.getLastArena();
-            if (caster.isArenaOwner(cache.getArenaID()) && ArenaSavedData.isArena(level)) {
-                DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
-                cache.leaveArena();
+            if (ArenaSavedData.isArena(serverLevel)) {
+                ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                if (handler.isArenaOwner(data.getCurrentId())) {
+                    data.destroyPortal(serverLevel);
+                }
             }
         }
     }
@@ -137,13 +125,15 @@ public class NeoForgeEvents {
         Level level = event.getEntity().level();
         Player player = event.getEntity();
         if (!level.isClientSide) {
-            var caster = SpellUtil.getSpellHandler(player);
-            caster.endSpells();
+            ServerLevel serverLevel = (ServerLevel) level;
+            var handler = SpellUtil.getSpellHandler(player);
+            handler.endSpells();
 
-            var cache = caster.getLastArena();
-            if (caster.isArenaOwner(cache.getArenaID()) && ArenaSavedData.isArena(level)) {
-                DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
-                cache.leaveArena();
+            if (ArenaSavedData.isArena(serverLevel)) {
+                ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                if (handler.isArenaOwner(data.getCurrentId())) {
+                    data.destroyPortal(serverLevel);
+                }
             }
         }
     }
@@ -151,8 +141,8 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onPostEntityTick(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof LivingEntity entity) {
-            var caster = SpellUtil.getSpellHandler(entity);
-            caster.tick();
+            var handler = SpellUtil.getSpellHandler(entity);
+            handler.tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
@@ -160,11 +150,11 @@ public class NeoForgeEvents {
 
             if (entity instanceof Player player) {
                 if (player.tickCount % 20 == 0) {
-                    double mana = caster.getMana();
-                    double maxMana = caster.getMaxMana();
+                    double mana = handler.getMana();
+                    double maxMana = handler.getMaxMana();
                     if (mana < maxMana) {
-                        double regen = caster.getManaRegen();
-                        caster.awardMana((float) regen);
+                        double regen = handler.getManaRegen();
+                        handler.awardMana((float) regen);
                     }
                 }
 
@@ -172,7 +162,7 @@ public class NeoForgeEvents {
                     SpellCastEvents.chargeOrChannelSpell(event);
             }
 
-            if (caster.isStationary() && entity instanceof Mob mob)
+            if (handler.isStationary() && entity instanceof Mob mob)
                 mob.getNavigation().stop();
         }
     }
@@ -211,9 +201,7 @@ public class NeoForgeEvents {
                 var bossFight = arenaData.getCurrentBossFight();
                 if (!arenaData.spawnedArena) {
                     arenaData.spawnArena(serverLevel);
-                } else if (bossFight != null && !bossFight.isInitialized()) {
-                    bossFight.start(serverLevel);
-                } else {
+                } else if (bossFight != null && arenaData.fightStarted) {
                     arenaData.handleBossFightLogic(serverLevel);
                 }
             }
@@ -225,14 +213,15 @@ public class NeoForgeEvents {
         Player player = event.getPlayer();
         Level level = player.level();
         ItemStack itemStack = event.getOriginalStack();
+        ItemStack newStack = event.getCurrentStack();
         Boolean bool = itemStack.get(SBData.BOSS_PICKUP);
         if (!level.isClientSide && ArenaSavedData.isArena(level) && bool != null && bool) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            newStack.set(SBData.BOSS_PICKUP, false);
             itemStack.set(SBData.BOSS_PICKUP, false);
 
-            ArenaCache cache = SpellUtil.getSpellHandler(player).getLastArena();
-            DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
-            Level portalLevel = level.getServer().getLevel(cache.getArenaLevel());
-            cache.destroyPortal(portalLevel);
+            ArenaSavedData data = ArenaSavedData.get(serverLevel);
+            data.destroyPortal(serverLevel);
         }
     }
 

@@ -120,6 +120,14 @@ public class MiniMushroom extends SmartSpellEntity<WildMushroomSpell> {
     }
 
     @Override
+    protected void tickDeath() {
+        if (!this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte)60);
+            this.remove(Entity.RemovalReason.KILLED);
+        }
+    }
+
+    @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
         if (this.level().isClientSide) {
@@ -285,7 +293,7 @@ public class MiniMushroom extends SmartSpellEntity<WildMushroomSpell> {
                 target.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
             }
 
-            entity.die(entity.damageSources().generic());
+            entity.discard();
             if (entity.spell != null)
                 entity.spell.endSpell();
         }

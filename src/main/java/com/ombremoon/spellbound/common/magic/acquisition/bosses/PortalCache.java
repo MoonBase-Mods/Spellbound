@@ -1,0 +1,98 @@
+package com.ombremoon.spellbound.common.magic.acquisition.bosses;
+
+import com.ombremoon.spellbound.common.init.SBBlocks;
+import com.ombremoon.spellbound.main.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.UnknownNullability;
+import org.slf4j.Logger;
+
+import java.util.UUID;
+
+public class PortalCache {
+    protected static final Logger LOGGER = Constants.LOG;
+    private UUID owner;
+    private int arenaID;
+    private BlockPos portalPos;
+    private ResourceKey<Level> portalLevel;
+
+    public UUID getOwner() {
+        return this.owner;
+    }
+
+    public int getArenaID() {
+        return this.arenaID;
+    }
+
+    public BlockPos getPortalPos() {
+        return this.portalPos;
+    }
+
+    public ResourceKey<Level> getPortalLevel() {
+        return this.portalLevel;
+    }
+
+    public void destroyPortal(ServerLevel level) {
+        BlockPos pos = this.portalPos.offset(-4, 0, -4);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                BlockPos blockPos1 = pos.offset(i, 0, j);
+                BlockState blockState = level.getBlockState(blockPos1);
+                if (blockState.is(SBBlocks.SUMMON_STONE.get()) || blockState.is(SBBlocks.SUMMON_PORTAL.get()))
+                    level.setBlock(blockPos1, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+
+        ArenaSavedData data = ArenaSavedData.get(level);
+        data.cacheClosedArena(this.owner, this.arenaID);
+    }
+
+    public void loadCache(Player owner, int arenaID, BlockPos portalPos, ResourceKey<Level> portalLevel) {
+        this.owner = owner.getUUID();
+        this.arenaID = arenaID;
+        this.portalPos = portalPos;
+        this.portalLevel = portalLevel;
+    }
+
+    public @UnknownNullability CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        if (this.owner != null)
+            nbt.putUUID("PortalOwner", this.owner);
+
+        nbt.putInt("PortalId", this.arenaID);
+
+        if (this.portalPos != null)
+            BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.portalPos).resultOrPartial(LOGGER::error).ifPresent(tag -> nbt.put("PortalPos", tag));
+
+        if (this.portalLevel != null)
+            nbt.putString("PortalLevel", this.portalLevel.location().toString());
+
+        return nbt;
+    }
+
+    public void deserializeNBT(CompoundTag compoundTag) {
+        if (compoundTag.contains("PortalCache", 10)) {
+            CompoundTag nbt = compoundTag.getCompound("ArenaCache");
+            if (nbt.get("PortalOwner") != null)
+                this.owner = nbt.getUUID("PortalOwner");
+
+            if (nbt.contains("PortalId", 99))
+                this.arenaID = nbt.getInt("PortalId");
+
+            if (nbt.get("PortalPos") != null)
+                BlockPos.CODEC.parse(NbtOps.INSTANCE, nbt.get("PortalPos")).resultOrPartial(LOGGER::error).ifPresent(blockPos -> this.portalPos = blockPos);
+
+            if (nbt.contains("PortalLevel", 8))
+                this.portalLevel = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(nbt.getString("PortalLevel")));
+        }
+    }
+}

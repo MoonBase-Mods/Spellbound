@@ -107,7 +107,7 @@ public class DynamicDimensionFactory {
 
     private static void sendToDimension(Entity entity, ServerLevel level, Vec3 targetVec) {
         level.getChunk(new BlockPos(Mth.floor(targetVec.x), Mth.floor(targetVec.y), Mth.floor(targetVec.z)));
-        float f = Direction.WEST.toYRot();
+        float f = entity.getYRot();
         var transition = new DimensionTransition(level, targetVec, entity.getDeltaMovement(), f, entity.getXRot(), DimensionTransition.PLAY_PORTAL_SOUND.then(DimensionTransition.PLACE_PORTAL_TICKET));
         entity.changeDimension(transition);
         entity.portalCooldown = 20;

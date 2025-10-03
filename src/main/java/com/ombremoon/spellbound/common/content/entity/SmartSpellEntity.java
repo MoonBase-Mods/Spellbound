@@ -77,7 +77,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         }
 
         if (!this.level().isClientSide) {
-            if (!this.hasOwner() || (this.isInitialized() && (this.spell == null ||  this.spell.isInactive)))
+            if ((this.wasSummoned() && !this.hasOwner()) || (this.isInitialized() && (this.spell == null ||  this.spell.isInactive)))
                 discard();
         }
     }
@@ -117,16 +117,6 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
 
     public void setSpellId(int id) {
         this.entityData.set(SPELL_ID, id);
-    }
-
-    @Override
-    public @Nullable Entity getOwner() {
-        return super.getOwner();
-    }
-
-    @Override
-    public void setOwner(@NotNull Entity entity) {
-        super.setOwner(entity);
     }
 
     protected boolean isOwner(LivingEntity entity) {

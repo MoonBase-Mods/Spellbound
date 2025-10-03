@@ -28,11 +28,7 @@ import java.util.UUID;
 
 public class SummonBlockEntity extends BlockEntity {
     protected static final Logger LOGGER = Constants.LOG;
-    private UUID owner;
     private int arenaId;
-    private BlockPos frontTopLeft;
-    private ResourceLocation spell;
-    private boolean hasEnteredPortal;
 
     protected SummonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -62,33 +58,12 @@ public class SummonBlockEntity extends BlockEntity {
                 ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
                 ResourceKey<Level> levelKey = data.getOrCreateKey(server, this.arenaId);
                 ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
-                if (arena != null && this.spell != null) {
+                if (arena != null) {
                     ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                    var handler = SpellUtil.getSpellHandler(livingEntity);
                     arenaData.spawnInArena(arena, entity);
-                    if (handler.isArenaOwner(this.arenaId))
-                        handler.getLastArena().loadCache(this.arenaId, this.frontTopLeft, level.dimension());
                 }
             }
         }
-    }
-
-    public UUID getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(UUID uuid) {
-        this.owner = uuid;
-        this.setChanged();
-    }
-
-    public ResourceLocation getSpell() {
-        return this.spell;
-    }
-
-    public void setSpell(ResourceLocation spell) {
-        this.spell = spell;
-        this.setChanged();
     }
 
     public int getArenaID() {
@@ -100,14 +75,6 @@ public class SummonBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
-    public BlockPos getFrontTopLeft() {
-        return this.frontTopLeft;
-    }
-
-    public void setFrontTopLeft(BlockPos frontTopLeft) {
-        this.frontTopLeft = frontTopLeft;
-    }
-
     public boolean shouldRenderFace(Direction face) {
         return face.getAxis() == Direction.Axis.Y;
     }
@@ -115,29 +82,12 @@ public class SummonBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (this.owner != null)
-            tag.putUUID("Owner", this.owner);
-
-        if (this.spell != null)
-            tag.putString("Spell", this.spell.toString());
-
         tag.putInt("ArenaId", this.arenaId);
-        if (this.frontTopLeft != null)
-            BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.frontTopLeft).resultOrPartial(LOGGER::error).ifPresent(nbt -> tag.put("PortalPos", nbt));
-
-        tag.putBoolean("EnteredPortal", this.hasEnteredPortal);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        String uuid = tag.getString("Owner");
-        if (!uuid.isEmpty())
-            this.owner = UUID.fromString(uuid);
-
-        this.spell = ResourceLocation.tryParse(tag.getString("Spell"));
         this.arenaId = tag.getInt("ArenaId");
-        BlockPos.CODEC.parse(NbtOps.INSTANCE, tag.get("PortalPos")).resultOrPartial(LOGGER::error).ifPresent(blockPos -> this.frontTopLeft = blockPos);
-        this.hasEnteredPortal = tag.getBoolean("EnteredPortal");
     }
 }

@@ -114,7 +114,8 @@ public class SummonStoneBlock extends Block {
                         int arenaId = data.incrementId();
 
                         handler.openArena(arenaId);
-                        BlockPos blockPos = blockPatternMatch.getFrontTopLeft().offset(-3, 0, -3);
+                        BlockPos frontTopLeft = blockPatternMatch.getFrontTopLeft();
+                        BlockPos blockPos = frontTopLeft.offset(-3, 0, -3);
 
                         for (int i = 0; i < 3; i++) {
                             for (int j = 0; j < 3; j++) {
@@ -122,10 +123,7 @@ public class SummonStoneBlock extends Block {
                                 level.setBlock(blockPos1, SBBlocks.SUMMON_PORTAL.get().defaultBlockState(), 2);
                                 BlockEntity blockEntity = level.getBlockEntity(blockPos1);
                                 if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
-                                    summonBlockEntity.setOwner(player.getUUID());
                                     summonBlockEntity.setArenaID(arenaId);
-                                    summonBlockEntity.setFrontTopLeft(blockPatternMatch.getFrontTopLeft());
-                                    summonBlockEntity.setSpell(this.spell);
                                 }
                             }
                         }
@@ -135,7 +133,7 @@ public class SummonStoneBlock extends Block {
                         ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
                         if (arena != null && this.spell != null) {
                             ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                            arenaData.initializeArena(arena, this.spell, this.getBossFight());
+                            arenaData.initializeArena(arena, player, arenaId, frontTopLeft, level.dimension(), this.spell, this.getBossFight());
                         }
                     }
                 } else {

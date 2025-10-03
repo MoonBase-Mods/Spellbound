@@ -71,7 +71,7 @@ public class EntityBasedBossFight extends BossFight {
         }
 
         @Override
-        public void initializeWinCondition(ServerLevel level, EntityBasedBossFight bossFight) {
+        public boolean initializeWinCondition(ServerLevel level, EntityBasedBossFight bossFight) {
             BlockPos origin = ORIGIN;
             BlockPos scanStart = origin.offset(bossFight.blockScanStart);
             BlockPos scanEnd = origin.offset(bossFight.blockScanEnd);
@@ -82,6 +82,8 @@ public class EntityBasedBossFight extends BossFight {
                 if (bossFight.bosses.contains(boss.getType()))
                     this.bosses.add(boss.getId());
             }
+
+            return this.bosses.size() == bossFight.bosses.size();
         }
 
         @Override
@@ -93,9 +95,6 @@ public class EntityBasedBossFight extends BossFight {
 
             if (this.bosses.isEmpty())
                 this.defeatedBoss = true;
-
-            super.tickFight(level, bossFight);
-
         }
 
         @Override
