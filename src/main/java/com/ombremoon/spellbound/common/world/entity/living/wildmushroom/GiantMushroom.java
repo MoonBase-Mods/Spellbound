@@ -137,6 +137,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
                 if (!this.isAttacking())
                     BrainUtils.setForgettableMemory(this, MemoryModuleType.ATTACK_COOLING_DOWN, true, 20);
             }
+            this.getPhase();
         } else {
             if (this.isExploding()) {
                 if (this.explosionTimer-- == 1) {

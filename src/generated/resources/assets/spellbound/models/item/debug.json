@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "spellbound:item/temp_texture"
+    "layer0": "spellbound:item/debug_item"
   }
 }
