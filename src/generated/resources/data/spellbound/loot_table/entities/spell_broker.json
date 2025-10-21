@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "function": "spellbound:set_spell",
+              "spellType": "spellbound:wild_mushroom"
+            }
+          ],
+          "name": "spellbound:spell_tome"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "spellbound:entities/spell_broker"
+}

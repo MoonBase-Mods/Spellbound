@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity;
 
+import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.util.SpellUtil;

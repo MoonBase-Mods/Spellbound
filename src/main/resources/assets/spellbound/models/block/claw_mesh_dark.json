@@ -1,0 +1,9 @@
+{
+  "loader": "neoforge:obj",
+  "model": "spellbound:models/obj/claw_mesh_dark.obj",
+  "textures": {
+  },
+  "automatic_culling": false,
+  "shade_quads": false,
+  "flip_v": true
+}

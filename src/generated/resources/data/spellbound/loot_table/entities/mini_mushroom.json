@@ -1,0 +1,67 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.25,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "spellbound:wild_mushroom"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 1.0,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone_meal"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 1.0,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            },
+            {
+              "function": "spellbound:set_spell",
+              "spellType": "spellbound:wild_mushroom"
+            }
+          ],
+          "name": "spellbound:spell_tome"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "spellbound:entities/mini_mushroom"
+}

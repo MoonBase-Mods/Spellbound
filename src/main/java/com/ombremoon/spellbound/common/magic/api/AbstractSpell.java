@@ -6,7 +6,7 @@ import com.ombremoon.spellbound.client.particle.EffectCache;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
-import com.ombremoon.spellbound.common.world.entity.FXEmitter;
+import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;

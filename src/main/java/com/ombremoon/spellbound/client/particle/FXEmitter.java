@@ -1,8 +1,6 @@
-package com.ombremoon.spellbound.common.world.entity;
+package com.ombremoon.spellbound.client.particle;
 
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.client.particle.EffectCache;
 import net.minecraft.resources.ResourceLocation;
 
 public interface FXEmitter {

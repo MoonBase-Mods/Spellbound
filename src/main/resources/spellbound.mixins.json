@@ -23,6 +23,7 @@
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "MinecraftMixin",
+    "ParticleEngineMixin",
     "PlayerModelMixin",
     "StructureBlockRendererMixin"
   ],
