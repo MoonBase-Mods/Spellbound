@@ -24,8 +24,4 @@ public record TextListExtras(ResourceLocation pageScrap, int maxRows, int rowGap
         return new TextListExtras(CommonClass.customLocation("default"), 0, 20, 45, false, 0, "▪");
     }
 
-
-    public ChatFormatting isHidden() {
-        return pageScrap().equals(CommonClass.customLocation("default")) || SpellUtil.hasScrap(Minecraft.getInstance().player, pageScrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED;
-    }
 }

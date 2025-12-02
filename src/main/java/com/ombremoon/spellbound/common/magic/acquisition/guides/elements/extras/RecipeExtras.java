@@ -16,7 +16,5 @@ public record RecipeExtras(ResourceLocation scrap) implements IElementExtra {
         return new RecipeExtras(CommonClass.customLocation("default"));
     }
 
-    public boolean hasScrap() {
-        return scrap.equals(CommonClass.customLocation("default")) || SpellUtil.hasScrap(Minecraft.getInstance().player, scrap);
-    }
+
 }

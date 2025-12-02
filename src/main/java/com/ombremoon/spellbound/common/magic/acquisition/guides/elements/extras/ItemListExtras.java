@@ -23,7 +23,5 @@ public record ItemListExtras(ResourceLocation pageScrap, int maxRows, int rowGap
         return new ItemListExtras(CommonClass.customLocation("default"), 0, 20, 45, 33, true, 0);
     }
 
-    public boolean isVisible() {
-        return pageScrap().equals(CommonClass.customLocation("default")) || SpellUtil.hasScrap(Minecraft.getInstance().player, pageScrap());
-    }
+
 }

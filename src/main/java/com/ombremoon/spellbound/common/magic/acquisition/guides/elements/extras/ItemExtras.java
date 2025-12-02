@@ -16,7 +16,5 @@ public record ItemExtras(ResourceLocation pageScrap) implements IElementExtra {
         return new ItemExtras(CommonClass.customLocation("default"));
     }
 
-    public boolean hasScrap() {
-        return pageScrap.equals(CommonClass.customLocation("default")) || SpellUtil.hasScrap(Minecraft.getInstance().player, pageScrap);
-    }
+
 }

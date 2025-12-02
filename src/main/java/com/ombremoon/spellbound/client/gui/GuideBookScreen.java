@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.client.gui;
 
+import com.ombremoon.spellbound.client.gui.guide_renderers.ElementRenderDispatcher;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.IPageElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -54,7 +56,9 @@ public class GuideBookScreen extends Screen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.blit(this.bookTexture, this.leftPos, this.topPos, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
 
-        pages.get(currentPage).render(guiGraphics, this.leftPos, this.topPos, mouseX, mouseY, partialTick);
+        for (IPageElement element : pages.get(currentPage).elements()) {
+            ElementRenderDispatcher.renderElement(element, guiGraphics, this.leftPos + 47, this.topPos + 36, mouseX, mouseY, partialTick);
+        }
     }
 
 
@@ -62,20 +66,22 @@ public class GuideBookScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
-            while (currentPage > 0) {
-                currentPage--;
-                if (pages.get(currentPage).isVisible()) break;
-            }
+            currentPage--;
+//            while (currentPage > 0) {
+//                currentPage--;
+//                //if (pages.get(currentPage).isVisible()) break;
+//            }
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         } else if (currentPage < lastPage && mouseX >= this.leftPos + 354 && mouseX <= this.leftPos + 370 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243) {
-            for (int i = currentPage; i < lastPage; i++) {
-                if (pages.get(i).isVisible()) {
-                    currentPage = i;
-                    break;
-                }
-            }
+//            for (int i = currentPage; i < lastPage; i++) {
+//                if (pages.get(i).isVisible()) {
+//                    currentPage = i;
+//                    break;
+//                }
+//            }
+            currentPage++;
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;

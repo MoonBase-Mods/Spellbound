@@ -30,6 +30,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
     private static final Logger LOGGER = Constants.LOG;
     private static final Gson GSON = new GsonBuilder().create();
     private static Map<ResourceLocation, List<GuideBookPage>> BOOKS = new HashMap<>();
+    private static Map<ResourceLocation, JsonElement> PAGE_JSONS = new HashMap<>();
 
     public GuideBookManager() {
         super(GSON, "guide_books");
@@ -95,32 +96,6 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
      * @return A sorted list of pages
      */
     private List<GuideBookPage> sortPages(List<Pair<ResourceLocation, GuideBookPage>> book) {
-        //ID, Page
-//        List<Pair<ResourceLocation, GuideBookPage>> result = new ArrayList<>();
-//
-//        for (Pair<ResourceLocation, GuideBookPage> pair : book) {
-//            GuideBookPage page = pair.getSecond();
-//            int index = -1;
-//            if (page.insertAfter().equals(FIRST_PAGE)) {
-//                result.addFirst(pair);
-//                continue;
-//            }
-//
-//            for (int i = 0; i < result.size(); i++) {
-//                if (result.get(i).getFirst().equals(page.insertAfter())) {
-//                    index = i + 1;
-//                    break;
-//                }
-//            }
-//
-//            if (index == -1) result.add(pair);
-//            else result.add(index, pair);
-//        }
-//
-//        List<GuideBookPage> toRet = result.stream().map(Pair::getSecond).toList();
-//        return toRet;
-
-        //parent, children
         Map<ResourceLocation, List<ResourceLocation>> parentToChildren = new HashMap<>();
         Map<ResourceLocation, GuideBookPage> pages = new HashMap<>();
         Map<ResourceLocation, Integer> inDegree = new HashMap<>(); //Number of dependants
@@ -137,23 +112,23 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
             inDegree.put(id, inDegree.get(id) + 1);
         }
 
-        Queue<GuideBookPage> queue = new ArrayDeque<>();
+        Queue<ResourceLocation> queue = new ArrayDeque<>();
         for (var entry : inDegree.entrySet()) {
-            if (entry.getValue() == 0) queue.add(pages.get(entry.getKey()));
+            if (entry.getValue() == 0) queue.add(entry.getKey());
         }
 
         List<GuideBookPage> sortedBook = new ArrayList<>();
         while (!queue.isEmpty()) {
-            GuideBookPage current = queue.poll();
-            sortedBook.add(current);
+            ResourceLocation current = queue.poll();
+            sortedBook.add(pages.get(current));
 
-            List<ResourceLocation> children = parentToChildren.get(current.id());
+            List<ResourceLocation> children = parentToChildren.get(current);
             if (children == null) continue;
 
             for (ResourceLocation child : children) {
                 inDegree.put(child, inDegree.get(child)-1);
 
-                if (inDegree.get(child) == 0) queue.add(pages.get(child));
+                if (inDegree.get(child) == 0) queue.add(child);
             }
         }
 

@@ -1,10 +1,13 @@
 package com.ombremoon.spellbound.main;
 
+import com.ombremoon.spellbound.client.gui.guide_renderers.*;
+import com.ombremoon.spellbound.client.gui.guide_renderers.GuideItemRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
 import com.ombremoon.spellbound.common.content.item.RitualTalismanItem;
 import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.*;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -52,6 +55,8 @@ public class Spellbound {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
+        registerElementRenderers();
+
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(CommonClass.customLocation("animation"), 42, Spellbound::registerPlayerAnimation);
 
         for (SpellPath spellPath : SpellPath.values()) {
@@ -98,5 +103,16 @@ public class Spellbound {
         event.register(SBMultiblockSerializers.REGISTRY);
         event.register(SBRitualEffects.REGISTRY);
         event.register(SBPageElements.REGISTRY);
+    }
+
+    private void registerElementRenderers() {
+        ElementRenderDispatcher.register(GuideEntityRenderer.class, new GuideEntityRendererRenderer());
+        ElementRenderDispatcher.register(GuideImage.class, new GuideImageRenderer());
+        ElementRenderDispatcher.register(GuideItem.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideItemList.class, new GuideItemListRenderer());
+        ElementRenderDispatcher.register(GuideRecipe.class, new GuideRecipeRenderer());
+        ElementRenderDispatcher.register(GuideSpellInfo.class, new GuideSpellInfoRenderer());
+        ElementRenderDispatcher.register(GuideText.class, new GuideTextRenderer());
+        ElementRenderDispatcher.register(GuideTextList.class, new GuideTextListRenderer());
     }
 }

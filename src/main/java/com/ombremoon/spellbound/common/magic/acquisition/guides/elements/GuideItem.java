@@ -17,18 +17,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, ElementPosition position, ItemExtras extras) implements PageElement {
-    private static final ResourceLocation ITEM_TILE = CommonClass.customLocation("textures/gui/books/item_tile.png");
-
+public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, ElementPosition position, ItemExtras extras) implements IPageElement {
     public static final MapCodec<GuideItem> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("item").forGetter(GuideItem::itemLoc),
             Codec.STRING.optionalFieldOf("tileName", "basic").forGetter(GuideItem::tileName),
@@ -38,55 +34,7 @@ public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, 
     ).apply(inst, GuideItem::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        Registry<Item> registry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
-
-        RandomSource rand = Minecraft.getInstance().level.getRandom();
-        rand.setSeed(Math.floorDiv(Minecraft.getInstance().player.tickCount, 10));
-
-        Item item = extras.hasScrap() ? registry.get(itemLoc) : registry.getRandom(rand).get().value();
-        if (item == null) return;
-
-        graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + tileName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (48 * scale), (int) (46 * scale), (int) (48 * scale), (int) (46 * scale));
-        renderItem(graphics, item.getDefaultInstance(), leftPos + position.xOffset(), topPos + position.yOffset(), 1.3f * scale);
-    }
-
-    public static void renderItem(GuiGraphics graphics, ItemStack stack, int x, int y, float scale) {
-        if (!stack.isEmpty()) {
-            Minecraft minecraft = Minecraft.getInstance();
-            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-            PoseStack pose = graphics.pose();
-            pose.pushPose();
-            pose.translate((x + (19*scale)), (y + (17*scale)), (float)(150));
-
-            try {
-                float size = 16.0F * 1.2F * scale;
-                pose.scale(size, -size, size);
-                boolean flag = !bakedmodel.usesBlockLight();
-                if (flag) {
-                    Lighting.setupForFlatItems();
-                }
-
-                minecraft.getItemRenderer().render(stack, ItemDisplayContext.GUI, false, pose, graphics.bufferSource(), 15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
-                graphics.flush();
-                if (flag) {
-                    Lighting.setupFor3DItems();
-                }
-            } catch (Throwable throwable) {
-                CrashReport crashreport = CrashReport.forThrowable(throwable, "Rendering item");
-                CrashReportCategory crashreportcategory = crashreport.addCategory("Item being rendered");
-                crashreportcategory.setDetail("Item Type", () -> String.valueOf(stack.getItem()));
-                crashreportcategory.setDetail("Item Components", () -> String.valueOf(stack.getComponents()));
-                crashreportcategory.setDetail("Item Foil", () -> String.valueOf(stack.hasFoil()));
-                throw new ReportedException(crashreport);
-            }
-
-            pose.popPose();
-        }
-    }
-
-    @Override
-    public @NotNull MapCodec<? extends PageElement> codec() {
+    public @NotNull MapCodec<? extends IPageElement> codec() {
         return CODEC;
     }
 }
