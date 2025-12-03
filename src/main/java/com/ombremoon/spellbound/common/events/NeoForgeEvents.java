@@ -3,22 +3,20 @@ package com.ombremoon.spellbound.common.events;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
-import com.ombremoon.spellbound.common.content.commands.LearnSkillsCommand;
-import com.ombremoon.spellbound.common.content.commands.LearnSpellCommand;
-import com.ombremoon.spellbound.common.content.commands.SpellboundCommand;
-import com.ombremoon.spellbound.common.content.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.content.spell.ruin.fire.SolarRaySpell;
-import com.ombremoon.spellbound.common.content.world.dimension.DimensionCreator;
-import com.ombremoon.spellbound.common.content.world.effect.SBEffect;
-import com.ombremoon.spellbound.common.content.world.effect.SBEffectInstance;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormData;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormSavedData;
-import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
+import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
+import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.effect.SBEffect;
+import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.weather.HailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
-import com.ombremoon.spellbound.common.magic.acquisition.ArenaCache;
-import com.ombremoon.spellbound.common.magic.acquisition.ArenaSavedData;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -30,14 +28,12 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -46,6 +42,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -83,11 +80,12 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof LivingEntity livingEntity) {
+            Level level = livingEntity.level();
             var handler = SpellUtil.getSpellHandler(livingEntity);
             handler.initData(livingEntity);
 
             if (livingEntity instanceof Player player) {
-                if (!player.level().isClientSide) {
+                if (!level.isClientSide) {
                     handler.sync();
 
                     //PayloadHandler.setScraps((ServerPlayer) player, player.getData(SBData.BOOK_SCRAPS));
@@ -96,30 +94,10 @@ public class NeoForgeEvents {
                     holder.sync();
 
                     var tree = player.getData(SBData.UPGRADE_TREE);
-                    tree.update(player, tree.getUnlockedSkills());
+                    tree.refreshTree(player);
 
-                    ArenaCache cache = handler.getLastArena();
-                    Level arenaLevel = player.getServer().getLevel(cache.getArenaLevel());
-
-                    if (arenaLevel == null)
-                        return;
-
-                    BlockPos arenaPos = cache.getArenaPos();
-
-                    if (handler.isArenaOwner(cache.getArenaID()) && arenaPos != null && !ArenaSavedData.isArena(event.getLevel()) && cache.leftArena()) {
-                        arenaPos = arenaPos.offset(-4, 0, -4);
-
-                        for (int i = 0; i < 5; i++) {
-                            for (int j = 0; j < 5; j++) {
-                                BlockPos blockPos1 = arenaPos.offset(i, 0, j);
-                                BlockState blockState = arenaLevel.getBlockState(blockPos1);
-                                if (blockState.is(SBBlocks.SUMMON_STONE.get()) || blockState.is(SBBlocks.SUMMON_PORTAL.get()))
-                                    arenaLevel.setBlock(blockPos1, Blocks.AIR.defaultBlockState(), 3);
-                            }
-                        }
-                        handler.closeArena();
-                        handler.getLastArena().clearCache();
-                    }
+                    ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
+                    data.closeCachedArenas(player);
                 }
             }
         }
@@ -129,13 +107,33 @@ public class NeoForgeEvents {
     public static void onPlayerLeaveWorld(EntityLeaveLevelEvent event) {
         Level level = event.getLevel();
         if (event.getEntity() instanceof Player player && !level.isClientSide) {
-            var caster = SpellUtil.getSpellHandler(player);
-            caster.endSpells();
+            ServerLevel serverLevel = (ServerLevel) level;
+            var handler = SpellUtil.getSpellHandler(player);
+            handler.endSpells();
 
-            var cache = caster.getLastArena();
-            if (caster.isArenaOwner(cache.getArenaID()) && ArenaSavedData.isArena(level)) {
-                DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
-                cache.leaveArena();
+            if (ArenaSavedData.isArena(serverLevel)) {
+                ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                if (handler.isArenaOwner(data.getCurrentId())) {
+                    data.destroyPortal(serverLevel);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        Level level = event.getEntity().level();
+        Player player = event.getEntity();
+        if (!level.isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            var handler = SpellUtil.getSpellHandler(player);
+            handler.endSpells();
+
+            if (ArenaSavedData.isArena(serverLevel)) {
+                ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                if (handler.isArenaOwner(data.getCurrentId())) {
+                    data.destroyPortal(serverLevel);
+                }
             }
         }
     }
@@ -143,8 +141,8 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onPostEntityTick(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof LivingEntity entity) {
-            var caster = SpellUtil.getSpellHandler(entity);
-            caster.tick();
+            var handler = SpellUtil.getSpellHandler(entity);
+            handler.tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
@@ -152,11 +150,11 @@ public class NeoForgeEvents {
 
             if (entity instanceof Player player) {
                 if (player.tickCount % 20 == 0) {
-                    double mana = caster.getMana();
-                    double maxMana = caster.getMaxMana();
+                    double mana = handler.getMana();
+                    double maxMana = handler.getMaxMana();
                     if (mana < maxMana) {
-                        double regen = caster.getManaRegen();
-                        caster.awardMana((float) regen);
+                        double regen = handler.getManaRegen();
+                        handler.awardMana((float) regen);
                     }
                 }
 
@@ -164,7 +162,7 @@ public class NeoForgeEvents {
                     SpellCastEvents.chargeOrChannelSpell(event);
             }
 
-            if (caster.isStationary() && entity instanceof Mob mob)
+            if (handler.isStationary() && entity instanceof Mob mob)
                 mob.getNavigation().stop();
         }
     }
@@ -191,86 +189,41 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Pre event) {
         Level level = event.getLevel();
-        if (!level.isClientSide && level.dimension() == Level.OVERWORLD) {
-            RitualSavedData data = RitualSavedData.get(level);
-            data.ACTIVE_RITUALS.removeIf(ritualInstance -> !ritualInstance.isActive());
-            data.ACTIVE_RITUALS.forEach(instance -> instance.tick((ServerLevel) level));
-            data.setDirty();
-        }
-        /*
-        HailstormData data = HailstormSavedData.get(level);
-        if (level.dimension() == Level.OVERWORLD) {
-            if (!level.isClientSide) {
-                ServerLevel serverLevel = (ServerLevel) level;
-                HailstormSavedData savedData = (HailstormSavedData) data;
-                if (level.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE)) {
-                    int i = ((ServerLevelData) level.getLevelData()).getClearWeatherTime();
-                    int j = ((ServerLevelData) level.getLevelData()).getRainTime();
-                    int k = savedData.getHailTime();
-                    boolean flag = savedData.isHailing();
-                    if (i > 0) {
-                        k = flag ? 0 : 1;
-                        flag = false;
-                    } else {
-                        if (k > 0) {
-                            if (--k == 0)
-                                flag = !flag;
-                        } else if (flag) {
-                            k = 0;
-                        } else {
-                            k = 0;
-                        }
-                    }
+        if (!level.isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            RitualSavedData ritualData = RitualSavedData.get(serverLevel);
+            ritualData.ACTIVE_RITUALS.removeIf(ritualInstance -> !ritualInstance.isActive());
+            ritualData.ACTIVE_RITUALS.forEach(instance -> instance.tick(serverLevel));
+            ritualData.setDirty();
 
-                    savedData.setHailTime(k);
-                    savedData.setHailing(flag);
-
-                }
-
-                savedData.tickHailLevel(serverLevel);
-                int sleepTime = level.getGameRules().getInt(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE);
-                if (serverLevel.sleepStatus.areEnoughSleeping(sleepTime) && serverLevel.sleepStatus.areEnoughDeepSleeping(sleepTime, serverLevel.players())) {
-                    if (serverLevel.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE) && savedData.isHailing()) {
-                        savedData.setHailTime(0);
-                        savedData.setHailing(false);
-                    }
+            if (ArenaSavedData.isArena(serverLevel)) {
+                ArenaSavedData arenaData = ArenaSavedData.get(serverLevel);
+                var bossFight = arenaData.getCurrentBossFight();
+                if (!arenaData.spawnedArena()) {
+                    arenaData.spawnArena(serverLevel);
+                } else if (bossFight != null && arenaData.hasFightStarted()) {
+                    arenaData.handleBossFightLogic(serverLevel);
                 }
             }
-        }*/
+        }
     }
 
-    /*@SubscribeEvent
-    public static void onChunkTick(TickChunkEvent.Pre event) {
-        LevelChunk chunk = event.getChunk();
-        Level level = chunk.getLevel();
-        if (level instanceof ServerLevel serverLevel) {
-            ChunkPos chunkpos = chunk.getPos();
-            HailstormSavedData data = (HailstormSavedData) HailstormSavedData.get(serverLevel);
-            boolean flag = data.isHailing();
-            int i = chunkpos.getMinBlockX();
-            int j = chunkpos.getMinBlockZ();
-            BlockPos blockpos = data.findLightningTargetAround(serverLevel, serverLevel.getBlockRandomPos(i, 0, j, 15));
-            if (flag) {
-                if (data.isHailingAt(serverLevel, blockpos) && data.chunkHasCyclone(serverLevel, blockpos)) {
-                    if (serverLevel.random.nextInt(100) == 0) {
-                        LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
-                        if (lightningbolt != null) {
-                            lightningbolt.moveTo(Vec3.atBottomCenterOf(blockpos));
-                            serverLevel.addFreshEntity(lightningbolt);
-                        }
-                    }
+    @SubscribeEvent
+    public static void onSpellPickUp(ItemEntityPickupEvent.Post event) {
+        Player player = event.getPlayer();
+        Level level = player.level();
+        ItemStack itemStack = event.getOriginalStack();
+        ItemStack newStack = event.getCurrentStack();
+        Boolean bool = itemStack.get(SBData.BOSS_PICKUP);
+        if (!level.isClientSide && ArenaSavedData.isArena(level) && bool != null && bool) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            newStack.set(SBData.BOSS_PICKUP, false);
+            itemStack.set(SBData.BOSS_PICKUP, false);
 
-                    if (serverLevel.random.nextInt(100) == 0) {
-                        Hail hail = SBEntities.HAIL.get().create(serverLevel);
-                        if (hail != null) {
-                            hail.moveTo(Vec3.atBottomCenterOf(blockpos.atY(serverLevel.getMaxBuildHeight())));
-                            serverLevel.addFreshEntity(hail);
-                        }
-                    }
-                }
-            }
+            ArenaSavedData data = ArenaSavedData.get(serverLevel);
+            data.destroyPortal(serverLevel);
         }
-    }*/
+    }
 
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {

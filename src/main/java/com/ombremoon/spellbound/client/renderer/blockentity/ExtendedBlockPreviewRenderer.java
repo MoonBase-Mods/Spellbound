@@ -2,8 +2,8 @@ package com.ombremoon.spellbound.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.ombremoon.spellbound.common.content.block.PreviewableExtendedBlock;
-import com.ombremoon.spellbound.common.content.block.entity.ExtendedBlockEntity;
+import com.ombremoon.spellbound.common.world.block.PreviewableExtendedBlock;
+import com.ombremoon.spellbound.common.world.block.entity.ExtendedBlockEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
 public class ExtendedBlockPreviewRenderer {

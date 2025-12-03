@@ -9,11 +9,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record UpdateSpellsPayload(String playerId, SpellType<?> spellType, int castId, CompoundTag initTag, CompoundTag spellData) implements CustomPacketPayload {
+public record UpdateSpellsPayload(int entityId, SpellType<?> spellType, int castId, CompoundTag initTag, CompoundTag spellData) implements CustomPacketPayload {
     public static final Type<UpdateSpellsPayload> TYPE = new Type<>(CommonClass.customLocation("update_spells"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateSpellsPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, UpdateSpellsPayload::playerId,
+            ByteBufCodecs.INT, UpdateSpellsPayload::entityId,
             ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY), UpdateSpellsPayload::spellType,
             ByteBufCodecs.INT, UpdateSpellsPayload::castId,
             ByteBufCodecs.COMPOUND_TAG, UpdateSpellsPayload::initTag,

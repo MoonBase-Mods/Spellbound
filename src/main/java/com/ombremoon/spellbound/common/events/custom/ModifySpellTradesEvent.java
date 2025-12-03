@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.events.custom;
 
-import com.ombremoon.spellbound.common.content.entity.SBMerchantType;
+import com.ombremoon.spellbound.common.world.entity.SBMerchantType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.neoforged.bus.api.Event;

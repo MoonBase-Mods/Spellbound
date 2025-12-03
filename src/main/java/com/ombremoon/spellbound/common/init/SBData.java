@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -95,14 +96,16 @@ public class SBData {
     );
 
     //Components
-    public static final Supplier<DataComponentType<String>> SPELL = COMPONENT_TYPES.registerComponentType("spells",
-            builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+    public static final Supplier<DataComponentType<SpellType<?>>> SPELL = COMPONENT_TYPES.registerComponentType("spells",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
     public static final Supplier<DataComponentType<Integer>> RUNE_INDEX = COMPONENT_TYPES.registerComponentType("rune_type",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final Supplier<DataComponentType<List<Integer>>> RUNES = COMPONENT_TYPES.registerComponentType("runes",
             builder -> builder.persistent(Codec.INT.listOf()).networkSynchronized(ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<Integer>> TALISMAN_RINGS = COMPONENT_TYPES.registerComponentType("talisman_rings",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final Supplier<DataComponentType<Boolean>> BOSS_PICKUP = COMPONENT_TYPES.registerComponentType("boss_pickup",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
     public static void register(IEventBus modEventBus) {
         SBData.ATTACHMENT_TYPES.register(modEventBus);

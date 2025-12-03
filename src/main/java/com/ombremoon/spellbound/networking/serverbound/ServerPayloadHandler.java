@@ -20,7 +20,7 @@ public class ServerPayloadHandler {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(context.player());
             AbstractSpell spell = handler.getCurrentlyCastSpell();
-            spell.initSpell(context.player());
+            spell.castSpell(context.player());
 //            handler.setCurrentlyCastingSpell(null);
         }
     }
@@ -58,7 +58,8 @@ public class ServerPayloadHandler {
     public static void handleNetworkCastReset(final CastResetPayload payload, final IPayloadContext context) {
         var handler = SpellUtil.getSpellHandler(context.player());
         AbstractSpell spell = handler.getCurrentlyCastSpell();
-        spell.onCastReset(spell.getCastContext());
+        if (spell != null)
+            spell.onCastReset(spell.getCastContext());
     }
 
     public static void handleNetworkUpdateChoice(final UpdateChoicePayload payload, final IPayloadContext context) {
@@ -79,10 +80,10 @@ public class ServerPayloadHandler {
 
     public static void handleNetworkPlayerMovement(final PlayerMovementPayload payload, final IPayloadContext context) {
         Player player = context.player();
-        var caster = SpellUtil.getSpellHandler(player);
+        var handler = SpellUtil.getSpellHandler(player);
         if (payload.movement() == PlayerMovementPayload.Movement.MOVE) {
-            caster.forwardImpulse = payload.forwardImpulse();
-            caster.leftImpulse = payload.leftImpulse();
+            handler.forwardImpulse = payload.forwardImpulse();
+            handler.leftImpulse = payload.leftImpulse();
         } else if (payload.movement() == PlayerMovementPayload.Movement.ROTATE) {
             player.setYBodyRot(payload.yRot());
         }

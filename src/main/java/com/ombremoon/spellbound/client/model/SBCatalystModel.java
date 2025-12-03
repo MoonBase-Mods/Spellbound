@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.model;
 
-import com.ombremoon.spellbound.common.content.item.CatalystItem;
+import com.ombremoon.spellbound.common.world.item.CatalystItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

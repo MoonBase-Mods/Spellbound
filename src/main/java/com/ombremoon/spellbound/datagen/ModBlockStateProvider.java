@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
-import com.ombremoon.spellbound.common.content.block.SummonStoneBlock;
+import com.ombremoon.spellbound.common.world.block.SummonStoneBlock;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.BuiltInRegistries;

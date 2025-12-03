@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.networking.clientbound.UpdateTreePayload;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -102,9 +103,17 @@ public class UpgradeTree implements INBTSerializable<CompoundTag> {
         update(player, true, List.of(), Set.of());
     }
 
-    public void refreshTree(Player player, List<Skill> added) {
-        clear();
-        update(player, added);
+    public void refreshTree(Player player) {
+        Set<ResourceLocation> toRemove = new ObjectOpenHashSet<>();
+        for (SkillNode node : this.roots) {
+            Skill skill = node.skill();
+            if (skill == null || skill.getSpell() == null) {
+                toRemove.add(node.skill().location());
+                this.remove(node);
+            }
+        }
+
+        update(player, this.getUnlockedSkills(), toRemove);
     }
 
     public void update(Player player, boolean reset, List<Skill> added, Set<ResourceLocation> removed) {
@@ -126,8 +135,8 @@ public class UpgradeTree implements INBTSerializable<CompoundTag> {
     public void update(UpdateTreePayload payload) {
         if (payload.reset()) this.clear();
 
-        this.remove(payload.removed());
         this.addAll(payload.added());
+        this.remove(payload.removed());
     }
 
     public Set<SkillNode> roots() {

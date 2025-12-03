@@ -1,10 +1,10 @@
 package com.ombremoon.spellbound.datagen;
 
-import com.ombremoon.spellbound.common.content.world.multiblock.BuildingBlock;
-import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockOutput;
-import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockProvider;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.StandardMultiblock;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.common.world.multiblock.BuildingBlock;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockOutput;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockProvider;
+import com.ombremoon.spellbound.common.world.multiblock.type.StandardMultiblock;
+import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

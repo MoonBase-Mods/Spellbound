@@ -1,8 +1,8 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockSerializer;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.StandardMultiblock;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockSerializer;
+import com.ombremoon.spellbound.common.world.multiblock.type.StandardMultiblock;
+import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Registry;

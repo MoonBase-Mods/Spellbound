@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.content.world.effect.*;
+import com.ombremoon.spellbound.common.world.effect.*;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;

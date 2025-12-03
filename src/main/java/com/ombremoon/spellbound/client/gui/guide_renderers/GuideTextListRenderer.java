@@ -1,13 +1,10 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideTextList;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList> {
 

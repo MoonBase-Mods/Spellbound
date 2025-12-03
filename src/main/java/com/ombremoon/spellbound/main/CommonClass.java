@@ -12,6 +12,7 @@ public class CommonClass {
         SBAttributes.register(modEventBus);
         SBBlockEntities.register(modEventBus);
         SBBlocks.register(modEventBus);
+        SBBossFights.register(modEventBus);
         SBChunkGenerators.register(modEventBus);
         SBData.register(modEventBus);
         SBDataTypes.register(modEventBus);
@@ -19,6 +20,7 @@ public class CommonClass {
         SBEntities.register(modEventBus);
         SBFeatures.register(modEventBus);
         SBItems.register(modEventBus);
+        SBLootFunctions.register(modEventBus);
         SBMemoryTypes.register(modEventBus);
         SBMultiblockSerializers.register(modEventBus);
         SBPageElements.register(modEventBus);

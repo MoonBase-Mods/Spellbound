@@ -1,35 +1,17 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import com.ombremoon.spellbound.common.content.entity.SpellEntity;
-import com.ombremoon.spellbound.common.content.entity.spell.SolarRay;
-import com.ombremoon.spellbound.common.content.spell.divine.HealingBlossomSpell;
 import com.ombremoon.spellbound.common.init.SBEntities;
-import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideEntityRenderer;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.OutlineBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.GeoRenderer;
-
-import javax.annotation.Nullable;
 
 public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEntityRenderer> {
     private Entity entity;
@@ -37,6 +19,7 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
     @Override
     public void render(GuideEntityRenderer element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         EntityType<?> entityType = Minecraft.getInstance().level.registryAccess().registry(Registries.ENTITY_TYPE).get().get(element.entityLoc());
+        entityType = SBEntities.HEALING_BLOSSOM.get();
 
         if (entityType == null) {
             LOGGER.warn("Entity could not be found {}", element.entityLoc());
@@ -46,7 +29,7 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
         if (this.entity == null || this.entity.getType() != (entityType)) this.entity = entityType.create(Minecraft.getInstance().level);
 
         if (entity instanceof GeoEntity){
-            if (entity instanceof SpellEntity<?> spellEntity) spellEntity.setOwner(Minecraft.getInstance().player);
+            //if (entity instanceof SpellEntity<?> spellEntity) spellEntity.setOwner(Minecraft.getInstance().player);
             entity.tickCount++;
             entity.tick();
         }
@@ -77,6 +60,9 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
                     .rotateY(f2);                // horizontal yaw
 
             poseStack.mulPose(quaternionf);
+        } else {
+            poseStack.mulPose(new Quaternionf()
+                    .rotateZ((float) Math.PI));
         }
 
         poseStack.scale(scale, scale, scale);

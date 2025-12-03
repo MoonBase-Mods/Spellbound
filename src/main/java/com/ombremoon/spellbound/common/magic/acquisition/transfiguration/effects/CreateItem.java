@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effect
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualEffect;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;

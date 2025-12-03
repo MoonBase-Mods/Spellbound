@@ -1,10 +1,18 @@
 package com.ombremoon.spellbound.common.magic.api.buff;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -14,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.apache.logging.log4j.util.TriConsumer;
+import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -21,6 +30,7 @@ import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
 public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buffObject, T object) {
+    private static final Logger LOGGER = Constants.LOG;
     private static final Map<String, BuffObject<?>> REGISTERED_OBJECTS = Maps.newHashMap();
     public static final StreamCodec<RegistryFriendlyByteBuf, SkillBuff<?>> STREAM_CODEC = StreamCodec.ofMember(
             SkillBuff::toNetwork, SkillBuff::fromNetwork
@@ -31,6 +41,7 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
             (source, livingEntity, effectInstance) -> livingEntity.addEffect(effectInstance, source),
             (livingEntity, mobEffectInstance) -> livingEntity.removeEffect(mobEffectInstance.getEffect()),
             (effectInstance, effectInstance2) -> effectInstance.is(effectInstance2.getEffect()),
+            MobEffectInstance.CODEC,
             MobEffectInstance.STREAM_CODEC);
 
     public static final BuffObject<ModifierData> ATTRIBUTE_MODIFIER = registerBuffObject(
@@ -46,6 +57,7 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
                     instance.removeModifier(modifierData.attributeModifier());
             },
             (data, data1) -> data.attributeModifier().is(data1.attributeModifier().id()),
+            ModifierData.CODEC,
             ModifierData.STREAM_CODEC);
 
     public static final BuffObject<SpellModifier> SPELL_MODIFIER = registerBuffObject(
@@ -59,6 +71,7 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
                 skills.removeModifier(spellModifier);
             },
             SpellModifier::equals,
+            SpellModifier.CODEC,
             SpellModifier.STREAM_CODEC);
 
     public static final BuffObject<ResourceLocation> EVENT = registerBuffObject(
@@ -70,7 +83,54 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
                 handler.getListener().removeListener(resourceLocation);
             },
             ResourceLocation::equals,
+            ResourceLocation.CODEC,
             ResourceLocation.STREAM_CODEC);
+
+    public CompoundTag save() {
+        CompoundTag tag = new CompoundTag();
+        SBSkills.REGISTRY.byNameCodec()
+                .encodeStart(NbtOps.INSTANCE, this.skill)
+                .resultOrPartial(LOGGER::error)
+                .ifPresent(nbt -> tag.put("Skill", nbt));
+        BuffCategory.CODEC
+                .encodeStart(NbtOps.INSTANCE, this.category)
+                .resultOrPartial(LOGGER::error)
+                .ifPresent(nbt -> tag.put("Category", nbt));
+        BuffObject.CODEC
+                .encodeStart(NbtOps.INSTANCE, this.buffObject)
+                .resultOrPartial(LOGGER::error)
+                .ifPresent(nbt -> tag.put("BuffObject", nbt));
+        if (this.object != null) {
+            this.buffObject.objectCodec
+                    .encodeStart(NbtOps.INSTANCE, this.object)
+                    .resultOrPartial(LOGGER::error)
+                    .ifPresent(nbt -> tag.put("Buff", nbt));
+        }
+        return tag;
+    }
+
+    public static <T> SkillBuff<T> load(CompoundTag tag) {
+        Skill skill = SBSkills.REGISTRY.byNameCodec()
+                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Skill")))
+                .resultOrPartial(LOGGER::error)
+                .orElse(null);
+        BuffCategory category = BuffCategory.CODEC
+                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Category")))
+                .resultOrPartial(LOGGER::error)
+                .orElse(null);
+        BuffObject<T> buffObject = (BuffObject<T>) BuffObject.CODEC
+                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("BuffObject")))
+                .resultOrPartial(LOGGER::error)
+                .orElse(null);
+        T object = null;
+        if (buffObject != null) {
+            object = buffObject.objectCodec
+                    .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Buff")))
+                    .resultOrPartial(LOGGER::error)
+                    .orElse(null);
+        }
+        return new SkillBuff<>(skill, category, buffObject, object);
+    }
 
     private void toNetwork(RegistryFriendlyByteBuf buf) {
         ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).encode(buf, this.skill);
@@ -91,8 +151,9 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
                                                         TriConsumer<Entity, LivingEntity, T> addObject,
                                                         BiConsumer<LivingEntity, T> removeObject,
                                                         BiPredicate<T, T> equalCondition,
+                                                        Codec<T> objectCodec,
                                                         StreamCodec<? super RegistryFriendlyByteBuf, T> objectStreamCodec) {
-        BuffObject<T> object = new BuffObject<>(name, addObject, removeObject, equalCondition, objectStreamCodec);
+        BuffObject<T> object = new BuffObject<>(name, addObject, removeObject, equalCondition, objectCodec, objectStreamCodec);
         REGISTERED_OBJECTS.put(name, object);
         return object;
     }
@@ -122,11 +183,11 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
         } else if (!(obj instanceof SkillBuff<?> skillBuff)) {
             return false;
         } else {
-            return this.isSkill(skillBuff.skill) && this.isOfType(skillBuff) && this.buffObject.equalCondition.test(this.object, (T) skillBuff.object);
+            return this.isSkill(skillBuff.skill) && this.isType(skillBuff) && this.buffObject.equalCondition.test(this.object, (T) skillBuff.object);
         }
     }
 
-    private boolean isOfType(SkillBuff<?> buff) {
+    private boolean isType(SkillBuff<?> buff) {
         return this.object.getClass().equals(buff.object.getClass());
     }
 
@@ -140,13 +201,22 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
             TriConsumer<Entity, LivingEntity, T> addObject,
             BiConsumer<LivingEntity, T> removeObject,
             BiPredicate<T, T> equalCondition,
+            Codec<T> objectCodec,
             StreamCodec<? super RegistryFriendlyByteBuf, T> objectStreamCodec) {
 
+        public static final Codec<BuffObject<?>> CODEC = Codec.STRING
+                .comapFlatMap(
+                        string -> {
+                            var object = parseUnchecked(string);
+                            return object != null ? DataResult.success(object) : DataResult.error(() -> "Failed to parse buff object " + string);
+                        },
+                        BuffObject::name
+                );
         public static final StreamCodec<ByteBuf, BuffObject<?>> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
-                .map(BuffObject::parse, BuffObject::name);
+                .map(BuffObject::parseUnchecked, BuffObject::name);
 
         @SuppressWarnings("unchecked")
-        private static <T> BuffObject<T> parse(String name) {
+        private static <T> BuffObject<T> parseUnchecked(String name) {
             return (BuffObject<T>) REGISTERED_OBJECTS.get(name);
         }
     }

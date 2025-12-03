@@ -11,8 +11,8 @@ import java.util.Arrays;
 public class ModifierSkill extends Skill {
     private final ObjectArrayList<SpellModifier> modifiers = new ObjectArrayList<>();
 
-    public ModifierSkill(ResourceLocation resLoc, int xPos, int yPos, @Nullable HolderSet<Skill> prerequisites, SpellModifier... spellModifiers) {
-        super(resLoc, xPos, yPos, prerequisites);
+    public ModifierSkill(int xPos, int yPos, @Nullable HolderSet<Skill> prerequisites, SpellModifier... spellModifiers) {
+        super(xPos, yPos, prerequisites);
         this.modifiers.addAll(Arrays.stream(spellModifiers).toList());
     }
 

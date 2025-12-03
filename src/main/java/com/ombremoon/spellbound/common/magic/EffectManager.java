@@ -106,7 +106,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         float resistance = 1.0F - effect.getEntityResistance(this.livingEntity);
         float pathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(effect.getPath()));
         float ruinPathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN));
-        return amount * resistance/* * 0.2F*/ * pathAmount * ruinPathAmount;
+        return amount * resistance * pathAmount * ruinPathAmount;
     }
 
     private void incrementHysteria(float amount) {

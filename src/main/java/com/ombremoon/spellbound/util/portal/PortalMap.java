@@ -1,16 +1,18 @@
 package com.ombremoon.spellbound.util.portal;
 
-import com.ombremoon.spellbound.common.content.entity.PortalEntity;
+import com.ombremoon.spellbound.common.init.SBTags;
+import com.ombremoon.spellbound.common.world.entity.PortalEntity;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import com.ombremoon.spellbound.util.EntityUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -36,21 +38,24 @@ public class PortalMap<T extends PortalEntity<?>> extends Int2ObjectOpenHashMap<
     }
 
     public boolean attemptTeleport(Entity entity, T portal) {
-        T adjacentRift = this.getAdjacentPortal(portal, portal.level());
-        if (adjacentRift != null) {
-            Vec3 position = adjacentRift.position();
-            if (!portal.isOnCooldown(entity)) {
-                adjacentRift.addCooldown(entity);
-                if (entity instanceof Projectile)
-                    position = position.add(0, 1, 0);
+        if (!EntityUtil.isBoss(entity)) {
+            T adjacentRift = this.getAdjacentPortal(portal, portal.level());
+            if (adjacentRift != null) {
+                Vec3 position = adjacentRift.position();
+                if (!portal.isOnCooldown(entity)) {
+                    adjacentRift.addCooldown(entity);
+                    if (entity instanceof Projectile)
+                        position = position.add(0, 1, 0);
 
-                entity.teleportTo(position.x, position.y, position.z);
-                if (entity instanceof Player teleportedPlayer)
-                    PayloadHandler.setRotation(teleportedPlayer, teleportedPlayer.getXRot(), adjacentRift.getYRot());
+                    entity.teleportTo(position.x, position.y, position.z);
+                    if (entity instanceof Player teleportedPlayer)
+                        PayloadHandler.setRotation(teleportedPlayer, teleportedPlayer.getXRot(), adjacentRift.getYRot());
 
-                return true;
+                    return true;
+                }
             }
         }
+
         return false;
     }
 

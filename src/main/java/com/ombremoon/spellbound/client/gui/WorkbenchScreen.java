@@ -15,10 +15,12 @@ import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -235,7 +237,6 @@ public class WorkbenchScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-//        RenderUtil.setupScreen(TEXTURE);
         this.renderWindow(guiGraphics, this.leftPos, this.topPos, mouseX, mouseY);
         this.renderBackground(guiGraphics, this.player, this.leftPos, this.topPos, mouseX, mouseY, partialTick);
         this.renderTooltips(guiGraphics, this.leftPos, this.topPos, mouseX, mouseY);
@@ -290,12 +291,13 @@ public class WorkbenchScreen extends Screen {
             if (!this.equippedSpellList.isEmpty() && this.equippedSpellList.size() > i + windowIndex) {
                 var spellType = this.equippedSpellList.get(i + windowIndex);
                 if (spellType != null) {
+                    int spellLevel = this.skillHolder.getSpellLevel(spellType);
                     int confirm = isHovering(95, 13 + (i * 29), 137, 30, mouseX, mouseY) ? 184 : 154;
                     guiGraphics.blit(EQUIP_PAGE, xPos + 2, yPos + 2 + (i * 29), 0,confirm, 135, 30);
                     guiGraphics.blit(spellType.getTexture(), xPos + 5, yPos + 5 + (i * 29), 0, 0, 24, 24, 24, 24);
                     Component component = spellType.createSpell().getName();
                     guiGraphics.drawString(this.font, component, xPos + 33, yPos + 6 + (i * 29), -1);
-                    guiGraphics.drawString(this.font, Component.literal("Lvl " + this.skillHolder.getSpellLevel(spellType)), xPos + 33, yPos + 19 + (i * 29), -1);
+                    guiGraphics.drawString(this.font, Component.literal("Lvl " + spellLevel).withStyle(spellLevel == 5 ? ChatFormatting.YELLOW : ChatFormatting.WHITE), xPos + 33, yPos + 19 + (i * 29), -1);
                 }
             } else {
                 guiGraphics.blit(EQUIP_PAGE, xPos + 2, yPos + 2 + (i * 29), 0, 124, 135, 30);

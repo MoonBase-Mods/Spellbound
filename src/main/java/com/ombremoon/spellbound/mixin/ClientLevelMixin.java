@@ -1,8 +1,8 @@
 package com.ombremoon.spellbound.mixin;
 
-import com.ombremoon.spellbound.common.content.block.ExtendedBlock;
-import com.ombremoon.spellbound.common.content.world.hailstorm.ClientHailstormData;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormSavedData;
+import com.ombremoon.spellbound.common.world.block.ExtendedBlock;
+import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;

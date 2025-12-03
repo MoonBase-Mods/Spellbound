@@ -3,7 +3,6 @@ package com.ombremoon.spellbound.common.magic.acquisition.guides.elements;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +14,6 @@ public record GuideItemRenderer(ResourceLocation itemLoc, ElementPosition positi
 
     @Override
     public @NotNull MapCodec<? extends IPageElement> codec() {
-        return null;
+        return CODEC;
     }
 }

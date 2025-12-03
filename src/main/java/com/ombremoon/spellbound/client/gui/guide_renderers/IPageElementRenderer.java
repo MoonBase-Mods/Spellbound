@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.IPageElement;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;

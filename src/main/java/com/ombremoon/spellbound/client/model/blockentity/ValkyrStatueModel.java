@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.model.blockentity;
 
-import com.ombremoon.spellbound.common.content.block.entity.ValkyrBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.ValkyrBlockEntity;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;

@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.magic.acquisition.divine;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.ombremoon.spellbound.common.content.block.DivineShrineBlock;
+import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.events.custom.MobInteractEvent;
 import com.ombremoon.spellbound.common.init.SBData;

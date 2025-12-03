@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.magic.api.buff;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellPath;
@@ -26,6 +28,17 @@ import java.util.function.Predicate;
  */
 public record SpellModifier(ResourceLocation id, ModifierType modifierType, Predicate<SpellType<?>> spellPredicate, float modifier) {
     private static final Map<ResourceLocation, SpellModifier> MODIFIER_REGISTRY = new HashMap<>();
+    public static final Codec<SpellModifier> CODEC = ResourceLocation.CODEC
+            .comapFlatMap(
+                    location -> {
+                        if (!MODIFIER_REGISTRY.containsKey(location)) {
+                            return DataResult.error(() -> "Tried to serialize unregistered spell modifier: " + location);
+                        } else  {
+                            return DataResult.success(SpellModifier.getTypeFromLocation(location));
+                        }
+                    },
+                    SpellModifier::id
+            );
     public static final StreamCodec<ByteBuf, SpellModifier> STREAM_CODEC = ResourceLocation.STREAM_CODEC
             .map(SpellModifier::getTypeFromLocation, SpellModifier::id);
 

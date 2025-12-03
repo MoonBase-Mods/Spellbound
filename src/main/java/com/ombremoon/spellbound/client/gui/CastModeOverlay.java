@@ -18,8 +18,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class CastModeOverlay implements LayeredDraw.Layer {
@@ -66,14 +68,23 @@ public class CastModeOverlay implements LayeredDraw.Layer {
     }
 
     private void renderActiveSpells(GuiGraphics guiGraphics, SpellHandler handler) {
-        Set<AbstractSpell> spells = new ObjectOpenHashSet<>(handler.getActiveSpells().stream().filter(spell -> spell.shouldRender(spell.getContext())).toList());
+        Set<AbstractSpell> spells = new ObjectOpenHashSet<>(
+                handler.getActiveSpells()
+                        .stream()
+                        .filter(spell -> spell.shouldRender(spell.getContext()))
+                        .sorted(Comparator.comparing(AbstractSpell::location))
+                        .toList());
         RenderSystem.enableBlend();
         int j1 = 0;
+        SpellType<?> spellType = null;
         List<Runnable> list = Lists.newArrayListWithExpectedSize(spells.size());
 
         for (AbstractSpell spell : spells) {
             int i = 1;
             int j = 1;
+            if (spellType != spell.spellType()) {
+                spellType = spell.spellType();
+            }
 
             i += 2 + (27 * j1);
             j1++;

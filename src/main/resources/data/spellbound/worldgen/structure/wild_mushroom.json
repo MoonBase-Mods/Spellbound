@@ -3,7 +3,7 @@
   "biomes": "#minecraft:has_structure/pillager_outpost",
   "step": "surface_structures",
   "spawn_overrides": {},
-  "start_pool": "spellbound:wild_mushroom_1_pool",
+  "start_pool": "spellbound:wild_mushroom",
   "size": 7,
   "terrain_adaptation": "beard_thin",
   "start_height": {

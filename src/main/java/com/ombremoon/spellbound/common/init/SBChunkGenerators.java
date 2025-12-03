@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.MapCodec;
 import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.common.content.world.dimension.EmptyChunkGenerator;
+import com.ombremoon.spellbound.common.world.dimension.EmptyChunkGenerator;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.neoforged.bus.api.IEventBus;

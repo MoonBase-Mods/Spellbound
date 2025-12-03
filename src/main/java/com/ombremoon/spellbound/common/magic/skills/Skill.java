@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class Skill {
-    private final ResourceLocation resourceLocation;
     private final int xPos;
     private final int yPos;
     @Nullable
@@ -22,20 +21,15 @@ public class Skill {
     private String nameID;
     private String descriptionID;
 
-    public Skill(ResourceLocation resLoc) {
-        this(resLoc, 0, 0, null);
+    public Skill() {
+        this(0, 0, null);
     }
 
-    public Skill(ResourceLocation resLoc, int xPos, int yPos, @Nullable HolderSet<Skill> prerequisites) {
-        this.resourceLocation = resLoc;
+    public Skill(int xPos, int yPos, @Nullable HolderSet<Skill> prerequisites) {
         if (xPos > 100 || xPos < -100) throw new IllegalArgumentException("X position must be between the values -100 and 100.");
         this.xPos = xPos;
         this.yPos = yPos;
         this.prerequisites = prerequisites;
-    }
-
-    public ResourceLocation getResourceLocation() {
-        return resourceLocation;
     }
 
     public int getX() {
@@ -106,10 +100,10 @@ public class Skill {
     public Skill getRoot() {
         Skill root = this;
         while (true) {
-            var prereqs = root.getPrereqs();
-            if (prereqs == null) {
+            if (root.isRoot())
                 return root;
-            }
+
+            var prereqs = root.getPrereqs();
             root = prereqs.stream().map(Holder::value).toList().getFirst();
         }
     }

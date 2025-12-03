@@ -7,7 +7,7 @@
   ],
   "key": {
     " ": {
-      "block": "minecraft:air"
+      "tag": "minecraft:air"
     },
     "$": {
       "block": "minecraft:diamond_block"

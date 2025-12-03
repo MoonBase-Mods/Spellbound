@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.client.renderer.entity;
 
-import com.ombremoon.spellbound.common.content.entity.living.LivingShadow;
-import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.world.entity.living.LivingShadow;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;

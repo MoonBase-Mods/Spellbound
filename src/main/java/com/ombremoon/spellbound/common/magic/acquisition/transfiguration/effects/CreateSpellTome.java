@@ -2,9 +2,9 @@ package com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effect
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.content.item.SpellTomeItem;
-import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
+import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualEffect;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;

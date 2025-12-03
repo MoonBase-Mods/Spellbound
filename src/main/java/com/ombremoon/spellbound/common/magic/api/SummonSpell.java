@@ -1,13 +1,10 @@
 package com.ombremoon.spellbound.common.magic.api;
 
-import com.ombremoon.spellbound.common.content.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.content.entity.SmartSpellEntity;
+import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.buff.events.ChangeTargetEvent;
-import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
-import com.ombremoon.spellbound.common.magic.api.buff.events.PlayerAttackEvent;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -16,7 +13,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;

@@ -88,7 +88,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         int newLevel = this.getSpellLevel(spellType);
         if (newLevel > level && newLevel > 0) {
             NeoForge.EVENT_BUS.post(new SpellLevelUpEvent(this.caster, spellType, newLevel));
-            this.awardSkillPoints(spellType, this.getSkillPoints(spellType) + (newLevel - level));
+            this.awardSkillPoints(spellType, newLevel - level);
             float f = newLevel > 10 ? 1.0F : (float)newLevel / 10.0F;
             caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
         }
@@ -100,7 +100,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void awardSkillPoints(SpellType<?> spellType, int points) {
-        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, + 11 - this.unlockedSkills.get(spellType).size()));
+        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, 11 - this.unlockedSkills.get(spellType).size()));
     }
 
     public <T extends AbstractSpell> void resetSkills(SpellType<T> spellType) {
@@ -246,7 +246,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             for (Skill skill : unlockedSkills.get(spellType)) {
                 if (skill == null) continue;
                 CompoundTag newSkillTag = new CompoundTag();
-                newSkillTag.putString("Skill", skill.getResourceLocation().toString());
+                newSkillTag.putString("Skill", skill.location().toString());
                 savedSkills.add(newSkillTag);
             }
             newTag.put("Skills", savedSkills);

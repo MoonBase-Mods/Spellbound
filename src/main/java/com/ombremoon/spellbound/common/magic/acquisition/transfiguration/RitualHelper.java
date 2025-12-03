@@ -1,8 +1,8 @@
 package com.ombremoon.spellbound.common.magic.acquisition.transfiguration;
 
-import com.ombremoon.spellbound.common.content.world.multiblock.type.TransfigurationMultiblock;
-import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Keys;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -18,8 +18,16 @@ public class RitualHelper {
         return level.registryAccess().registry(Keys.RITUAL).get().stream().filter(ritual -> ritual.matches(multiblock, items)).findFirst();
     }
 
+    public static void createItem(Level level, BlockPos pos, ItemStack item) {
+        createItem(level, pos.getCenter(), item);
+    }
+
     public static void createItem(Level level, Vec3 pos, ItemStack item) {
         createItem(level, pos, item, Optional.empty());
+    }
+
+    public static <T> void createItem(Level level, BlockPos pos, ItemStack item, Optional<DataComponentStorage> storage) {
+        createItem(level, pos.getBottomCenter(), item, storage);
     }
 
     public static <T> void createItem(Level level, Vec3 pos, ItemStack item, Optional<DataComponentStorage> storage) {

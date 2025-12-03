@@ -18,8 +18,7 @@ public class RitualSavedData extends SavedData {
     public final List<RitualInstance> ACTIVE_RITUALS = new ArrayList<>();
 
     public static RitualSavedData get(Level level) {
-        if (level instanceof ServerLevel) {
-            ServerLevel serverLevel = level.getServer().getLevel(Level.OVERWORLD);
+        if (level instanceof ServerLevel serverLevel) {
             DimensionDataStorage storage = serverLevel.getDataStorage();
             return storage.computeIfAbsent(new Factory<>(RitualSavedData::create, RitualSavedData::load), "_ritual");
         } else {

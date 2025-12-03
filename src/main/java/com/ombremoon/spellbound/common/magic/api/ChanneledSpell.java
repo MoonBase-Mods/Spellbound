@@ -4,19 +4,25 @@ import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class ChanneledSpell extends AnimatedSpell {
+    private static final ResourceLocation CHANNEL_FAIL = CommonClass.customLocation("channel_fail");
     protected int manaTickCost;
     protected Function<SpellContext, String> channelAnimation;
     protected String channelStopAnimation;
+    private boolean channelInterrupted;
 
     public static <T extends ChanneledSpell> Builder<T> createChannelledSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -35,13 +41,27 @@ public abstract class ChanneledSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStart(SpellContext context) {
+        Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(true);
 
-        String animation = this.channelAnimation.apply(context);
-        if (!animation.isEmpty() && context.getCaster() instanceof Player player)
-            playAnimation(player, animation);
+        if (!level.isClientSide) {
+            String animation = this.channelAnimation.apply(context);
+            if (!animation.isEmpty() && context.getCaster() instanceof Player player)
+                playAnimation(player, animation);
+
+            handler.getListener().addListener(
+                    SpellEventListener.Events.POST_DAMAGE,
+                    CHANNEL_FAIL,
+                    post -> {
+                        this.channelInterrupted = true;
+                        this.endSpell();
+                        if (!animation.isEmpty() && caster instanceof Player player)
+                            this.stopAnimation(player, animation);
+                    }
+            );
+        }
     }
 
     @Override
@@ -63,10 +83,10 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         handler.setChargingOrChannelling(false);
         if (!caster.level().isClientSide) {
             if (context.getCaster() instanceof Player player) {
-                if (!this.channelStopAnimation.isEmpty()) {
+                if (!this.channelStopAnimation.isEmpty() && !this.channelInterrupted) {
                     playAnimation(player, this.channelStopAnimation);
                 } else {
-//                    stopAnimation(player);
+                    stopAnimation(player, this.channelAnimation.apply(context));
                 }
             }
         } else {

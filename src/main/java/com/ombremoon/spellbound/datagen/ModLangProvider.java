@@ -292,6 +292,19 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced by 20 points for each active spell purged.");
         addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's armor or weapon.");
         addSkillTooltip(SBSkills.EXPUNGE, "Cast with a fool's shard to remove a spell from the target's knowledge. Can only be used once a day.");
+
+        addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of Ice. Cast again to detonate it, dealing damage to nearby enemies.");
+        addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are slower by 50% for 5 seconds.");
+        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 30 sec. cooldown.");
+        addSkillTooltip(SBSkills.CHILL, "Crystal passively emits a freezing aura, dealing frost damage every second.");
+        addSkillTooltip(SBSkills.FROZEN_SHRAPNEL, "The crystal now sends out ice shards that deal extra frost damage.");
+        addSkillTooltip(SBSkills.HYPOTHERMIA, "Enemies hit by the explosion have their frost resistance reduced by 10% for 10 seconds.");
+        addSkillTooltip(SBSkills.CRYSTAL_ECHO, "After detonation, the crystal reforms in its original location for 10 seconds (once per crystal).");
+        addSkillTooltip(SBSkills.THIN_ICE, "Enemies that walk near the crystal will instantly trigger the detonation.");
+        addSkillTooltip(SBSkills.CHAOTIC_SHATTER, "Detonating one crystal will detonate others in the area.");
+        addSkillTooltip(SBSkills.LINGERING_FROST, "After detonation, the crystal leaves a damaging mist behind. Enemies caught in the mist for 3 seconds will get frozen.");
+        addSkillTooltip(SBSkills.GLACIAL_IMPACT, "Recast with a frozen shard to mark a crystal. Marked crystal's explosion applies freeze and Permafrost to enemies hit.");
+
     }
 
     protected void addSkillTooltip(Holder<Skill> skill, String description) {

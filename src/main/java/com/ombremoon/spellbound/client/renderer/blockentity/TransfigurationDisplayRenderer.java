@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.ombremoon.spellbound.common.content.block.entity.TransfigurationDisplayBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

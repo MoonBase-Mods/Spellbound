@@ -2,8 +2,8 @@ package com.ombremoon.spellbound.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.ombremoon.spellbound.common.content.block.RuneBlock;
-import com.ombremoon.spellbound.common.content.block.entity.RuneBlockEntity;
+import com.ombremoon.spellbound.common.world.block.RuneBlock;
+import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.renderer.MultiBufferSource;

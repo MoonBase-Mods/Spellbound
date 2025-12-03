@@ -38,7 +38,7 @@ neoForge {
     runs {
         client {
             client()
-//            programArguments.add '--username', "Dev1"
+            programArguments.add '--username'/*, "Dev1"*/
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
@@ -98,6 +98,7 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    mavenCentral()
     exclusiveContent {
         forRepository {
             maven {
@@ -116,10 +117,6 @@ repositories {
         }
     }
     maven {
-        name "KosmX's maven"
-        url 'https://maven.kosmx.dev/'
-    }
-    maven {
         name = 'GeckoLib'
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content {
@@ -129,6 +126,14 @@ repositories {
     maven {
         name = "SmartBrainLib (SBL) Maven Repo"
         url = "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+    }
+    maven {
+        name = "RedlanceMinecraft"
+        url = "https://repo.redlance.org/public"
+    }
+    maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
     }
     maven { url = "https://maven.firstdarkdev.xyz/snapshots" }
     maven {
@@ -145,6 +150,9 @@ repositories {
 }
 
 dependencies {
+//    implementation "com.zigythebird.playeranim:PlayerAnimationLibNeo:$project.pal_version"
+//    additionalRuntimeClasspath "org.javassist:javassist:3.30.2-GA"
+
     implementation "dev.kosmx.player-anim:player-animation-lib-forge:${player_anim}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}"
@@ -157,8 +165,8 @@ dependencies {
     runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.22.1.316"
     compileOnly "dev.emi:emi-neoforge:1.1.22+1.21.1:api"
     runtimeOnly "dev.emi:emi-neoforge:1.1.22+1.21.1"
-    jarJar(implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.0.5"))
-    jarJar(implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.0.3"))
+    jarJar(implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.0.6"))
+    jarJar(implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.0.4"))
 }
 
 jarJar.enabled(true)

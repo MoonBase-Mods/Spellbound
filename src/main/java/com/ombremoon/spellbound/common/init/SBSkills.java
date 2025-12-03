@@ -178,7 +178,7 @@ public class SBSkills {
     public static final Holder<Skill> SYNTHESIS = registerSkill("synthesis", 50, 200, preReqs(POISON_ESSENCE));
     public static final Holder<Skill> FUNGAL_HARVEST = registerSkill("fungal_harvest", 0, 150, preReqs(NATURES_DOMINANCE));
     public static final Holder<Skill> LIVING_FUNGUS = registerSkill("living_fungus", 0, 200, preReqs(FUNGAL_HARVEST));
-    public static final Holder<Skill> PROLIFERATION = registerSkill("proliferation", 50, 250, preReqs(LIVING_FUNGUS));
+    public static final Holder<Skill> PROLIFERATION = registerSkill("proliferation", 0, 250, preReqs(LIVING_FUNGUS));
 
 
     //Healing Touch
@@ -251,15 +251,15 @@ public class SBSkills {
     public static Holder<Skill> NINE_LIVES = registerSkill("nine_lives", 0 , 250 , preReqs(TWIN_SPIRITS)); //TODO
 
     private static Holder<Skill> registerSkill(String name) {
-        return SKILLS.register(name, () -> new Skill(CommonClass.customLocation(name)));
+        return SKILLS.register(name, Skill::new);
     }
 
     private static Holder<Skill> registerSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs) {
-        return SKILLS.register(name, () -> new Skill(CommonClass.customLocation(name), xPos, yPos, prereqs));
+        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs));
     }
 
     private static Holder<Skill> registerRadialSkill(String name) {
-        return SKILLS.register(name, () -> new Skill(CommonClass.customLocation(name)) {
+        return SKILLS.register(name, () -> new Skill() {
             @Override
             public boolean isRadial() {
                 return true;
@@ -268,7 +268,7 @@ public class SBSkills {
     }
 
     private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs) {
-        return SKILLS.register(name, () -> new Skill(CommonClass.customLocation(name), xPos, yPos, prereqs) {
+        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
             @Override
             public boolean isRadial() {
                 return true;
@@ -277,7 +277,7 @@ public class SBSkills {
     }
 
     private static Holder<Skill> registerConditionalSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, BiPredicate<Player, SkillHolder> skillCondition) {
-        return SKILLS.register(name, () -> new Skill(CommonClass.customLocation(name), xPos, yPos, prereqs) {
+        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
             @Override
             public boolean canUnlockSkill(Player player, SkillHolder holder) {
                 return skillCondition.test(player, holder);
@@ -286,7 +286,7 @@ public class SBSkills {
     }
 
     private static Holder<Skill> registerModifierSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, SpellModifier... spellModifiers) {
-        return SKILLS.register(name, () -> new ModifierSkill(CommonClass.customLocation(name), xPos, yPos, prereqs, spellModifiers));
+        return SKILLS.register(name, () -> new ModifierSkill(xPos, yPos, prereqs, spellModifiers));
     }
 
     private static HolderSet<Skill> preReqs(Holder<Skill>... skills) {

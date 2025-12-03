@@ -8,7 +8,11 @@ import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
-import com.ombremoon.spellbound.client.renderer.entity.*;
+import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.PlaceholderRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellCastRenderLayer;
@@ -17,9 +21,9 @@ import com.ombremoon.spellbound.client.renderer.types.EmissiveSpellProjectileRen
 import com.ombremoon.spellbound.client.renderer.types.GenericLivingEntityRenderer;
 import com.ombremoon.spellbound.client.renderer.types.GenericSpellRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
-import com.ombremoon.spellbound.common.content.block.entity.RuneBlockEntity;
-import com.ombremoon.spellbound.common.content.world.hailstorm.ClientHailstormData;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormSavedData;
+import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
+import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -78,7 +82,7 @@ public class ClientEvents {
 
             event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
             event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
-            event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRendererTest::new);
+            event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
             event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
             event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
             event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
@@ -90,11 +94,14 @@ public class ClientEvents {
             event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
             event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
 
-            event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), PlaceholderRenderer::new);
+            event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
             event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
             event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
+            event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
             event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
             event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
+
+            event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
 
             event.registerBlockEntityRenderer(SBBlockEntities.VALKY_STATUE.get(), ValkyrStatueRenderer::new);
             event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);

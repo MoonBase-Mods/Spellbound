@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.content.world.worldgen.WildMushroomFeatureConfiguration;
+import com.ombremoon.spellbound.common.world.worldgen.WildMushroomFeatureConfiguration;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;

@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record DataComponentStorage(List<TypedDataComponent<?>> dataComponents) {
@@ -23,5 +25,13 @@ public record DataComponentStorage(List<TypedDataComponent<?>> dataComponents) {
 
     public static <T> TypedDataComponent<T> createUnchecked(DataComponentType<T> type, Object value) {
         return new TypedDataComponent<>(type, (T)value);
+    }
+
+    public static Optional<DataComponentStorage> optionalOf(TypedDataComponent<?>... data) {
+        return Optional.of(of(data));
+    }
+
+    public static DataComponentStorage of(TypedDataComponent<?>... data) {
+        return new DataComponentStorage(Arrays.asList(data));
     }
 }

@@ -2,8 +2,8 @@ package com.ombremoon.spellbound.common.magic.acquisition.transfiguration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
-import com.ombremoon.spellbound.common.content.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.common.init.SBRitualEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

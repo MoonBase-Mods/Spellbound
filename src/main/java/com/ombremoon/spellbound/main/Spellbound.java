@@ -2,33 +2,24 @@ package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.client.gui.guide_renderers.*;
 import com.ombremoon.spellbound.client.gui.guide_renderers.GuideItemRenderer;
-import com.ombremoon.spellbound.client.shader.SBShaders;
-import com.ombremoon.spellbound.common.content.item.RitualTalismanItem;
-import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.*;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.world.BiomeModifier;
-import net.neoforged.neoforge.common.world.StructureModifier;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 //TODO: General - Discuss with Duck about bobHurt in GameRenderer
@@ -62,16 +53,10 @@ public class Spellbound {
         for (SpellPath spellPath : SpellPath.values()) {
             if (!spellPath.isSubPath()) {
                 ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
-                    String path = stack.get(SBData.SPELL);
-                    if (path != null) {
-                        ResourceLocation location = ResourceLocation.tryParse(path);
-                        if (location != null) {
-                            SpellType<?> spellType = SBSpells.REGISTRY.get(location);
-                            if (spellType != null) {
-                                SpellPath spellPath1 = spellType.getPath();
-                                return spellPath == spellPath1 ? 1.0F : 0.0F;
-                            }
-                        }
+                    SpellType<?> spellType = stack.get(SBData.SPELL);
+                    if (spellType != null) {
+                        SpellPath spellPath1 = spellType.getPath();
+                        return spellPath == spellPath1 ? 1.0F : 0.0F;
                     }
 
                     return 0.0F;
@@ -103,6 +88,7 @@ public class Spellbound {
         event.register(SBMultiblockSerializers.REGISTRY);
         event.register(SBRitualEffects.REGISTRY);
         event.register(SBPageElements.REGISTRY);
+        event.register(SBBossFights.REGISTRY);
     }
 
     private void registerElementRenderers() {

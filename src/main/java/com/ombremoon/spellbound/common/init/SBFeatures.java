@@ -1,9 +1,9 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.content.world.worldgen.ArcanthusConfig;
-import com.ombremoon.spellbound.common.content.world.worldgen.ArcanthusFeature;
-import com.ombremoon.spellbound.common.content.world.worldgen.HugeWildMushroomFeature;
-import com.ombremoon.spellbound.common.content.world.worldgen.WildMushroomFeatureConfiguration;
+import com.ombremoon.spellbound.common.world.worldgen.ArcanthusConfig;
+import com.ombremoon.spellbound.common.world.worldgen.ArcanthusFeature;
+import com.ombremoon.spellbound.common.world.worldgen.HugeWildMushroomFeature;
+import com.ombremoon.spellbound.common.world.worldgen.WildMushroomFeatureConfiguration;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;

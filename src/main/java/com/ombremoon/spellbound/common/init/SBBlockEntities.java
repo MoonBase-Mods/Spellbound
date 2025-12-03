@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.content.block.entity.*;
+import com.ombremoon.spellbound.common.world.block.entity.*;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;

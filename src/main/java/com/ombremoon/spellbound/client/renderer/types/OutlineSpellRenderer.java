@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.renderer.types;
 
-import com.ombremoon.spellbound.common.content.entity.SpellEntity;
+import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

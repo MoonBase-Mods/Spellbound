@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.magic.acquisition.transfiguration;
 
 import com.mojang.serialization.Dynamic;
-import com.ombremoon.spellbound.common.content.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

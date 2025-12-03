@@ -2,9 +2,9 @@ package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.KeyBinds;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormData;
-import com.ombremoon.spellbound.common.content.world.hailstorm.HailstormSavedData;
-import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.world.weather.HailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -41,10 +41,14 @@ public class ClientPayloadHandler {
 
     public static void handleEndSpell(EndSpellPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            var handler = SpellUtil.getSpellHandler(context.player());
-            AbstractSpell spell = handler.getSpell(payload.spellType(), payload.castId());
-            if (spell != null)
-                spell.endSpell();
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                AbstractSpell spell = handler.getSpell(payload.spellType(), payload.castId());
+                if (spell != null)
+                    spell.endSpell();
+            }
         });
     }
 
@@ -59,14 +63,26 @@ public class ClientPayloadHandler {
     public static void handleClientUpdateSpells(UpdateSpellsPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-
-            Player player = level.getPlayerByUUID(UUID.fromString(payload.playerId()));
-            if (player != null) {
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
                 AbstractSpell spell = payload.spellType().createSpell();
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
-                    spell.clientInitSpell(player, level, player.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"), nbt.getBoolean("shiftSpells"));
+                    spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"), nbt.getBoolean("shiftSpells"));
                 }
+            }
+        });
+    }
+
+    public static void handleClientShiftSpell(UpdateSpellIdPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                AbstractSpell spell = handler.getSpell(payload.spellType(), payload.shiftId());
+                if (spell != null)
+                    spell.castId = payload.castId();
             }
         });
     }
@@ -74,11 +90,10 @@ public class ClientPayloadHandler {
     public static void handleClientUpdateSpellTicks(UpdateSpellTicksPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
-                var caster = SpellUtil.getSpellHandler(livingEntity);
-                AbstractSpell spell = caster.getSpell(payload.spellType(), payload.castId());
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                AbstractSpell spell = handler.getSpell(payload.spellType(), payload.castId());
                 if (spell != null)
                     spell.tickCount = payload.ticks();
             }
@@ -88,14 +103,13 @@ public class ClientPayloadHandler {
     public static void handleClientUpdateSkillBuff(UpdateSkillBuffPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
-                var caster = SpellUtil.getSpellHandler(livingEntity);
+                var handler = SpellUtil.getSpellHandler(livingEntity);
                 if (!payload.removeBuff()) {
-                    caster.forceAddBuff(payload.skillBuff(), payload.duration());
+                    handler.forceAddBuff(payload.skillBuff(), payload.duration());
                 } else {
-                    caster.removeSkillBuff(payload.skillBuff());
+                    handler.removeSkillBuff(payload.skillBuff());
                 }
             }
         });
@@ -104,7 +118,6 @@ public class ClientPayloadHandler {
     public static void handleClientUpdateCooldowns(UpdateCooldownsPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
                 var skills = SpellUtil.getSkills(livingEntity);
@@ -113,7 +126,7 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleClientSpellSync(SyncSpellPayload payload, IPayloadContext context) {
+    public static void handleClientSpellSync(SyncSpellHandlerPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
 

@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.ombremoon.spellbound.common.content.block.entity.ExtendedBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.ExtendedBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.ClientLevel;
