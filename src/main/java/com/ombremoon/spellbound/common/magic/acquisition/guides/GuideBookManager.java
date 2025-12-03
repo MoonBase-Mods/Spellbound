@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.magic.acquisition.guides;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.lowdragmc.lowdraglib2.graphprocessor.data.parameter.ExposedParameter;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.ombremoon.spellbound.common.magic.SpellPath;
@@ -25,10 +26,11 @@ import java.util.*;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class GuideBookManager extends SimpleJsonResourceReloadListener {
-    private static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("first_page_dont_use");
+    private static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("default");
     private static final Logger LOGGER = Constants.LOG;
     private static final Gson GSON = new GsonBuilder().create();
     private static Map<ResourceLocation, List<GuideBookPage>> BOOKS = new HashMap<>();
+    private static Map<ResourceLocation, JsonElement> PAGE_JSONS = new HashMap<>();
 
     public GuideBookManager() {
         super(GSON, "guide_books");
@@ -94,29 +96,43 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
      * @return A sorted list of pages
      */
     private List<GuideBookPage> sortPages(List<Pair<ResourceLocation, GuideBookPage>> book) {
-        List<Pair<ResourceLocation, GuideBookPage>> result = new ArrayList<>();
+        Map<ResourceLocation, List<ResourceLocation>> parentToChildren = new HashMap<>();
+        Map<ResourceLocation, GuideBookPage> pages = new HashMap<>();
+        Map<ResourceLocation, Integer> inDegree = new HashMap<>(); //Number of dependants
 
         for (Pair<ResourceLocation, GuideBookPage> pair : book) {
+            ResourceLocation id = pair.getFirst();
             GuideBookPage page = pair.getSecond();
-            int index = -1;
-            if (page.insertAfter().equals(FIRST_PAGE)) {
-                result.addFirst(pair);
-                continue;
-            }
 
-            for (int i = 0; i < result.size(); i++) {
-                if (result.get(i).getFirst().equals(page.insertAfter())) {
-                    index = i + 1;
-                    break;
-                }
-            }
+            pages.put(id, page);
+            inDegree.put(id, 0);
+            if (page.insertAfter().equals(CommonClass.customLocation("default"))) continue;
 
-            if (index == -1) result.add(pair);
-            else result.add(index, pair);
+            parentToChildren.computeIfAbsent(page.insertAfter(), k -> new ArrayList<>()).add(id);
+            inDegree.put(id, inDegree.get(id) + 1);
         }
 
-        List<GuideBookPage> toRet = result.stream().map(Pair::getSecond).toList();
-        return toRet;
+        Queue<ResourceLocation> queue = new ArrayDeque<>();
+        for (var entry : inDegree.entrySet()) {
+            if (entry.getValue() == 0) queue.add(entry.getKey());
+        }
+
+        List<GuideBookPage> sortedBook = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            ResourceLocation current = queue.poll();
+            sortedBook.add(pages.get(current));
+
+            List<ResourceLocation> children = parentToChildren.get(current);
+            if (children == null) continue;
+
+            for (ResourceLocation child : children) {
+                inDegree.put(child, inDegree.get(child)-1);
+
+                if (inDegree.get(child) == 0) queue.add(child);
+            }
+        }
+
+        return sortedBook;
     }
 
     /**

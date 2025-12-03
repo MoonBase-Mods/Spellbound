@@ -24,15 +24,22 @@
       "position": {
         "xOffset": 167,
         "yOffset": 5
+      },
+      "extras": {
+        "pageScrap": "spellbound:test_scrap"
       }
     },
 
     {
       "type": "spellbound:recipe",
       "recipe": "minecraft:anvil",
+      "gridName": "grimoire",
       "position": {
         "xOffset": 195,
         "yOffset": 125
+      },
+      "extras": {
+        "pageScrap": "spellbound:anvil"
       }
     }
   ]

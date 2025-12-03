@@ -61,8 +61,12 @@ public class SBItems {
     public static final Supplier<Item> CHALK = registerItem("chalk", () -> new ChalkItem(getItemProperties().stacksTo(16)));
 
     //Guide Books
-    public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", () -> new GuideBookItem(CommonClass.customLocation("starter_book")));
-    public static final Supplier<Item> RUIN_BOOK = registerItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation"), CommonClass.customLocation("textures/gui/books/starter_book.png")));
+    public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", () -> new GuideBookItem(CommonClass.customLocation("studies_in_the_arcane")));
+    public static final Supplier<Item> RUIN_BOOK = registerItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation")));
+    public static final Supplier<Item> DIVINE_BOOK = registerItem("sanctified_codex", () -> new GuideBookItem(CommonClass.customLocation("sanctified_codex")));
+    public static final Supplier<Item> DECEPTION_BOOK = registerItem("swindlers_guide", () -> new GuideBookItem(CommonClass.customLocation("swindlers_guide")));
+    public static final Supplier<Item> SUMMON_BOOK = registerItem("the_necronomicon", () -> new GuideBookItem(CommonClass.customLocation("the_necronomicon")));
+    public static final Supplier<Item> TRANSFIG_BOOK = registerItem("architects_lexicon", () -> new GuideBookItem(CommonClass.customLocation("architects_lexicon")));
 
     public static final Supplier<CreativeModeTab> SPELL_TAB = CREATIVE_MODE_TABS.register("spell_tab", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP,0)
             .icon(() -> new ItemStack(SBBlocks.ARCANTHUS.get()))
