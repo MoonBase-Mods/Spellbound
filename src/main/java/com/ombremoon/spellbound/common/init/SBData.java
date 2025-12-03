@@ -40,7 +40,7 @@ public class SBData {
 
     //Mana
     public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(
-            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).sync().build());
+            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).build());
 
     //Upgrade Tree
     public static final Supplier<AttachmentType<UpgradeTree>> UPGRADE_TREE = ATTACHMENT_TYPES.register(
