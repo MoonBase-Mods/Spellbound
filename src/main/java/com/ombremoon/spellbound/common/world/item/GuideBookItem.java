@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.item;
 
+import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -34,5 +35,6 @@ public class GuideBookItem extends Item {
         }
 
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
+
     }
 }

@@ -17,7 +17,6 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -82,7 +81,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * Syncs spells handler data from the server to the client.
      */
     public void sync() {
-        if (this.caster instanceof Player player && !this.isClientSide())
+        if (this.caster instanceof Player player && !player.level().isClientSide)
             PayloadHandler.syncHandlerToClient(player);
     }
 
@@ -186,15 +185,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         } else if (currentMana < amount) {
             return false;
         } else {
-            if (forceConsume && this.shouldConsumeMana())
+            if (forceConsume)
                 this.awardMana(-amount);
 
             return true;
         }
-    }
-
-    private boolean shouldConsumeMana() {
-        return this.level.getGameRules().getBoolean(Keys.CONSUME_MANA);
     }
 
     /**
@@ -202,11 +197,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param mana The amount of mana received
      */
     public void awardMana(float mana) {
-        if (!this.isClientSide()) {
-            this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
-            if (this.caster instanceof Player player)
-                PayloadHandler.syncMana(player);
-        }
+        this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
+        if (this.caster instanceof Player player && !player.level().isClientSide)
+            PayloadHandler.syncMana(player);
     }
 
     /**
@@ -342,14 +335,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Returns a set of all active spell types.
-     * @return The set of active spell types
-     */
-    public Set<SpellType<?>> getActiveSpellTypes() {
-        return this.activeSpells.keySet();
-    }
-
-    /**
      * Returns the first instance of an {@link AbstractSpell} in the active spells map of a given {@link SpellType}.
      * @param spellType The spells type
      * @return The AbstractSpell
@@ -438,7 +423,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private void removeBuffEffect(SkillBuff<?> skillBuff) {
         skillBuff.removeBuff(this.caster);
 
-        if (this.caster instanceof Player player && !this.isClientSide())
+        if (this.caster instanceof Player player && !player.level().isClientSide)
             PayloadHandler.updateSkillBuff((ServerPlayer) player, skillBuff, 0, true);
 
     }
@@ -472,7 +457,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
     public void setChoice(SpellType<?> spellType, Skill skill) {
         this.spellChoices.put(spellType, skill);
-        if (this.isClientSide())
+        if (this.caster.level().isClientSide)
             PayloadHandler.updateChoice(spellType, skill);
     }
 
@@ -505,7 +490,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param animationName The animation path location
      */
     public void playAnimation(Player player, String animationName, float animationSpeed) {
-        if (!this.isClientSide())
+        if (!player.level().isClientSide)
             PayloadHandler.handleAnimation(player, animationName, animationSpeed, false);
     }
 
@@ -570,7 +555,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void setChargingOrChannelling(boolean channelling) {
         this.channelling = channelling;
-        if (this.caster instanceof Player player && !this.isClientSide())
+        if (this.caster instanceof Player player && !this.caster.level().isClientSide)
             PayloadHandler.setChargeOrChannel(player, channelling);
     }
 
@@ -648,7 +633,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         if (!(this.caster instanceof Player))
             return null;
 
-        if (this.isClientSide()) {
+        if (this.caster.level().isClientSide) {
             warn("Tried to retrieve Divine Actions from the client, but they do not exist.");
             return null;
         }

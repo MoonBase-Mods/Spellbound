@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.events.custom.MobInteractEvent;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBTags;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.page_scraps.PageScrapManager;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.util.Loggable;
@@ -72,6 +73,9 @@ public class PlayerDivineActions implements Loggable {
     private void registerListeners() {
         for (ActionHolder actionHolder : DivineActionManager.getAllActions()) {
             this.registerListeners(actionHolder);
+        }
+        for (ActionHolder action : PageScrapManager.getAllActions()) {
+            this.registerListeners(action);
         }
     }
 

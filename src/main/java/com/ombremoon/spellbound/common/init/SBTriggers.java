@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.CuredZombieVillagerTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.triggers.LearnSpellTrigger;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionTrigger;
@@ -28,6 +29,7 @@ public class SBTriggers {
     public static final Supplier<HealActionTrigger> HEAL_TO_FULL = register("heal_to_full", new HealActionTrigger());
     public static final Supplier<CuredZombieVillagerTrigger> CURED_ZOMBIE_VILLAGER = register("cured_zombie_villager", new CuredZombieVillagerTrigger());
     public static final Supplier<SpecialTrigger> DECORATED_SHRINE = register("decorated_shrine", new SpecialTrigger());
+    public static final Supplier<LearnSpellTrigger> LEARN_SPELL = register("learn_spell", new LearnSpellTrigger());
 
     public static <T extends ActionTrigger<?>> Supplier<T> register(String name, T trigger) {
         return TRIGGERS.register(name, () -> trigger);

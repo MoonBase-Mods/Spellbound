@@ -21,7 +21,11 @@ public abstract class DivineActionProvider implements DataProvider {
     private final CompletableFuture<HolderLookup.Provider> registries;
 
     public DivineActionProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "divine_action");
+        this(packOutput, registries, "divine_action");
+    }
+
+    public DivineActionProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries, String kind) {
+        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, kind);
         this.registries = registries;
     }
 
@@ -47,7 +51,7 @@ public abstract class DivineActionProvider implements DataProvider {
     }
 
     @Override
-    public final String getName() {
+    public String getName() {
         return "Divine Actions";
     }
 }
