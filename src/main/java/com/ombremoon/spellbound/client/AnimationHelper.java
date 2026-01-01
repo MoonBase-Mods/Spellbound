@@ -2,10 +2,13 @@ package com.ombremoon.spellbound.client;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.particle.EffectCache;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
+import com.ombremoon.spellbound.util.SpellUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -53,6 +56,10 @@ public class AnimationHelper {
             } else if (animation.isActive()) {
                 player.setYBodyRot(player.getYHeadRot());
                 PayloadHandler.updateRotation(player.yBodyRot);
+                var handler = SpellUtil.getSpellHandler(player);
+                AbstractSpell spell = handler.getCurrentlyCastSpell();
+                if (spell != null && spell.isCasting() && spell.isStationaryCast(spell.getCastContext()))
+                    handler.setStationaryTicks(1);
             }
         }
     }

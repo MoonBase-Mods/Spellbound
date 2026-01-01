@@ -88,7 +88,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private final float baseDamage;
     private final float xpModifier;
     private final int castTime;
-    private final int stationaryTicks;
     private final BiPredicate<SpellContext, AbstractSpell> castPredicate;
     private final CastType castType;
     private final SoundEvent castSound;
@@ -138,7 +137,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.baseDamage = builder.baseDamage;
         this.xpModifier = builder.xpModifier;
         this.castTime = builder.castTime;
-        this.stationaryTicks = builder.stationaryTicks;
         this.castPredicate = (BiPredicate<SpellContext, AbstractSpell>) builder.castPredicate;
         this.castType = builder.castType;
         this.castSound = builder.castSound;
@@ -235,7 +233,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public boolean isCasting() {
-        return !this.init && this.context == null;
+        return /*!this.init*/this.castTime > 0 && this.context == null;
     }
 
     /**
@@ -496,7 +494,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (!context.getLevel().isClientSide) {
             this.spellData.set(CAST_POS, context.getBlockPos());
         } else {
-            context.getSpellHandler().setStationaryTicks(this.stationaryTicks);
+//            context.getSpellHandler().setStationaryTicks(this.stationaryTicks);
         }
     }
 
@@ -519,6 +517,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         handler.castTick = 0;
         PayloadHandler.castReset(this.spellType(), this.isRecast);
         this.onCastReset(context);
+    }
+
+    public boolean isStationaryCast(SpellContext castContext) {
+        return true;
     }
 
     /**
@@ -1498,7 +1500,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected int manaCost;
         protected float baseDamage;
         protected int castTime = 10;
-        protected int stationaryTicks = 20;
         protected float xpModifier = 0.2F;
         protected BiPredicate<SpellContext, T> castPredicate = (context, abstractSpell) -> true;
         protected CastType castType = CastType.INSTANT;
@@ -1564,15 +1565,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
          * @param castTime The cast time
          * @return The spells builder
          */
-        public Builder<T> castTime(int castTime, int stationaryTicks) {
-            this.castTime = castTime;
-            this.stationaryTicks = stationaryTicks;
-            return this;
-        }
-
         public Builder<T> castTime(int castTime) {
             this.castTime = castTime;
-            this.stationaryTicks = castTime;
             return this;
         }
 

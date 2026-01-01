@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.main.Keys;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -73,8 +74,14 @@ public class EntityBasedBossFight extends BossFight {
         public boolean initializeWinCondition(ServerLevel level, EntityBasedBossFight bossFight) {
             for (BossSpawn boss : bossFight.bosses) {
                 Vec3 offset = boss.spawnOffset;
-                Entity entity = boss.boss.spawn(level, ORIGIN.offset((int) offset.x, (int) offset.y, (int) offset.z), MobSpawnType.EVENT);
+                Entity entity = boss.boss.create(level);
                 if (entity != null) {
+                    entity.setPos(Vec3.atBottomCenterOf(ORIGIN.offset((int) offset.x, (int) offset.y, (int) offset.z)));
+                    if (entity instanceof SBLivingEntity livingEntity) {
+                        livingEntity.setStartTick(boss.spawnTick);
+                    }
+
+                    level.addFreshEntity(entity);
                     this.bosses.add(entity.getId());
                 }
             }
@@ -139,7 +146,7 @@ public class EntityBasedBossFight extends BossFight {
     }
 
     public static class Builder implements BossFightBuilder<EntityBasedBossFight> {
-        private final List<Pair<Supplier<? extends EntityType<?>>, Vec3>> bosses = new ObjectArrayList<>();
+        private final List<BossSpawnSupplier> bosses = new ObjectArrayList<>();
         private ResourceLocation spell;
         private Vec3 playerSpawnOffset = Vec3.ZERO;
 
@@ -148,8 +155,8 @@ public class EntityBasedBossFight extends BossFight {
             return this;
         }
 
-        public Builder withBoss(Supplier<? extends EntityType<?>> entity, int x, int y, int z) {
-            this.bosses.add(Pair.of(entity, new Vec3(x, y, z)));
+        public Builder withBoss(Supplier<? extends EntityType<?>> entity, int x, int y, int z, int spawnTicks) {
+            this.bosses.add(new BossSpawnSupplier(entity, new Vec3(x, y, z), spawnTicks));
             return this;
         }
 
@@ -160,9 +167,9 @@ public class EntityBasedBossFight extends BossFight {
 
         @Override
         public EntityBasedBossFight build() {
-            List<BossSpawn> bosses = this.bosses.stream().map(pair -> {
-                EntityType<?> type = pair.getFirst().get();
-                return new BossSpawn(type, pair.getSecond());
+            List<BossSpawn> bosses = this.bosses.stream().map(supplier -> {
+                EntityType<?> type = supplier.boss().get();
+                return new BossSpawn(type, supplier.spawnOffset(), supplier.spawnTick());
             }).toList();
             SpellType<?> spell = SBSpells.REGISTRY.get(this.spell);
             return new EntityBasedBossFight(
@@ -173,12 +180,16 @@ public class EntityBasedBossFight extends BossFight {
         }
     }
 
-    record BossSpawn(EntityType<?> boss, Vec3 spawnOffset) {
+    record BossSpawn(EntityType<?> boss, Vec3 spawnOffset, int spawnTick) {
         private static final Codec<BossSpawn> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                         BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("boss").forGetter(BossSpawn::boss),
-                        Vec3.CODEC.fieldOf("offset").forGetter(BossSpawn::spawnOffset)
+                        Vec3.CODEC.fieldOf("offset").forGetter(BossSpawn::spawnOffset),
+                        Codec.INT.fieldOf("spawnTick").forGetter(BossSpawn::spawnTick)
                 ).apply(instance, BossSpawn::new)
         );
+    }
+
+    record BossSpawnSupplier(Supplier<? extends EntityType<?>> boss, Vec3 spawnOffset, int spawnTick) {
     }
 }

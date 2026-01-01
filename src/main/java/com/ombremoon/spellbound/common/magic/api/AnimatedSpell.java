@@ -48,12 +48,6 @@ public abstract class AnimatedSpell extends AbstractSpell {
     @Override
     public void onCastReset(SpellContext context) {
         super.onCastReset(context);
-        Level level = context.getLevel();
-        var handler = context.getSpellHandler();
-//        context.getSpellHandler().setStationaryTicks(this.getCastTime());
-//        String animation = this.failAnimation.apply(context);
-//        if (!context.getLevel().isClientSide && !animation.isEmpty() && context.getCaster() instanceof Player player)
-//            playAnimation(player, animation);
     }
 
     public static class Builder<T extends AnimatedSpell> extends AbstractSpell.Builder<T> {
@@ -84,16 +78,8 @@ public abstract class AnimatedSpell extends AbstractSpell {
             this.xpModifier = modifier;
             return this;
         }
-
-        public Builder<T> castTime(int castTime, int stationaryTicks) {
-            this.castTime = castTime;
-            this.stationaryTicks = stationaryTicks;
-            return this;
-        }
-
         public Builder<T> castTime(int castTime) {
             this.castTime = castTime;
-            this.stationaryTicks = castTime;
             return this;
         }
 
@@ -110,20 +96,17 @@ public abstract class AnimatedSpell extends AbstractSpell {
         public Builder<T> instantCast() {
             this.castAnimation = context -> "instant_cast";
             this.castTime = 5;
-            this.stationaryTicks = 16;
             return this;
         }
 
         public Builder<T> summonCast() {
             this.castAnimation = context -> "summon";
             this.castTime = 30;
-            this.stationaryTicks = 60;
             return this;
         }
 
         public Builder<T> selfBuffCast() {
             this.castAnimation = context -> "self_buff";
-            this.stationaryTicks = 43;
             return this;
         }
 
