@@ -39,7 +39,10 @@ public class ElectricChargeSpell extends AnimatedSpell {
                         spell.discharged = true;
                         return context.isRecast();
                     } else if (entity != null) {
-                        return !spell.entityIds.contains(entity.getId());
+                        if (spell.entityIds.contains(entity.getId()))
+                            spell.discharged = true;
+
+                        return true;
                     } else {
                         return context.isRecast();
                     }
@@ -76,7 +79,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
         Level level = context.getLevel();
         boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
         if (context.hasSkill(SBSkills.AMPLIFY)) {
-            context.getSpellHandler().setChargingOrChannelling(true);
             return;
         }
 
@@ -95,7 +97,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
         super.onSpellTick(context);
         Level level = context.getLevel();
         var handler = context.getSpellHandler();
-        boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
         if (context.hasSkill(SBSkills.AMPLIFY)) {
             if ((context.isRecast() && context.getTarget() == null) || this.discharged) {
                 this.discharging = true;
@@ -103,13 +104,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     incrementTick();
                     if (!level.isClientSide && this.tickCount % 20 == 0)
                         consumeMana(context.getCaster(), 3);
-                } else {
-                    for (Integer entityId : this.entityIds) {
-                        Entity entity = level.getEntity(entityId);
-                        if (entity instanceof LivingEntity livingEntity)
-                            discharge(context, livingEntity, hasShard);
-                    }
-                    endSpell();
                 }
             }
         }
@@ -120,16 +114,22 @@ public class ElectricChargeSpell extends AnimatedSpell {
                 this.createSurroundingServerParticles(entity, SBParticles.SPARK.get(), 1);
             }
         }
+
+        if (this.entityIds.isEmpty())
+            this.endSpell();
     }
 
     @Override
     protected void onSpellStop(SpellContext context) {
-
-    }
-
-    @Override
-    public CastType getCastType(SpellContext context) {
-        return context.hasSkill(SBSkills.AMPLIFY) && context.isRecast() && (context.getTarget() == null || this.discharged) ? CastType.CHANNEL : super.getCastType(context);
+        log(this.entityIds);
+        if (context.hasSkill(SBSkills.AMPLIFY) && (context.isRecast() && context.getTarget() == null) || this.discharged) {
+            boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
+            for (Integer entityId : this.entityIds) {
+                Entity entity = context.getLevel().getEntity(entityId);
+                if (entity instanceof LivingEntity livingEntity)
+                    discharge(context, livingEntity, hasShard);
+            }
+        }
     }
 
     private void discharge(SpellContext context, LivingEntity target, boolean hasShard) {

@@ -493,8 +493,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public void onCastStart(SpellContext context) {
         if (!context.getLevel().isClientSide) {
             this.spellData.set(CAST_POS, context.getBlockPos());
-        } else {
-//            context.getSpellHandler().setStationaryTicks(this.stationaryTicks);
         }
     }
 
@@ -505,7 +503,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public void onCastReset(SpellContext context) {
         if (context.getLevel().isClientSide) {
             KeyBinds.getSpellCastMapping().setDown(false);
-//            context.getSpellHandler().setStationaryTicks(0);
         }
     }
 
@@ -1303,9 +1300,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 onCastReset(this.context);
                 CompoundTag initTag = this.initTag(this.isRecast, true, shiftSpells);
                 PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
-//                if (caster instanceof Player player) {
-//                }
-
                 return;
             }
 
