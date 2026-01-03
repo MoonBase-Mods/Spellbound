@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.gui.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
 import com.ombremoon.spellbound.client.renderer.SBRenderTypes;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -89,7 +90,6 @@ public class RenderUtil {
                 if (flag) {
                     Lighting.setupForFlatItems();
                 }
-
                 minecraft.getItemRenderer().render(stack, ItemDisplayContext.GUI, false, pose, graphics.bufferSource(), 15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
                 graphics.flush();
                 if (flag) {

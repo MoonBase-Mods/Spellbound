@@ -27,7 +27,7 @@ public interface IPageElementRenderer<T extends IPageElement> extends Loggable {
 
     /**
      * The method called when this element is to be rendered on the current page
-     * @param graphics the GuiGraphics for renderering
+     * @param graphics the GuiGraphics for rendering
      * @param leftPos the left most x coordinate for the beginning of the page
      * @param topPos the top most y coordinate for the top of the page
      * @param mouseX the x position of the mouse
