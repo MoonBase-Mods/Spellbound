@@ -8,27 +8,17 @@
   ],
   "display": {
     "thirdperson_righthand": {
-      "translation": [
-        0,
-        3,
-        1
-      ],
       "scale": [
-        0.55,
-        0.55,
-        0.55
+        0.8,
+        0.8,
+        0.8
       ]
     },
     "thirdperson_lefthand": {
-      "translation": [
-        0,
-        3,
-        1
-      ],
       "scale": [
-        0.55,
-        0.55,
-        0.55
+        0.8,
+        0.8,
+        0.8
       ]
     },
     "firstperson_righthand": {
