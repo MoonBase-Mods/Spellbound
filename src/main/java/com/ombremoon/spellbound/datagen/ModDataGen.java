@@ -33,7 +33,6 @@ public class ModDataGen {
         generator.addProvider(includeServer, new ModTagProvider.EntityTypes(packOutput, event.getLookupProvider(), existingFileHelper));
         generator.addProvider(includeServer, new ModTagProvider.DamageTypes(packOutput, event.getLookupProvider(), existingFileHelper));
         generator.addProvider(includeServer, new ModGlobalLootModifiersProvider(packOutput, lookupProvider));
-        generator.addProvider(includeServer, new ModDivineActionProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModPageScrapProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModMultiblockProvider(packOutput, lookupProvider));
         generator.addProvider(includeClient, new ModItemModelProvider(packOutput, existingFileHelper));

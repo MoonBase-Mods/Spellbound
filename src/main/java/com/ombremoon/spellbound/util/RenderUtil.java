@@ -134,12 +134,13 @@ public class RenderUtil {
             float f1 = (float)(y +  y + entity.getBbHeight()) / 2.0F;
             float f2 = (float)Math.atan((double)((f - mouseX) / 40.0F));
             float f3 = (float)Math.atan((double)((f1 - mouseY) / 40.0F));
-
+            poseStack.translate(/*-240, -130*/0, 0, 50);
             Quaternionf quaternionf = new Quaternionf()
-                    .rotateZ((float)Math.PI)         //flip
+                    .rotateZ((float)Math.PI);
+            Quaternionf quaternionf1 = new Quaternionf()         //flip
                     .rotateX(-f3 * 20.0F * ((float)Math.PI / 180F))  //vertical
                     .rotateY(f2);                //horizontal
-
+            quaternionf.mul(quaternionf1);
             poseStack.mulPose(quaternionf);
         } else if (rotates) {
             poseStack.mulPose(new Quaternionf()
@@ -150,7 +151,6 @@ public class RenderUtil {
                     .rotateZ((float) Math.PI));
         }
 
-        poseStack.translate(-240, -130, 50);
         poseStack.scale(scale, scale, scale);
 
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -186,8 +186,6 @@ public class RenderUtil {
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-
         poseStack.popPose();
     }
 }

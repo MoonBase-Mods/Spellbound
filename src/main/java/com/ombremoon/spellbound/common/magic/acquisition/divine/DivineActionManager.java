@@ -52,6 +52,7 @@ public class DivineActionManager extends SimpleJsonResourceReloadListener {
             }
         });
         ACTIONS = builder.buildOrThrow();
+        LOGGER.info("Loaded {} divine actions", ACTIONS.size());
     }
 
     private void validate(ResourceLocation location, DivineAction action) {

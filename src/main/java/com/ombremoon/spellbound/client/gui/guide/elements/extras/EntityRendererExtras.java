@@ -5,14 +5,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 
-public record EntityRendererExtras(ResourceLocation pageScrap, boolean followMouse, int scale, int xRot, int yRot, int zRot, boolean animated) implements IElementExtra {
+public record EntityRendererExtras(ResourceLocation pageScrap, boolean followMouse, float scale, float xRot, float yRot, float zRot, boolean animated) implements IElementExtra {
     public static final Codec<EntityRendererExtras> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             ResourceLocation.CODEC.optionalFieldOf("pageScrap", CommonClass.customLocation("default")).forGetter(EntityRendererExtras::pageScrap),
             Codec.BOOL.optionalFieldOf("followMouse", false).forGetter(EntityRendererExtras::followMouse),
-            Codec.INT.optionalFieldOf("scale", 25).forGetter(EntityRendererExtras::scale),
-            Codec.INT.optionalFieldOf("xRot", 0).forGetter(EntityRendererExtras::xRot),
-            Codec.INT.optionalFieldOf("yRot", 0).forGetter(EntityRendererExtras::yRot),
-            Codec.INT.optionalFieldOf("zRot", 0).forGetter(EntityRendererExtras::zRot),
+            Codec.FLOAT.optionalFieldOf("scale", 25F).forGetter(EntityRendererExtras::scale),
+            Codec.FLOAT.optionalFieldOf("xRot", 0F).forGetter(EntityRendererExtras::xRot),
+            Codec.FLOAT.optionalFieldOf("yRot", 0F).forGetter(EntityRendererExtras::yRot),
+            Codec.FLOAT.optionalFieldOf("zRot", 0F).forGetter(EntityRendererExtras::zRot),
             Codec.BOOL.optionalFieldOf("animated", false).forGetter(EntityRendererExtras::animated)
     ).apply(inst, EntityRendererExtras::new));
 

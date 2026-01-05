@@ -7,19 +7,16 @@ import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionRewards;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.triggers.LearnSpellTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.triggers.SpellPredicate;
-import com.ombremoon.spellbound.datagen.provider.DivineActionProvider;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.main.Spellbound;
+import com.ombremoon.spellbound.datagen.provider.PageScrapProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class ModPageScrapProvider extends DivineActionProvider {
+public class ModPageScrapProvider extends PageScrapProvider {
     public ModPageScrapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries, "page_scraps");
+        super(packOutput, registries);
     }
 
     @Override

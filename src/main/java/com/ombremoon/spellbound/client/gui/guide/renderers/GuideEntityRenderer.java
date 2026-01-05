@@ -1,12 +1,12 @@
 package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideEntityElement;
+import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,11 +26,6 @@ public class GuideEntityRenderer implements IPageElementRenderer<GuideEntityElem
         }
 
         Entity entity = entityType.create(Minecraft.getInstance().level);
-
-        if (entity instanceof GeoEntity){
-            entity.tickCount = tickCount;
-            entity.tick();
-        }
 
         RenderUtil.renderEntityInInventory(graphics,
                 leftPos + element.position().xOffset(),

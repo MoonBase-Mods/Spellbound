@@ -16,16 +16,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public abstract class DivineActionProvider implements DataProvider {
+public abstract class PageScrapProvider implements DataProvider {
     private final PackOutput.PathProvider pathProvider;
     private final CompletableFuture<HolderLookup.Provider> registries;
 
-    public DivineActionProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        this(packOutput, registries, "divine_action");
-    }
-
-    public DivineActionProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries, String kind) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, kind);
+    public PageScrapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "page_scraps");
         this.registries = registries;
     }
 
@@ -38,7 +34,7 @@ public abstract class DivineActionProvider implements DataProvider {
             List<CompletableFuture<?>> list = new ArrayList<>();
             Consumer<ActionHolder> consumer = actionHolder -> {
                 if (!set.add(actionHolder.id())) {
-                    throw new IllegalStateException("Duplicate divine action " + actionHolder.id());
+                    throw new IllegalStateException("Duplicate page scrap " + actionHolder.id());
                 } else {
                     Path path = this.pathProvider.json(actionHolder.id());
                     list.add(DataProvider.saveStable(output, provider, DivineAction.CODEC, actionHolder.value(), path));
@@ -52,6 +48,6 @@ public abstract class DivineActionProvider implements DataProvider {
 
     @Override
     public String getName() {
-        return "Divine Actions";
+        return "Page Scraps";
     }
 }

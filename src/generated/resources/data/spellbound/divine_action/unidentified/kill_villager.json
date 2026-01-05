@@ -1,30 +1,28 @@
 {
   "criteria": {
-    "kill_undead": {
+    "kill_villager": {
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
-            "predicate": {
-              "type": "#minecraft:undead"
-            }
+            "predicate": {}
           }
         ],
-        "number_entities_killed": 10
+        "number_entities_killed": 5
       },
-      "trigger": "spellbound:kill_undead"
+      "trigger": "spellbound:kill_villager"
     }
   },
   "requirements": [
     [
-      "kill_undead"
+      "kill_villager"
     ]
   ],
   "rewards": {
     "experience": 20,
     "spells": [
-      "spellbound:shadow_gate"
+      "spellbound:storm_rift"
     ]
   }
 }

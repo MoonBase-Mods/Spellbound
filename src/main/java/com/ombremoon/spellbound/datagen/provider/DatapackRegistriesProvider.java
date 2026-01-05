@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class DatapackRegistriesProvider extends DatapackBuiltinEntriesProvider {
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Keys.RITUAL, SBRituals::bootstrap)
+            .add(Keys.DIVINE_ACTION, SBDivineActions::bootstrap)
             .add(Keys.GUIDE_BOOK, SBGuidePages::bootstrap)
             .add(Registries.PLACED_FEATURE, SBPlacedFeatures::bootstrap)
             .add(Registries.CONFIGURED_FEATURE, SBConfiguredFeatures::bootstrap)

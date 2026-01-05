@@ -90,6 +90,12 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
             return this;
         }
 
+        public DivineAction build() {
+            Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
+            ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));
+            return new DivineAction(this.rewards, map, requirements);
+        }
+
         public ActionHolder build(ResourceLocation id) {
             Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
             ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));

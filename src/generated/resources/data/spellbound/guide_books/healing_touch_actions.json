@@ -69,7 +69,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "divine_action.healing_touch.lore"
+        "translate": "healing_touch.heal_mob_to_full.lore"
       }
     },
     {
@@ -89,13 +89,12 @@
         "Judgement: ",
         "Cooldown: "
       ],
-      "width": 100
+      "width": 155
     },
     {
       "type": "spellbound:tooltip",
       "height": 40,
       "position": {
-        "xOffset": 54,
         "yOffset": 93
       },
       "tooltips": [
@@ -109,7 +108,7 @@
         "Judgement: ",
         "Cooldown: "
       ],
-      "width": 100
+      "width": 155
     },
     {
       "type": "spellbound:tooltip",
@@ -128,7 +127,7 @@
         "Judgement: ",
         "Cooldown: "
       ],
-      "width": 100
+      "width": 155
     },
     {
       "type": "spellbound:item",
@@ -163,19 +162,17 @@
       }
     },
     {
-      "type": "spellbound:item",
-      "extras": {
-        "disableBackground": true,
-        "scale": 2.0
-      },
-      "item": [
-        {
-          "item": "minecraft:wither_rose"
-        }
+      "type": "spellbound:entity_renderer",
+      "entities": [
+        "minecraft:warden"
       ],
+      "extras": {
+        "xRot": -22.5,
+        "yRot": 45.0
+      },
       "position": {
-        "xOffset": 77,
-        "yOffset": 110
+        "xOffset": 127,
+        "yOffset": 175
       }
     }
   ],
