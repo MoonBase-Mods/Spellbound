@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.gui.guide;
+package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.mojang.math.Axis;
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideImageElement;

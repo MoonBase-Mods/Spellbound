@@ -33,6 +33,12 @@
       }
     },
     {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
       "type": "spellbound:text",
       "extras": {
         "italic": true

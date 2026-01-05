@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.gui.guide;
+package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.IPageElement;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;

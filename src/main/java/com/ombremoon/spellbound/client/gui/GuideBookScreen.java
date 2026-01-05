@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.gui;
 
-import com.ombremoon.spellbound.client.gui.guide.ElementRenderDispatcher;
+import com.ombremoon.spellbound.client.gui.guide.renderers.ElementRenderDispatcher;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.client.gui.guide.elements.IPageElement;

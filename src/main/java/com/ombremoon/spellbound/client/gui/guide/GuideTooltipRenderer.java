@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client.gui.guide;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideTooltipElement;
+import com.ombremoon.spellbound.client.gui.guide.renderers.IPageElementRenderer;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

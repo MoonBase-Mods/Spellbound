@@ -1,9 +1,8 @@
 package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.client.gui.guide.*;
-import com.ombremoon.spellbound.client.gui.guide.GuideEntityRenderer;
-import com.ombremoon.spellbound.client.gui.guide.GuideStaticItemRenderer;
 import com.ombremoon.spellbound.client.gui.guide.elements.TransfigurationRitualElement;
+import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;

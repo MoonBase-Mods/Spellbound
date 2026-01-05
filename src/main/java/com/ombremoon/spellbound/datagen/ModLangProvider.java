@@ -118,6 +118,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_border.element", "Element: ");
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
 
+        //Summon Acq
+        add("summon.acquisition.description", "Use the correct keystone to access the bosses dimension.");
+        add("summon.acquisition.boss_rewards", "Boss Rewards");
+
         //Basic
         add("guide.basic.discord", "Discord");
         add("guide.basic.bugs", "Bug Reports");

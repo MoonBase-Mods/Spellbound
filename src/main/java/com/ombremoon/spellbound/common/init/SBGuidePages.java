@@ -324,7 +324,7 @@ public interface SBGuidePages {
                         .setPreviousPage(prevPage)
                         .addElements(
                                 PageBuilder.Text
-                                        .ofTranslatable(spell.location().toLanguageKey())
+                                        .ofTranslatable(spell.createSpell().getNameId())
                                         .position(PAGE_START_CENTER_X, PAGE_START_DOUBLE_Y)
                                         .centered()
                                         .bold()
@@ -343,7 +343,7 @@ public interface SBGuidePages {
                                 PageBuilder.Recipe
                                         .of(ResourceLocation.withDefaultNamespace("anvil"))
                                         .gridName(PageBuilder.Recipe.SpellboundGrids.NECRONOMICON)
-                                        .position(PAGE_START_CENTER_X, 100)
+                                        .position(PAGE_START_CENTER_X - 40, 85)
                                         .build(),
 
                                 PageBuilder.Text
@@ -367,6 +367,7 @@ public interface SBGuidePages {
                                 PageBuilder.ItemList
                                         .of()
                                         .addEntry(Ingredient.of(SBItems.SPELL_TOME.get()))
+                                        .position(230, 180)
                                         .build()
 
                         ));
