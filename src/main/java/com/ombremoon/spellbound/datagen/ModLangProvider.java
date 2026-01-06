@@ -84,8 +84,6 @@ public class ModLangProvider extends LanguageProvider {
     protected void manualEntries() {
         skillDescriptions();
         guideContents();
-        ritualContents();
-        divineGuideContents();
 
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
@@ -119,37 +117,14 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
 
         //Summon Acq
-        add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
-        add("summon.acquisition.boss_rewards", "Boss Rewards");
-        add("summon.acquisition.wild_mushroom.lore", "Come to think of it, it's rare to see a single mushroom on its own...");
-
-        //Basic
-        add("guide.basic.discord", "Discord");
-        add("guide.basic.bugs", "Bug Reports");
-        add("guide.basic.blurb", "Welcome fellow Magi! I present to you the first in many books documenting my exploration into the arcane. This book will act as a guideline introducing you to the different paths of magic I have discovered and how they can be used.");
-
-
         //Transfig
-        add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
-
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
-                "Revamps the way your body conserves energy granting an increase in the casters movement speed.",
-                 "I have been trying to gather ingredients for all of my transfigurations but its taking me too long to find everything. I need a faster way.",
-                "Well I solved my problem with transfiguration. You wont believe it but by mixing the right ingredients I can supercharge my body allowing my legs to work even faster!");
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.SHADOW_GATE.get(),
-                "Rips open a portal through the darkness linking two points for transportation",
-                "As my studies have advanced I am finding myself needing to explore more biomes and found that teleportation could be quite useful.",
-                "I think I got it! After experimenting with ender pearls I found they rip open gateways temporarily. I have created a spell to keep these open for longer.");
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.MYSTIC_ARMOR.get(),
-                "Grants the caster a magically charged shield, reducing incoming spell damage based on level.",
-                 "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
-                "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
-
         add("guide.basic.acquisition", "Spell Acquisition");
 
-        summonContents();
-        ruinContents();
         basicContents();
+        ruinContents();
+        transfigContents();
+        summonContents();
+        divineGuideContents();
 
         //Deception
         add("guide.deception.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can utilize the shadows to my advantage with the art of deception.");
@@ -163,6 +138,9 @@ public class ModLangProvider extends LanguageProvider {
 
     private void basicContents() {
         add("guide.basic.ruin.cover_page", "The Ruin Path focuses on destructive spells that can destroy both living creatures and the environment utilising different elemental powers.");
+        add("guide.basic.discord", "Discord");
+        add("guide.basic.bugs", "Bug Reports");
+        add("guide.basic.blurb", "Welcome fellow Magi! I present to you the first in many books documenting my exploration into the arcane. This book will act as a guideline introducing you to the different paths of magic I have discovered and how they can be used.");
         add("guide.basic.ruin.description", "Ruin spells are split up into Sub-Paths each with a different effect allowing you to use §lFire§r, §lFrost§r, §lShock§r or a mix of all three.");
         add("guide.basic.ruin.description1", "Each Sub-path has special effects they cause on your target allowing you to either deal more damage or crowd control targets.");
         add("guide.basic.ruin.acquisition1", "Ruin spells are acquired by defeating powerful enemies that use different Ruin Path spells to deal damage.");
@@ -216,6 +194,9 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.valid_portals", "Well after multiple stages of trial and error I have found that these focused summoning stones must be very specific.");
         add("guide.summon.valid_portals1", "When I am able to find a way to create a new focused stone I will be sure to note it down in this book, along with any information regarding the spells I can draw out from the dimension.");
 
+        add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
+        add("summon.acquisition.boss_rewards", "Boss Rewards");
+        add("summon.acquisition.wild_mushroom.lore", "Come to think of it, it's rare to see a single mushroom on its own...");
         addSpellContents(SpellPath.SUMMONS, SBSpells.WILD_MUSHROOM.get(),
                 "Grows a mushroom out of the ground at the target location, periodically emitting a damaging poison cloud.",
                 "Fungi are some of the most resilient living organisms, if I can find a mushroom infested realm think of the power it could be hiding.",
@@ -223,7 +204,7 @@ public class ModLangProvider extends LanguageProvider {
         );
     }
 
-    protected void ritualContents() {
+    protected void transfigContents() {
         add("spellbound.ritual.tier_one", "Tier: 1");
         add("spellbound.ritual.tier_two", "Tier: 2");
         add("spellbound.ritual.tier_three", "Tier: 3");
@@ -238,6 +219,20 @@ public class ModLangProvider extends LanguageProvider {
         add("ritual.spellbound.create_mystic_armor", "Create Spell Tome:\nMystic Armor");
         add("ritual.spellbound.create_mystic_armor.description", "Creates a Mystic Armor spell tome");
         add("spellbound.ritual.materials", "Ritual Materials");
+        add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
+                "Revamps the way your body conserves energy granting an increase in the casters movement speed.",
+                "I have been trying to gather ingredients for all of my transfigurations but its taking me too long to find everything. I need a faster way.",
+                "Well I solved my problem with transfiguration. You wont believe it but by mixing the right ingredients I can supercharge my body allowing my legs to work even faster!");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.SHADOW_GATE.get(),
+                "Rips open a portal through the darkness linking two points for transportation",
+                "As my studies have advanced I am finding myself needing to explore more biomes and found that teleportation could be quite useful.",
+                "I think I got it! After experimenting with ender pearls I found they rip open gateways temporarily. I have created a spell to keep these open for longer.");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.MYSTIC_ARMOR.get(),
+                "Grants the caster a magically charged shield, reducing incoming spell damage based on level.",
+                "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
+                "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
+
     }
 
     protected void divineGuideContents() {
@@ -255,10 +250,15 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.divine.judgement3", "There is a hidden balance at play—a §lJudgement.");
         add("guide.divine.judgement4", "It seems my soul is constantly being weighed. Acts of light tip the scales, amplifying my ability to preserve life but suffocating my ability to take it. Acts of darkness tip them back, fueling my darker arts while severing my connection to the light.");
         add("guide.divine.judgement5", "This invisible score dictates everything. Forbidden knowledge remains locked to me until my nature aligns with its intent, and even the world itself seems to react to my standing. I must choose my path carefully. I cannot be both a Saint and a Monster. The Scales will not allow it.");
-        add("guide.divine.divine_temple", "Divine Temple");
+        add("guide.divine.divine_temple", "Divine Temples");
         add("guide.divine.divine_temple1", "I have discovered these mysterious, looming structures along my travels. Scattered across the lands are Divine Temples, ancient structures built to worship the Divine.");
         add("guide.divine.valkyr1", "They are not abandoned. Each is protected by a Valkyr, a sentinel of steel and light.");
         add("guide.divine.valkyr2", "I realized my safety hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
+        add("guide.divine.divine_shrine", "The Divine Shrine");
+        add("guide.divine.divine_shrine1", "The Divine Shrine is the heart of this magic, yet it functions unlike any other altar I have encountered. It does not desire materials; it desires proof.");
+        add("guide.divine.divine_shrine2", "I have learned that spells are not made, but granted. To acquire them, I must perform specific Divine Actions within the Shrine's presence.");
+        add("guide.divine.divine_action1", "Guarded by the Valkyr, the Shrine is bound to the temple. Should I attempt to mine or displace the altar, the Valkyr’s wrath is immediate. I may use the Shrine where it stands, but I am forbidden from taking it.");
+        add("guide.divine.divine_action2", "Like the Valkyr, the shrine too seems to measure my Judgement. If my Judgement does not meet the specific requirement for a spell, the altar remains dormant—\ndenying me the power until my nature aligns with its intent.");
 
         add("guide.divine.divine_actions", "Divine Actions:\n");
         add("healing_touch.heal_mob_to_full.name", "Shepherd");
@@ -269,7 +269,7 @@ public class ModLangProvider extends LanguageProvider {
         add("divine_action.healing_touch.bless_shrine", "Bless a shrine with a Divine Phial");
         add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
         add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
-        add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action -- good or bad. I think as long as I take good care of it, I can become even stronger!");
+        add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action—good or bad. I think as long as I take good care of it, I can become even stronger!");
         add("healing_blossom.decorate_shrine.name", "Gardener");
         add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
         add("healing_blossom.purify_wither_rose.name", "Life From Death");

@@ -1,0 +1,112 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.divine.divine_shrine"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.divine.divine_shrine1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 140
+      },
+      "translation": {
+        "translate": "guide.divine.divine_shrine2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 10
+      },
+      "translation": {
+        "translate": "guide.divine.divine_action1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 90
+      },
+      "translation": {
+        "translate": "guide.divine.divine_action2"
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:plains_divine_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": -18,
+        "yOffset": 70
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:sandstone_divine_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": 24,
+        "yOffset": 70
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:jungle_divine_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": 66,
+        "yOffset": 70
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:temple_and_valkyr"
+}
