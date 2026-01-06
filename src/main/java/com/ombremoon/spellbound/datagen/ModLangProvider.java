@@ -174,7 +174,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.dimensions", "Dimensions");
         add("guide.summon.description1", "Summoning magic... dragging creatures from the darkest of realms and forcing them to fight on your behalf. Only the strong willed can use this power.");
         add("guide.summon.description2", "To harness this source of magic a creature must first be battled to understand its power. But that requires first reaching into these twisted realms where they reside and hunting these powerful entities.");
-        add("guide.summon.dimensions1", "The most powerful creatures to exist, lord over their own realms. If I am able to find a way to access these dimensions then I can how to control these beasts and their powers.");
+        add("guide.summon.dimensions1", "The most powerful creatures to exist, lord over their own realms. If I am able to find a way to access these dimensions then I can learn how to control these beasts and their powers.");
         add("guide.summon.dimensions2", "I know I can't be the first one to try this I plan to search for any potential portals left by others.");
 
         add("guide.summon.summoning_stone", "Summoning Stones");
@@ -183,9 +183,16 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.summoning_portal1", "Ah-ha! Mimicking an End portal seems to allow these stones to be activated with Magic Essence. Now I just need to find how to access a specific dimension.");
 
         add("guide.summon.portal_activation", "Portal Activation");
-        add("guide.summon.portal_activation1", "After referencing end portals I have realised that these types of portals need a block to focus on to, to locate their destination.");
+        add("guide.summon.portal_activation1", "After focusing more of my studies on End portals I have realised that these types of portals need a block to focus on, to locate their destination.");
         add("guide.summon.portal_activation2", "I believe that if I can create just a single summoning stone adjusted to a specific dimension I could open a gateway by placing it in the middle of my portal and activating it.");
-        add("guide.summon.valid_portals", "Well after multiple stages of trial and error I have found that these focused summoning stones must be very specific. When I am able to find a way to create a new focused stone I will be sure to note it down in this book, along with any information regarding the spells I can draw out from the dimension.");
+        add("guide.summon.valid_portals", "Well after multiple stages of trial and error I have found that these focused summoning stones must be very specific.");
+        add("guide.summon.valid_portals1", "When I am able to find a way to create a new focused stone I will be sure to note it down in this book, along with any information regarding the spells I can draw out from the dimension.");
+
+        addSpellContents(SpellPath.SUMMONS, SBSpells.WILD_MUSHROOM.get(),
+                "Grows a mushroom out of the ground at the target location, periodically emitting a damaging poison cloud.",
+                "Fungi are some of the most resilient living organisms, if I can find a mushroom infested realm think of the power it could be hiding.",
+                "Why did I think going to the home of a notably durable fungi would be a good idea. It always knows where I am it must be these damn spores."
+        );
     }
 
     protected void ritualContents() {

@@ -70,6 +70,16 @@
       "translation": {
         "translate": "guide.summon.valid_portals"
       }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 110
+      },
+      "translation": {
+        "translate": "guide.summon.valid_portals1"
+      }
     }
   ],
   "id": "spellbound:the_necronomicon",

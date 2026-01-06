@@ -29,8 +29,6 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
         RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
         Optional<RecipeHolder<?>> recipeOpt = manager.byKey(element.recipeLoc());
         if (recipeOpt.isEmpty()) return;
-        leftPos -= 40;
-        topPos += 30;
 
         RecipeHolder<?> recipeHolder = recipeOpt.get();
         Recipe<?> recipe = recipeHolder.value();

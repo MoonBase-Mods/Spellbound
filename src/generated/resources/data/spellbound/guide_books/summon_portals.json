@@ -56,7 +56,7 @@
       "type": "spellbound:text",
       "position": {
         "xOffset": 169,
-        "yOffset": 120
+        "yOffset": 125
       },
       "translation": {
         "translate": "guide.summon.summoning_portal1"

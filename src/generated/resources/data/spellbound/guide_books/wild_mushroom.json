@@ -11,77 +11,66 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spellbound.path.summons"
+        "translate": "spells.spellbound.wild_mushroom"
       }
     },
     {
       "type": "spellbound:spell_border",
       "colour": -13490312,
+      "mastery": "adept",
       "path": "summons",
       "pathTexture": "spellbound:textures/gui/paths/summons.png"
     },
     {
+      "type": "spellbound:image",
+      "height": 74,
+      "image": "spellbound:textures/gui/books/images/spells/wild_mushroom.png",
+      "position": {
+        "yOffset": 40
+      },
+      "width": 140
+    },
+    {
       "type": "spellbound:text",
+      "position": {
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.wild_mushroom.description"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.wild_mushroom.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.wild_mushroom.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
       "extras": {
-        "bold": true,
-        "centered": true
+        "alwaysShow": true
       },
-      "position": {
-        "xOffset": 247,
-        "yOffset": 8
-      },
-      "translation": {
-        "translate": "guide.summon.dimensions"
-      }
-    },
-    {
-      "type": "spellbound:spell_border",
-      "colour": -13490312,
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png",
-      "position": {
-        "xOffset": 169
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "position": {
-        "yOffset": 35
-      },
-      "translation": {
-        "translate": "guide.summon.description1"
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "position": {
-        "yOffset": 100
-      },
-      "translation": {
-        "translate": "guide.summon.description2"
-      }
-    },
-    {
-      "type": "spellbound:text",
+      "path": "spellbound:wild_mushroom",
       "position": {
         "xOffset": 169,
-        "yOffset": 35
-      },
-      "translation": {
-        "translate": "guide.summon.dimensions1"
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "position": {
-        "xOffset": 169,
-        "yOffset": 120
-      },
-      "translation": {
-        "translate": "guide.summon.dimensions2"
+        "yOffset": 195
       }
     }
   ],
   "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_cover_page"
+  "insertAfter": "spellbound:summon_portal_activation"
 }

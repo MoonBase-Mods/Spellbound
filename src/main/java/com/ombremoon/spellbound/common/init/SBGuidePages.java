@@ -78,6 +78,7 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SUMMON_DESCRIPTION = key("summon_description");
     ResourceKey<GuideBookPage> SUMMON_PORTALS = key("summon_portals");
     ResourceKey<GuideBookPage> SUMMON_PORTAL_ACTIVATION = key("summon_portal_activation");
+    ResourceKey<GuideBookPage> WILD_MUSHROOM = key("wild_mushroom");
     ResourceKey<GuideBookPage> MUSHROOM_ACQ = key("mushroom_page_acq");
 
     //Divine Book
@@ -200,15 +201,15 @@ public interface SBGuidePages {
                                         .build()
                         )
         );
-        createSpellPage(context, SOLAR_RAY, RUIN_P3, RUIN_BOOK, SBSpells.SOLAR_RAY);
+        createSpellPage(context, SOLAR_RAY, RUIN_P3, Book.RUIN, SBSpells.SOLAR_RAY);
 
         //Transfiguration
         createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
-        createSpellPage(context, STRIDE, TRANSFIG_COVER_PAGE, TRANSFIG_BOOK, SBSpells.STRIDE);
+        createSpellPage(context, STRIDE, TRANSFIG_COVER_PAGE, Book.TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_RITUAL, STRIDE, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
-        createSpellPage(context, SHADOW_GATE, STRIDE_RITUAL, TRANSFIG_BOOK, SBSpells.SHADOW_GATE);
+        createSpellPage(context, SHADOW_GATE, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
-        createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, TRANSFIG_BOOK, SBSpells.MYSTIC_ARMOR);
+        createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
 
         //Summon
@@ -218,7 +219,7 @@ public interface SBGuidePages {
                 SUMMON_DESCRIPTION,
                 SUMMON_COVER_PAGE,
                 Book.SUMMONS,
-                translatable("spellbound.path.summon"),
+                translatable("spellbound.path.summons"),
                 translatable("guide.summon.dimensions"),
                 false,
                 new TextPosition(translatable("guide.summon.description1"), 35),
@@ -240,7 +241,7 @@ public interface SBGuidePages {
                         new ImageWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,150, 80)
                 ),
                 new TextPosition(translatable("guide.summon.summoning_stone1"), 35),
-                new TextPosition(translatable("guide.summon.summoning_portal1"), PAGE_TWO_START_X, 120));
+                new TextPosition(translatable("guide.summon.summoning_portal1"), PAGE_TWO_START_X, 125));
         createDescription(context,
                 SUMMON_PORTAL_ACTIVATION,
                 SUMMON_PORTALS,
@@ -250,8 +251,10 @@ public interface SBGuidePages {
                 false,
                 new TextPosition(translatable("guide.summon.portal_activation1"), 35),
                 new TextPosition(translatable("guide.summon.portal_activation2"), 110),
-                new TextPosition(translatable("guide.summon.valid_portals"), PAGE_TWO_START_X, 35)
+                new TextPosition(translatable("guide.summon.valid_portals"), PAGE_TWO_START_X, 35),
+                new TextPosition(translatable("guide.summon.valid_portals1"), PAGE_TWO_START_X, 110)
                 );
+        createSpellPage(context, WILD_MUSHROOM, SUMMON_PORTAL_ACTIVATION, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_PORTAL_ACTIVATION, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Divine
@@ -539,7 +542,7 @@ public interface SBGuidePages {
     private static <T extends AbstractSpell> void createSpellPage(BootstrapContext<GuideBookPage> context,
                                         ResourceKey<GuideBookPage> currentPage,
                                         ResourceKey<GuideBookPage> prevPage,
-                                        ResourceLocation book,
+                                        Book book,
                                         Supplier<SpellType<T>> spell
     ) {
         SpellType<?> spellType = spell.get();
@@ -547,7 +550,7 @@ public interface SBGuidePages {
         register(context,
                 currentPage,
                 PageBuilder
-                        .forBook(book)
+                        .forBook(book.getLocation())
                         .setPreviousPage(prevPage)
                         .addElements(
                                 PageBuilder.Text
