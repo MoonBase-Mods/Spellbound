@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
 
@@ -32,12 +33,28 @@ public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpell
 
         topPos -= 5;
 
-        if (mastery.isPresent()) {
-            String masteryText = I18n.get("guide.element.spell_border.mastery", mastery.get().toString());
+        if (!element.topText().isPresent()) {
+            if (mastery.isPresent()) {
+                String masteryText = I18n.get("guide.element.spell_border.mastery", mastery.get().toString());
+                graphics.drawString(Minecraft.getInstance().font,
+                        masteryText,
+                        ((153 - font.width(masteryText)) / 2) + leftPos + element.position().xOffset(),
+                        topPos + 168 + element.position().yOffset(), element.colour(), false);
+            }
+        } else {
+            Component topText = element.topText().get();
             graphics.drawString(Minecraft.getInstance().font,
-                    masteryText,
-                    ((153 - font.width(masteryText)) / 2) + leftPos + element.position().xOffset(),
+                    topText,
+                    ((153 - font.width(topText)) / 2) + leftPos + element.position().xOffset(),
                     topPos + 168 + element.position().yOffset(), element.colour(), false);
+        }
+
+        if (element.bottomText().isPresent()) {
+            Component bototmText = element.bottomText().get();
+            graphics.drawString(Minecraft.getInstance().font,
+                    bototmText,
+                    ((153 - font.width(bototmText)) / 2) + leftPos + element.position().xOffset(),
+                    topPos + 183 + element.position().yOffset(), element.colour(), false);
         }
 
         graphics.blit(

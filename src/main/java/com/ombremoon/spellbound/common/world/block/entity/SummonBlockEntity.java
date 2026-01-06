@@ -55,7 +55,11 @@ public class SummonBlockEntity extends BlockEntity {
                 ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
                 if (arena != null) {
                     ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                    arenaData.spawnInArena(arena, entity);
+                    if (arenaData.getCurrentBossFight() != null) {
+                        arenaData.spawnInArena(arena, entity);
+                    } else {
+                        arenaData.destroyPortal(arena);
+                    }
                 }
             }
         }

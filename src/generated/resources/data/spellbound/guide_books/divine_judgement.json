@@ -1,0 +1,54 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.divine.judgement_cont"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.divine.judgement3"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 65
+      },
+      "translation": {
+        "translate": "guide.divine.judgement4"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 10
+      },
+      "translation": {
+        "translate": "guide.divine.judgement5"
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:divine_description"
+}

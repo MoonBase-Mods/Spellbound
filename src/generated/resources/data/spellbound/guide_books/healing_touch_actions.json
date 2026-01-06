@@ -38,41 +38,6 @@
       }
     },
     {
-      "type": "spellbound:text",
-      "extras": {
-        "maxLineLength": 100
-      },
-      "position": {
-        "xOffset": 54,
-        "yOffset": 93
-      },
-      "translation": {
-        "translate": "divine_action.healing_touch.apply_blessed_bandages"
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "extras": {
-        "maxLineLength": 100
-      },
-      "position": {
-        "yOffset": 150
-      },
-      "translation": {
-        "translate": "divine_action.healing_touch.purify_shrine"
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "position": {
-        "xOffset": 169,
-        "yOffset": 5
-      },
-      "translation": {
-        "translate": "healing_touch.heal_mob_to_full.lore"
-      }
-    },
-    {
       "type": "spellbound:tooltip",
       "height": 40,
       "position": {
@@ -82,68 +47,27 @@
         {
           "bold": true,
           "color": "yellow",
-          "text": "Shepherd",
+          "translate": "healing_touch.heal_mob_to_full.name",
           "underlined": true
         },
         "",
-        "Judgement: ",
-        "Cooldown: "
-      ],
-      "width": 155
-    },
-    {
-      "type": "spellbound:tooltip",
-      "height": 40,
-      "position": {
-        "yOffset": 93
-      },
-      "tooltips": [
         {
-          "bold": true,
-          "color": "yellow",
-          "text": "TBD",
-          "underlined": true
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+5"
+            }
+          ],
+          "translate": "divine_action.judgement"
         },
-        "",
-        "Judgement: ",
-        "Cooldown: "
-      ],
-      "width": 155
-    },
-    {
-      "type": "spellbound:tooltip",
-      "height": 40,
-      "position": {
-        "yOffset": 150
-      },
-      "tooltips": [
         {
-          "bold": true,
-          "color": "yellow",
-          "text": "TBD",
-          "underlined": true
-        },
-        "",
-        "Judgement: ",
-        "Cooldown: "
-      ],
-      "width": 155
-    },
-    {
-      "type": "spellbound:item",
-      "extras": {
-        "disableBackground": true,
-        "scale": 2.0
-      },
-      "item": [
-        {
-          "item": "minecraft:zombie_head"
+          "translate": "divine_action.cooldown",
+          "with": [
+            "24000"
+          ]
         }
       ],
-      "position": {
-        "xOffset": 77,
-        "yOffset": 7
-      }
+      "width": 155
     },
     {
       "type": "spellbound:item",
@@ -157,24 +81,173 @@
         }
       ],
       "position": {
+        "xOffset": 74,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:use_blessed_bandages"
+      },
+      "position": {
+        "xOffset": 54,
+        "yOffset": 93
+      },
+      "translation": {
+        "translate": "divine_action.healing_touch.use_blessed_bandages"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 93
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "healing_touch.use_blessed_bandages.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+5"
+            }
+          ],
+          "translate": "divine_action.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "24000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "minecraft:golden_apple"
+        }
+      ],
+      "position": {
         "xOffset": -26,
         "yOffset": 64
       }
     },
     {
-      "type": "spellbound:entity_renderer",
-      "entities": [
-        "minecraft:warden"
-      ],
+      "type": "spellbound:text",
       "extras": {
-        "xRot": -22.5,
-        "yRot": 45.0
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:bless_shrine"
       },
       "position": {
-        "xOffset": 127,
-        "yOffset": 175
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "divine_action.healing_touch.bless_shrine"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 150
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "healing_touch.bless_shrine.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+5"
+            }
+          ],
+          "translate": "divine_action.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "24000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "type": "neoforge:components",
+          "components": {
+            "spellbound:talisman_rings": 2
+          },
+          "items": "spellbound:ritual_talisman"
+        }
+      ],
+      "position": {
+        "xOffset": 74,
+        "yOffset": 110
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "bulletPoint": "",
+        "maxRows": 3,
+        "rowGap": 55
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "healing_touch.heal_mob_to_full.lore"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "healing_touch.use_blessed_bandages.lore"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:use_blessed_bandages_lore"
+        },
+        {
+          "component": {
+            "translate": "healing_touch.bless_shrine.lore"
+          },
+          "extraOffset": 10,
+          "scrap": "spellbound:bless_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": 179,
+        "yOffset": 5
       }
     }
   ],
-  "id": "spellbound:sanctified_codex"
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:healing_touch"
 }

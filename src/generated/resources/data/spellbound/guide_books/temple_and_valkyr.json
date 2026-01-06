@@ -1,0 +1,80 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.divine.divine_temple"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 30
+      },
+      "translation": {
+        "translate": "guide.divine.divine_temple1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100
+      },
+      "position": {
+        "xOffset": 224,
+        "yOffset": 20
+      },
+      "translation": {
+        "translate": "guide.divine.valkyr1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 95
+      },
+      "translation": {
+        "translate": "guide.divine.valkyr2"
+      }
+    },
+    {
+      "type": "spellbound:image",
+      "height": 80,
+      "image": "spellbound:textures/gui/books/images/divine_temple.png",
+      "position": {
+        "yOffset": 95
+      },
+      "width": 150
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 80,
+      "image": "spellbound:textures/gui/books/images/valkyr.png",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 10
+      },
+      "width": 50
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:divine_judgement"
+}

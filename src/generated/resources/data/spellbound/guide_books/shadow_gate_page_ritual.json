@@ -11,7 +11,7 @@
         "yOffset": 4
       },
       "translation": {
-        "translate": "ritual.spellbound.create_stride"
+        "translate": "ritual.spellbound.create_shadow_gate"
       }
     },
     {
@@ -29,7 +29,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "ritual.spellbound.create_stride.description"
+        "translate": "ritual.spellbound.create_shadow_gate.description"
       }
     },
     {
@@ -53,16 +53,28 @@
       "type": "spellbound:text_list",
       "list": [
         {
-          "translate": "spellbound.ritual.tier_one"
+          "component": {
+            "translate": "spellbound.ritual.tier_two"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.activation_time",
-          "with": [
-            "5"
-          ]
+          "component": {
+            "translate": "spellbound.ritual.activation_time",
+            "with": [
+              "10"
+            ]
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.duration_not_applicable"
+          "component": {
+            "translate": "spellbound.ritual.duration_not_applicable"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         }
       ],
       "position": {
@@ -87,9 +99,9 @@
     {
       "type": "spellbound:ritual",
       "leftPage": false,
-      "ritual": "spellbound:create_stride"
+      "ritual": "spellbound:create_shadow_gate"
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:stride_page_info"
+  "insertAfter": "spellbound:shadow_gate_"
 }

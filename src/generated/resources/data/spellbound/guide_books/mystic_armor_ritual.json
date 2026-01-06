@@ -11,7 +11,7 @@
         "yOffset": 4
       },
       "translation": {
-        "translate": "ritual.spellbound.create_shadow_gate"
+        "translate": "ritual.spellbound.create_mystic_armor"
       }
     },
     {
@@ -29,7 +29,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "ritual.spellbound.create_shadow_gate.description"
+        "translate": "ritual.spellbound.create_mystic_armor.description"
       }
     },
     {
@@ -53,16 +53,28 @@
       "type": "spellbound:text_list",
       "list": [
         {
-          "translate": "spellbound.ritual.tier_two"
+          "component": {
+            "translate": "spellbound.ritual.tier_two"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.activation_time",
-          "with": [
-            "10"
-          ]
+          "component": {
+            "translate": "spellbound.ritual.activation_time",
+            "with": [
+              "10"
+            ]
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.duration_not_applicable"
+          "component": {
+            "translate": "spellbound.ritual.duration_not_applicable"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         }
       ],
       "position": {
@@ -87,9 +99,9 @@
     {
       "type": "spellbound:ritual",
       "leftPage": false,
-      "ritual": "spellbound:create_shadow_gate"
+      "ritual": "spellbound:create_mystic_armor"
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:shadow_gate_page_info"
+  "insertAfter": "spellbound:mystic_armor"
 }

@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -24,10 +25,11 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
     private static final Logger LOGGER = Constants.LOG;
     private static final Gson GSON = new GsonBuilder().create();
     private static Map<ResourceLocation, List<GuideBookPage>> BOOKS = new HashMap<>();
+    private final RegistryAccess registries;
 
     private static final Map<ResourceLocation, Integer> bookmarkedPages = new HashMap<>(6);
 
-    public GuideBookManager() {
+    public GuideBookManager(RegistryAccess registries) {
         super(GSON, "guide_books");
 
         bookmarkedPages.put(CommonClass.customLocation("basic_cover_page"), 0);
@@ -36,6 +38,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
         bookmarkedPages.put(CommonClass.customLocation("basic_divine_cover"), 0);
         bookmarkedPages.put(CommonClass.customLocation("basic_deception_cover"), 0);
         bookmarkedPages.put(CommonClass.customLocation("basic_ruin_cover"), 0);
+        this.registries = registries;
     }
 
     public static int getBasicBookmark(ResourceLocation page) {
@@ -80,7 +83,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
         Map<ResourceLocation, List<Pair<ResourceLocation, GuideBookPage>>> pages = new HashMap<>();
         object.forEach((location, json) -> {
             try {
-                GuideBookPage page = GuideBookPage.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
+                GuideBookPage page = GuideBookPage.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).getOrThrow();
                 if (page == null) {
                     LOGGER.debug("Skipping loading guide page {} as its conditions were not met", location);
                     return;
@@ -155,7 +158,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
 
     @SubscribeEvent
     public static void onAddReloadListener(AddReloadListenerEvent event) {
-        GuideBookManager manager = new GuideBookManager();
+        GuideBookManager manager = new GuideBookManager(event.getRegistryAccess());
         event.addListener(manager);
     }
 }

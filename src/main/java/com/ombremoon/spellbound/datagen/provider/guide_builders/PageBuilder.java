@@ -10,22 +10,29 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 public class PageBuilder {
     private ResourceLocation bookId;
@@ -701,6 +708,8 @@ public class PageBuilder {
         private int colour;
         private ElementPosition position;
         private ResourceLocation pathTexture;
+        private Optional<Component> topText;
+        private Optional<Component> bottomText;
 
         private SpellBorder(SpellType<?> spellType) {
             this(spellType.getPath(), spellType.getMastery());
@@ -719,6 +728,8 @@ public class PageBuilder {
                 case DECEPTION -> -13357984;
                 default -> 0;
             };
+            this.topText = Optional.empty();
+            this.bottomText = Optional.empty();
         }
 
         /**
@@ -780,13 +791,23 @@ public class PageBuilder {
             return this;
         }
 
+        public SpellBorder setTopText(Component topText) {
+            this.topText = Optional.of(topText);
+            return this;
+        }
+
+        public SpellBorder setBottomText(Component bottomText) {
+            this.bottomText = Optional.of(bottomText);
+            return this;
+        }
+
         /**
          * Creates a GuideSpellBorderElement from builder
          * @return generated element
          */
         public GuideSpellBorderElement build() {
             return new GuideSpellBorderElement(
-                    this.path, this.mastery, colour, position, pathTexture
+                    this.path, this.mastery, colour, position, pathTexture, topText, bottomText
             );
         }
     }
@@ -900,6 +921,43 @@ public class PageBuilder {
             this.ingredients.add(item);
             return this;
         }
+
+/*        public StaticItem addItem(ItemLike item, TypedDataComponent<?>... data) {
+            this.ingredients.add(createIngredient(Arrays.asList(data), item));
+            return this;
+        }
+
+        public StaticItem addItem(HolderSet<Item> items, TypedDataComponent<?>... data) {
+            this.ingredients.add(createIngredient(Arrays.asList(data), items));
+            return this;
+        }
+
+        public StaticItem addItem(Item item, TypedDataComponent<?>... data) {
+            this.ingredients.add(createIngredient(Arrays.asList(data), item));
+            return this;
+        }
+
+        public StaticItem addItem(HolderSet<Item> items) {
+            this.ingredients.add(createIngredient(List.of(), items));
+            return this;
+        }
+
+        public StaticItem addItem(Item item) {
+            this.ingredients.add(createIngredient(List.of(), item));
+            return this;
+        }
+
+        private DataComponentIngredient createIngredient(List<TypedDataComponent<?>> data, ItemLike... items) {
+            return createIngredient(data,HolderSet.direct(Arrays.stream(items).map(ItemLike::asItem).map(Item::builtInRegistryHolder).toList()));
+        }
+
+        private <S> DataComponentIngredient createIngredient(List<TypedDataComponent<?>> data, HolderSet<Item> items) {
+            var builder = DataComponentPredicate.builder();
+            for (var components : data) {
+                builder.expect((DataComponentType<? super S>) components.type(), (S) components.value());
+            }
+            return new DataComponentIngredient(items, builder.build(), false);
+        }*/
 
         /**
          * The grid texture to use, defaults to "basic"
@@ -1245,12 +1303,14 @@ public class PageBuilder {
 
     //Builder for GuideTextList
     public static class TextList implements PageBuilderType {
-        private List<Component> entries;
+        private List<GuideTextListElement.ScrapComponent> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private int maxRows;
         private int rowGap;
         private int columnGap;
+        private int lineLength;
+        private int extraOffset;
         private String bulletPoint;
         private boolean dropShadow;
         private int textColour;
@@ -1262,6 +1322,7 @@ public class PageBuilder {
             this.maxRows = 0;
             this.rowGap = 20;
             this.columnGap = 45;
+            this.lineLength = 150;
             this.bulletPoint = "▪";
             this.dropShadow = false;
             this.textColour = 0;
@@ -1280,8 +1341,23 @@ public class PageBuilder {
          * @param text The list entry
          * @return this
          */
+        public TextList addEntry(Component text, ResourceLocation scrap, int extraOffset) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap, extraOffset));
+            return this;
+        }
+
+        public TextList addEntry(Component text, ResourceLocation scrap) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap));
+            return this;
+        }
+
+        public TextList addEntry(Component text, int extraOffset) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, extraOffset));
+            return this;
+        }
+
         public TextList addEntry(Component text) {
-            this.entries.add(text);
+            this.entries.add(new GuideTextListElement.ScrapComponent(text));
             return this;
         }
 
@@ -1293,16 +1369,6 @@ public class PageBuilder {
          */
         public TextList position(int x, int y) {
             this.position = new ElementPosition(x, y);
-            return this;
-        }
-
-        /**
-         * Sets the page scrap required to unlock this element. Will be obfuscated if not unlocked
-         * @param scrap The id for the page scrap
-         * @return this
-         */
-        public TextList setRequiredScrap(ResourceLocation scrap) {
-            this.pageScrap = scrap;
             return this;
         }
 
@@ -1333,6 +1399,16 @@ public class PageBuilder {
          */
         public TextList columnGap(int gap) {
             this.columnGap = gap;
+            return this;
+        }
+
+        /**
+         * Max length of the component
+         * @param length number of pixels
+         * @return this
+         */
+        public TextList lineLength(int length) {
+            this.columnGap = length;
             return this;
         }
 
@@ -1369,10 +1445,10 @@ public class PageBuilder {
             return new GuideTextListElement(
                     entries,
                     new TextListExtras(
-                            pageScrap,
                             maxRows,
                             rowGap,
                             columnGap,
+                            lineLength,
                             dropShadow,
                             textColour,
                             bulletPoint

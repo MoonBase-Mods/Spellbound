@@ -1,0 +1,76 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.mystic_armor"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "mastery": "adept",
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:image",
+      "height": 74,
+      "image": "spellbound:textures/gui/books/images/spells/mystic_armor.png",
+      "position": {
+        "yOffset": 40
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.TRANSFIGURATION.mystic_armor.description"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.TRANSFIGURATION.mystic_armor.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.TRANSFIGURATION.mystic_armor.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:mystic_armor",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:shadow_gate_page_ritual"
+}

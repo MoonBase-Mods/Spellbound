@@ -1,0 +1,87 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spellbound.path.divine"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.divine.judgement"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png",
+      "position": {
+        "xOffset": 169
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.divine.description1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 100
+      },
+      "translation": {
+        "translate": "guide.divine.description2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.divine.judgement1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 80
+      },
+      "translation": {
+        "translate": "guide.divine.judgement2"
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:divine_cover_page"
+}

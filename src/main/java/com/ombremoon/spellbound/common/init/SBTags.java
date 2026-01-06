@@ -37,7 +37,7 @@ public class SBTags {
     }
 
     public static class Items {
-
+        public static TagKey<Item> DIVINE_SHRINE = tag("divine_shrine");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, CommonClass.customLocation(name));

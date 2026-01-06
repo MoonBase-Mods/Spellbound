@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
 public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStaticItemElement> {
     private RandomSource rand;

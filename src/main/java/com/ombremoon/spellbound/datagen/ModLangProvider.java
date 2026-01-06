@@ -61,7 +61,7 @@ public class ModLangProvider extends LanguageProvider {
 
     protected void pathLang() {
         for (SpellPath path : SpellPath.values()) {
-            add("spellbound.pathTexture." + path.getSerializedName(), checkReplace(path.getSerializedName()));
+            add("spellbound.path." + path.getSerializedName(), checkReplace(path.getSerializedName()));
         }
     }
 
@@ -85,7 +85,7 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
         ritualContents();
-        divineActionContents();
+        divineGuideContents();
 
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
@@ -160,8 +160,6 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summons.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can increase my strength through numbers with the rites of summoning.");
 
         //Divine
-        add("guide.divine.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can call upon divine forces to aid myself and allies and harm foes.");
-        add("guide.divine.divine_actions", "Divine Actions:\n");
 
         //Deception
         add("guide.deception.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can utilize the shadows to my advantage with the art of deception.");
@@ -190,14 +188,45 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.ritual.materials", "Ritual Materials");
     }
 
-    protected void divineActionContents() {
+    protected void divineGuideContents() {
         add("divine_action.judgement", "Judgement: ");
+        add("divine_action.judgement_required", "Judgement Required: ");
         add("divine_action.cooldown", "Cooldown: %s ticks");
 
-        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full.");
-        add("divine_action.healing_touch.apply_blessed_bandages", "Heal your wounds with Blessed Bandages.");
-        add("divine_action.healing_touch.purify_shrine", "Purify a shrine with a Divine Phial.");
-        add("healing_touch.heal_mob_to_full.lore", "This is a bunch of lore for the first divine action. Watch me fill this translation with an absolute word soup you'd want to have at your next family Christmas dinner.\n\n The second divine action lore entry won't make any more sense than the first. And don't expect too much from the last one either, I'm just using all this text as a means of testing. Can you believe that? Testing? Me?\n\n Well, unfortunately, I'm running out of words to use for the last lore entry. So this is where I sign off o7.");
+        add("guide.divine.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can call upon divine forces to aid myself and allies and harm foes.");
+        add("guide.divine.description1", "The Divine Path is the discipline of miracles, drawing power from the absolute forces of not only Light, but Darkness. This magic is not learned—it is bestowed.");
+        add("guide.divine.description2", "To walk this path is to become a conduit for higher powers. Whether you seek to be a Saint of Mercy who shields the weak, or a Paladin of Darkness who has fallen to the forces of evil, this path demands action.");
+        add("guide.divine.judgement", "Judgement");
+        add("guide.divine.judgement_cont", "Judgement Cont.");
+        add("guide.divine.judgement1", "I used to think this magic was merely a tool, indifferent to the hand that wielded it. I was wrong. It is watching me.");
+        add("guide.divine.judgement2", "I noticed the shift recently. After spending days protecting the weak, my benevolent magic surged, becoming far more potent than before. Yet, out of curiosity, when I turned to cruelty, that warmth withered. In its place, my darker arts flared with a terrifying, violent heat.");
+        add("guide.divine.judgement3", "There is a hidden balance at play—a §lJudgement.");
+        add("guide.divine.judgement4", "It seems my soul is constantly being weighed. Acts of light tip the scales, amplifying my ability to preserve life but suffocating my ability to take it. Acts of darkness tip them back, fueling my darker arts while severing my connection to the light.");
+        add("guide.divine.judgement5", "This invisible score dictates everything. Forbidden knowledge remains locked to me until my nature aligns with its intent, and even the world itself seems to react to my standing. I must choose my path carefully. I cannot be both a Saint and a Monster. The Scales will not allow it.");
+        add("guide.divine.divine_temple", "Divine Temple");
+        add("guide.divine.divine_temple1", "I have discovered these mysterious, looming structures along my travels. Scattered across the lands are Divine Temples, ancient structures built to worship the Divine.");
+        add("guide.divine.valkyr1", "They are not abandoned. Each is protected by a Valkyr, a sentinel of steel and light.");
+        add("guide.divine.valkyr2", "I realized my safety hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
+
+        add("guide.divine.divine_actions", "Divine Actions:\n");
+        add("healing_touch.heal_mob_to_full.name", "Shepherd");
+        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full");
+        add("healing_touch.use_blessed_bandages.name", "Field Medic");
+        add("divine_action.healing_touch.use_blessed_bandages", "Heal your wounds with Blessed Bandages.");
+        add("healing_touch.bless_shrine.name", "Caretaker");
+        add("divine_action.healing_touch.bless_shrine", "Bless a shrine with a Divine Phial");
+        add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
+        add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
+        add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action -- good or bad. I think as long as I take good care of it, I can become even stronger!");
+        add("healing_blossom.decorate_shrine.name", "Gardener");
+        add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
+        add("healing_blossom.purify_wither_rose.name", "Life From Death");
+        add("healing_blossom.grow_ambrosia_bush.name", "Living Pollen");
+        add("divine_action.healing_blossom.grow_ambrosia_bush", "Convert a Berry Bush into an Ambrosia Bush");
+        add("divine_action.healing_blossom.purify_wither_rose", "Purify a Wither Rose");
+        add("healing_blossom.decorate_shrine.lore", "As I grow in tune with the divine, I can feel a strong presence of magic emanating from Overworld flora. I should collect as much as I can to study.");
+        add("healing_blossom.grow_ambrosia_bush.lore", "It seems bees fail to see me as an enemy after I've eaten this Ambrosia dish. While helpful, it's not really my taste. I'll just give some to the bees since they seem to like it.");
+        add("healing_blossom.purify_wither_rose.lore", "I can sense a sinister aura coming from this black flower. As a servant of the Divine, it is my duty to cleanse it!");
     }
 
     protected void skillDescriptions() {

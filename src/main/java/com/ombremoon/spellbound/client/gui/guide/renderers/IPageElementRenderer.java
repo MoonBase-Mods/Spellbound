@@ -9,10 +9,13 @@ import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -48,15 +51,19 @@ public interface IPageElementRenderer<T extends IPageElement> extends Loggable {
         return false;
     }
 
-    default Ingredient buildIngredient(List<Ingredient> ingredients) {
-        List<ItemLike> list = new ArrayList<>();
+    default <S> Ingredient buildIngredient(List<Ingredient> ingredients) {
+        List<ItemStack> list = new ArrayList<>();
         for (Ingredient ing : ingredients) {
             for (ItemStack stack : ing.getItems()) {
-                list.add(stack.getItem());
+                if (ing.isCustom() && ing.getCustomIngredient() instanceof DataComponentIngredient dataIng) {
+                    dataIng.components().expectedComponents.forEach(data -> stack.set((DataComponentType<? super S>) data.type(), (S) data.value()));
+                }
+
+                list.add(stack);
             }
         }
 
-        return Ingredient.of(list.toArray(new ItemLike[]{}));
+        return Ingredient.of(list.toArray(new ItemStack[]{}));
     }
 
     default Ingredient buildIngredientFromStack(List<ItemStack> ingredients) {

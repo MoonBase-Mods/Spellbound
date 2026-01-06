@@ -203,6 +203,8 @@ public class NeoForgeEvents {
                     arenaData.spawnArena(serverLevel);
                 } else if (bossFight != null && arenaData.hasFightStarted()) {
                     arenaData.handleBossFightLogic(serverLevel);
+                } else if (arenaData.hasFightStarted() && ArenaSavedData.isArenaEmpty(serverLevel)) {
+                    arenaData.destroyPortal(serverLevel);
                 }
             }
         }
