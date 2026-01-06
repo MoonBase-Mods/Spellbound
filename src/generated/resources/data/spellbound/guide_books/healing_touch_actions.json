@@ -88,7 +88,8 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "maxLineLength": 100
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:use_blessed_bandages"
       },
       "position": {
         "xOffset": 54,
@@ -149,7 +150,8 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "maxLineLength": 100
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:bless_shrine"
       },
       "position": {
         "yOffset": 150
@@ -211,27 +213,41 @@
       }
     },
     {
-      "type": "spellbound:text",
-      "position": {
-        "xOffset": 169,
-        "yOffset": 5
+      "type": "spellbound:text_list",
+      "extras": {
+        "bulletPoint": "",
+        "maxRows": 3,
+        "rowGap": 55
       },
-      "translation": {
-        "extra": [
-          "\n\n",
-          {
+      "list": [
+        {
+          "component": {
+            "translate": "healing_touch.heal_mob_to_full.lore"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
+        },
+        {
+          "component": {
             "translate": "healing_touch.use_blessed_bandages.lore"
           },
-          "\n\n",
-          {
+          "extraOffset": 0,
+          "scrap": "spellbound:use_blessed_bandages_lore"
+        },
+        {
+          "component": {
             "translate": "healing_touch.bless_shrine.lore"
           },
-          "\n\n"
-        ],
-        "translate": "healing_touch.heal_mob_to_full.lore"
+          "extraOffset": 10,
+          "scrap": "spellbound:bless_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": 179,
+        "yOffset": 5
       }
     }
   ],
   "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:divine_cover_page"
+  "insertAfter": "spellbound:healing_touch"
 }

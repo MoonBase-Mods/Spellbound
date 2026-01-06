@@ -36,6 +36,13 @@ public class ModTagProvider {
         @Override
         protected void addTags(HolderLookup.Provider pProvider) {
             populateTag(ItemTags.DYEABLE, SBItems.CHALK);
+            populateTagFromBlocks(SBTags.Items.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE, SBBlocks.PLAINS_DIVINE_SHRINE, SBBlocks.SANDSTONE_DIVINE_SHRINE);
+        }
+
+        public void populateTagFromBlocks(TagKey<Item> tag, Supplier<Block>... items){
+            for (Supplier<Block> item : items) {
+                tag(tag).add(BuiltInRegistries.ITEM.getResourceKey(item.get().asItem()).get());
+            }
         }
 
         public void populateTag(TagKey<Item> tag, Supplier<Item>... items){

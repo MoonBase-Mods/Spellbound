@@ -47,16 +47,28 @@
       "type": "spellbound:text_list",
       "list": [
         {
-          "translate": "spellbound.ritual.tier_one"
+          "component": {
+            "translate": "spellbound.ritual.tier_one"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.activation_time",
-          "with": [
-            "5"
-          ]
+          "component": {
+            "translate": "spellbound.ritual.activation_time",
+            "with": [
+              "5"
+            ]
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.duration_not_applicable"
+          "component": {
+            "translate": "spellbound.ritual.duration_not_applicable"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         }
       ],
       "position": {
@@ -85,5 +97,5 @@
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:stride_page_info"
+  "insertAfter": "spellbound:stride"
 }

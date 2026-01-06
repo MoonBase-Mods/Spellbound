@@ -1,0 +1,85 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.healing_touch"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "bottomText": {
+        "extra": [
+          {
+            "color": "dark_green",
+            "text": "0"
+          }
+        ],
+        "translate": "divine_action.judgement_required"
+      },
+      "colour": -3510773,
+      "mastery": "novice",
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:image",
+      "height": 74,
+      "image": "spellbound:textures/gui/books/images/spells/healing_touch.png",
+      "position": {
+        "yOffset": 40
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.DIVINE.healing_touch.description"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.DIVINE.healing_touch.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.DIVINE.healing_touch.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:healing_touch",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:divine_cover_page"
+}

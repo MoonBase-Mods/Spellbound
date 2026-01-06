@@ -13,7 +13,7 @@
       "translation": {
         "extra": [
           {
-            "translate": "spells.spellbound.healing_touch"
+            "translate": "spells.spellbound.healing_blossom"
           }
         ],
         "translate": "guide.divine.divine_actions"
@@ -28,68 +28,12 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "maxLineLength": 100
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:decorate_shrine"
       },
       "position": {
         "xOffset": 54,
         "yOffset": 40
-      },
-      "translation": {
-        "translate": "divine_action.blessing.cure_zombie_villager"
-      }
-    },
-    {
-      "type": "spellbound:tooltip",
-      "height": 40,
-      "position": {
-        "yOffset": 40
-      },
-      "tooltips": [
-        {
-          "bold": true,
-          "color": "yellow",
-          "translate": "blessing.cure_zombie_villager.name",
-          "underlined": true
-        },
-        "",
-        {
-          "extra": [
-            {
-              "color": "green",
-              "text": "+15"
-            }
-          ],
-          "translate": "divine_action.judgement"
-        },
-        {
-          "translate": "divine_action.cooldown",
-          "with": [
-            "200"
-          ]
-        }
-      ],
-      "width": 155
-    },
-    {
-      "type": "spellbound:image",
-      "extras": {
-        "enableCorners": false
-      },
-      "height": 32,
-      "image": "spellbound:textures/block/rune/rune_1.png",
-      "position": {
-        "xOffset": 9,
-        "yOffset": 37
-      },
-      "width": 32
-    },
-    {
-      "type": "spellbound:text",
-      "extras": {
-        "maxLineLength": 100
-      },
-      "position": {
-        "yOffset": 93
       },
       "translation": {
         "translate": "divine_action.healing_blossom.decorate_shrine"
@@ -99,7 +43,7 @@
       "type": "spellbound:tooltip",
       "height": 40,
       "position": {
-        "yOffset": 93
+        "yOffset": 40
       },
       "tooltips": [
         {
@@ -128,12 +72,73 @@
       "width": 155
     },
     {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "tag": "minecraft:flowers"
+        }
+      ],
+      "position": {
+        "xOffset": -26,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:grow_ambrosia_bush"
+      },
+      "position": {
+        "yOffset": 93
+      },
+      "translation": {
+        "translate": "divine_action.healing_blossom.grow_ambrosia_bush"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 93
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "healing_blossom.grow_ambrosia_bush.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "green",
+              "text": "+10"
+            }
+          ],
+          "translate": "divine_action.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "12000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
       "type": "spellbound:image",
       "extras": {
         "enableCorners": false
       },
       "height": 32,
-      "image": "spellbound:textures/gui/paths/divine.png",
+      "image": "minecraft:textures/block/sweet_berry_bush_stage3.png",
       "position": {
         "xOffset": 112,
         "yOffset": 89
@@ -143,14 +148,15 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "maxLineLength": 100
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:purify_wither_rose"
       },
       "position": {
         "xOffset": 54,
         "yOffset": 150
       },
       "translation": {
-        "translate": "divine_action.unidentified.kill_villager"
+        "translate": "divine_action.healing_blossom.purify_wither_rose"
       }
     },
     {
@@ -163,15 +169,15 @@
         {
           "bold": true,
           "color": "yellow",
-          "translate": "unidentified.kill_villager.name",
+          "translate": "healing_blossom.purify_wither_rose.name",
           "underlined": true
         },
         "",
         {
           "extra": [
             {
-              "color": "red",
-              "text": "-20"
+              "color": "green",
+              "text": "+15"
             }
           ],
           "translate": "divine_action.judgement"
@@ -186,40 +192,57 @@
       "width": 155
     },
     {
-      "type": "spellbound:image",
+      "type": "spellbound:item",
       "extras": {
-        "enableCorners": false
+        "disableBackground": true,
+        "scale": 2.0
       },
-      "height": 32,
-      "image": "spellbound:textures/gui/spells/healing_blossom.png",
+      "item": [
+        {
+          "item": "minecraft:wither_rose"
+        }
+      ],
       "position": {
-        "xOffset": 9,
-        "yOffset": 140
-      },
-      "width": 32
+        "xOffset": -26,
+        "yOffset": 110
+      }
     },
     {
-      "type": "spellbound:text",
-      "position": {
-        "xOffset": 169,
-        "yOffset": 5
+      "type": "spellbound:text_list",
+      "extras": {
+        "bulletPoint": "",
+        "maxRows": 3,
+        "rowGap": 55
       },
-      "translation": {
-        "extra": [
-          "\n\n",
-          {
+      "list": [
+        {
+          "component": {
             "translate": "healing_blossom.decorate_shrine.lore"
           },
-          "\n\n",
-          {
-            "translate": "unidentified.kill_villager.lore"
+          "extraOffset": 0,
+          "scrap": "spellbound:decorate_shrine_lore"
+        },
+        {
+          "component": {
+            "translate": "healing_blossom.grow_ambrosia_bush.lore"
           },
-          "\n\n"
-        ],
-        "translate": "blessing.cure_zombie_villager.lore"
+          "extraOffset": 15,
+          "scrap": "spellbound:grow_ambrosia_bush_lore"
+        },
+        {
+          "component": {
+            "translate": "healing_blossom.purify_wither_rose.lore"
+          },
+          "extraOffset": 35,
+          "scrap": "spellbound:purify_wither_rose_lore"
+        }
+      ],
+      "position": {
+        "xOffset": 179,
+        "yOffset": 5
       }
     }
   ],
   "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:healing_touch_actions"
+  "insertAfter": "spellbound:healing_blossom"
 }

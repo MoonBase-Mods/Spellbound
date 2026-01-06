@@ -187,17 +187,27 @@ public class ModLangProvider extends LanguageProvider {
 
     protected void divineActionContents() {
         add("divine_action.judgement", "Judgement: ");
+        add("divine_action.judgement_required", "Judgement Required: ");
         add("divine_action.cooldown", "Cooldown: %s ticks");
 
         add("healing_touch.heal_mob_to_full.name", "Shepherd");
-        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full.");
-        add("healing_touch.use_blessed_bandages.name", "Field Medic.");
+        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full");
+        add("healing_touch.use_blessed_bandages.name", "Field Medic");
         add("divine_action.healing_touch.use_blessed_bandages", "Heal your wounds with Blessed Bandages.");
-        add("healing_touch.bless_shrine.name", "Purify a shrine with a Divine Phial.");
-        add("divine_action.healing_touch.bless_shrine", "Caretaker");
-        add("healing_touch.heal_mob_to_full.lore", "This is a bunch of lore for the first divine action.");
-        add("healing_touch.use_blessed_bandages.lore", "This is a bunch of lore for the second divine action.");
-        add("healing_touch.bless_shrine.lore", "This is a bunch of lore for the third divine action.");
+        add("healing_touch.bless_shrine.name", "Caretaker");
+        add("divine_action.healing_touch.bless_shrine", "Bless a shrine with a Divine Phial");
+        add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
+        add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
+        add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action -- good or bad. I think as long as I take good care of it, I can become even stronger!");
+        add("healing_blossom.decorate_shrine.name", "Gardener");
+        add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
+        add("healing_blossom.purify_wither_rose.name", "Life From Death");
+        add("healing_blossom.grow_ambrosia_bush.name", "Living Pollen");
+        add("divine_action.healing_blossom.grow_ambrosia_bush", "Convert a Berry Bush into an Ambrosia Bush");
+        add("divine_action.healing_blossom.purify_wither_rose", "Purify a Wither Rose");
+        add("healing_blossom.decorate_shrine.lore", "As I grow in tune with the divine, I can feel a strong presence of magic emanating from Overworld flora. I should collect as much as I can to study.");
+        add("healing_blossom.grow_ambrosia_bush.lore", "It seems bees fail to see me as an enemy after I've eaten this Ambrosia dish. While helpful, it's not really my taste. I'll just give some to the bees since they seem to like it.");
+        add("healing_blossom.purify_wither_rose.lore", "I can sense a sinister aura coming from this black flower. As a servant of the Divine, it is my duty to cleanse it!");
     }
 
     protected void skillDescriptions() {

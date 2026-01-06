@@ -11,20 +11,29 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.shadow_gate"
+        "translate": "spells.spellbound.healing_blossom"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
-      "mastery": "adept",
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+      "bottomText": {
+        "extra": [
+          {
+            "color": "dark_green",
+            "text": "50"
+          }
+        ],
+        "translate": "divine_action.judgement_required"
+      },
+      "colour": -3510773,
+      "mastery": "expert",
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
     },
     {
       "type": "spellbound:image",
       "height": 74,
-      "image": "spellbound:textures/gui/books/images/spells/shadow_gate.png",
+      "image": "spellbound:textures/gui/books/images/spells/healing_blossom.png",
       "position": {
         "yOffset": 40
       },
@@ -36,7 +45,7 @@
         "yOffset": 125
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.shadow_gate.description"
+        "translate": "guide.DIVINE.healing_blossom.description"
       }
     },
     {
@@ -46,7 +55,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.shadow_gate.lore"
+        "translate": "guide.DIVINE.healing_blossom.lore"
       }
     },
     {
@@ -56,7 +65,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.shadow_gate.boss_lore"
+        "translate": "guide.DIVINE.healing_blossom.boss_lore"
       }
     },
     {
@@ -64,13 +73,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:shadow_gate",
+      "path": "spellbound:healing_blossom",
       "position": {
         "xOffset": 169,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:stride_page_acq"
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:healing_touch_actions"
 }

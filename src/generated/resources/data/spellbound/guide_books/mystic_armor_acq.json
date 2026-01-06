@@ -47,16 +47,28 @@
       "type": "spellbound:text_list",
       "list": [
         {
-          "translate": "spellbound.ritual.tier_two"
+          "component": {
+            "translate": "spellbound.ritual.tier_two"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.activation_time",
-          "with": [
-            "10"
-          ]
+          "component": {
+            "translate": "spellbound.ritual.activation_time",
+            "with": [
+              "10"
+            ]
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         },
         {
-          "translate": "spellbound.ritual.duration_not_applicable"
+          "component": {
+            "translate": "spellbound.ritual.duration_not_applicable"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default"
         }
       ],
       "position": {
@@ -85,5 +97,5 @@
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:mystic_armor_page_info"
+  "insertAfter": "spellbound:mystic_armor"
 }

@@ -24,15 +24,16 @@ public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList
             }
 
 
-            graphics.drawString(Minecraft.getInstance().font,
+            var scrapComponent = element.list().get(i);
+            graphics.drawWordWrap(Minecraft.getInstance().font,
                     Component.literal(element.extras().bulletPoint())
-                            .append(" ")
-                            .append(element.list().get(i))
-                            .withStyle(isVisible(element.extras().pageScrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
+                            .append(element.extras().bulletPoint().isEmpty() ? "" : " ")
+                            .append(scrapComponent.component())
+                            .withStyle(isVisible(scrapComponent.scrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
                     leftPos - 10 + element.position().xOffset() + xOffset,
-                    topPos + element.position().yOffset() + 6 + yOffset,
-                    element.extras().textColour(),
-                    element.extras().dropShadow()
+                    topPos + element.position().yOffset() + 6 + yOffset + scrapComponent.extraOffset(),
+                    element.extras().lineLength(),
+                    element.extras().textColour()
             );
         }
     }

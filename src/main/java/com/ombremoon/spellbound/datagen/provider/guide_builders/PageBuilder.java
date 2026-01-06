@@ -673,6 +673,8 @@ public class PageBuilder {
         private int colour;
         private ElementPosition position;
         private ResourceLocation pathTexture;
+        private Optional<Component> topText;
+        private Optional<Component> bottomText;
 
         private SpellBorder(SpellType<?> spellType) {
             this(spellType.getPath(), spellType.getMastery());
@@ -691,6 +693,8 @@ public class PageBuilder {
                 case DECEPTION -> -13357984;
                 default -> 0;
             };
+            this.topText = Optional.empty();
+            this.bottomText = Optional.empty();
         }
 
         /**
@@ -752,13 +756,23 @@ public class PageBuilder {
             return this;
         }
 
+        public SpellBorder setTopText(Component topText) {
+            this.topText = Optional.of(topText);
+            return this;
+        }
+
+        public SpellBorder setBottomText(Component bottomText) {
+            this.bottomText = Optional.of(bottomText);
+            return this;
+        }
+
         /**
          * Creates a GuideSpellBorderElement from builder
          * @return generated element
          */
         public GuideSpellBorderElement build() {
             return new GuideSpellBorderElement(
-                    this.path, this.mastery, colour, position, pathTexture
+                    this.path, this.mastery, colour, position, pathTexture, topText, bottomText
             );
         }
     }
@@ -1254,12 +1268,14 @@ public class PageBuilder {
 
     //Builder for GuideTextList
     public static class TextList implements PageBuilderType {
-        private List<Component> entries;
+        private List<GuideTextListElement.ScrapComponent> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private int maxRows;
         private int rowGap;
         private int columnGap;
+        private int lineLength;
+        private int extraOffset;
         private String bulletPoint;
         private boolean dropShadow;
         private int textColour;
@@ -1271,6 +1287,7 @@ public class PageBuilder {
             this.maxRows = 0;
             this.rowGap = 20;
             this.columnGap = 45;
+            this.lineLength = 150;
             this.bulletPoint = "▪";
             this.dropShadow = false;
             this.textColour = 0;
@@ -1289,8 +1306,23 @@ public class PageBuilder {
          * @param text The list entry
          * @return this
          */
+        public TextList addEntry(Component text, ResourceLocation scrap, int extraOffset) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap, extraOffset));
+            return this;
+        }
+
+        public TextList addEntry(Component text, ResourceLocation scrap) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap));
+            return this;
+        }
+
+        public TextList addEntry(Component text, int extraOffset) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, extraOffset));
+            return this;
+        }
+
         public TextList addEntry(Component text) {
-            this.entries.add(text);
+            this.entries.add(new GuideTextListElement.ScrapComponent(text));
             return this;
         }
 
@@ -1302,16 +1334,6 @@ public class PageBuilder {
          */
         public TextList position(int x, int y) {
             this.position = new ElementPosition(x, y);
-            return this;
-        }
-
-        /**
-         * Sets the page scrap required to unlock this element. Will be obfuscated if not unlocked
-         * @param scrap The id for the page scrap
-         * @return this
-         */
-        public TextList setRequiredScrap(ResourceLocation scrap) {
-            this.pageScrap = scrap;
             return this;
         }
 
@@ -1342,6 +1364,16 @@ public class PageBuilder {
          */
         public TextList columnGap(int gap) {
             this.columnGap = gap;
+            return this;
+        }
+
+        /**
+         * Max length of the component
+         * @param length number of pixels
+         * @return this
+         */
+        public TextList lineLength(int length) {
+            this.columnGap = length;
             return this;
         }
 
@@ -1378,10 +1410,10 @@ public class PageBuilder {
             return new GuideTextListElement(
                     entries,
                     new TextListExtras(
-                            pageScrap,
                             maxRows,
                             rowGap,
                             columnGap,
+                            lineLength,
                             dropShadow,
                             textColour,
                             bulletPoint
