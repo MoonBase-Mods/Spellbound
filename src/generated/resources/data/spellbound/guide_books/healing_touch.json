@@ -51,7 +51,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 5
       },
       "translation": {
@@ -61,7 +61,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 68
       },
       "translation": {
@@ -75,7 +75,7 @@
       },
       "path": "spellbound:healing_touch",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 195
       }
     }

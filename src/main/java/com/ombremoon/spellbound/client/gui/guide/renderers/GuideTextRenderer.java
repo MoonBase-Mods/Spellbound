@@ -34,7 +34,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
 
         List<FormattedCharSequence> lines = font.split(
                 ((MutableComponent)element.text())
-                        .withStyle(style),
+                        .withStyle(style),#
                 element.extras().maxLineLength());
         this.height = lines.size() * font.lineHeight;
 

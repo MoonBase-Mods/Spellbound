@@ -83,7 +83,7 @@ public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList
             index = Math.floorDiv(y, 20);
         }
 
-        index = Math.clamp(index, 0, element.items().size());
+        index = Math.clamp(index, 0, element.items().size()-1);
 
         GuideItemListElement.ItemListEntry entry = element.items().get(index);
         ItemStack stack = entry.items().isEmpty() ? ItemStack.EMPTY : entry.items().get((int) (Math.floor(ElementRenderDispatcher.getTickCount() / 30f) % entry.items().size()));

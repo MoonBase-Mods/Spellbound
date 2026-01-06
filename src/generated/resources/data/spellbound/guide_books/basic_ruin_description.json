@@ -40,7 +40,7 @@
       "path": "ruin",
       "pathTexture": "spellbound:textures/gui/paths/ruin.png",
       "position": {
-        "xOffset": 169
+        "xOffset": 172
       }
     },
     {
@@ -64,7 +64,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 35
       },
       "translation": {
@@ -74,7 +74,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 100
       },
       "translation": {

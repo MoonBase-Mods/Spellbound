@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public interface SBGuidePages {
-    int PAGE_TWO_START_X = 169;
+    int PAGE_TWO_START_X = 172;
     int PAGE_START_Y = 8;
     int PAGE_START_DOUBLE_Y = 4;
     int PAGE_START_CENTER_X = 72;
@@ -109,7 +109,6 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> MORE_ITEMS = key("basic_cover_page"); //Shards, Armors & Staves
     ResourceKey<GuideBookPage> SPELLS = key("basic_cover_page"); //Spell Tomes & Choice Spells
     ResourceKey<GuideBookPage> SKILLS = key("basic_cover_page"); //Skills
-    ResourceKey<GuideBookPage> BASIC_RUIN_DESCRIPTION = key("basic_ruin_description");
 
     static void bootstrap(BootstrapContext<GuideBookPage> context) {
 
@@ -148,19 +147,6 @@ public interface SBGuidePages {
                         )
         );
         createBasicCoverPage(context, BASIC_BOOK, BASIC_RUIN_PAGE, BASIC_COVER_PAGE, SpellPath.RUIN);
-        createDescription(context,
-                BASIC_RUIN_DESCRIPTION,
-                BASIC_RUIN_PAGE,
-                Book.BASIC,
-                SpellPath.RUIN,
-                translatable("spellbound.path.ruin"),
-                translatable("guide.basic.acquisition"),
-                false,
-                new TextPosition(translatable("guide.basic.ruin.description"), 35),
-                new TextPosition(translatable("guide.basic.ruin.description1"), 110),
-                new TextPosition(translatable("guide.basic.ruin.acquisition1"), PAGE_TWO_START_X, 35),
-                new TextPosition(translatable("guide.basic.ruin.acquisition2"), PAGE_TWO_START_X, 100)
-        );
         //endregion
 
         //region Ruin

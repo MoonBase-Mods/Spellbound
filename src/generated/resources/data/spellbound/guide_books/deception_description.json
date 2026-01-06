@@ -1,0 +1,44 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spellbound.path.deception"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.deception.description1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 110
+      },
+      "translation": {
+        "translate": "guide.deception.description2"
+      }
+    }
+  ],
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:deception_cover_page"
+}

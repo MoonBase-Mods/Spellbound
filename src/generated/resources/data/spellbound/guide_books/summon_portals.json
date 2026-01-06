@@ -40,7 +40,7 @@
       "path": "summons",
       "pathTexture": "spellbound:textures/gui/paths/summons.png",
       "position": {
-        "xOffset": 169
+        "xOffset": 172
       }
     },
     {
@@ -55,7 +55,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 125
       },
       "translation": {
@@ -77,7 +77,7 @@
       "height": 80,
       "image": "spellbound:textures/gui/books/images/summoning_portal.png",
       "position": {
-        "xOffset": 169,
+        "xOffset": 172,
         "yOffset": 35
       },
       "width": 150

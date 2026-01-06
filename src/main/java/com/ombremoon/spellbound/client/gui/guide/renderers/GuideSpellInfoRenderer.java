@@ -72,8 +72,8 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
         int dataHeight = (data.size() *
                 (Minecraft.getInstance().font.lineHeight + (element.extras().lineGap()/2))) + element.extras().lineGap()/2;
 
-        graphics.blitSprite(DATA_SPRITE, leftPos + position.xOffset(), topPos + position.yOffset() - dataHeight, 150, dataHeight);
-        graphics.blitSprite(TITLE_BOX_SPRITE, leftPos + position.xOffset(), topPos + position.yOffset() - dataHeight, 150, 17);
+        graphics.blitSprite(DATA_SPRITE, leftPos + position.xOffset(), topPos + position.yOffset() - dataHeight, 147, dataHeight);
+        graphics.blitSprite(TITLE_BOX_SPRITE, leftPos + position.xOffset(), topPos + position.yOffset() - dataHeight, 147, 17);
         graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info"), leftPos + position.xOffset() + 4, topPos + 5 - dataHeight + position.yOffset(), extras.colour(), extras.dropShadow());
 
         for (int i = 0; i < data.size(); i++) {
