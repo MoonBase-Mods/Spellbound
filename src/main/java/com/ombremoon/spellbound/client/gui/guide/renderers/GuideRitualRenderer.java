@@ -23,7 +23,7 @@ public class GuideRitualRenderer implements IPageElementRenderer<Transfiguration
         RenderUtil.renderItem(graphics, item, leftPos + itemOffset - 48, topPos + 20, 5.3F);
 
         TransfigurationRitual ritual = RitualHelper.getRitualFor(Minecraft.getInstance().level, element.ritual());
-        ItemStack stack = new GuideGhostItem(buildIngredientFromValues(ritual.materials()), 30, 30).getItem(tickCount, 50.0F);
+        ItemStack stack = new GuideGhostItem(buildIngredientFromValues(ritual.materials()), 30, 30).getItem(tickCount);
         RenderUtil.renderItem(graphics, stack, leftPos + itemOffset + 9, topPos + 22, 2.3F, 200);
         graphics.drawString(Minecraft.getInstance().font,
                 Component.literal(String.valueOf(stack.getCount())),

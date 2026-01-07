@@ -1,0 +1,289 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "item.spellbound.chalk"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "item.spellbound.ritual_talisman"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.transfiguration.chalk"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.transfiguration.ritual_talisman"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "architect",
+      "position": {
+        "yOffset": 100
+      },
+      "recipe": "spellbound:chalk"
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "architect",
+      "position": {
+        "xOffset": 237,
+        "yOffset": 35
+      },
+      "recipe": "spellbound:ritual_talisman"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        [
+          {
+            "item": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -6447721,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -12103854,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -14869215,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -8170446,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -5231066,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -425955,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -75715,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -8337633,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -10585066,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -15295332,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -12930086,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -12827478,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -7785800,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -3715395,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "minecraft:dyed_color": {
+                "rgb": -816214,
+                "show_in_tooltip": false
+              }
+            },
+            "items": "spellbound:chalk"
+          }
+        ]
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 100
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        [
+          {
+            "type": "neoforge:components",
+            "components": {
+              "spellbound:talisman_rings": 1
+            },
+            "items": "spellbound:ritual_talisman"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "spellbound:talisman_rings": 2
+            },
+            "items": "spellbound:ritual_talisman"
+          },
+          {
+            "type": "neoforge:components",
+            "components": {
+              "spellbound:talisman_rings": 3
+            },
+            "items": "spellbound:ritual_talisman"
+          }
+        ]
+      ],
+      "position": {
+        "xOffset": 152,
+        "yOffset": 35
+      }
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:transfig_display_pedestal"
+}

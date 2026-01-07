@@ -147,6 +147,51 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.ruin.acquisition2", "These enemies reside in their own arenas that require keystones to access. The recipes for these have been long forgotten however, leaving ruin spells to be known only to Spell Brokers");
     }
 
+    protected void transfigContents() {
+        add("spellbound.ritual.tier_one", "Tier: 1");
+        add("spellbound.ritual.tier_two", "Tier: 2");
+        add("spellbound.ritual.tier_three", "Tier: 3");
+        add("spellbound.ritual.activation_time", "Activation Time: %s seconds");
+        add("spellbound.ritual.duration", "Duration: %s seconds");
+        add("spellbound.ritual.duration_not_applicable", "Duration: N/A");
+
+        add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
+        add("guide.transfiguration.quote", "Reality is not a rule. It is a suggestion");
+        add("guide.transfiguration.description1", "Matter, equivalent exchange, logic—the Transfiguration Path requires great understanding of these concepts. It's more than magic—it's a science.");
+        add("guide.transfiguration.description2", "To truly master this path is to reject the world as it appears. Stone can become water, iron can become gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of physics, you must understand them first.");
+        add("guide.transfiguration.rituals", "Alchemy Rituals");
+        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything I do. Whether I am extracting a new spell formula or manipulating my environment, the process is the same: arrange the geometry, balance the components, and force the transmutation.");
+        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central pedestal surrounded by display stands, with each tier increasing the displays and height needed.");
+        add("guide.transfiguration.rituals_cont", "Alchemy Rituals Cont.");
+        add("guide.transfiguration.pedestal_legend", "- Pedestal");
+        add("guide.transfiguration.display_legend", "- Display");
+        add("guide.transfiguration.rune_circuit", "If I connect the displays in a ring with these runic symbols I found, the structure acts a circuit, with the items on displays defining the properties of the ritual.");
+        add("guide.transfiguration.pedestal", "I infused a little bit of my magic into an rickety table I had lying around in preparation for my studies. And now I have it—the heart of the altar, where the magic happens.");
+        add("guide.transfiguration.display", "I've been chiseling away at these old magic stones for hours. My body aches, but at least I have a way to store my collection of materials");
+        add("guide.transfiguration.chalk", "I discovered some runic marking on the walls in the caves. I don't understand what they mean, but it's almost as if I felt magic flowing through the text. I'll write some down for later.");
+        add("guide.transfiguration.ritual_talisman", "I have everything in place to begin my experiment, but nothing is happening. Maybe I need a catalyst? I should be wary—if it isn't strong enough, it could be a waste.");
+        add("ritual.spellbound.create_stride", "Create Spell Tome:\nStride");
+        add("ritual.spellbound.create_stride.description", "Creates a Stride spell tome");
+        add("ritual.spellbound.create_shadow_gate", "Create Spell Tome:\nShadow Gate");
+        add("ritual.spellbound.create_shadow_gate.description", "Creates a Shadow Gate spell tome");
+        add("ritual.spellbound.create_mystic_armor", "Create Spell Tome:\nMystic Armor");
+        add("ritual.spellbound.create_mystic_armor.description", "Creates a Mystic Armor spell tome");
+        add("spellbound.ritual.materials", "Ritual Materials");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
+                "Revamps the way your body conserves energy granting an increase in the casters movement speed.",
+                "I have been trying to gather ingredients for all of my transfigurations but its taking me too long to find everything. I need a faster way.",
+                "Well I solved my problem with transfiguration. You wont believe it but by mixing the right ingredients I can supercharge my body allowing my legs to work even faster!");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.SHADOW_GATE.get(),
+                "Rips open a portal through the darkness linking two points for transportation",
+                "As my studies have advanced I am finding myself needing to explore more biomes and found that teleportation could be quite useful.",
+                "I think I got it! After experimenting with ender pearls I found they rip open gateways temporarily. I have created a spell to keep these open for longer.");
+        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.MYSTIC_ARMOR.get(),
+                "Grants the caster a magically charged shield, reducing incoming spell damage based on level.",
+                "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
+                "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
+
+    }
+
     protected void ruinContents() {
         add("guide.ruin.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can bend it to my will to destroy my enemies by harnessing the powers of ruin.");
 
@@ -202,37 +247,6 @@ public class ModLangProvider extends LanguageProvider {
                 "Fungi are some of the most resilient living organisms, if I can find a mushroom infested realm think of the power it could be hiding.",
                 "Why did I think going to the home of a notably durable fungi would be a good idea. It always knows where I am it must be these damn spores."
         );
-    }
-
-    protected void transfigContents() {
-        add("spellbound.ritual.tier_one", "Tier: 1");
-        add("spellbound.ritual.tier_two", "Tier: 2");
-        add("spellbound.ritual.tier_three", "Tier: 3");
-        add("spellbound.ritual.activation_time", "Activation Time: %s seconds");
-        add("spellbound.ritual.duration", "Duration: %s seconds");
-        add("spellbound.ritual.duration_not_applicable", "Duration: N/A");
-
-        add("ritual.spellbound.create_stride", "Create Spell Tome:\nStride");
-        add("ritual.spellbound.create_stride.description", "Creates a Stride spell tome");
-        add("ritual.spellbound.create_shadow_gate", "Create Spell Tome:\nShadow Gate");
-        add("ritual.spellbound.create_shadow_gate.description", "Creates a Shadow Gate spell tome");
-        add("ritual.spellbound.create_mystic_armor", "Create Spell Tome:\nMystic Armor");
-        add("ritual.spellbound.create_mystic_armor.description", "Creates a Mystic Armor spell tome");
-        add("spellbound.ritual.materials", "Ritual Materials");
-        add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
-                "Revamps the way your body conserves energy granting an increase in the casters movement speed.",
-                "I have been trying to gather ingredients for all of my transfigurations but its taking me too long to find everything. I need a faster way.",
-                "Well I solved my problem with transfiguration. You wont believe it but by mixing the right ingredients I can supercharge my body allowing my legs to work even faster!");
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.SHADOW_GATE.get(),
-                "Rips open a portal through the darkness linking two points for transportation",
-                "As my studies have advanced I am finding myself needing to explore more biomes and found that teleportation could be quite useful.",
-                "I think I got it! After experimenting with ender pearls I found they rip open gateways temporarily. I have created a spell to keep these open for longer.");
-        addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.MYSTIC_ARMOR.get(),
-                "Grants the caster a magically charged shield, reducing incoming spell damage based on level.",
-                "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
-                "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
-
     }
 
     protected void divineGuideContents() {

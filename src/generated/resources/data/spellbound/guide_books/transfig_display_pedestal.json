@@ -1,0 +1,118 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "block.spellbound.transfiguration_pedestal"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "block.spellbound.transfiguration_display"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.transfiguration.pedestal"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.transfiguration.display"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "architect",
+      "position": {
+        "xOffset": 65,
+        "yOffset": 35
+      },
+      "recipe": "spellbound:transfiguration_pedestal"
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "architect",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 95
+      },
+      "recipe": "spellbound:transfiguration_display"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:transfiguration_pedestal"
+        }
+      ],
+      "position": {
+        "xOffset": -20,
+        "yOffset": 35
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:transfiguration_display"
+        }
+      ],
+      "position": {
+        "xOffset": 239,
+        "yOffset": 95
+      }
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:transfig_rituals"
+}

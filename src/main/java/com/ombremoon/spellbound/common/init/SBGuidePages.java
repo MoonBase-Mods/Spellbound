@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,12 +21,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.util.Color;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -111,6 +116,25 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SKILLS = key("basic_cover_page"); //Skills
 
     static void bootstrap(BootstrapContext<GuideBookPage> context) {
+        Ingredient talisman1 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 1).build(), SBItems.RITUAL_TALISMAN.get());
+        Ingredient talisman2 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 2).build(), SBItems.RITUAL_TALISMAN.get());
+        Ingredient talisman3 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 3).build(), SBItems.RITUAL_TALISMAN.get());
+        Ingredient chalk1 = Ingredient.of(SBItems.CHALK.get());
+        Ingredient chalk2 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIGHT_GRAY.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk3 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.GRAY.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk4 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BLACK.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk5 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BROWN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk6 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.RED.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk7 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.ORANGE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk8 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.YELLOW.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk9 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIME.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk10 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.GREEN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk11 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.CYAN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk12 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIGHT_BLUE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk13 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BLUE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk14 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.PURPLE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk15 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.MAGENTA.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
+        Ingredient chalk16 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.PINK.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
 
         //Basic
         register(
@@ -232,7 +256,45 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
                 new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
         );
-        createSpellPage(context, STRIDE, TRANSFIG_RITUALS, Book.TRANSFIG, SBSpells.STRIDE);
+        createDescriptionWithRecipeAndItem(
+                context,
+                TRANSFIG_RITUAL_ITEMS_1,
+                TRANSFIG_RITUALS,
+                Book.TRANSFIG,
+                translatable("block.spellbound.transfiguration_pedestal"),
+                translatable("block.spellbound.transfiguration_display"),
+                false,
+                List.of(
+                        new RecipeEntry(loc("transfiguration_pedestal"), 65, 35),
+                        new RecipeEntry(loc("transfiguration_display"), PAGE_TWO_START_X, 95)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(blockToItem(SBBlocks.TRANSFIGURATION_PEDESTAL)), -20, 35, false),
+                        new ItemEntry(Ingredient.of(blockToItem(SBBlocks.TRANSFIGURATION_DISPLAY)), 239, 95, false)
+                ),
+                new TextEntry(translatable("guide.transfiguration.pedestal"), 0, 125),
+                new TextEntry(translatable("guide.transfiguration.display"), PAGE_TWO_START_X, 35)
+        );
+        createDescriptionWithRecipeAndItem(
+                context,
+                TRANSFIG_RITUAL_ITEMS_2,
+                TRANSFIG_RITUAL_ITEMS_1,
+                Book.TRANSFIG,
+                translatable("item.spellbound.chalk"),
+                translatable("item.spellbound.ritual_talisman"),
+                false,
+                List.of(
+                        new RecipeEntry(loc("chalk"), 0, 100),
+                        new RecipeEntry(loc("ritual_talisman"), PAGE_TWO_START_X + 65, 35)
+                ),
+                List.of(
+                        new ItemEntry(CompoundIngredient.of(chalk1, chalk2, chalk3, chalk4, chalk5, chalk6, chalk7, chalk8, chalk9, chalk10, chalk11, chalk12, chalk13, chalk14, chalk15, chalk16), 67, 100, false),
+                        new ItemEntry(CompoundIngredient.of(talisman1, talisman2, talisman3), PAGE_TWO_START_X - 20, 35, false)
+                ),
+                new TextEntry(translatable("guide.transfiguration.chalk"), 0, 35),
+                new TextEntry(translatable("guide.transfiguration.ritual_talisman"), PAGE_TWO_START_X, 125)
+        );
+        createSpellPage(context, STRIDE, TRANSFIG_RITUAL_ITEMS_2, Book.TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_RITUAL, STRIDE, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
         createSpellPage(context, SHADOW_GATE, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
@@ -254,7 +316,7 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.summon.dimensions1"), PAGE_TWO_START_X, 35),
                 new TextEntry(translatable("guide.summon.dimensions2"), PAGE_TWO_START_X, 120)
         );
-        createDescriptionAndRecipeAndImage(context,
+        createDescriptionWithRecipeAndImage(context,
                 SUMMON_PORTALS,
                 SUMMON_DESCRIPTION,
                 Book.SUMMONS,
@@ -262,7 +324,7 @@ public interface SBGuidePages {
                 translatable("guide.summon.summoning_portal"),
                 false,
                 List.of(
-                        new RecipeEntry(ResourceLocation.withDefaultNamespace("anvil"), PAGE_START_CENTER_X-40, 90)
+                        new RecipeEntry(defaultNameSpace("anvil"), PAGE_START_CENTER_X-40, 90)
                 ),
                 List.of(
                         new ImageEntryWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,150, 80)
@@ -347,7 +409,6 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.divine.divine_action2"), PAGE_TWO_START_X, 90)
         );
         createDivineSpellPage(context, HEALING_TOUCH, DIVINE_SHRINE, DIVINE_BOOK, SBSpells.HEALING_TOUCH, 0);
-        Ingredient talisman = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 2).build(), SBItems.RITUAL_TALISMAN.get());
         createDivineActionPage(
                 context,
                 HEALING_TOUCH_ACTIONS,
@@ -356,7 +417,7 @@ public interface SBGuidePages {
                 false,
                 new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 5, 24000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
                 new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, talisman)
+                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, talisman2)
         );
         createDivineSpellPage(context, HEALING_BLOSSOM, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(
@@ -521,7 +582,7 @@ public interface SBGuidePages {
         register(context, currentPage, builder);
     }
 
-    private static void createDescriptionAndRecipeAndImage(
+    private static void createDescriptionWithRecipeAndImage(
             BootstrapContext<GuideBookPage> context,
             ResourceKey<GuideBookPage> currentPage,
             ResourceKey<GuideBookPage> prevPage,
@@ -588,7 +649,7 @@ public interface SBGuidePages {
         register(context, currentPage, builder);
     }
 
-    private static void createDescriptionAndRecipeAndItem(
+    private static void createDescriptionWithRecipeAndItem(
             BootstrapContext<GuideBookPage> context,
             ResourceKey<GuideBookPage> currentPage,
             ResourceKey<GuideBookPage> prevPage,

@@ -79,7 +79,7 @@ public class SBData {
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
-            "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<ResourceLocation>())
+            "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
                     .serialize(ResourceLocation.CODEC.listOf())
                     .sync(StreamCodec.<RegistryFriendlyByteBuf, List<ResourceLocation>>of((buf, list) -> {
                         buf.writeInt(list.size());
