@@ -882,6 +882,7 @@ public interface SBGuidePages {
                                 .of(spell.get().getRootSkill().getDescription())
                                 .position(0, 115)
                                 .build(),
+                        //Hi
 
                         PageBuilder.Text
                                 .ofTranslatable(translations + "lore")
