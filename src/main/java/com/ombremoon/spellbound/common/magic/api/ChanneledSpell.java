@@ -18,11 +18,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class ChanneledSpell extends AnimatedSpell {
-    private static final ResourceLocation CHANNEL_FAIL = CommonClass.customLocation("channel_fail");
     protected int manaTickCost;
     protected Function<SpellContext, String> channelAnimation;
     protected String channelStopAnimation;
-    private boolean channelInterrupted;
 
     public static <T extends ChanneledSpell> Builder<T> createChannelledSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -50,17 +48,6 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             String animation = this.channelAnimation.apply(context);
             if (!animation.isEmpty() && context.getCaster() instanceof Player player)
                 playAnimation(player, animation);
-
-            handler.getListener().addListener(
-                    SpellEventListener.Events.POST_DAMAGE,
-                    CHANNEL_FAIL,
-                    post -> {
-                        this.channelInterrupted = true;
-                        this.endSpell();
-                        if (!animation.isEmpty() && caster instanceof Player player)
-                            this.stopAnimation(player, animation);
-                    }
-            );
         }
     }
 
@@ -82,9 +69,8 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(false);
         if (!caster.level().isClientSide) {
-            handler.getListener().removeListener(SpellEventListener.Events.POST_DAMAGE, CHANNEL_FAIL);
             if (context.getCaster() instanceof Player player) {
-                if (!this.channelStopAnimation.isEmpty() && !this.channelInterrupted) {
+                if (!this.channelStopAnimation.isEmpty()) {
                     playAnimation(player, this.channelStopAnimation);
                 } else {
                     stopAnimation(player, this.channelAnimation.apply(context));

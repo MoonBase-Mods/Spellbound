@@ -32,9 +32,16 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //Add recent action cooldown for divine spell acquisition
 //Change rituals to check one display per tick (startup time min depends on tier {tier 1  = min(4)})
 
+//Alpha Bugs to Fix
+//Dimension system
+//Ritual Lag
+//Loot Tables
+//Shadow Gate Light Level
+//Minor Book Changes
+
 //Catalysts
 //Ruin - Doubles Status Build Up
-//Transfig
+//Transfig - Rituals have double outpu
 //Summons - Have 1 extra summon
 //Light Divine - Gain Judgement From Casting
 //Dark Divine - Lost Judgement From Casting

@@ -211,8 +211,7 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.basic.transfiguration"), 31, 0, 119),
                 new TextEntry(translatable("guide.basic.summons"), 0, 114, 130),
                 new TextEntry(translatable("guide.basic.divine"), PAGE_TWO_START_X, 0, 134),
-                new TextEntry(translatable("guide.basic.deception"), PAGE_TWO_START_X + 25, 97, 134),
-                new TextEntry(translatable("guide.basic.summons_fix"), 130, 150)
+                new TextEntry(translatable("guide.basic.deception"), PAGE_TWO_START_X + 25, 97, 134)
         );
         createDescriptionWithRecipeAndItem(
                 context,

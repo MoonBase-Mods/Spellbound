@@ -151,11 +151,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.spell_paths", "Spell Paths");
         add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §4Ruin§r, §2Transfiguration§r, §1Summons§r, §eDivine§r, and §9Deception§r");
         add("guide.basic.spell_paths_cont", "Spell Paths Cont.");
-        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. The Ruin path can be broken down into addition sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
+        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. The Ruin path can be broken down into additional sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
         add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Learn how to perform spells on an even grander scale through rituals.");
-        add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimension to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey as a");
-        add("guide.basic.summons_fix", "Magi.");
-        add("guide.basic.divine", "Divine is the path of light and darkness. Aid your allies and smite the undead, or curse your enemies and steal their life force, the Divine forces fuel your power. But beware, for every action taken, judgement will be passed.");
+        add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimensions to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey.");
+        add("guide.basic.divine", "Divine is the path of light and darkness. Aid your allies and smite the undead, or curse your enemies and steal their life force. The Divine forces fuel your power, but beware. For every action taken, judgement will be passed.");
         add("guide.basic.deception", "Deception is the path of illusions and trickery. Masters of the art of Deception make their moves from the shadows, striking when you least expect. It is said that there is a place beyond mortal reach, housing secrets for those determined enough to uncover them.");
         add("guide.basic.general_items", "General Items");
         add("guide.basic.arcanthus", "A magical flower found in small patches in flower fields, Arcanthus is the easiest way for a Magi to introduce oneself to the world of magic. Can be crafted into magic essence.");
@@ -166,7 +165,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.book_recipes_cont", "Book Recipes Cont.");
         add("guide.basic.guide_books", "Guide Books are essential for any Magi, new or old. Within them contains all information relevant to its corresponding path. Some content includes: ");
         add("guide.basic.guide_books1", "▪ Path Overview");
-        add("guide.basic.guide_books2", "▪ Unique Path Mechanic");
+        add("guide.basic.guide_books2", "▪ Unique Path Mechanics");
         add("guide.basic.guide_books3", "▪ Path Lore");
         add("guide.basic.guide_books4", "▪ Path Specific Items");
         add("guide.basic.guide_books5", "▪ Spell Info & Acquisition");
@@ -178,13 +177,13 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.page_scraps2", "Page scraps can be obtained around the world through various actions, deciphering certain entries in a book.");
         add("guide.basic.page_scraps3", "Explore the lands, interact with mobs, and be on the look out for clues to unlock every book entry.");
         add("guide.basic.path_items", "Path Items");
-        add("guide.basic.path_items1", "Every path has a set of specific items that will help Magi's on their path: §lShards§r, §lStaves§r, and §lArmor§r");
+        add("guide.basic.path_items1", "Every path has a set of specific items that will help Magi's grow stronger: §lShards§r, §lStaves§r, and §lArmor§r");
         add("guide.basic.shards", "Shards are special magic catalyst items that can be found underground, dropped from certain mobs, or earned from specific tasks.");
-        add("guide.basic.armor", "Enchanted regalia that buffs the certain spell stats from the corresponding path.");
+        add("guide.basic.armor", "Enchanted regalia that buffs certain spell stats from the corresponding path.");
         add("guide.basic.staves", "A Magi's Staff allows its user to better control the flow of magic, bestowing a special buff to spells of the corresponding path.");
         add("guide.basic.spells", "Spells");
         add("guide.basic.spell_tomes", "To learn a spell, you must first obtain its Spell Tome. Spell Tomes cannot be found in dungeons or as common mob loot, but are instead acquired through certain tasks corresponding to its path.");
-        add("guide.basic.spell_mastery", "All spells are locked under a Mastery Level. Path Mastery Level is increased by levelling up spell, which can be done through spell casting and harming/healing entities with your spells.");
+        add("guide.basic.spell_mastery", "All spells are locked under a Mastery Level. Path Mastery Level is increased by levelling up spells, which can be done through spell casting and harming/healing entities with your spells.");
         add("guide.basic.choice_spells", "As spells level up, they can be upgraded to become even stronger and more unique to your playstyle. Certain upgrades changes how spells work entirely—these are called §lChoice Spells§r.");
         add("guide.basic.skills", "Skills");
         add("guide.basic.skills1", "Skills are upgrades unique to each spell that adds additional functionality to it. All spells have a total of 10 skill upgrades.");
@@ -348,7 +347,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.divine.divine_shrine", "The Divine Shrine");
         add("guide.divine.divine_shrine1", "The Divine Shrine is the heart of this magic, yet it functions unlike any other altar I have encountered. It does not desire materials; it desires proof.");
         add("guide.divine.divine_shrine2", "I have learned that spells are not made, but granted. To acquire them, I must perform specific Divine Actions within the Shrine's presence.");
-        add("guide.divine.divine_action1", "Guarded by the Valkyr, the Shrine is bound to the temple. Should I attempt to mine or displace the altar, the Valkyr’s wrath is immediate. I may use the Shrine where it stands, but I am forbidden from taking it.");
+        add("guide.divine.divine_action1", "Guarded by the Valkyr, the Shrine is bound to the temple. Should I attempt to mine or displace the altar, the Valkyr’s wrath will be immediate. I may use the Shrine where it stands, but I am forbidden from taking it.");
         add("guide.divine.divine_action2", "Like the Valkyr, the shrine too seems to measure my Judgement. If my Judgement does not meet the specific requirement for a spell, the altar remains dormant—\ndenying me the power until my nature aligns with its intent.");
 
         add("guide.divine.divine_actions", "Divine Actions:\n");
