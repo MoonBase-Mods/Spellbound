@@ -2,10 +2,7 @@ package com.ombremoon.spellbound.common.magic;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.ombremoon.spellbound.common.init.SBAttributes;
-import com.ombremoon.spellbound.common.init.SBData;
-import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.init.SBTriggers;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
@@ -71,12 +68,26 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private int stationaryTicks;
     private float zoomModifier = 1.0F;
     private boolean initialized;
+    private boolean receivedBook;
 
     //TEMPORARY
     public Vec3 handPos;
     public float forwardImpulse;
     public float leftImpulse;
     public boolean movementDirty;
+
+    public void giveBook() {
+        if (receivedBook) return;
+        if (!(this.caster instanceof Player player)) {
+            this.receivedBook = true;
+            return;
+        }
+
+        if (!player.getInventory().add(SBItems.STARTER_BOOK.get().getDefaultInstance()))
+            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
+
+        this.receivedBook = true;
+    }
 
     /**
      * Syncs spells handler data from the server to the client.
@@ -696,6 +707,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
         compoundTag.put("OpenArenas", arenaList);
+        compoundTag.putBoolean("hasBook", receivedBook);
 
         return compoundTag;
     }
@@ -747,5 +759,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
             this.openArenas = set;
         }
+        this.receivedBook = nbt.getBoolean("hasBook");
     }
 }

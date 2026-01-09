@@ -31,6 +31,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -83,6 +84,7 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SHADOW_GATE_RITUAL = key("shadow_gate_page_ritual");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR = key("mystic_armor");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR_RITUAL = key("mystic_armor_ritual");
+    ResourceKey<GuideBookPage> MANA_TEAR_RITUAL = key("mana_tear_ritual");
 
     //Summon Book
     ResourceKey<GuideBookPage> SUMMON_COVER_PAGE = key("summon_cover_page");
@@ -495,7 +497,8 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.transfiguration.staff_recipe"), TRANSFIG_STAFF_RITUAL),
                 new ContentsEntry(spellName(SBSpells.STRIDE.get()), STRIDE),
                 new ContentsEntry(spellName(SBSpells.SHADOW_GATE.get()), SHADOW_GATE),
-                new ContentsEntry(spellName(SBSpells.MYSTIC_ARMOR.get()), MYSTIC_ARMOR));
+                new ContentsEntry(spellName(SBSpells.MYSTIC_ARMOR.get()), MYSTIC_ARMOR),
+                new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL));
         createDescription(
                 context,
                 TRANSFIG_DESCRIPTION,
@@ -609,6 +612,7 @@ public interface SBGuidePages {
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
+        createRitualPage(context, MANA_TEAR_RITUAL, MYSTIC_ARMOR_RITUAL, SBRituals.CREATE_MANA_TEAR, 10, 0, RitualTier.ONE);
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
@@ -798,7 +802,7 @@ public interface SBGuidePages {
                                 .build(),
                         PageBuilder.Text
                                 .ofTranslatable("guide.general.table_contents")
-                                .position(PAGE_TWO_START_X, 40)
+                                .position(PAGE_TWO_START_X, 35)
                                 .bold()
                                 .build(),
                         PageBuilder.Text
@@ -811,7 +815,7 @@ public interface SBGuidePages {
 
         var list = PageBuilder.TextList
                 .of()
-                .position(PAGE_TWO_START_X+10, 50)
+                .position(PAGE_TWO_START_X+10, 45)
                 .rowGap(10);
 
         for (ContentsEntry entry : contents) {

@@ -41,7 +41,7 @@
       },
       "position": {
         "xOffset": 172,
-        "yOffset": 40
+        "yOffset": 35
       },
       "translation": {
         "translate": "guide.general.table_contents"
@@ -146,11 +146,19 @@
           "extraOffset": 0,
           "scrap": "spellbound:default",
           "target_page": "spellbound:mystic_armor"
+        },
+        {
+          "component": {
+            "translate": "guide.transfigurations.mana_tear"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:mana_tear_ritual"
         }
       ],
       "position": {
         "xOffset": 182,
-        "yOffset": 50
+        "yOffset": 45
       }
     }
   ],

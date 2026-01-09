@@ -1,0 +1,110 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 4
+      },
+      "translation": {
+        "translate": "ritual.spellbound.create_mana_tear"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "ritual.spellbound.create_mana_tear.description"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "xOffset": -5,
+        "yOffset": 55
+      },
+      "translation": "-------------------------"
+    },
+    {
+      "type": "spellbound:text_list",
+      "list": [
+        {
+          "component": {
+            "translate": "spellbound.ritual.tier_one"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "spellbound.ritual.activation_time",
+            "with": [
+              "10"
+            ]
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "spellbound.ritual.duration_not_applicable"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        }
+      ],
+      "position": {
+        "xOffset": 10,
+        "yOffset": 65
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "centered": true,
+        "underline": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spellbound.ritual.materials"
+      }
+    },
+    {
+      "type": "spellbound:ritual",
+      "leftPage": false,
+      "ritual": "spellbound:create_mana_tear"
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:mystic_armor_ritual"
+}

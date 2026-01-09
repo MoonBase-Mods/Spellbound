@@ -1,0 +1,27 @@
+{
+  "definition": {
+    "duration": 1,
+    "startupTime": 100,
+    "tier": 1
+  },
+  "effects": [
+    {
+      "type": "spellbound:create_item",
+      "item": "spellbound:mana_tear"
+    }
+  ],
+  "values": [
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:diamond"
+      }
+    },
+    {
+      "count": 3,
+      "ingredient": {
+        "item": "spellbound:magic_essence"
+      }
+    }
+  ]
+}

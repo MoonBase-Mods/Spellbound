@@ -94,6 +94,7 @@ public class NeoForgeEvents {
             if (livingEntity instanceof Player player) {
                 if (!level.isClientSide) {
                     handler.sync();
+                    handler.giveBook();
 
                     //PayloadHandler.setScraps((ServerPlayer) player, player.getData(SBData.BOOK_SCRAPS));
 

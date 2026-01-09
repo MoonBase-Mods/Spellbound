@@ -20,6 +20,7 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_LEGS = key("create_transfig_leggings");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
+    ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
     ResourceKey<TransfigurationRitual> TEST = key("test");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
@@ -60,6 +61,13 @@ public interface SBRituals {
                         .withEffect(new CreateSpellTome(SBSpells.MYSTIC_ARMOR.get(), 2))
 
         );
+
+        register(context,
+                CREATE_MANA_TEAR,
+                TransfigurationRitual.ritual(1)
+                        .requires(Ingredient.of(Items.DIAMOND))
+                        .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 3)
+                        .withEffect(new CreateItem(SBItems.MANA_TEAR.get())));
 
         register(context,
                 CREATE_TRANSFIG_HELM,

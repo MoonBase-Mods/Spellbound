@@ -258,6 +258,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.items", "Ritual Items");
         add("guide.transfiguration.armor_recipe", "Apparel Ritual");
         add("guide.transfiguration.staff_recipe", "Staff Ritual");
+        add("guide.transfigurations.mana_tear", "Mana Tear Ritual");
 
         add("spellbound.ritual.tier_one", "Tier: 1");
         add("spellbound.ritual.tier_two", "Tier: 2");
@@ -308,6 +309,9 @@ public class ModLangProvider extends LanguageProvider {
         add("ritual.spellbound.create_transfig_leggings.description", "Creates Creationist Leggings");
         add("ritual.spellbound.create_transfig_boots.description", "Creates Creationist Boots");
         add("ritual.spellbound.create_transfig_stave.description", "Creates a Creationist Staff");
+
+        add("ritual.spellbound.create_mana_tear", "Create Item:\nMana Tear");
+        add("ritual.spellbound.create_mana_tear.description", "Creates a Mana Tear");
     }
 
     protected void addTransfigSpellContents(SpellType<?> spellType, String lore, String bossLore) {

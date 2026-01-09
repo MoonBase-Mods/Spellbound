@@ -41,7 +41,7 @@
       },
       "position": {
         "xOffset": 172,
-        "yOffset": 40
+        "yOffset": 35
       },
       "translation": {
         "translate": "guide.general.table_contents"
@@ -102,7 +102,7 @@
       ],
       "position": {
         "xOffset": 182,
-        "yOffset": 50
+        "yOffset": 45
       }
     }
   ],

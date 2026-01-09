@@ -72,6 +72,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("L L")
                 .unlockedBy("has_blue_wool", has(Items.BLUE_WOOL))
                 .save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SBItems.STARTER_BOOK.get())
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .requires(Items.BOOK)
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.RUIN_BOOK.get())
                 .define('B', Items.BOOK)
                 .define('*', Items.COAL)
@@ -132,5 +137,13 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(SBItems.MAGIC_ESSENCE.get())
                 .unlockedBy("has_summon_stone", has(SBBlocks.SUMMON_STONE.get()))
                 .save(output, getConversionRecipeName(SBBlocks.SUMMON_STONE.get(), SBBlocks.CRACKED_SUMMON_STONE.get()));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.MANA_TEAR.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('D', Items.DIAMOND)
+                .pattern("###")
+                .pattern("#D#")
+                .pattern("###")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
     }
 }

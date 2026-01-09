@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_magic_essence": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:magic_essence"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "spellbound:mana_tear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_magic_essence"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "spellbound:mana_tear"
+    ]
+  }
+}

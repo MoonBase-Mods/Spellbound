@@ -45,10 +45,10 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
     private static final Map<Holder<ArmorMaterial>, Holder<MobEffect>> SET_BONUS = new HashMap<>();
 
     public static void armorAttributeInit() {
-        SPELL_RESISTANCES.put(EquipmentSlot.HEAD, 2.0);
-        SPELL_RESISTANCES.put(EquipmentSlot.CHEST, 2.0);
-        SPELL_RESISTANCES.put(EquipmentSlot.LEGS, 2.0);
-        SPELL_RESISTANCES.put(EquipmentSlot.FEET, 2.0);
+        SPELL_RESISTANCES.put(EquipmentSlot.HEAD, 0.03);
+        SPELL_RESISTANCES.put(EquipmentSlot.CHEST, 0.07);
+        SPELL_RESISTANCES.put(EquipmentSlot.LEGS, 0.07);
+        SPELL_RESISTANCES.put(EquipmentSlot.FEET, 0.03);
 
         SET_BONUS.put(SBArmorMaterials.PYROMANCER, SBEffects.PYROMANCER);
         SET_BONUS.put(SBArmorMaterials.STORMWEAVER, SBEffects.STORMWEAVER);
@@ -99,7 +99,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
     }
 
     private AttributeModifier modifier(double amount) {
-        return new AttributeModifier(CommonClass.customLocation("armor." + this.type.getName()), amount, AttributeModifier.Operation.ADD_VALUE);
+        return new AttributeModifier(CommonClass.customLocation("armor." + this.type.getName()), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     private AttributeModifier modifier() {

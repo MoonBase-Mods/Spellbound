@@ -27,7 +27,7 @@ public class SBTrades {
         map.put(SBMerchantType.SPELL_BROKER, toIntMap(ImmutableMap.of(1, new MerchantOffer[]{
                 spellTrade(8, Items.LIGHTNING_ROD, 4, SBSpells.STORMSTRIKE.get()),
                 spellTrade(8, Items.COPPER_TRAPDOOR, 4, SBSpells.ELECTRIC_CHARGE.get()),
-                spellTrade(48, Items.ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
+                spellTrade(48, Items.BLUE_ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
                 spellTrade(48, Items.MAGMA_CREAM, 32, SBSpells.SOLAR_RAY.get()),
                 spellTrade(64, Items.LIGHTNING_ROD, 32, SBSpells.STORM_RIFT.get()),
                 spellTrade(32, Items.LEAD, 2, SBSpells.SHADOWBOND.get()),
@@ -35,7 +35,7 @@ public class SBTrades {
         }, 2, new MerchantOffer[]{
                 spellTrade(8, Items.LIGHTNING_ROD, 4, SBSpells.STORMSTRIKE.get()),
                 spellTrade(8, Items.COPPER_TRAPDOOR, 4, SBSpells.ELECTRIC_CHARGE.get()),
-                spellTrade(48, Items.ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
+                spellTrade(48, Items.BLUE_ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
                 spellTrade(48, Items.MAGMA_CREAM, 32, SBSpells.SOLAR_RAY.get()),
                 spellTrade(64, Items.LIGHTNING_ROD, 32, SBSpells.STORM_RIFT.get()),
                 spellTrade(32, Items.LEAD, 2, SBSpells.SHADOWBOND.get()),

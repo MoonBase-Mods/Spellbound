@@ -1,7 +1,7 @@
 {
   "type": "spellbound:add_item",
   "chance": {
-    "chance": 0.2
+    "chance": 0.3
   },
   "conditions": [
     {
