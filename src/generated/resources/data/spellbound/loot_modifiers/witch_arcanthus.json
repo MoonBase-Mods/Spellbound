@@ -1,0 +1,18 @@
+{
+  "type": "spellbound:add_item",
+  "chance": {
+    "chance": 0.2
+  },
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/witch"
+    }
+  ],
+  "items": [
+    {
+      "count": 2,
+      "id": "spellbound:arcanthus"
+    }
+  ]
+}

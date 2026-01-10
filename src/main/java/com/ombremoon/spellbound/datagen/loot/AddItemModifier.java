@@ -42,6 +42,14 @@ public class AddItemModifier extends IndividualChanceLootModifier {
                 .toList();
     }
 
+    public AddItemModifier(LootItemCondition[] conditionsIn, float chance, Item... items) {
+        super(conditionsIn, (LootItemRandomChanceCondition) LootItemRandomChanceCondition.randomChance(chance).build());
+        this.items = Arrays
+                .stream(items)
+                .map(item -> item.getDefaultInstance())
+                .toList();
+    }
+
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootItemRandomChanceCondition chanceCon, LootContext lootContext) {
         for (ItemStack stack : this.items) {

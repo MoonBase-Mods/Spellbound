@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.datagen.loot.AddItemModifier;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -100,15 +101,16 @@ public class ModGlobalLootModifiersProvider extends GlobalLootModifierProvider {
                 SBItems.STORMWEAVER_BOOTS,
                 SBItems.SHOCK_STAFF
         );
+
+        addToEntityLootTable("witch_arcanthus", EntityType.WITCH, 0.2F, new ItemStack(SBBlocks.ARCANTHUS.get(),  2));
     }
 
-//    protected void addToEntityLootTable(String modifierName, EntityType<?> entityType, float dropChance, float lootMultiplier, Item item) {
-//        add(modifierName, new AddItemModifier(new LootItemCondition[] {
-//                new LootTableIdCondition.Builder(entityType.getDefaultLootTable()).build(),
-//                EnchantmentActiveCheck.enchantmentActiveCheck().(dropChance, lootMultiplier).build()
-//        }, item));
-//    }
-//
+    protected void addToEntityLootTable(String modifierName, EntityType<?> entityType, float dropChance, ItemStack item) {
+        add(modifierName, new AddItemModifier(new LootItemCondition[] {
+                new LootTableIdCondition.Builder(entityType.getDefaultLootTable().location()).build(),
+        }, dropChance, item));
+    }
+
     protected void addToStructureLootTable(String modifierName, ResourceLocation resourceLocation, float probabilityChance, ItemStack... item) {
         add(modifierName, new AddItemModifier(new LootItemCondition[] {
                 new LootTableIdCondition.Builder(resourceLocation).build()

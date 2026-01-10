@@ -9,7 +9,8 @@
     "spellbound:chests/trial_chamber/reward_rare_stormweaver",
     "spellbound:chests/trial_chamber/reward_common_stormweaver",
     "spellbound:chests/trial_chamber/intersection_stormweaver",
-    "spellbound:chests/trial_chamber/corridor_stormweaver"
+    "spellbound:chests/trial_chamber/corridor_stormweaver",
+    "spellbound:witch_arcanthus"
   ],
   "replace": false
 }

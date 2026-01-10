@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.datagen;
+package com.ombremoon.spellbound.datagen.loot;
 
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBEntities;
@@ -8,7 +8,6 @@ import com.ombremoon.spellbound.common.world.loot.functions.SetSpellFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -30,7 +28,7 @@ import java.util.stream.Stream;
 
 public class ModEntityLootTables extends EntityLootSubProvider {
 
-    protected ModEntityLootTables(HolderLookup.Provider registries) {
+    public ModEntityLootTables(HolderLookup.Provider registries) {
         super(FeatureFlags.DEFAULT_FLAGS, registries);
     }
 
