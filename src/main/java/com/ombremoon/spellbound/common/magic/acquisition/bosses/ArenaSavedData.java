@@ -36,10 +36,12 @@ import java.util.UUID;
 public class ArenaSavedData extends SavedData {
     public static final Logger LOGGER = Constants.LOG;
 
+    //Global
     private final Map<Integer, UUID> arenaMap = new Int2ObjectOpenHashMap<>();
     private int arenaId;
     private final Multimap<UUID, Integer> closedArenas = ArrayListMultimap.create();
 
+    //For arena levels
     private final PortalCache portalCache = new PortalCache();
     private boolean spawnedArena;
     private boolean fightStarted;
