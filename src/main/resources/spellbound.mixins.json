@@ -14,11 +14,9 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "StructureBlockEntityMixin",
-    "StructureTemplateMixin",
     "ZombieVillagerMixin"
   ],
   "client": [
-    "ClientLevelMixin",
     "EffectRenderingInventoryScreenMixin",
     "GameRendererMixin",
     "LevelRendererMixin",

@@ -3,14 +3,18 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "spellbound:jungle_divine_shrine",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "center": "true"
+              }
+            }
+          ],
           "name": "spellbound:jungle_divine_shrine"
         }
       ],

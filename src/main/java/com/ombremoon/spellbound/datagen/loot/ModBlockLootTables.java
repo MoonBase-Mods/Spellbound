@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.datagen.loot;
 
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBItems;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
@@ -9,10 +10,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -25,7 +30,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        this.dropSelf(SBBlocks.MAGI_WORKBENCH.get());
+        this.multiBlockDropSelf(SBBlocks.MAGI_WORKBENCH.get());
         this.dropSelf(SBBlocks.ARCANTHUS.get());
         this.dropSelf(SBBlocks.FROZEN_CRYSTAL_BLOCK.get());
         this.dropSelf(SBBlocks.BUDDING_FROZEN_CRYSTAL.get());
@@ -51,9 +56,9 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.CRACKED_SUMMON_STONE.get());
         this.dropSelf(SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get());
         this.dropSelf(SBBlocks.PLAINS_DIVINE_SHRINE.get());
-        this.dropSelf(SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
-        this.dropSelf(SBBlocks.JUNGLE_DIVINE_SHRINE.get());
-        this.dropSelf(SBBlocks.VALKYR_STATUE.get());
+        this.multiBlockDropSelf(SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
+        this.multiBlockDropSelf(SBBlocks.JUNGLE_DIVINE_SHRINE.get());
+        this.multiBlockDropSelf(SBBlocks.VALKYR_STATUE.get());
         this.dropSelf(SBBlocks.WILD_MUSHROOM.get());
         this.dropSelf(SBBlocks.MYCELIUM_CARPET.get());
         this.dropSelf(SBBlocks.GREEN_SPORE_BLOCK.get());
@@ -70,6 +75,21 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     protected Iterable<Block> getKnownBlocks() {
         return (Iterable<Block>) SBBlocks.BLOCKS.getEntries().stream().map(Supplier::get).toList();
     }
+
+    // we only want 1 block of the multiblock to drop itself
+    private void multiBlockDropSelf(Block block) {
+        this.add(block, simpleConditional(AbstractMultiBlock.CENTER, block, block.asItem()));
+    }
+
+    private LootTable.Builder simpleConditional(Property<Boolean> property, Block block, Item item){
+        return LootTable.lootTable()
+                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                        .add(LootItem.lootTableItem(item)
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties()
+                                                .hasProperty(property, true)))));
+    }
+
 
     protected LootTable.Builder createShardDrops(Block block, Item item) {
         return this.createSilkTouchDispatchTable(
