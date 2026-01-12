@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.datafixers.util.Pair;
-import com.ombremoon.spellbound.common.world.block.entity.SimpleExtendedBlockEntity;
 import com.ombremoon.spellbound.common.init.SBTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,11 +15,14 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-public class DivineShrineBlock extends AbstractExtendedBlock implements PreviewableExtendedBlock {
+public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewableMultiblock {
     public static final VoxelShape SHAPE = makeShape();
 
     public DivineShrineBlock(Properties properties) {
@@ -28,17 +30,12 @@ public class DivineShrineBlock extends AbstractExtendedBlock implements Previewa
     }
 
     @Override
-    public Stream<BlockPos> fullBlockShape(@Nullable Direction direction, BlockPos center) {
-        return Stream.of(center, center.above());
+    public List<BlockPos> makeFullBlockShape(Level level, BlockPos center, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
+        return List.of(center, center.above());
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new SimpleExtendedBlockEntity(blockPos, blockState);
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getMultiblockRenderShape(BlockState state, boolean isCenter) {
         return RenderShape.MODEL;
     }
 

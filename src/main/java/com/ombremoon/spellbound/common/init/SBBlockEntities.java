@@ -16,7 +16,6 @@ public class SBBlockEntities {
     public static final Supplier<BlockEntityType<RuneBlockEntity>> RUNE = BLOCK_ENTITY_TYPE.register("rune", () -> BlockEntityType.Builder.of(RuneBlockEntity::new, SBBlocks.RUNE.get()).build(null));
     public static final Supplier<BlockEntityType<TransfigurationDisplayBlockEntity>> TRANSFIGURATION_DISPLAY = BLOCK_ENTITY_TYPE.register("transfiguration_display", () -> BlockEntityType.Builder.of(TransfigurationDisplayBlockEntity::new, SBBlocks.TRANSFIGURATION_DISPLAY.get()).build(null));
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL = BLOCK_ENTITY_TYPE.register("pedestal", () -> BlockEntityType.Builder.of(PedestalBlockEntity::new, SBBlocks.TRANSFIGURATION_PEDESTAL.get()).build(null));
-    public static final Supplier<BlockEntityType<SimpleExtendedBlockEntity>> SIMPLE_EXTENDED_BLOCK = BLOCK_ENTITY_TYPE.register("simple_multiblock", () -> BlockEntityType.Builder.of(SimpleExtendedBlockEntity::new, SBBlocks.MAGI_WORKBENCH.get(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get(), SBBlocks.JUNGLE_DIVINE_SHRINE.get(), SBBlocks.PLAINS_DIVINE_SHRINE.get()).build(null));
     public static final Supplier<BlockEntityType<ValkyrBlockEntity>> VALKY_STATUE = BLOCK_ENTITY_TYPE.register("valkyr_statue", () -> BlockEntityType.Builder.of(ValkyrBlockEntity::new, SBBlocks.VALKYR_STATUE.get()).build(null));
 
     public static void register(IEventBus modEventBus) {
