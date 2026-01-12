@@ -67,7 +67,7 @@ public abstract class SummonSpell extends AnimatedSpell {
                 if (entity instanceof LivingEntity livingEntity && livingEntity.isAlive()) {
                     if (entity instanceof SmartSpellEntity) {
                         //SET DESPAWN ANIMATIONS
-                        log("Smart Entity");
+//                        log("Smart Entity");
                         entity.discard();
                     } else {
                         entity.discard();

@@ -98,7 +98,6 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
 
     private static void resetDisplay(TransfigurationDisplayBlockEntity display) {
         display.setItem(null);
-        Constants.LOG.info("{}", display.level);
         display.centerDistX = 0;
         display.centerDistY = 0;
         display.centerDistZ = 0;
