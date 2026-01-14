@@ -3,6 +3,8 @@ package com.ombremoon.spellbound.common.magic.acquisition.bosses;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
+import com.ombremoon.spellbound.common.init.SBBlocks;
+import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -22,7 +24,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Map;
@@ -42,6 +47,8 @@ public class ArenaSavedData extends SavedData {
     private boolean fightStarted;
     private ResourceLocation spellLocation;
     private BossFightInstance<?, ?> currentBossFight;
+    @Nullable
+    private BoundingBox arenaBounds;
 
     public static ArenaSavedData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(new Factory<>(ArenaSavedData::create, ArenaSavedData::load), "_dynamic_dimension");
@@ -97,11 +104,38 @@ public class ArenaSavedData extends SavedData {
         if (DynamicDimensionFactory.spawnArena(level, this.spellLocation)) {
             this.spawnedArena = true;
             this.setDirty();
+            notifyPortalReady(level.getServer());
+        }
+    }
+
+    private void notifyPortalReady(MinecraftServer server) {
+        ResourceKey<Level> portalLevelKey = this.portalCache.getPortalLevel();
+        BlockPos portalPos = this.portalCache.getPortalPos();
+        if (portalLevelKey == null || portalPos == null) return;
+
+        ServerLevel portalLevel = server.getLevel(portalLevelKey);
+        if (portalLevel == null) return;
+
+        BlockPos basePos = portalPos.offset(-4, 0, -4);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                BlockPos blockPos = basePos.offset(i, 0, j);
+                if (portalLevel.getBlockState(blockPos).is(SBBlocks.SUMMON_PORTAL.get())) {
+                    BlockEntity blockEntity = portalLevel.getBlockEntity(blockPos);
+                    if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
+                        summonBlockEntity.setArenaReady(true);
+                    }
+                }
+            }
         }
     }
 
     public void spawnInArena(ServerLevel level, Entity entity) {
-        if (this.currentBossFight != null) {
+        if (!this.spawnedArena) {
+            spawnArena(level);
+        }
+
+        if (this.currentBossFight != null && this.spawnedArena) {
             DynamicDimensionFactory.spawnInArena(level, entity, this.currentBossFight.getBossFight());
             if (!this.fightStarted) {
                 this.currentBossFight.start(level);
@@ -149,6 +183,16 @@ public class ArenaSavedData extends SavedData {
 
     public BossFightInstance<?, ?> getCurrentBossFight() {
         return this.currentBossFight;
+    }
+
+    @Nullable
+    public BoundingBox getArenaBounds() {
+        return this.arenaBounds;
+    }
+
+    public void setArenaBounds(@Nullable BoundingBox bounds) {
+        this.arenaBounds = bounds;
+        this.setDirty();
     }
 
     public void cacheClosedArena(UUID owner, int id) {
@@ -240,7 +284,7 @@ public class ArenaSavedData extends SavedData {
 
         this.spawnedArena = nbt.getBoolean("SpawnedArena");
         this.fightStarted = nbt.getBoolean("FightStarted");
-        this.portalCache.deserializeNBT(nbt);
+        this.portalCache.deserializeNBT(nbt.getCompound("PortalCache"));
         if (nbt.contains("ArenaSpell", 10)) {
             ResourceLocation.CODEC
                     .parse(new Dynamic<>(NbtOps.INSTANCE, nbt.get("ArenaSpell")))

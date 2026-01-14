@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
 import com.ombremoon.spellbound.networking.serverbound.*;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -20,11 +21,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -175,6 +178,21 @@ public class PayloadHandler {
 
     public static void sendScrapToast(ServerPlayer player, ResourceLocation scrap) {
         PacketDistributor.sendToPlayer(player, new ScrapToastPayload(scrap));
+    }
+
+    public static void sendArenaDebug(ServerPlayer player, boolean enabled, BoundingBox bounds, BlockPos spawnPos, BlockPos origin) {
+        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+                enabled,
+                bounds.minX(), bounds.minY(), bounds.minZ(),
+                bounds.maxX(), bounds.maxY(), bounds.maxZ(),
+                spawnPos, origin
+        ));
+    }
+
+    public static void sendArenaDebugDisable(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+                false, 0, 0, 0, 0, 0, 0, BlockPos.ZERO, BlockPos.ZERO
+        ));
     }
 
 /*    public static void changeHailLevel(ServerLevel level, float hailLevel) {
@@ -365,6 +383,11 @@ public class PayloadHandler {
                 SendGuideBooksPayload.TYPE,
                 SendGuideBooksPayload.STREAM_CODEC,
                 ClientPayloadHandler::handGuideBooks
+        );
+        registrar.playToClient(
+                ArenaDebugPayload.TYPE,
+                ArenaDebugPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleArenaDebug
         );
     }
 }

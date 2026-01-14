@@ -54,10 +54,21 @@ public class SummonPortalBlock extends BaseEntityBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        double d0 = (double)pos.getX() + random.nextDouble();
-        double d1 = (double)pos.getY() + 0.8;
-        double d2 = (double)pos.getZ() + random.nextDouble();
-        level.addParticle(ParticleTypes.PORTAL, d0, d1, d2, 0.0, 0.0, 0.0);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        boolean isReady = blockEntity instanceof SummonBlockEntity summon && summon.isArenaReady();
+
+        double x = (double) pos.getX() + random.nextDouble();
+        double y = (double) pos.getY() + 0.8;
+        double z = (double) pos.getZ() + random.nextDouble();
+
+        if (isReady) {
+            level.addParticle(ParticleTypes.PORTAL, x, y, z, 0.0, 0.0, 0.0);
+        } else {
+            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.02, 0.0);
+            if (random.nextInt(3) == 0) {
+                level.addParticle(ParticleTypes.ENCHANT, x, y + 0.5, z, 0.0, 0.5, 0.0);
+            }
+        }
     }
 
     @Override

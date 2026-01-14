@@ -11,6 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -21,11 +22,16 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
+import net.nikdo53.tinymultiblocklib.components.SharedStatePropertiesBuilder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-public class ValkyrStatueBlock extends AbstractExtendedBlock implements PreviewableExtendedBlock{
+public class ValkyrStatueBlock extends AbstractMultiBlock implements IPreviewableMultiblock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty POSE = IntegerProperty.create("pose", 0, 3);
     public static final VoxelShape SHAPE = makeShape();
@@ -36,13 +42,18 @@ public class ValkyrStatueBlock extends AbstractExtendedBlock implements Previewa
     }
 
     @Override
+    public RenderShape getMultiblockRenderShape(BlockState state, boolean isCenter) {
+        return isCenter ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.INVISIBLE;
+    }
+
+    @Override
     public @Nullable DirectionProperty getDirectionProperty() {
         return FACING;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        BlockPos blockPos = this.getCenter(level, pos);
+        BlockPos blockPos = IMultiBlock.getCenter(level, pos);
         BlockState center = level.getBlockState(blockPos);
         center = center.cycle(POSE);
         level.setBlock(blockPos, center, 10);
@@ -51,8 +62,8 @@ public class ValkyrStatueBlock extends AbstractExtendedBlock implements Previewa
     }
 
     @Override
-    public Stream<BlockPos> fullBlockShape(@Nullable Direction direction, BlockPos center) {
-        return Stream.of(center, center.above(), center.above(2));
+    public List<BlockPos> makeFullBlockShape(Level level, BlockPos center, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
+        return List.of(center, center.above(), center.above(2));
     }
 
     @Override
@@ -61,8 +72,19 @@ public class ValkyrStatueBlock extends AbstractExtendedBlock implements Previewa
     }
 
     @Override
+    public boolean hasCustomBE() {
+        return true;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
+        builder.add(POSE);
+    }
+
+    @Override
+    public void createSharedBlockStates(SharedStatePropertiesBuilder builder) {
+        super.createSharedBlockStates(builder);
         builder.add(POSE);
     }
 

@@ -5,18 +5,20 @@ import com.ombremoon.spellbound.common.init.SBBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class ValkyrBlockEntity extends SimpleExtendedBlockEntity implements GeoBlockEntity {
+public class ValkyrBlockEntity extends AbstractMultiBlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public ValkyrBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
+
 
     public ValkyrBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(SBBlockEntities.VALKY_STATUE.get(), pPos, pBlockState);

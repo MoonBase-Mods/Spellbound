@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.dimension;
 
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
@@ -22,12 +24,14 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
 
 /**
  * @author Commoble, used with permission.
  * https://gist.github.com/Commoble/7db2ef25f94952a4d2e2b7e3d4be53e0
  */
 public class DynamicDimensionFactory {
+    private static final Logger LOGGER = Constants.LOG;
 
     public static ServerLevel getOrCreateDimension(MinecraftServer server, ResourceKey<Level> levelKey) {
         return DimensionCreator.get().getOrCreateLevel(server, levelKey, () -> createLevel(server));
@@ -46,7 +50,9 @@ public class DynamicDimensionFactory {
         Vec3 spawnOffset = bossFight.getPlayerSpawnOffset();
         int randomOffsetX = level.random.nextInt(3);
         int randomOffsetZ = level.random.nextInt(3);
-        Vec3 targetVec = Vec3.atBottomCenterOf(blockPos.offset((int) spawnOffset.x + randomOffsetX, (int) spawnOffset.y, (int) spawnOffset.z + randomOffsetZ));
+        BlockPos offsetPos = blockPos.offset((int) spawnOffset.x + randomOffsetX, (int) spawnOffset.y, (int) spawnOffset.z + randomOffsetZ);
+        Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
+
         sendToDimension(entity, level, targetVec);
     }
 
@@ -73,8 +79,18 @@ public class DynamicDimensionFactory {
         );
         if (start.isValid()) {
             BoundingBox boundingBox = start.getBoundingBox();
+            LOGGER.debug("[Arena Spawn] Structure valid | BoundingBox: min({}, {}, {}) max({}, {}, {})",
+                    boundingBox.minX(), boundingBox.minY(), boundingBox.minZ(),
+                    boundingBox.maxX(), boundingBox.maxY(), boundingBox.maxZ());
+
+            ArenaSavedData arenaData = ArenaSavedData.get(level);
+            arenaData.setArenaBounds(boundingBox);
+
             ChunkPos chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.minX()), SectionPos.blockToSectionCoord(boundingBox.minZ()));
             ChunkPos chunkPos1 = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.maxX()), SectionPos.blockToSectionCoord(boundingBox.maxZ()));
+
+            LOGGER.debug("[Arena Spawn] Placing in chunks from {} to {}", chunkPos, chunkPos1);
+
             ChunkPos.rangeClosed(chunkPos, chunkPos1)
                     .forEach(pos -> start.placeInChunk(
                             level,
@@ -92,9 +108,11 @@ public class DynamicDimensionFactory {
                             pos
                     ));
 
+            LOGGER.debug("[Arena Spawn] Arena generation complete");
             return true;
         }
 
+        LOGGER.warn("[Arena Spawn] Structure generation FAILED - StructureStart invalid | Spell: {}", spell);
         return false;
     }
 

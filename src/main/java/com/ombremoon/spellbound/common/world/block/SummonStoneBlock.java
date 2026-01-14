@@ -9,9 +9,11 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
+import com.ombremoon.spellbound.mixin.ConnectionAccessor;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -120,7 +122,7 @@ public class SummonStoneBlock extends Block {
                         for (int i = 0; i < 3; i++) {
                             for (int j = 0; j < 3; j++) {
                                 BlockPos blockPos1 = blockPos.offset(i, 0, j);
-                                level.setBlock(blockPos1, SBBlocks.SUMMON_PORTAL.get().defaultBlockState(), 2);
+                                level.setBlock(blockPos1, SBBlocks.SUMMON_PORTAL.get().defaultBlockState(), 3);
                                 BlockEntity blockEntity = level.getBlockEntity(blockPos1);
                                 if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
                                     summonBlockEntity.setArenaID(arenaId);
@@ -129,6 +131,17 @@ public class SummonStoneBlock extends Block {
                         }
 
                         MinecraftServer server = level.getServer();
+                        for (int i = 0; i < 3; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                BlockPos blockPos1 = blockPos.offset(i, 0, j);
+                                server.getPlayerList().broadcastAll(
+                                        new ClientboundBlockUpdatePacket(level, blockPos1)
+                                );
+                            }
+                        }
+                        for (var serverPlayer : server.getPlayerList().getPlayers()) {
+                            ((ConnectionAccessor) serverPlayer.connection.getConnection()).invokeFlush();
+                        }
                         ResourceKey<Level> levelKey = data.getOrCreateKey(server, arenaId);
                         ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
                         if (arena != null && this.spell != null) {

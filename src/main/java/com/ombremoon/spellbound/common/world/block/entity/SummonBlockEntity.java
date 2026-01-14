@@ -8,6 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -19,11 +22,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class SummonBlockEntity extends BlockEntity {
     protected static final Logger LOGGER = Constants.LOG;
     private int arenaId;
+    private boolean arenaReady;
 
     protected SummonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -55,9 +60,9 @@ public class SummonBlockEntity extends BlockEntity {
                 ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
                 if (arena != null) {
                     ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                    if (arenaData.getCurrentBossFight() != null) {
+                    if (arenaData.getCurrentBossFight() != null && arenaData.spawnedArena()) {
                         arenaData.spawnInArena(arena, entity);
-                    } else {
+                    } else if (arenaData.getCurrentBossFight() == null) {
                         arenaData.destroyPortal(arena);
                     }
                 }
@@ -74,6 +79,18 @@ public class SummonBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
+    public boolean isArenaReady() {
+        return this.arenaReady;
+    }
+
+    public void setArenaReady(boolean ready) {
+        this.arenaReady = ready;
+        this.setChanged();
+        if (this.level != null && !this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
+    }
+
     public boolean shouldRenderFace(Direction face) {
         return face.getAxis() == Direction.Axis.Y;
     }
@@ -82,11 +99,25 @@ public class SummonBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("ArenaId", this.arenaId);
+        tag.putBoolean("ArenaReady", this.arenaReady);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.arenaId = tag.getInt("ArenaId");
+        this.arenaReady = tag.getBoolean("ArenaReady");
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

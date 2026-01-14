@@ -83,18 +83,15 @@ public class PortalCache {
     }
 
     public void deserializeNBT(CompoundTag compoundTag) {
-        if (compoundTag.contains("PortalCache", 10)) {
-            CompoundTag nbt = compoundTag.getCompound("ArenaCache");
-            if (nbt.get("PortalOwner") != null)
-                this.owner = nbt.getUUID("PortalOwner");
+        if (compoundTag.contains("PortalOwner"))
+            this.owner = compoundTag.getUUID("PortalOwner");
 
-            if (nbt.contains("PortalId", 99))
-                this.arenaID = nbt.getInt("PortalId");
+        if (compoundTag.contains("PortalId", 99))
+            this.arenaID = compoundTag.getInt("PortalId");
 
-            NbtUtils.readBlockPos(compoundTag, "PortalPos").ifPresent(blockPos -> this.portalPos = blockPos);
+        NbtUtils.readBlockPos(compoundTag, "PortalPos").ifPresent(blockPos -> this.portalPos = blockPos);
 
-            if (nbt.contains("PortalLevel", 8))
-                this.portalLevel = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(nbt.getString("PortalLevel")));
-        }
+        if (compoundTag.contains("PortalLevel", 8))
+            this.portalLevel = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(compoundTag.getString("PortalLevel")));
     }
 }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "spellbound.refmap.json",
   "mixins": [
+    "ConnectionAccessor",
     "DuckRangedAttribute",
     "HealOrHarmMobEffectMixin",
     "LivingEntityMixin",
@@ -13,11 +14,9 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "StructureBlockEntityMixin",
-    "StructureTemplateMixin",
     "ZombieVillagerMixin"
   ],
   "client": [
-    "ClientLevelMixin",
     "EffectRenderingInventoryScreenMixin",
     "GameRendererMixin",
     "LevelRendererMixin",

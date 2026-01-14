@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-@EventBusSubscriber(modid = Constants.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class SBRenderTypes {
 
     private static ShaderInstance rendertypeHeatDistortion;

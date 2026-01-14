@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -27,35 +28,46 @@ public class ModItemModelProvider extends ItemModelProvider {
         tempItem(SBItems.DEBUG.get());
         simpleGeneratedModel(SBBlocks.ARCANTHUS.get().asItem());
 
-        simpleGeneratedModel(SBItems.SOUL_SHARD.get());
-        simpleGeneratedModel(SBItems.FOOL_SHARD.get());
-        simpleGeneratedModel(SBItems.FROZEN_SHARD.get());
-        simpleGeneratedModel(SBItems.SMOLDERING_SHARD.get());
-        simpleGeneratedModel(SBItems.STORM_SHARD.get());
-        simpleGeneratedModel(SBItems.HOLY_SHARD.get());
+        simpleGeneratedModel(SBItems.SOUL_SHARD);
+        simpleGeneratedModel(SBItems.FOOL_SHARD);
+        simpleGeneratedModel(SBItems.FROZEN_SHARD);
+        simpleGeneratedModel(SBItems.SMOLDERING_SHARD);
+        simpleGeneratedModel(SBItems.STORM_SHARD);
+        simpleGeneratedModel(SBItems.HOLY_SHARD);
 
-        simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH.get().asItem());
-        simpleGeneratedModel(SBItems.CREATIONIST_BOOTS.get());
-        simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE.get());
-        simpleGeneratedModel(SBItems.CREATIONIST_LEGGINGS.get());
-        simpleGeneratedModel(SBItems.CREATIONIST_HELMET.get());
-        simpleGeneratedModel(SBItems.CHALK.get());
+        simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
+        simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
+        simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
+        simpleGeneratedModel(SBItems.CREATIONIST_LEGGINGS);
+        simpleGeneratedModel(SBItems.CREATIONIST_HELMET);
+        simpleGeneratedModel(SBItems.CHALK);
 
 
-        simpleGeneratedModel(SBItems.CRYOMANCER_BOOTS.get());
-        simpleGeneratedModel(SBItems.CRYOMANCER_CHESTPLATE.get());
-        simpleGeneratedModel(SBItems.CRYOMANCER_LEGGINGS.get());
-        simpleGeneratedModel(SBItems.CRYOMANCER_HELMET.get());
+        simpleGeneratedModel(SBItems.CRYOMANCER_BOOTS);
+        simpleGeneratedModel(SBItems.CRYOMANCER_CHESTPLATE);
+        simpleGeneratedModel(SBItems.CRYOMANCER_LEGGINGS);
+        simpleGeneratedModel(SBItems.CRYOMANCER_HELMET);
 
-        simpleGeneratedModel(SBItems.PYROMANCER_BOOTS.get());
-        simpleGeneratedModel(SBItems.PYROMANCER_CHESTPLATE.get());
-        simpleGeneratedModel(SBItems.PYROMANCER_LEGGINGS.get());
-        simpleGeneratedModel(SBItems.PYROMANCER_HELMET.get());
+        simpleGeneratedModel(SBItems.PYROMANCER_BOOTS);
+        simpleGeneratedModel(SBItems.PYROMANCER_CHESTPLATE);
+        simpleGeneratedModel(SBItems.PYROMANCER_LEGGINGS);
+        simpleGeneratedModel(SBItems.PYROMANCER_HELMET);
 
-        simpleGeneratedModel(SBItems.STORMWEAVER_BOOTS.get());
-        simpleGeneratedModel(SBItems.STORMWEAVER_CHESTPLATE.get());
-        simpleGeneratedModel(SBItems.STORMWEAVER_LEGGINGS.get());
-        simpleGeneratedModel(SBItems.STORMWEAVER_HELMET.get());
+        simpleGeneratedModel(SBItems.STORMWEAVER_BOOTS);
+        simpleGeneratedModel(SBItems.STORMWEAVER_CHESTPLATE);
+        simpleGeneratedModel(SBItems.STORMWEAVER_LEGGINGS);
+        simpleGeneratedModel(SBItems.STORMWEAVER_HELMET);
+
+
+        simpleGeneratedModel(SBItems.MAGIC_ESSENCE);
+        simpleGeneratedModel(SBItems.MANA_TEAR);
+
+        simpleGeneratedModel(SBItems.DECEPTION_BOOK);
+        simpleGeneratedModel(SBItems.DIVINE_BOOK);
+        simpleGeneratedModel(SBItems.RUIN_BOOK);
+        simpleGeneratedModel(SBItems.TRANSFIG_BOOK);
+        simpleGeneratedModel(SBItems.SUMMON_BOOK);
+        simpleGeneratedModel(SBItems.STARTER_BOOK);
 
 
     }
@@ -64,8 +76,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         registryObjects.stream().map(Supplier::get).forEach(this::simpleGeneratedModel);
     }
 
-    protected ItemModelBuilder simpleGeneratedModel(Item item) {
-        return simpleModel(item, mcLoc("item/generated"));
+    protected ItemModelBuilder simpleGeneratedModel(ItemLike item) {
+        return simpleModel(item.asItem(), mcLoc("item/generated"));
+    }
+
+    protected <T extends ItemLike> ItemModelBuilder simpleGeneratedModel(Supplier<T> item) {
+        return simpleModel(item.get().asItem(), mcLoc("item/generated"));
     }
 
     protected ItemModelBuilder simpleHandHeldModel(Item item) {

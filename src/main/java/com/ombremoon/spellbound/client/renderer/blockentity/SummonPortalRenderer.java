@@ -1,10 +1,14 @@
 package com.ombremoon.spellbound.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import org.joml.Matrix4f;
 
 public class SummonPortalRenderer<T extends SummonBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -13,22 +17,15 @@ public class SummonPortalRenderer<T extends SummonBlockEntity> implements BlockE
 
     @Override
     public void render(T blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-
-    }
-
-/*    @Override
-    public void render(T blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        Matrix4f matrix4f = poseStack.last().pose();
-        this.renderCube(blockEntity, matrix4f, bufferSource.getBuffer(this.renderType()));
+//        if (blockEntity.isArenaReady()) {
+//            Matrix4f matrix4f = poseStack.last().pose();
+//            this.renderCube(blockEntity, matrix4f, bufferSource.getBuffer(this.renderType()));
+//        }
     }
 
     private void renderCube(T blockEntity, Matrix4f pose, VertexConsumer consumer) {
         float f = this.getOffsetDown();
         float f1 = this.getOffsetUp();
-        this.renderFace(blockEntity, pose, consumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, Direction.SOUTH);
-        this.renderFace(blockEntity, pose, consumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, Direction.NORTH);
-        this.renderFace(blockEntity, pose, consumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, Direction.EAST);
-        this.renderFace(blockEntity, pose, consumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F, Direction.WEST);
         this.renderFace(blockEntity, pose, consumer, 0.0F, 1.0F, f, f, 0.0F, 0.0F, 1.0F, 1.0F, Direction.DOWN);
         this.renderFace(blockEntity, pose, consumer, 0.0F, 1.0F, f1, f1, 1.0F, 1.0F, 0.0F, 0.0F, Direction.UP);
     }
@@ -65,5 +62,5 @@ public class SummonPortalRenderer<T extends SummonBlockEntity> implements BlockE
 
     protected RenderType renderType() {
         return RenderType.endPortal();
-    }*/
+    }
 }

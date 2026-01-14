@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
-import com.ombremoon.spellbound.common.world.block.entity.SimpleExtendedBlockEntity;
 import com.ombremoon.spellbound.common.init.SBStats;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.core.BlockPos;
@@ -23,12 +22,18 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
+import net.nikdo53.tinymultiblocklib.components.IBlockPosOffsetEnum;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class UnnamedWorkbenchBlock extends AbstractExtendedBlock implements PreviewableExtendedBlock {
+public class UnnamedWorkbenchBlock extends AbstractMultiBlock implements IPreviewableMultiblock {
     public static final MapCodec<UnnamedWorkbenchBlock> CODEC = simpleCodec(UnnamedWorkbenchBlock::new);
     public static final EnumProperty<WorkbenchPart> PART = EnumProperty.create("workbench", WorkbenchPart.class);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -54,17 +59,17 @@ public class UnnamedWorkbenchBlock extends AbstractExtendedBlock implements Prev
 
     @Override
     public BlockState getDefaultStateForPreviews(Direction direction) {
-        return PreviewableExtendedBlock.super.getDefaultStateForPreviews(direction).setValue(FACING, direction.getClockWise());
+        return IPreviewableMultiblock.super.getDefaultStateForPreviews(direction).setValue(FACING, direction.getClockWise());
     }
 
     @Override
-    public @Nullable BiFunction<BlockState, BlockPos, BlockState> getStateFromOffset() {
-        return ((blockState, pos) -> blockState.setValue(PART, WorkbenchPart.fromOffset(pos, getDirection(blockState))));
+    public BlockState getStateForEachBlock(BlockState state, BlockPos pos, BlockPos centerOffset, Level level, @Nullable Direction direction) {
+        return state.setValue(PART, IBlockPosOffsetEnum.fromOffset(WorkbenchPart.class, centerOffset, getDirection(state), WorkbenchPart.LEFT));
     }
 
     @Override
-    public Stream<BlockPos> fullBlockShape(@Nullable Direction direction, BlockPos center) {
-        return BlockPos.betweenClosedStream(center, center.relative(direction).above());
+    public List<BlockPos> makeFullBlockShape(Level level, BlockPos center, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
+        return IMultiBlock.posStreamToList(BlockPos.betweenClosedStream(center, center.relative(direction).above()));
     }
 
     @Override
@@ -73,13 +78,8 @@ public class UnnamedWorkbenchBlock extends AbstractExtendedBlock implements Prev
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getMultiblockRenderShape(BlockState state, boolean isCenter) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new SimpleExtendedBlockEntity(blockPos, blockState);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class UnnamedWorkbenchBlock extends AbstractExtendedBlock implements Prev
         builder.add(PART);
     }
 
-    public enum WorkbenchPart implements StringRepresentable {
-        LEFT("left", new BlockPos(0, 0, 0)),
+    public enum WorkbenchPart implements StringRepresentable, IBlockPosOffsetEnum {
+        LEFT("left", BlockPos.ZERO),
         RIGHT("right",  new BlockPos(0, 0, -1)),
         TOP_LEFT("top_left",  new BlockPos(0, 1, 0)),
         TOP_RIGHT("top_right",  new BlockPos(0, 1, -1));
@@ -113,20 +113,14 @@ public class UnnamedWorkbenchBlock extends AbstractExtendedBlock implements Prev
             this.offset = offset;
         }
 
-        public static WorkbenchPart fromOffset(BlockPos offset, @Nullable Direction direction) {
-            for (WorkbenchPart part : WorkbenchPart.values()){
-               BlockPos offset1 = part.offset;
-               if (direction != null) offset1 = offset1.rotate(ExtendedBlock.rotationFromDirection(direction));
-
-               if (offset1.equals(offset)) return part;
-
-           }
-           return WorkbenchPart.LEFT;
-        }
-
         @Override
         public String getSerializedName() {
             return this.name;
+        }
+
+        @Override
+        public Function<BlockPos, BlockPos> getOffsetFunction() {
+            return (pos) -> this.offset;
         }
     }
 
