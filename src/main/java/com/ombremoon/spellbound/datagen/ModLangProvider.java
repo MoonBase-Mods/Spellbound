@@ -563,14 +563,14 @@ public class ModLangProvider extends LanguageProvider {
 
         addSkillTooltip(SBSkills.HEALING_TOUCH, "Heals the caster 2 health per second for 5 seconds.");
         addSkillTooltip(SBSkills.BLASPHEMY, "When the caster is hit, applies Disease to the attacker for 3 seconds. 5 sec. cooldown");
-        addSkillTooltip(SBSkills.CONVALESCENCE, "Restores 1 health when the caster attack a target affected by poison or disease.");
+        addSkillTooltip(SBSkills.CONVALESCENCE, "Restores 1 health when the caster attacks a target affected by poison or disease.");
         addSkillTooltip(SBSkills.DIVINE_BALANCE, "Increases the duration of the spell by 100% and the mana cost by 50%.");
         addSkillTooltip(SBSkills.NATURES_TOUCH, "Instantly restores 4 health to the caster.");
         addSkillTooltip(SBSkills.CLEANSING_TOUCH, "Removes a random negative effect from the caster.");
         addSkillTooltip(SBSkills.ACCELERATED_GROWTH, "Instantly restores 2 hunger to the caster.");
         addSkillTooltip(SBSkills.HEALING_STREAM, "Each tick restores extra health equal to 2% of the caster's missing mana.");
         addSkillTooltip(SBSkills.TRANQUILITY_OF_WATER, "Increases mana regeneration by 25%");
-        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each tick applies a stack of Overgrowth (up to a max of 5 stacks.) When hit, Overgrowth restores 4 health, consuming 1 stack.");
+        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each heal tick applies a stack of Overgrowth (up to a max of 5 stacks). When hit, Overgrowth restores 4 health, consuming 1 stack.");
         addSkillTooltip(SBSkills.OAK_BLESSING, "Increases armor by 15% for 10 seconds if the caster's health drops below 30% while Healing Touch is active. 30 sec. cooldown.");
 
         addSkillTooltip(SBSkills.HEALING_BLOSSOM, "Plants a divine blossom. The blossom blooms 10 seconds after casting and last 10 seconds. The blossom heals the caster 2 health per seconds when within 5 blocks.");

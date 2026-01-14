@@ -27,15 +27,8 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 //TODO: General - Discuss with Duck about bobHurt in GameRenderer
 // bobHurt stuff?
-//TODO: General - Discuss with Duck about Followers
-// Like familiars? or what
 
 //Change rituals to check one display per tick (startup time min depends on tier {tier 1  = min(4)})
-
-//Alpha Bugs to Fix
-//Ritual Lag
-//Stave/armor pages - go back over transfig one, my minds blanking
-//Structure loot pools - done for vanilla structures, might wanna add some to our structures
 
 //Catalysts
 //Ruin - Doubles Status Build Up
