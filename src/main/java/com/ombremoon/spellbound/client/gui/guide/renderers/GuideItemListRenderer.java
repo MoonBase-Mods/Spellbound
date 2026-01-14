@@ -59,8 +59,8 @@ public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList
             );
 
             String countString;
-            if (entry.count().getA() == entry.count().getB()) countString = String.valueOf(entry.count().getA());
-            else countString = entry.count().getA() + "-" + entry.count().getB();
+            if (entry.count().min() == entry.count().max()) countString = String.valueOf(entry.count().min());
+            else countString = entry.count().min() + "-" + entry.count().max();
 
             graphics.drawString(Minecraft.getInstance().font,
                     Component.literal(countString).withStyle(isVisible(element.extras().pageScrap()) && isVisible(entry.scrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
