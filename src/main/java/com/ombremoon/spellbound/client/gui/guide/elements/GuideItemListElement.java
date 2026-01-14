@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.client.gui.guide.elements;
 
-import com.lowdragmc.lowdraglib2.math.Range;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,6 +8,7 @@ import com.ombremoon.spellbound.client.gui.guide.elements.extras.ItemListExtras;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IHoverable;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IInteractable;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.util.math.Range;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
