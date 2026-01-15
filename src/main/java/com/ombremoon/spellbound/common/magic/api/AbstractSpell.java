@@ -699,7 +699,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         SpellPath path = this.spellType().getIdentifiablePath();
         float levelDamage = amount * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * skills.getSpellLevel(spellType()));
         float judgementFactor = this.getPath() == SpellPath.DIVINE ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
-        levelDamage *= 1 + PATH_LEVEL_DAMAGE_MODIFIER * ((float) skills.getPathLevel(path) / 100) * judgementFactor;
+        levelDamage *= 1 + PATH_LEVEL_DAMAGE_MODIFIER * ((float) skills.getPathLevel(path) / 100) * (1.0F + judgementFactor);
         return potency(ownerEntity, levelDamage);
     }
 
@@ -1363,7 +1363,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 spellCap++;
 
             int spellsActive = this.context.getActiveSpells();
-            if (spellsActive >= spellCap) {
+            if (!this.fullRecast && spellsActive >= spellCap) {
                 this.endFirstSpell();
             }
 

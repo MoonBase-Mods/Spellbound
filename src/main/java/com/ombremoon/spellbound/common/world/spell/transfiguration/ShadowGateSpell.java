@@ -36,18 +36,11 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                 .manaCost(25)
                 .duration(1200)
                 .castCondition((context, spell) -> {
-                    int activePortals = spell.portalMap.size();
                     boolean hasReach = context.hasSkill(SBSkills.REACH);
                     BlockPos blockPos = spell.getSpawnPos(hasReach ? 100 : 50);
                     if (blockPos == null) return false;
 
                     if (!context.getLevel().getBlockState(blockPos).isAir()) return false;
-                    /*if (activePortals > 1) {
-                        int portalRange = hasReach ? 10000 : 2500;
-                        PortalInfo info = spell.portalMap.get(spell.portalMap.getPreviousPortal());
-                        double distance = info.position().distanceToSqr(blockPos.getCenter());
-                        if (distance > portalRange) return false;
-                    }*/
 
                     if (context.hasSkill(SBSkills.DARKNESS_PREVAILS)) return true;
                     int i = context.getLevel().getRawBrightness(blockPos, 0) + context.getLevel().getBrightness(LightLayer.BLOCK, blockPos) - context.getLevel().getSkyDarken();

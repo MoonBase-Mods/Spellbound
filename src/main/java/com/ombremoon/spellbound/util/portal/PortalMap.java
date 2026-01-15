@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.util.portal;
 
-import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.world.entity.PortalEntity;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.EntityUtil;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
 import java.util.function.Consumer;
