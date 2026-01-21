@@ -7,12 +7,16 @@ import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMult
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,19 +41,20 @@ public final class RitualInstance {
     public void tick(ServerLevel level) {
         Player player = level.getPlayerByUUID(this.ownerID);
         TransfigurationRitual ritual = ritualHolder.value();
+        TransfigurationMultiblock multiblock = (TransfigurationMultiblock) pattern.multiblock();
         if (this.ticks >= ritual.definition().duration()) {
             ritual.effects().forEach(ritualEffect -> ritualEffect.onActivated(level, ritual.definition().tier(), player, this.blockPos, this.pattern));
             this.active = false;
-            TransfigurationMultiblock multiblock = (TransfigurationMultiblock) pattern.multiblock();
             multiblock.clearMultiblock(player, level, pattern);
         }
 
-        if (this.startTicks < /*ritual.definition().startupTime()*/100) {
+        if (this.startTicks < ritual.definition().startupTime()) {
             this.startTicks++;
         } else {
             this.ticks++;
         }
     }
+
 
     public void toggleRitual() {
         this.active = !this.active;

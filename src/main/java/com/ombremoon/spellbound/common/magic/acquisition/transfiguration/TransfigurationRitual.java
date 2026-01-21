@@ -5,25 +5,21 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -34,7 +30,7 @@ public class TransfigurationRitual {
                             RitualDefinition.CODEC.fieldOf("definition").forGetter(TransfigurationRitual::definition),
                             Value.CODEC
                                     .listOf()
-                                    .fieldOf("values")
+                                    .fieldOf("ingredients")
                                     .flatXmap(list -> {
                                         Value[] avalue = list.toArray(Value[]::new);
                                         if (avalue.length == 0) {
@@ -45,7 +41,7 @@ public class TransfigurationRitual {
                                                     : DataResult.success(NonNullList.of(Value.EMPTY, avalue));
                                         }
                                     }, DataResult::success)
-                                    .forGetter(recipe -> recipe.materials),
+                                    .forGetter(recipe -> recipe.elementMaterials),
                             RitualEffect.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
                     )
                     .apply(p_344998_, TransfigurationRitual::new)
@@ -53,73 +49,50 @@ public class TransfigurationRitual {
     public static final Codec<Holder<TransfigurationRitual>> CODEC = RegistryFixedCodec.create(Keys.RITUAL);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<TransfigurationRitual>> STREAM_CODEC = ByteBufCodecs.holderRegistry(Keys.RITUAL);
     private final RitualDefinition definition;
-    private final NonNullList<Value> materials;
+    private final NonNullList<Value> elementMaterials;
+    private final NonNullList<Ingredient> materials = NonNullList.create();
     private final List<RitualEffect> effects;
     final Map<Ingredient, Integer> ingredients = new Object2IntOpenHashMap<>();
-    final Set<Item> filteredItems = new ObjectOpenHashSet<>();
 
-    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> materials, List<RitualEffect> effects) {
+    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<RitualEffect> effects) {
         this.definition = definition;
-        this.materials = materials;
+        this.elementMaterials = elementMaterials;
         this.effects = effects;
 
-        materials.forEach(value -> ingredients.put(value.ingredient, value.count));
+        this.materials.addAll(this.convertValueToIngredient(elementMaterials));
+        elementMaterials.forEach(value -> ingredients.put(value.ingredient, value.count));
     }
 
     public boolean matches(TransfigurationMultiblock input, List<ItemStack> items) {
-        if (items.size() < this.materials.size() || items.size() > this.materials.size()) {
+        if (items.size() != this.materials.size()) {
             return false;
-        } else if (this.matches(items, this.getIngredients())) {
-            for (Item item : this.filteredItems) {
-                if (this.countItem(item, items) < this.getIngredientCount(new ItemStack(item)))
-                    return false;
-            }
-            return this.definition.tier == input.getRings() && this.hasValidEffects(input);
+        } else {
+            return this.matches(items, this.materials) && this.definition.tier == input.getRings() && this.hasValidEffects(input);
         }
-        return false;
     }
 
     public boolean matches(List<ItemStack> from, NonNullList<Ingredient> to) {
-        int matchedIngredients = 0;
+        Iterator<Ingredient> iter = NonNullList.copyOf(to).iterator();
         for (ItemStack itemStack : from) {
-            if (matchedIngredients >= to.size()) {
-                return true;
-            } else {
-                for (Ingredient ingredient : to) {
-                    if (ingredient.test(itemStack)) {
-                        matchedIngredients++;
-                        this.filteredItems.add(itemStack.getItem());
-                        break;
-                    }
+            while (iter.hasNext()) {
+                if (iter.next().test(itemStack)) {
+                    iter.remove();
+                    break;
                 }
             }
         }
-        return matchedIngredients == to.size();
+        return !iter.hasNext();
     }
 
-    private NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> nonNullList = NonNullList.create();
-        nonNullList.addAll(this.ingredients.keySet());
-        return nonNullList;
-    }
-
-    private int getIngredientCount(ItemStack ingredient) {
-        for (var entry : this.ingredients.entrySet()) {
-            if (entry.getKey().getItems()[0].is(ingredient.getItem()))
-                return entry.getValue();
-        }
-        return 0;
-    }
-
-    private int countItem(Item item, List<ItemStack> items) {
-        int i = 0;
-        for(ItemStack stack : items) {
-            if (stack.is(item)) {
-                i += stack.getCount();
+    private NonNullList<Ingredient> convertValueToIngredient(NonNullList<Value> values) {
+        NonNullList<Ingredient> list = NonNullList.create();
+        for (Value value : values) {
+            for (int i = 0; i < value.count; i++) {
+                list.add(value.ingredient);
             }
         }
 
-        return i;
+        return list;
     }
 
     public boolean hasValidEffects(TransfigurationMultiblock multiblock) {
@@ -135,8 +108,8 @@ public class TransfigurationRitual {
         return this.definition;
     }
 
-    public NonNullList<Value> materials() {
-        return this.materials;
+    public NonNullList<Value> clientMaterials() {
+        return this.elementMaterials;
     }
 
     public List<RitualEffect> effects() {

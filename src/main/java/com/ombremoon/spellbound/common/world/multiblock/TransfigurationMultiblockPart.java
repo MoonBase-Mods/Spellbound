@@ -66,7 +66,9 @@ public abstract class TransfigurationMultiblockPart extends BlockEntity implemen
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveWithoutMetadata(registries);
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag, registries);
+        return tag;
     }
 
     @Override

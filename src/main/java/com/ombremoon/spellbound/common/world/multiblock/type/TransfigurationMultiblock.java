@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.multiblock.type;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.init.SBRituals;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import com.ombremoon.spellbound.common.world.multiblock.*;
 import com.ombremoon.spellbound.common.init.SBBlocks;
@@ -28,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class TransfigurationMultiblock extends StandardMultiblock {
@@ -67,12 +67,11 @@ public class TransfigurationMultiblock extends StandardMultiblock {
 
     @Override
     protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {BlockPos pedestal = this.getPedestalPosition(pattern);
-//        List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
-//        List<ItemStack> items = createItemList(displays);
+//        List<ItemStack> items = this.createItemList(level, pattern);
 //        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
-        if (/*optional.isPresent() && */part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
+        if (/*optional.isPresent() &&*/ part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
 //            TransfigurationRitual ritual = optional.get();
-//            display.setRitual(ritual);
+            display.setRitual(level.registryAccess().holderOrThrow(SBRituals.CREATE_SHADOW_GATE).value());
             display.setCenter(pedestal);
             display.active = true;
         }
@@ -81,9 +80,8 @@ public class TransfigurationMultiblock extends StandardMultiblock {
     @Override
     public void onActivate(Player player, Level level, MultiblockPattern pattern) {
         BlockPos pedestal = this.getPedestalPosition(pattern);
-        List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
-        List<ItemStack> items = createItemList(displays);
-        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
+        List<ItemStack> items = this.createItemList(level, pattern);
+        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(this, items, this.rings);
         if (optional.isPresent() && !level.isClientSide) {
             TransfigurationRitual ritual = optional.get();
             RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
@@ -92,39 +90,18 @@ public class TransfigurationMultiblock extends StandardMultiblock {
         }
     }
 
-    private List<TransfigurationDisplayBlockEntity> createDisplayList(Level level, MultiblockPattern pattern) {
-        List<TransfigurationDisplayBlockEntity> displays = new ArrayList<>();
+    private List<ItemStack> createItemList(Level level, MultiblockPattern pattern) {
+        List<ItemStack> ritualItems = new ArrayList<>();
         BlockPos origin = pattern.frontBottomLeft();
         for (MultiblockIndex index : this.displayPositions) {
             BlockPos blockPos = index.toPos(pattern.facing(), origin);
             BlockEntity entity = level.getBlockEntity(blockPos);
             if (entity instanceof TransfigurationDisplayBlockEntity display) {
-                displays.add(display);
+                ritualItems.add(display.currentItem);
             }
         }
 
-        return displays;
-    }
-
-    private List<ItemStack> createItemList(List<TransfigurationDisplayBlockEntity> displays) {
-        List<ItemStack> items = new ArrayList<>();
-        for (var display : displays) {
-            boolean found = false;
-            if (display.currentItem == null)
-                continue;
-
-            for (ItemStack item : items) {
-                if (item.getItem() == display.currentItem.getItem()) {
-                    item.grow(1);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                items.add(display.currentItem.copy());
-            }
-        }
-        return items;
+        return ritualItems;
     }
 
     @Override

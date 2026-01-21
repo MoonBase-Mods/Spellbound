@@ -147,6 +147,12 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(SBItems.MAGIC_ESSENCE.get())
                 .unlockedBy("has_summon_stone", has(SBBlocks.SUMMON_STONE.get()))
                 .save(output, getConversionRecipeName(SBBlocks.SUMMON_STONE.get(), SBBlocks.CRACKED_SUMMON_STONE.get()));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SBBlocks.CRACKED_SUMMON_STONE.get())
+                .requires(SBBlocks.CRACKED_SUMMON_STONE.get())
+                .requires(SBBlocks.CRACKED_SUMMON_STONE.get())
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .unlockedBy("has_summon_stone", has(SBBlocks.SUMMON_STONE.get()))
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.MANA_TEAR.get())
                 .define('#', SBItems.MAGIC_ESSENCE.get())
                 .define('D', Items.DIAMOND)

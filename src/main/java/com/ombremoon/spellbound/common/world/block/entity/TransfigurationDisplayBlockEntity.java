@@ -11,6 +11,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblockPart {
     public ItemStack currentItem;
@@ -79,19 +82,28 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
         } else if (display.pedestalPos != null) {
             initSpiral(display, display.pedestalPos);
         } else {
+            if (display.getRitual() == null)
+                return;
+
             tickItems(display);
         }
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, TransfigurationDisplayBlockEntity display) {
-        if (display.active)
+        if (display.active) {
+            if (display.getRitual() == null) {
+                display.setActive(false);
+                return;
+            }
+
             tickItems(display);
+        }
 
     }
 
     private static void tickItems(TransfigurationDisplayBlockEntity display) {
         display.spiralTick++;
-        if (display.spiralTick >= /*display.getRitual().definition().startupTime()*/100) {
+        if (display.spiralTick >= display.getRitual().definition().startupTime()) {
             resetDisplay(display);
         }
     }
@@ -122,7 +134,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
     }
 
     public Vec3 spiralOffset(float partialTicks, double turns) {
-        double raw = ((level.getGameTime() - spiralStartTick) + partialTicks) / /*this.getRitual().definition().startupTime()*/100;
+        double raw = ((level.getGameTime() - spiralStartTick) + partialTicks) / this.getRitual().definition().startupTime();
         double p = Mth.clamp(raw, 0.0, 1.0);
         double ease = 1.0 - Math.pow(1.0 - p, 3.0);
 
@@ -141,6 +153,11 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
 
     public void setCenter(BlockPos center) {
         this.pedestalPos = center;
+        setChanged();
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
         setChanged();
     }
 
