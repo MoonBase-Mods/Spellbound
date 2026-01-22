@@ -5,11 +5,10 @@ import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
@@ -137,5 +136,10 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     @Override
     protected int getDuration(SpellContext context) {
         return context.isChoice(SBSkills.COUNTER_MAGIC) ? 200 : super.getDuration(context);
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+
     }
 }

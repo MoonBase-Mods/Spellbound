@@ -1,12 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
-import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
-import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -14,6 +10,9 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
+import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
+import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -181,6 +180,11 @@ public class WildMushroomSpell extends SummonSpell {
     @Override
     protected int getDuration(SpellContext context) {
         return this.hasEvolvedMushroom(context) ? 24000 : super.getDuration(context);
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+
     }
 
     private boolean hasEvolvedMushroom(SpellContext context) {

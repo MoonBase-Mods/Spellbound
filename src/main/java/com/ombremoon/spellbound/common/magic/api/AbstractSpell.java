@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.client.CameraEngine;
 import com.ombremoon.spellbound.client.KeyBinds;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.client.particle.EffectCache;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
@@ -26,14 +27,20 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -50,7 +57,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -84,6 +94,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected static final float MANA_COST_MODIFIER = 0.15F;
     protected static final float HURT_XP_MODIFIER = 0.01F;
     protected static final float HEAL_MODIFIER = 0.25F;
+    private final Map<Skill, List<Component>> skillTooltips = new HashMap<>();
+    private final Map<Skill, DataComponentType<?>> tooltipComponents = new HashMap<>();
     private final SpellType<?> spellType;
     private final int manaCost;
     private final int duration;
@@ -148,6 +160,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         dataBuilder.define(CAST_POS, BlockPos.ZERO);
         this.defineSpellData(dataBuilder);
         this.spellData = dataBuilder.build();
+        this.registerSkillTooltips();
+
     }
 
     /**
@@ -301,11 +315,36 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns a component of the spells description.
+     * Returns a component of the spell's description.
      * @return The spells description
      */
     public MutableComponent getDescription() {
         return Component.translatable(this.getDescriptionId());
+    }
+
+    public List<Component> getSkillTooltip(Skill skill) {
+        return this.skillTooltips.getOrDefault(skill, new ArrayList<>());
+    }
+
+    protected abstract void registerSkillTooltips();
+
+    protected void addSkillDetails(Holder<Skill> skill, SkillTooltipProvider... providers) {
+        List<Component> tooltips = this.skillTooltips.getOrDefault(skill.value(), new ArrayList<>());
+        Consumer<Component> adder = tooltips::add;
+        for (SkillTooltipProvider provider : providers) {
+            if (provider.component() != null && this.tooltipComponents.get(skill.value()) != provider.component()) {
+                ResourceLocation location = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(Objects.requireNonNull(provider.component()));
+                if (location != null) {
+                    adder.accept(CommonComponents.EMPTY);
+                    adder.accept(Component.translatable("spellbound.skill_tooltip." + location.getPath()).withStyle(ChatFormatting.GRAY));
+                    this.tooltipComponents.put(skill.value(), provider.component());
+                }
+            }
+
+            provider.addToTooltip(Item.TooltipContext.EMPTY, adder, TooltipFlag.NORMAL);
+        }
+
+        this.skillTooltips.put(skill.value(), tooltips);
     }
 
     /**

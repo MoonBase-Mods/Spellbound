@@ -1,16 +1,15 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.StormBolt;
-import com.ombremoon.spellbound.common.world.entity.spell.StormCloud;
-import com.ombremoon.spellbound.common.world.entity.spell.StormRift;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.entity.spell.StormBolt;
+import com.ombremoon.spellbound.common.world.entity.spell.StormCloud;
+import com.ombremoon.spellbound.common.world.entity.spell.StormRift;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.EntityUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -33,7 +32,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
@@ -354,6 +352,11 @@ public class StormRiftSpell extends AnimatedSpell {
         livingEntity.setDeltaMovement(direction);
         livingEntity.hurtMarked = true;
         this.thrownEntities.add(livingEntity.getId());
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+
     }
 
     @Override

@@ -1,22 +1,24 @@
 package com.ombremoon.spellbound.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.tree.SkillNode;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UpgradeWidget {
@@ -27,29 +29,32 @@ public class UpgradeWidget {
     private final UpgradeWindow window;
     private final Minecraft minecraft;
     private final SkillNode skillNode;
+    private final AbstractSpell spell;
     private final FormattedCharSequence title;
     private final int width;
     private final List<FormattedCharSequence> description;
+    private final List<FormattedCharSequence> skillDetails;
     private final List<UpgradeWidget> parents = new ObjectArrayList<>();
     private final List<UpgradeWidget> children = new ObjectArrayList<>();
     private final int x;
     private final int y;
     private final int color;
+    private boolean showDetails;
 
     public UpgradeWidget(UpgradeWindow window, Minecraft minecraft, SkillNode skillNode) {
         this.window = window;
         this.minecraft = minecraft;
         this.skillNode = skillNode;
-        this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(skillNode.skill().getName(), 163));
-        this.x = skillNode.skill().getX();
-        this.y = -skillNode.skill().getY();
+        Skill skill = skillNode.skill();
+        this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(skill.getName(), 163));
+        this.x = skill.getX();
+        this.y = -skill.getY();
         int j = 29 + minecraft.font.width(this.title);
-        SpellPath path = getSkill().getSpell().getIdentifiablePath();
+        this.spell = skill.getSpell().createSpell();
+        SpellPath path = spell.spellType().getIdentifiablePath();
         this.color = path.getColor();
-        this.description = Language.getInstance()
-                .getVisualOrder(
-                        this.findOptimalLines(ComponentUtils.mergeStyles(skillNode.skill().getDescription(), Style.EMPTY.withColor(this.color)), 120)
-                );
+        this.description = this.createSkillDescription(minecraft.font, skill);
+        this.skillDetails = this.createSkillTooltip(minecraft.font, skill);
 
         for (FormattedCharSequence formattedcharsequence : this.description) {
             j = Math.max(j, minecraft.font.width(formattedcharsequence));
@@ -62,26 +67,17 @@ public class UpgradeWidget {
         return this.skillNode.skill();
     }
 
-    private static float getMaxWidth(StringSplitter manager, List<FormattedText> text) {
-        return (float)text.stream().mapToDouble(manager::stringWidth).max().orElse(0.0);
+    private List<FormattedCharSequence> createSkillDescription(Font font, Skill skill) {
+        var component = skill.getDescription().withStyle(Style.EMPTY.withColor(this.color));
+        component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
+        return font.split(component, 120);
     }
 
-    private List<FormattedText> findOptimalLines(Component component, int maxWidth) {
-        StringSplitter stringsplitter = this.minecraft.font.getSplitter();
-        List<FormattedText> list = null;
-        float f = Float.MAX_VALUE;
-
-        for (int i : TEST_SPLIT_OFFSETS) {
-            List<FormattedText> list1 = stringsplitter.splitLines(component, maxWidth - i, Style.EMPTY);
-            float f1 = Math.abs(getMaxWidth(stringsplitter, list1) - (float)maxWidth);
-            if (f1 <= 10.0F) {
-                return list1;
-            }
-
-            if (f1 < f) {
-                f = f1;
-                list = list1;
-            }
+    private List<FormattedCharSequence> createSkillTooltip(Font font, Skill skill) {
+        List<FormattedCharSequence> list = new ArrayList<>();
+        List<Component> tooltips = this.spell.getSkillTooltip(skill);
+        for (var tooltip : tooltips) {
+            list.addAll(font.split(tooltip, 120));
         }
 
         return list;
@@ -143,28 +139,32 @@ public class UpgradeWidget {
     }
 
     public void drawHover(GuiGraphics guiGraphics, int x, int y, float fade, int width, int height) {
+        this.showDetails = Screen.hasShiftDown();
+        List<FormattedCharSequence> tooltip = this.getDescription();
         boolean flag = width + x + this.x + this.width + 30 >= this.window.getScreen().width;
-        boolean flag1 = 115 - y - this.y - 30 <= 6 + this.description.size() * 9;
+        boolean flag1 = 115 - y - this.y - 30 <= 6 + tooltip.size() * 9;
         var holder = SpellUtil.getSkills(this.minecraft.player);
         boolean flag2 = holder.hasSkill(getSkill());
         ResourceLocation box = flag2 ? UNLOCKED : LOCKED;
 
         int i = this.width;
+        if (this.showDetails)
+            i += 10;
         RenderSystem.enableBlend();
         int j = y + this.y;
         int k;
         if (flag) {
-            k = x + this.x - this.width + 26 + 6;
+            k = x + this.x - i + 26 + 6;
         } else {
             k = x + this.x;
         }
 
-        int l = 37 + this.description.size() * 9;
-        if (!this.description.isEmpty()) {
+        int l = 37 + tooltip.size() * 9;
+        if (!tooltip.isEmpty()) {
             if (flag1) {
-                guiGraphics.blitSprite(TITLE_BOX_SPRITE, k, j + 26 - l, this.width, l);
+                guiGraphics.blitSprite(TITLE_BOX_SPRITE, k, j + 26 - l, i, l);
             } else {
-                guiGraphics.blitSprite(TITLE_BOX_SPRITE, k, j, this.width, l);
+                guiGraphics.blitSprite(TITLE_BOX_SPRITE, k, j, i, l);
             }
         }
 
@@ -177,17 +177,21 @@ public class UpgradeWidget {
         }
 
         if (flag1) {
-            for (int i1 = 0; i1 < this.description.size(); i1++) {
-                guiGraphics.drawString(this.minecraft.font, this.description.get(i1), k + 5, j + 26 - l + 9 + i1 * 9, -5592406, false);
+            for (int i1 = 0; i1 < tooltip.size(); i1++) {
+                guiGraphics.drawString(this.minecraft.font, tooltip.get(i1), k + 5, j + 26 - l + 9 + i1 * 9, -5592406, false);
             }
         } else {
-            for (int j1 = 0; j1 < this.description.size(); j1++) {
-                guiGraphics.drawString(this.minecraft.font, this.description.get(j1), k + 5, y + this.y + 9 + 22 + j1 * 9, -5992406, false);
+            for (int j1 = 0; j1 < tooltip.size(); j1++) {
+                guiGraphics.drawString(this.minecraft.font, tooltip.get(j1), k + 5, y + this.y + 9 + 22 + j1 * 9, -5992406, false);
             }
         }
 
         ResourceLocation sprite = this.skillNode.skill().getTexture();
         guiGraphics.blit(sprite, x + this.x + 3, y + this.y + 3, 0, 0, 24, 24, 24, 24);
+    }
+
+    private List<FormattedCharSequence> getDescription() {
+        return this.showDetails ? this.createSkillTooltip(this.minecraft.font, this.getSkill()) : this.description;
     }
 
     public void attachToParents() {

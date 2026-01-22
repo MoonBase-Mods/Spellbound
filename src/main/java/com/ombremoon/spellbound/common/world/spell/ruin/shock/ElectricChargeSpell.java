@@ -61,6 +61,11 @@ public class ElectricChargeSpell extends AnimatedSpell {
     }
 
     @Override
+    protected void registerSkillTooltips() {
+
+    }
+
+    @Override
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(DISCHARGE_TICK, 0);

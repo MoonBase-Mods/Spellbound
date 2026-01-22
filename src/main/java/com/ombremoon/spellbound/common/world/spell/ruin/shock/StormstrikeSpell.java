@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.StormstrikeBolt;
 import com.ombremoon.spellbound.common.init.*;
@@ -23,6 +25,14 @@ public class StormstrikeSpell extends AnimatedSpell {
 
     public StormstrikeSpell() {
         super(SBSpells.STORMSTRIKE.get(), createStormstrikeBuilder());
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.STORMSTRIKE,
+                SkillTooltip.DAMAGE_OVER_TIME.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 3)),
+                SkillTooltip.DURATION.tooltip(60));
+        this.addSkillDetails(SBSkills.ELECTRIFY, SkillTooltip.TARGET_SHOCK_RESIST.tooltip(-30F));
     }
 
     @Override

@@ -153,6 +153,11 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
         return context != null && CRYSTAL_PREDICATE.test(context) ? 5 : super.getCastTime(context);
     }
 
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
+
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {
         var skills = context.getSkills();
         ShatteringCrystalSpell spell = crystal.getSpell();

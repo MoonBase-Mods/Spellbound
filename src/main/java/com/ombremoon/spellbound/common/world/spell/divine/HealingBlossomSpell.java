@@ -1,8 +1,5 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
@@ -14,6 +11,8 @@ import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +47,11 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
     public HealingBlossomSpell() {
         super(SBSpells.HEALING_BLOSSOM.get(), createHealingBlossomSpell());
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+
     }
 
     @Override

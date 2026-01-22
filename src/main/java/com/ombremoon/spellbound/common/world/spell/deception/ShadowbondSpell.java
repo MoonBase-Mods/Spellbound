@@ -179,6 +179,11 @@ public class ShadowbondSpell extends AnimatedSpell {
         return context.hasSkill(SBSkills.EVERLASTING_BOND) ? 500 : context.hasSkill(SBSkills.REVERSAL) ? duration + 100 : duration;
     }
 
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
+
     private void teleport(LivingEntity first, LivingEntity second) {
         Vec3 firstPos = first.position();
         Vec3 secondPosPos = second.position();

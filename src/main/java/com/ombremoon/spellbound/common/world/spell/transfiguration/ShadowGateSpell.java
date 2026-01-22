@@ -180,6 +180,11 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     }
 
     @Override
+    protected void registerSkillTooltips() {
+
+    }
+
+    @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
         this.portalMap.serialize(compoundTag);
         return compoundTag;

@@ -105,6 +105,7 @@ public class StormstrikeEffect extends SBEffect {
             var skills = SpellUtil.getSkills(owner);
             StormstrikeSpell spell = SBSpells.STORMSTRIKE.get().createSpell();
 
+            //ADD SPELLDAMAGESOURCE
             if (skills.hasSkill(SBSkills.REFRACTION) && damageSource.is(SBDamageTypes.RUIN_SHOCK) && damageSource.getEntity() != null && damageSource.getEntity().is(owner))
                 handler.awardMana(20 + skills.getSpellLevel(spell.spellType()) * 2);
         }

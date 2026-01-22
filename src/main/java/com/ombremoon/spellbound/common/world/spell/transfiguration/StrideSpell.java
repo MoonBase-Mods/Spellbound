@@ -67,6 +67,11 @@ public class StrideSpell extends AnimatedSpell {
     }
 
     @Override
+    protected void registerSkillTooltips() {
+
+    }
+
+    @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
         LivingEntity caster = context.getCaster();

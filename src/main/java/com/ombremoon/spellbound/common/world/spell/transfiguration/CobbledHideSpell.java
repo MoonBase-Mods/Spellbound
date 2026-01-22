@@ -41,6 +41,11 @@ public class CobbledHideSpell extends AnimatedSpell {
     }
 
 
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
+
     //Damage based skills needed to be added
     @Override
     protected void onSpellStart(SpellContext context) {

@@ -14,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -106,6 +107,10 @@ public class SBData {
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final Supplier<DataComponentType<Boolean>> BOSS_PICKUP = COMPONENT_TYPES.registerComponentType("boss_pickup",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+    public static final Supplier<DataComponentType<Unit>> DETAILS = COMPONENT_TYPES.registerComponentType("details", builder -> builder.persistent(Unit.CODEC));
+    public static final Supplier<DataComponentType<Unit>> TARGET_DEBUFFS = COMPONENT_TYPES.registerComponentType("target_debuffs", builder -> builder.persistent(Unit.CODEC));
+    public static final Supplier<DataComponentType<Unit>> ALLY_BUFFS = COMPONENT_TYPES.registerComponentType("ally_buffs", builder -> builder.persistent(Unit.CODEC));
 
     public static void register(IEventBus modEventBus) {
         SBData.ATTACHMENT_TYPES.register(modEventBus);
