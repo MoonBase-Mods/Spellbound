@@ -1,9 +1,5 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.IceShrapnel;
-import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -13,6 +9,9 @@ import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.entity.spell.IceShrapnel;
+import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -41,7 +40,9 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 .duration(400)
                 .manaCost(20)
                 .baseDamage(5)
-                .castAnimation(context -> createQuickOrSimpleAnimation(context, CRYSTAL_PREDICATE.test(context)))
+                .castAnimation(context -> {
+                    return context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context));
+                })
                 .castCondition((context, shatteringCrystalSpell) -> {
                     if (context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getOwner()) {
                         if (context.hasSkill(SBSkills.GLACIAL_IMPACT) && context.hasCatalyst(SBItems.FROZEN_SHARD.get()) && !crystal.marked) {

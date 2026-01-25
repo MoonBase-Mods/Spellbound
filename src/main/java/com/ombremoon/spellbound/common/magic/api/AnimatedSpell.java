@@ -85,11 +85,6 @@ public abstract class AnimatedSpell extends AbstractSpell {
         }
     }
 
-    protected static SpellAnimation createQuickOrSimpleAnimation(SpellContext context, boolean isInstant) {
-        String animation = context.quickOrSimpleCast(isInstant);
-        return new SpellAnimation(animation, SpellAnimation.Type.CAST, true);
-    }
-
     @Override
     public boolean isStationaryCast(SpellContext context) {
         return this.castAnimation.apply(context).stationary();

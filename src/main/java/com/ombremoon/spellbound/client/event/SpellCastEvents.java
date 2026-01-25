@@ -69,7 +69,7 @@ public class SpellCastEvents {
         AbstractSpell spell = handler.getCurrentlyCastSpell();
         if (spell != null) {
             if (handler.castTick > 0 && !SpellUtil.canCastSpell(player, spell)) {
-                SpellContext spellContext = createContext(spell);
+                SpellContext spellContext = createContext(player, spell);
                 spell.resetCast(handler, spellContext);
             }
 
@@ -81,14 +81,14 @@ public class SpellCastEvents {
                     if (handler.isChargingOrChannelling()) {
                         stopChargeOrChannel(player, handler, spell, true);
                     } else if (handler.castTick == 0) {
-                        startCasting(handler, spell);
+                        startCasting(player, handler, spell);
                         handler.setChargingOrChannelling(true);
                         PayloadHandler.setChargeOrChannel(true);
                     }
                 } else if (handler.isChargingOrChannelling()) {
                     stopChargeOrChannel(player, handler, spell, false);
                 } else if (handler.castTick == 0) {
-                    startCasting(handler, spell);
+                    startCasting(player, handler, spell);
                 }
             }
 
@@ -120,12 +120,14 @@ public class SpellCastEvents {
         } else {
             spell = spellType.createSpellWithData(player);
             handler.setCurrentlyCastingSpell(spell);
-            createContext(spell);
+            createContext(player, spell);
         }
     }
 
-    public static SpellContext createContext(AbstractSpell spell) {
-        SpellContext context = spell.getContext();
+    public static SpellContext createContext(Player player, AbstractSpell spell) {
+        SpellContext prevContext = spell.getContext();
+        SpellContext context = new SpellContext(spell.spellType(), prevContext.getCaster(), spell.getTargetEntity(player, SpellUtil.getCastRange(player)), prevContext.isRecast());
+
         spell.setCastContext(context);
         PayloadHandler.setCastingSpell(spell.spellType(), context);
         return context;
@@ -135,8 +137,8 @@ public class SpellCastEvents {
         return spell instanceof ChargeableSpell chargeable && chargeable.canCharge((skill, choice) -> skills.hasSkill(skill) && (choice == null || skills.getChoice(spell.spellType()) == choice));
     }
 
-    private static void startCasting(SpellHandler handler, AbstractSpell spell) {
-        SpellContext spellContext = createContext(spell);
+    private static void startCasting(Player player, SpellHandler handler, AbstractSpell spell) {
+        SpellContext spellContext = createContext(player, spell);
         spell.onCastStart(spellContext);
         PayloadHandler.castStart();
         handler.castTick = 1;
