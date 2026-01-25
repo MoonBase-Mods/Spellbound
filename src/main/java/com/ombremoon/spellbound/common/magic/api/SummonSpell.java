@@ -144,13 +144,8 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, String> castAnimationName) {
+        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
-            return this;
-        }
-
-        public Builder<T> failAnimation(Function<SpellContext, String> failAnimationName) {
-            this.failAnimation = failAnimationName;
             return this;
         }
 

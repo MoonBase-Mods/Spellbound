@@ -1,27 +1,33 @@
 package com.ombremoon.spellbound.common.world.effect;
 
 import com.ombremoon.sentinellib.api.BoxUtil;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
+import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.tslat.smartbrainlib.util.RandomUtil;
 
 public class StormstrikeEffect extends SBEffect {
+    public static final ResourceLocation ELECTRIFY = CommonClass.customLocation("electrify");
+
     public StormstrikeEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
-
 
     @Override
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
@@ -39,6 +45,16 @@ public class StormstrikeEffect extends SBEffect {
                         SkillBuff.SPELL_MODIFIER,
                         SpellModifier.CHARGED_ATMOSPHERE,
                         160);
+
+            if (skills.hasSkill(SBSkills.ELECTRIFY)) {
+                spell.addSkillBuff(
+                        livingEntity,
+                        SBSkills.ELECTRIFY,
+                        BuffCategory.HARMFUL,
+                        SkillBuff.ATTRIBUTE_MODIFIER,
+                        new ModifierData(SBAttributes.SHOCK_SPELL_RESIST, new AttributeModifier(ELECTRIFY, spell.potency(-0.3F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                );
+            }
         }
     }
 
@@ -60,7 +76,7 @@ public class StormstrikeEffect extends SBEffect {
 
             if (skills.hasSkill(SBSkills.DISARM)) {
                 ItemStack itemStack = livingEntity.getItemBySlot(EquipmentSlot.MAINHAND);
-                if (!itemStack.isEmpty() && RandomUtil.percentChance(0.2)) {
+                if (!itemStack.isEmpty() && RandomUtil.percentChance(spell.potency(0.2F))) {
                     if (livingEntity instanceof Player player) {
                         player.drop(itemStack, true);
                     } else {
@@ -69,7 +85,7 @@ public class StormstrikeEffect extends SBEffect {
                 }
             }
 
-            if (skills.hasSkill(SBSkills.PULSATION) && RandomUtil.percentChance(0.1))
+            if (skills.hasSkill(SBSkills.PULSATION) && RandomUtil.percentChance(spell.potency(0.1F)))
                 livingEntity.addEffect(new MobEffectInstance(SBEffects.STUNNED, 20, 0, false, false));
 
             if (spell.hurt(livingEntity, damage)) {
@@ -105,9 +121,14 @@ public class StormstrikeEffect extends SBEffect {
             var skills = SpellUtil.getSkills(owner);
             StormstrikeSpell spell = SBSpells.STORMSTRIKE.get().createSpell();
 
-            //ADD SPELLDAMAGESOURCE
-            if (skills.hasSkill(SBSkills.REFRACTION) && damageSource.is(SBDamageTypes.RUIN_SHOCK) && damageSource.getEntity() != null && damageSource.getEntity().is(owner))
-                handler.awardMana(20 + skills.getSpellLevel(spell.spellType()) * 2);
+            if (skills.hasSkill(SBSkills.REFRACTION)
+                    && damageSource instanceof SpellDamageSource spellDamage
+                    && spellDamage.is(SBDamageTypes.RUIN_SHOCK)
+                    && spellDamage.getEntity() != null
+                    && spellDamage.getEntity().is(owner)
+                    && !spellDamage.isSpell(spell)) {
+                handler.awardMana(spell.potency(5F));
+            }
         }
     }
 

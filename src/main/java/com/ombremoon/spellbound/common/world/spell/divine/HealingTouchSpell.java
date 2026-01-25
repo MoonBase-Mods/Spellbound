@@ -10,7 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
+import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.nbt.CompoundTag;
@@ -48,15 +48,14 @@ public class HealingTouchSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         context.getSpellHandler().getListener().addListener(SpellEventListener.Events.POST_DAMAGE, PLAYER_DAMAGE, this::onDamagePost);
         if (!context.getLevel().isClientSide) {
-            SkillHolder skills = context.getSkills();
             LivingEntity caster = context.getCaster();
-            if (skills.hasSkill(SBSkills.NATURES_TOUCH))
+            if (context.hasSkill(SBSkills.NATURES_TOUCH))
                 this.heal(caster, 4f);
 
-            if (skills.hasSkill(SBSkills.CLEANSING_TOUCH))
+            if (context.hasSkill(SBSkills.CLEANSING_TOUCH))
                 this.cleanseCaster(1);
 
-            if (skills.hasSkill(SBSkills.TRANQUILITY_OF_WATER.value()))
+            if (context.hasSkill(SBSkills.TRANQUILITY_OF_WATER))
                 this.addSkillBuff(
                         caster,
                         SBSkills.TRANQUILITY_OF_WATER,
@@ -148,13 +147,15 @@ public class HealingTouchSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putInt("overgrowth", this.overgrowthStacks);
-        compoundTag.putInt("blessing", this.blessingDuration);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putInt("overgrowth", this.overgrowthStacks);
+        nbt.putInt("blessing", this.blessingDuration);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.overgrowthStacks = nbt.getInt("overgrowth");
         this.blessingDuration = nbt.getInt("blessing");
     }

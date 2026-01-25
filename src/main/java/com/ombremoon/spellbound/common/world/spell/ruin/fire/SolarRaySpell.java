@@ -7,6 +7,7 @@ import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -38,6 +39,7 @@ import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -102,9 +104,9 @@ public class SolarRaySpell extends ChanneledSpell {
                 .manaTickCost(10)
                 .baseDamage(3)
                 .castTime(23)
-                .castAnimation(context -> "solar_ray_cast")
-                .channelAnimation(context -> "solar_ray_channel")
-                .stopChannelAnimation("solar_ray_end");
+                .castAnimation(context -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
+                .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, !context.hasSkill(SBSkills.OVERPOWER)))
+                .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
     }
 
     public SolarRaySpell() {
@@ -128,7 +130,7 @@ public class SolarRaySpell extends ChanneledSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             this.summonEntity(context, SBEntities.SOLAR_RAY.get(), caster.position(), solarRay -> {
-                if (context.getSkills().hasSkill(SBSkills.SUNSHINE))
+                if (context.hasSkill(SBSkills.SUNSHINE))
                     solarRay.addSunshine();
 
                 solarRay.setSpellId(1);
@@ -138,7 +140,7 @@ public class SolarRaySpell extends ChanneledSpell {
             });
         }
 
-        context.getSpellHandler().setStationaryTicks(this.getCastTime() + 1);
+//        context.getSpellHandler().setStationaryTicks(this.getCastTime() + 1);
     }
 
     @Override
@@ -148,7 +150,7 @@ public class SolarRaySpell extends ChanneledSpell {
         if (solarRay != null)
             solarRay.setEndTick(9);
 
-        context.getSpellHandler().setStationaryTicks(0);
+//        context.getSpellHandler().setStationaryTicks(0);
     }
 
     @Override
@@ -195,8 +197,8 @@ public class SolarRaySpell extends ChanneledSpell {
             ((ISentinel)caster).triggerSentinelBox(OVERHEAT);
 
         boolean overPower = context.hasSkill(SBSkills.OVERPOWER);
-        if (!overPower)
-            handler.setStationaryTicks(1);
+//        if (!overPower)
+//            handler.setStationaryTicks(1);
 
         if (caster instanceof Player player) {
             if (!context.getLevel().isClientSide && overPower) {
@@ -221,6 +223,11 @@ public class SolarRaySpell extends ChanneledSpell {
         SolarRay solarRay = getSolarRay(context);
         if (solarRay != null)
             solarRay.setEndTick(9);
+    }
+
+    @Override
+    public boolean isStationaryCast(SpellContext context) {
+        return this.isCasting() || this.tickCount > 1 && !context.hasSkill(SBSkills.OVERPOWER);
     }
 
     private void setSolarRay(int solarRay) {

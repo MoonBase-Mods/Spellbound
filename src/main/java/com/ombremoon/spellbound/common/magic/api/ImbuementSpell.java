@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.magic.SpellContext;
 
-public class ImbuementSpell extends AnimatedSpell {
+public abstract class ImbuementSpell extends AnimatedSpell {
     public ImbuementSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
     }

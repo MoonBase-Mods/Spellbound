@@ -51,17 +51,16 @@ public class CobbledHideSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         if (context.isRecast()) return;
         LivingEntity caster = context.getCaster();
-        SkillHolder skills = context.getSkills();
         Holder<SoundEvent> sound = SoundEvents.ARMOR_EQUIP_LEATHER;
 
         float modAmount = 1.1f;
-        if (skills.hasSkill(SBSkills.DRAGON_HIDE)){
+        if (context.hasSkill(SBSkills.DRAGON_HIDE)){
             modAmount = 1.5f;
             sound = SoundEvents.ARMOR_EQUIP_NETHERITE;
-        } else if (skills.hasSkill(SBSkills.DIAMOND_HIDE)) {
+        } else if (context.hasSkill(SBSkills.DIAMOND_HIDE)) {
             modAmount = 1.3f;
             sound = SoundEvents.ARMOR_EQUIP_DIAMOND;
-        } else if (skills.hasSkill(SBSkills.IRON_HIDE)) {
+        } else if (context.hasSkill(SBSkills.IRON_HIDE)) {
             modAmount = 1.2f;
             sound = SoundEvents.ARMOR_EQUIP_IRON;
         }
@@ -74,16 +73,16 @@ public class CobbledHideSpell extends AnimatedSpell {
                 new ModifierData(Attributes.ARMOR, new AttributeModifier(hideMod, modAmount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                 getDuration());
 
-        if (skills.hasSkill(SBSkills.INFECTIOUS)) {
+        if (context.hasSkill(SBSkills.INFECTIOUS)) {
             Predicate<LivingEntity> predicate;
-            if (skills.hasSkill(SBSkills.VIRAL))
+            if (context.hasSkill(SBSkills.VIRAL))
                 predicate = entity -> entity instanceof Player || (entity instanceof OwnableEntity ownable && context.getCaster() == ownable.getOwner());
             else predicate = entity -> entity instanceof OwnableEntity ownable && context.getCaster() == ownable.getOwner();
 
             this.buffedTargets = context.getLevel().getEntitiesOfClass(LivingEntity.class,
                     context.getCaster().getBoundingBox().inflate(8d), predicate);
 
-            double allyBuff = skills.hasSkill(SBSkills.REINFORCED) ? modAmount : modAmount/2d;
+            double allyBuff = context.hasSkill(SBSkills.REINFORCED) ? modAmount : modAmount/2d;
             buffedTargets.forEach(mob -> mob.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(
                     hideMod, allyBuff, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             )));
@@ -111,7 +110,7 @@ public class CobbledHideSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellRecast(SpellContext context) {
-        if (context.getSkills().hasSkill(SBSkills.REPULSIVE_SKIN)) {
+        if (context.hasSkill(SBSkills.REPULSIVE_SKIN)) {
             LivingEntity caster = context.getCaster();
             List<LivingEntity> entities = context.getLevel().getEntitiesOfClass(LivingEntity.class,
                     caster.getBoundingBox().inflate(8d));

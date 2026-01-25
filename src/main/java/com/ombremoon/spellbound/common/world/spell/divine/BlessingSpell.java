@@ -28,7 +28,6 @@ public class BlessingSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        var skills = context.getSkills();
         if (!level.isClientSide) {
             if (context.isChoice(SBSkills.BLESSING)) {
 
@@ -52,5 +51,10 @@ public class BlessingSpell extends AnimatedSpell {
     @Override
     protected int getDuration(SpellContext context) {
         return context.hasSkill(SBSkills.EXTENDED_GRACE) ? 200 : super.getDuration(context);
+    }
+
+    @Override
+    protected void registerSkillTooltips() {
+
     }
 }

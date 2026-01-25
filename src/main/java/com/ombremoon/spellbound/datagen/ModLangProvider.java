@@ -446,11 +446,20 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.target_debuffs", "Target Buffs");
         add("spellbound.skill_tooltip.ally_buffs", "Ally Buffs");
         add("spellbound.skill_tooltip.damage", "%s %s");
-        add("spellbound.skill_tooltip.duration", "Duration: %s");
-        add("spellbound.skill_tooltip.modify_duration", "%s%s%% Fire Resist on Target");
-        add("spellbound.skill_tooltip.fire_resist", "%s%s%% Fire Resist on Target");
-        add("spellbound.skill_tooltip.ice_resist", "%s%s%% Ice Resist on Target");
-        add("spellbound.skill_tooltip.shock_resist", "%s%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.duration", "%s Duration");
+        add("spellbound.skill_tooltip.radius", "%s Block Radius");
+        add("spellbound.skill_tooltip.mana_cost", "%s%% Mana Cost");
+        add("spellbound.skill_tooltip.mana", "%s Mana");
+        add("spellbound.skill_tooltip.potency", "%s%% Potency");
+        add("spellbound.skill_tooltip.cooldown", "%s Cooldown");
+        add("spellbound.skill_tooltip.effect_duration", "%s Effect Duration");
+        add("spellbound.skill_tooltip.proc_chance", "%s%% Proc Chance");
+        add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
+        add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
+        add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
+        add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
+        add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
 
         addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a thin beam of light that deals 5 fire damage per second.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
@@ -472,14 +481,14 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target");
         addSkillTooltip(SBSkills.STATIC_SHOCK, "Hitting a block now creates a small explosion that applies Stormstrike to anyone it hits.");
         addSkillTooltip(SBSkills.ELECTRIFY, "Decreases the target's shock resistance.");
-        addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage equal to 1% of your current mana each damage tick.");
-        addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, equal to 10% of the caster's current mana.");
-        addSkillTooltip(SBSkills.REFRACTION, "When the target takes damage from your shock-based Ruin spells while affected with Stormstrike, restores 15 mana back to the caster.");
+        addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage scaling with the caster's mana.");
+        addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, scaling with the caster's mana.");
+        addSkillTooltip(SBSkills.REFRACTION, "Restores mana back to the caster when the target takes Shock damage from sources other than Stormstrike.");
         addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the target for 1 second each damage tick.");
-        addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard. 30 sec. cooldown.");
-        addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases shock-based Ruin spells' mana costs by 25% for 8 seconds.");
+        addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard.");
+        addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases the mana cost of Shock spells for a duration.");
         addSkillTooltip(SBSkills.DISARM, "Chance to disarm the target each damage tick.");
-        addSkillTooltip(SBSkills.SUPERCHARGE, "If the target dies while affected by Stormstrike, increases the damage of shock-based Ruin spells by 50% for 10 seconds.");
+        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells for a duration if the target dies while affected by Stormstrike.");
 
         addSkillTooltip(SBSkills.ELECTRIC_CHARGE, "Sneakily apply an electric charge to the target. Recast to discharge.");
         addSkillTooltip(SBSkills.ELECTRIFICATION, "Applies Stormstrike on discharge.");

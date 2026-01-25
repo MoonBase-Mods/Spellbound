@@ -1,6 +1,9 @@
 package com.ombremoon.spellbound.client;
 
+import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -43,8 +46,12 @@ public class AnimationHelper {
                 var handler = SpellUtil.getSpellHandler(player);
                 AbstractSpell spell = handler.getCurrentlyCastSpell();
 
-                if (spell != null && spell.isCasting() && spell.isStationaryCast(spell.getCastContext()) && !handler.isChargingOrChannelling())
-                    handler.setStationaryTicks(1);
+                if (spell instanceof AnimatedSpell animated) {
+                    SpellContext context = spell.getCastContext();
+                    SpellAnimation animation = animated.getCastAnimation(context);
+                    if (animation.type().isStationary() && animated.isStationaryCast(context))
+                        handler.setStationaryTicks(1);
+                }
             }
         }
     }

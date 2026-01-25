@@ -328,11 +328,12 @@ public class ShadowbondSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putInt("FirstTargetId", this.firstTarget);
-        compoundTag.putInt("SecondTargetId", this.secondTarget);
-        compoundTag.putIntArray("TargetList", this.targetList);
-        compoundTag.putBoolean("CanReverse", this.canReverse);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putInt("FirstTargetId", this.firstTarget);
+        nbt.putInt("SecondTargetId", this.secondTarget);
+        nbt.putIntArray("TargetList", this.targetList);
+        nbt.putBoolean("CanReverse", this.canReverse);
+        return nbt;
     }
 
     @Override

@@ -36,6 +36,6 @@ public interface ISpellEntity<T extends AbstractSpell> extends GeoEntity, FXEmit
     }
 
     default DamageSource spellDamageSource(Level level) {
-        return SpellUtil.damageSource(level, SBDamageTypes.SB_GENERIC, this.getOwner(), this.getEntity());
+        return SpellUtil.spellDamageSource(level, SBDamageTypes.SB_GENERIC, this.getSpell(), this.getOwner(), this.getEntity());
     }
 }

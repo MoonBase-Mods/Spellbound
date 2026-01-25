@@ -230,7 +230,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                 }
 
                 if (context.hasSkill(SBSkills.ALTERNATING_CURRENT)) {
-                    if (RandomUtil.percentChance(potency(0.03F)) && target.getHealth() < caster.getHealth() * 2) {
+                    if (RandomUtil.percentChance(potency(target, 0.03F)) && target.getHealth() < caster.getHealth() * 2) {
                         target.kill();
                         if (context.hasSkill(SBSkills.PIEZOELECTRIC) && caster instanceof Player) {
                             RitualHelper.createItem(level, target.position(), new ItemStack(SBItems.STORM_SHARD.get()));
@@ -263,14 +263,16 @@ public class ElectricChargeSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putIntArray("ChargedTargets", this.entityIds.stream().toList());
-        compoundTag.putBoolean("Discharged", this.discharged);
-        compoundTag.putBoolean("Discharging", this.discharging);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putIntArray("ChargedTargets", this.entityIds.stream().toList());
+        nbt.putBoolean("Discharged", this.discharged);
+        nbt.putBoolean("Discharging", this.discharging);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.entityIds = new IntOpenHashSet(nbt.getIntArray("ChargedTargets"));
         this.discharged = nbt.getBoolean("Discharged");
         this.discharging = nbt.getBoolean("Discharging");

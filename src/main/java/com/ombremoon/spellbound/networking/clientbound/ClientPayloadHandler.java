@@ -71,7 +71,7 @@ public class ClientPayloadHandler {
                 AbstractSpell spell = payload.spellType().createSpell();
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
-                    spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"));
+                    spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt);
                 }
             }
         });

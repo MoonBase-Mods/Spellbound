@@ -7,4 +7,9 @@ public class SmiteSpell extends ImbuementSpell {
     public SmiteSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
     }
+
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
 }

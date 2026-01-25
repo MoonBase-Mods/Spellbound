@@ -43,8 +43,7 @@ public class WildMushroomSpell extends SummonSpell {
                 .manaCost(30)
                 .baseDamage(4.0F)
                 .castCondition((context, spell) -> {
-                    var skills = context.getSkills();
-                    if (skills.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getOwner()) {
+                    if (context.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getOwner()) {
                         WildMushroomSpell mushroomSpell = mushroom.getSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());
@@ -74,11 +73,10 @@ public class WildMushroomSpell extends SummonSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             LivingEntity caster = context.getCaster();
-            var skills = context.getSkills();
             WildMushroom mushroom = this.summonEntity(context, SBEntities.MUSHROOM.get());
             this.setMushroom(mushroom.getId());
 
-            if (skills.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
+            if (context.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
                 this.addSkillBuff(
                         caster,
                         SBSkills.FUNGAL_HARVEST,
@@ -165,13 +163,12 @@ public class WildMushroomSpell extends SummonSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             LivingEntity caster = context.getCaster();
-            var skills = context.getSkills();
             WildMushroom mushroom = this.getMushroom(context);
 
             if (mushroom != null)
                 mushroom.setEndTick(5);
 
-            if (skills.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
+            if (context.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
                 this.removeSkillBuff(caster, SBSkills.FUNGAL_HARVEST);
 
         }

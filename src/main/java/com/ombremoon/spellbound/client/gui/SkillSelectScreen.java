@@ -5,9 +5,9 @@ import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.radial.RadialMenu;
 import com.ombremoon.spellbound.client.gui.radial.RadialMenuItem;
 import com.ombremoon.spellbound.client.gui.radial.SkillRadialMenuItem;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -33,7 +33,7 @@ public class SkillSelectScreen extends Screen {
     private final Player player;
     private final SpellType<?> spellType;
     private final List<Skill> radialSkills;
-    private final SpellHandler handler;
+    private final SkillHolder skills;
     private final RadialMenu radialMenu;
     private SkillRadialMenuItem[] skillItems = new SkillRadialMenuItem[5];
     private final List<RadialMenuItem> items;
@@ -45,7 +45,7 @@ public class SkillSelectScreen extends Screen {
         this.player = Minecraft.getInstance().player;
         this.spellType = spellType;
         this.radialSkills = radialSkills;
-        this.handler = SpellUtil.getSpellHandler(this.player);
+        this.skills = SpellUtil.getSkills(this.player);
         this.items = new ObjectArrayList<>();
         this.radialMenu = new RadialMenu(this, this.items, RADIAL_WIDTH - RADIAL_ITEM_WIDTH, RADIAL_WIDTH, BACKGROUND_COLOR, BACKGROUND_HOVER_COLOR) {
             @Override
@@ -59,10 +59,10 @@ public class SkillSelectScreen extends Screen {
                 @Override
                 public boolean onClick() {
                     Skill choice = this.getSkill();
-                    if (handler.getChoice(spellType) == choice)
+                    if (skills.getChoice(spellType) == choice)
                         return false;
 
-                    handler.setChoice(spellType, choice);
+                    skills.setChoice(spellType, choice);
                     PayloadHandler.updateChoice(spellType, choice);
                     radialMenu.close();
 

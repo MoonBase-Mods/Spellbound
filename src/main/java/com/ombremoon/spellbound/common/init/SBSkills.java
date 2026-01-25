@@ -23,18 +23,18 @@ public class SBSkills {
     public static final Registry<Skill> REGISTRY = new RegistryBuilder<>(SKILL_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
-    //Volcano
-    public static final Holder<Skill> VOLCANO = registerSkill("volcano");
-    public static final Holder<Skill> INFERNO_CORE = registerSkill("inferno_core", 0, 50, preReqs(VOLCANO));
-    public static final Holder<Skill> LAVA_FLOW = registerSkill("lava_flow", 50, 50, preReqs(VOLCANO));
-    public static final Holder<Skill> EXPLOSIVE_BARRAGE = registerSkill("explosive_barrage", -50, 50, preReqs(VOLCANO));
-    public static final Holder<Skill> SHRAPNEL = registerSkill("shrapnel", -50, 100, preReqs(EXPLOSIVE_BARRAGE));
-    public static final Holder<Skill> HEATWAVE = registerSkill("heatwave", -100, 100, preReqs(EXPLOSIVE_BARRAGE));
-    public static final Holder<Skill> SCORCHED_EARTH = registerSkill("scorched_earth", 50, 100, preReqs(LAVA_FLOW));
-    public static final Holder<Skill> SEISMIC_SHOCK = registerSkill("seismic_shock", -100, 150, preReqs(HEATWAVE));
-    public static final Holder<Skill> MOLTEN_SHIELD = registerSkill("molten_shield", 100, 100, preReqs(LAVA_FLOW));
-    public static final Holder<Skill> PYROCLASTIC_CLOUD = registerSkill("pyroclastic_cloud", 0, 100, preReqs(INFERNO_CORE));
-    public static final Holder<Skill> APOCALYPSE = registerSkill("apocalypse", 0, 175, preReqs(SHRAPNEL, PYROCLASTIC_CLOUD, SCORCHED_EARTH));
+    //Flame Jet
+    public static final Holder<Skill> FLAME_JET = registerSkill("flame_jet");
+    public static final Holder<Skill> JET_ENGINE = registerSkill("jet_engine", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> FLAME_GEYSER = registerSkill("flame_geyser", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> TWIN_JETS = registerSkill("twin_jets", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> IGNITION_BURST = registerSkill("ignition_burst", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> TURBO_CHARGE = registerSkill("turbo_charge", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> EXPULSION_BLAST = registerSkill("expulsion_blast", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> TURBULENCE_STREAM = registerSkill("turbulence_stream", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> JET_STABILIZATION = registerSkill("jet_stabilization", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> AFTERSHOCK_COMPRESSION = registerSkill("aftershock_compression", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> IRON_MAN = registerSkill("iron_man", 0, 0, preReqs(FLAME_JET));
 
     //Solar Ray
     public static final Holder<Skill> SOLAR_RAY = registerSkill("solar_ray");
@@ -48,6 +48,19 @@ public class SBSkills {
     public static final Holder<Skill> AFTERGLOW = registerSkill("afterglow", 0, 200, preReqs(SOLAR_BURST));
     public static final Holder<Skill> BLINDING_LIGHT = registerSkill("blinding_light", -50, 250, preReqs(AFTERGLOW));
     public static final Holder<Skill> POWER_OF_THE_SUN = registerSkill("power_of_the_sun", 0, 250, preReqs(AFTERGLOW));
+
+    //Volcano
+    public static final Holder<Skill> VOLCANO = registerSkill("volcano");
+    public static final Holder<Skill> INFERNO_CORE = registerSkill("inferno_core", 0, 50, preReqs(VOLCANO));
+    public static final Holder<Skill> LAVA_FLOW = registerSkill("lava_flow", 50, 50, preReqs(VOLCANO));
+    public static final Holder<Skill> EXPLOSIVE_BARRAGE = registerSkill("explosive_barrage", -50, 50, preReqs(VOLCANO));
+    public static final Holder<Skill> SHRAPNEL = registerSkill("shrapnel", -50, 100, preReqs(EXPLOSIVE_BARRAGE));
+    public static final Holder<Skill> HEATWAVE = registerSkill("heatwave", -100, 100, preReqs(EXPLOSIVE_BARRAGE));
+    public static final Holder<Skill> SCORCHED_EARTH = registerSkill("scorched_earth", 50, 100, preReqs(LAVA_FLOW));
+    public static final Holder<Skill> SEISMIC_SHOCK = registerSkill("seismic_shock", -100, 150, preReqs(HEATWAVE));
+    public static final Holder<Skill> MOLTEN_SHIELD = registerSkill("molten_shield", 100, 100, preReqs(LAVA_FLOW));
+    public static final Holder<Skill> PYROCLASTIC_CLOUD = registerSkill("pyroclastic_cloud", 0, 100, preReqs(INFERNO_CORE));
+    public static final Holder<Skill> APOCALYPSE = registerSkill("apocalypse", 0, 175, preReqs(SHRAPNEL, PYROCLASTIC_CLOUD, SCORCHED_EARTH));
 
     //Shattering Crystal
     public static final Holder<Skill> SHATTERING_CRYSTAL = registerSkill("shattering_crystal");

@@ -39,6 +39,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     protected final Map<SpellPath, Float> pathXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Float> spellXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Integer> skillPoints = new Object2IntOpenHashMap<>();
+    private final Map<SpellType<?>, Skill> skillChoices = new Object2ObjectOpenHashMap<>();
     public final Map<SpellType<?>, Set<Skill>> unlockedSkills = new Object2ObjectOpenHashMap<>();
     private final Set<SpellModifier> permanentModifiers = new ObjectOpenHashSet<>();
     private final Set<SpellModifier> timedModifiers = new ObjectOpenHashSet<>();
@@ -131,7 +132,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void awardSkillPoints(SpellType<?> spellType, int points) {
-        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, 11 - this.unlockedSkills.get(spellType).size()));
+        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, 11 - this.unlockedSkills.getOrDefault(spellType, new HashSet<>()).size()));
     }
 
     public <T extends AbstractSpell> void resetSkills(SpellType<T> spellType) {
@@ -150,12 +151,9 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public void unlockSkill(Skill skill, boolean consumePoints) {
         SpellType<?> spellType = skill.getSpell();
-        Set<Skill> unlocked = this.unlockedSkills.get(spellType);
-        if (unlocked == null)
-            unlocked = new HashSet<>();
-
+        Set<Skill> unlocked = this.unlockedSkills.getOrDefault(spellType, new HashSet<>());
         unlocked.add(skill);
-        this.unlockedSkills.put(skill.getSpell(), unlocked);
+        this.unlockedSkills.put(spellType, unlocked);
 
         if (this.caster instanceof Player player)
             skill.onSkillUnlock(player);
@@ -171,8 +169,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         if (hasSkill(skill)) return false;
         if (skill.isRoot() || skill.getPrereqs() == null) return false;
 
-        Set<Skill> unlocked = unlockedSkills.get(spellType);
-        if (unlocked == null) return false;
+        Set<Skill> unlocked = unlockedSkills.getOrDefault(spellType, new HashSet<>());
         if (unlocked.size() > MAX_SPELL_LEVEL + 1) return false;
         if (!skill.canUnlockSkill((Player) this.caster, this)) return false;
         if (this.getSkillPoints(spellType) <= 0) return false;
@@ -192,8 +189,8 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public boolean hasSkill(Skill skill) {
         var spellType = skill.getSpell();
-        if (unlockedSkills.get(spellType) == null) return false;
-        return unlockedSkills.get(spellType).contains(skill) || skill.isRoot();
+        Set<Skill> unlocked = unlockedSkills.getOrDefault(spellType, new HashSet<>());
+        return unlocked.contains(skill) || skill.isRoot();
     }
 
     public boolean hasSkillReady(Skill skill) {
@@ -202,6 +199,24 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public boolean hasSkillReady(Holder<Skill> skill) {
         return hasSkillReady(skill.value());
+    }
+
+    public Skill getChoice(SpellType<?> spellType) {
+        return this.skillChoices.getOrDefault(spellType, spellType.getRootSkill());
+    }
+
+    public void setChoice(SpellType<?> spellType, Skill skill) {
+        this.skillChoices.put(spellType, skill);
+        if (this.caster.level().isClientSide)
+            PayloadHandler.updateChoice(spellType, skill);
+    }
+
+    public void removeChoice(SpellType<?> spellType) {
+        this.skillChoices.remove(spellType);
+    }
+
+    public void clearChoices() {
+        this.skillChoices.clear();
     }
 
     public void addModifier(SpellModifier spellModifier) {

@@ -10,6 +10,11 @@ public class SiphonSpell extends AnimatedSpell {
     }
 
     @Override
+    protected void registerSkillTooltips() {
+
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
 
     }

@@ -6,7 +6,9 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -19,8 +21,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-
-import java.util.List;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class SpellCastEvents {
@@ -58,6 +58,7 @@ public class SpellCastEvents {
 
         AnimationHelper.tick(player);
         var handler = SpellUtil.getSpellHandler(player);
+        var skills = SpellUtil.getSkills(player);
 
         if (!isAbleToSpellCast()) return;
         if (!handler.inCastMode()) return;
@@ -68,55 +69,90 @@ public class SpellCastEvents {
         AbstractSpell spell = handler.getCurrentlyCastSpell();
         if (spell != null) {
             if (handler.castTick > 0 && !SpellUtil.canCastSpell(player, spell)) {
-                SpellContext spellContext = createContext(player, handler, spell);
+                SpellContext spellContext = createContext(spell);
                 spell.resetCast(handler, spellContext);
             }
 
             boolean isCastKeyPressed = KeyBinds.getSpellCastMapping().isDown();
             boolean castKeyJustPressed = isCastKeyPressed && !wasCastKeyPressed;
 
-            if (castKeyJustPressed && handler.castTick == 0) {
-                if (handler.isChargingOrChannelling()) {
-                    handler.setChargingOrChannelling(false);
-                    PayloadHandler.setChargeOrChannel(false);
-                    handler.castTick = 0;
-                    PayloadHandler.stopChannel(spell.spellType());
+            if (castKeyJustPressed) {
+                if (canChargeSpell(skills, spell)) {
+                    if (handler.isChargingOrChannelling()) {
+                        stopChargeOrChannel(player, handler, spell, true);
+                    } else if (handler.castTick == 0) {
+                        startCasting(handler, spell);
+                        handler.setChargingOrChannelling(true);
+                        PayloadHandler.setChargeOrChannel(true);
+                    }
+                } else if (handler.isChargingOrChannelling()) {
+                    stopChargeOrChannel(player, handler, spell, false);
                 } else if (handler.castTick == 0) {
-                    SpellContext spellContext = createContext(player, handler, spell);
-                    spell.onCastStart(spellContext);
-                    PayloadHandler.castStart();
-                    handler.castTick = 1;
+                    startCasting(handler, spell);
                 }
             }
 
-            if (handler.castTick > 0 && !handler.isChargingOrChannelling()) {
+            if (handler.castTick > 0) {
                 int castTime = spell.getCastTime();
-                if (handler.castTick >= castTime) {
-                    castSpell(player);
-                    handler.castTick = 0;
-                } else {
-                    handler.castTick++;
+                if (spell instanceof ChargeableSpell chargeable && handler.isChargingOrChannelling()) {
+                    int maxCharges = chargeable.maxCharges();
+                    int ticksPerCharge = castTime / maxCharges;
+                    if (handler.castTick % ticksPerCharge == 0 && spell.getCharges() < maxCharges) {
+                        spell.incrementCharges();
+                    }
+
+                    if (spell.getCharges() >= maxCharges) {
+                        stopChargeOrChannel(player, handler, spell, true);
+                    } else {
+                        handler.castTick++;
+                    }
+                } else if (!handler.isChargingOrChannelling()) {
+                    if (handler.castTick >= castTime) {
+                        castSpell(player, spell.getCharges());
+                        handler.castTick = 0;
+                    } else {
+                        handler.castTick++;
+                    }
                 }
             }
 
             wasCastKeyPressed = isCastKeyPressed;
         } else {
-            spell = spellType.createSpell();
+            spell = spellType.createSpellWithData(player);
             handler.setCurrentlyCastingSpell(spell);
-            createContext(player, handler, spell);
+            createContext(spell);
         }
     }
 
-    //Remove target == null
-    public static SpellContext createContext(Player player, SpellHandler handler, AbstractSpell spell) {
-        SpellType<?> spellType = spell.spellType();
-        boolean isRecast = handler.getActiveSpells(spellType).size() > 1;
-        Entity target = spell.getTargetEntity(player, SpellUtil.getCastRange(player));
-        target = target == null || target.isRemoved() ? null : target;
-        SpellContext context = new SpellContext(spellType, player, target, isRecast);
+    public static SpellContext createContext(AbstractSpell spell) {
+        SpellContext context = spell.getContext();
         spell.setCastContext(context);
-        PayloadHandler.setCastingSpell(spellType, context);
+        PayloadHandler.setCastingSpell(spell.spellType(), context);
         return context;
+    }
+
+    private static boolean canChargeSpell(SkillHolder skills, AbstractSpell spell) {
+        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge((skill, choice) -> skills.hasSkill(skill) && (choice == null || skills.getChoice(spell.spellType()) == choice));
+    }
+
+    private static void startCasting(SpellHandler handler, AbstractSpell spell) {
+        SpellContext spellContext = createContext(spell);
+        spell.onCastStart(spellContext);
+        PayloadHandler.castStart();
+        handler.castTick = 1;
+        spell.resetCharges();
+    }
+
+    private static void stopChargeOrChannel(Player player, SpellHandler handler, AbstractSpell spell, boolean castSpell) {
+        handler.setChargingOrChannelling(false);
+        PayloadHandler.setChargeOrChannel(false);
+        handler.castTick = 0;
+        if (castSpell) {
+            castSpell(player, spell.getCharges());
+            spell.resetCharges();
+        } else {
+            PayloadHandler.stopChannel(spell.spellType());
+        }
     }
 
     private static boolean isAbleToSpellCast() {
@@ -124,12 +160,12 @@ public class SpellCastEvents {
         if (minecraft.getOverlay() != null) return false;
         if (minecraft.screen != null) return false;
         if (!minecraft.mouseHandler.isMouseGrabbed()) return false;
-        if (EffectManager.isSilenced(Minecraft.getInstance().player)) return false;
+        if (EffectManager.isSilenced(minecraft.player)) return false;
         return minecraft.isWindowActive();
     }
 
-    public static void castSpell(Player player) {
+    public static void castSpell(Player player, int charges) {
         if (player.isSpectator()) return;
-        PayloadHandler.castSpell();
+        PayloadHandler.castSpell(charges);
     }
 }

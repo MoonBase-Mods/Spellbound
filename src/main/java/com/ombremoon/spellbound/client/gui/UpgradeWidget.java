@@ -53,8 +53,8 @@ public class UpgradeWidget {
         this.spell = skill.getSpell().createSpell();
         SpellPath path = spell.spellType().getIdentifiablePath();
         this.color = path.getColor();
-        this.description = this.createSkillDescription(minecraft.font, skill);
         this.skillDetails = this.createSkillTooltip(minecraft.font, skill);
+        this.description = this.createSkillDescription(minecraft.font, skill);
 
         for (FormattedCharSequence formattedcharsequence : this.description) {
             j = Math.max(j, minecraft.font.width(formattedcharsequence));
@@ -69,7 +69,9 @@ public class UpgradeWidget {
 
     private List<FormattedCharSequence> createSkillDescription(Font font, Skill skill) {
         var component = skill.getDescription().withStyle(Style.EMPTY.withColor(this.color));
-        component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
+        if (!this.skillDetails.isEmpty())
+            component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
+
         return font.split(component, 120);
     }
 
@@ -139,7 +141,7 @@ public class UpgradeWidget {
     }
 
     public void drawHover(GuiGraphics guiGraphics, int x, int y, float fade, int width, int height) {
-        this.showDetails = Screen.hasShiftDown();
+        this.showDetails = !this.skillDetails.isEmpty() && Screen.hasShiftDown();
         List<FormattedCharSequence> tooltip = this.getDescription();
         boolean flag = width + x + this.x + this.width + 30 >= this.window.getScreen().width;
         boolean flag1 = 115 - y - this.y - 30 <= 6 + tooltip.size() * 9;
@@ -191,7 +193,7 @@ public class UpgradeWidget {
     }
 
     private List<FormattedCharSequence> getDescription() {
-        return this.showDetails ? this.createSkillTooltip(this.minecraft.font, this.getSkill()) : this.description;
+        return this.showDetails ? this.skillDetails : this.description;
     }
 
     public void attachToParents() {

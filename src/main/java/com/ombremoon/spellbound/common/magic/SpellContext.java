@@ -127,12 +127,20 @@ public class SpellContext {
         return this.skillHolder.getSpellLevel(this.spellType);
     }
 
+    public int getPathLevel() {
+        return getPathLevel(this.spellType.getIdentifiablePath());
+    }
+
+    public int getPathLevel(SpellPath path) {
+        return this.skillHolder.getPathLevel(path);
+    }
+
     public boolean canCastWithLevel() {
         return this.getActiveSpells() <= this.getSpellLevel();
     }
 
     public boolean isChoice(Holder<Skill> skill) {
-        return this.spellHandler.getChoice(this.spellType).equals(skill.value());
+        return this.skillHolder.getChoice(this.spellType).equals(skill.value());
     }
 
     public String quickOrSimpleCast(boolean isInstant) {

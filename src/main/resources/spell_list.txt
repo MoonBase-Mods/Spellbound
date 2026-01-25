@@ -5,24 +5,24 @@
 3) Magma Hands
 4) Ring of Fire
 5) Detonate
-6) Phoenix Strike
+7) Phoenix Strike
 7) Manifest Fire Dragon
 8) Solar Ray
 9) Meteor
 10) Volcano
 
-- Ruin: Ice/Water
+- Ruin: Ice
 
 11) Ice Bolt
-12) Ice Skate
-13) Frost Bomb
-14) Bubble Shield
+12) Bubble Shield
+13) Tidal Wave
+14) Hail
 15) Ice Spike
-16) Shattering Crystal
+16) Ice Skate
 17) Manifest Ice Dragon
-18) Hail
+18) Shattering Crystal
 19) Ice Storm
-20) Glacial Fortress
+20) Frost Bomb
 
 - Ruin: Shock
 
@@ -30,7 +30,7 @@
 22) Electric Charge
 23) Thunderclap
 24) Electric Orb
-25) Tripwire
+25) Tesla Coil
 26) Enhance
 27) Manifest Storm Dragon
 28) Storm Port
@@ -48,16 +48,16 @@
 37) Transmute Ore
 38) Ender Chest
 39) Mystic Armor
-40) Fabricate Object
+40) Magnetize
 41) Shadow Gate
 42) Drop Zone
-43) Magnetize
+43) Terraform
 44) Wildshape
-45) Terraform
+45) Control Weather
 46) Anansi's Hands
 47) Manifest Evoker
 48) Telekinesis
-49) Control Weather
+49) Chrono-Lock
 50) Black Hole
 
 - Summons
@@ -65,8 +65,8 @@
 51) Bound Bow
 52) Summon Undead
 53) Summon Villager
-54) Summon Familiar
-55) Summon Wolf Pack
+54) Summon Wolf Pack
+55) Summon Trophy
 56) Summon Elemental
 57) Summon Mount
 58) Arcane Arsenal
@@ -75,11 +75,11 @@
 61) Vengeful Spirit
 62) Summon Spellcaster
 63) Wither Totem
-64) Summon Sculkling (Manifest Warden)
-65)
+64) Summon Waystone
+65) Nether Gate
 66) Kraken's Fury
-67)
-68) Nether Gate
+67) Summon Sculkling (Manifest Warden)
+68) Summon Dragon
 69) Pillager Raid
 70) Ancient Beast
 
@@ -97,7 +97,7 @@
 80) Cursed Prayer
 81) Banish
 82) Plague
-83) Burial
+83) Halo
 84) Starstorm
 85) Finger of Mercy
 86) Healing Blossom

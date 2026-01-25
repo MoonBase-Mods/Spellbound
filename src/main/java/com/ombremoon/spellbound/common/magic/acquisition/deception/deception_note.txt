@@ -1,0 +1,30 @@
+Deception Puzzle Rooms
+
+Rooms creation will support 3 room template sizes:
+- Small (20x20x20)
+- Medium (30x30x30)
+- Large (40x40x40)
+
+Will allow for custom swapping of templates (as long as they remain within template guidelines)
+
+Templates can chain up to 3 times to create larger puzzle rooms
+
+Since puzzle rooms are in static dimensions, can create saved data specific to each for level
+related features
+- Starting/Ending the puzzle
+- Setting certain puzzle arena rules
+
+
+---Puzzle List---
+
+Flicker - 1 Small Room
+
+Shadow Veil
+
+Cursed Rune
+
+Nightblade
+
+Shadowbond - 1 Small Room
+
+Purge Magic

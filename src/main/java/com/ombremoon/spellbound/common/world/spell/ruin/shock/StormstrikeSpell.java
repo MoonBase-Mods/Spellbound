@@ -30,9 +30,38 @@ public class StormstrikeSpell extends AnimatedSpell {
     @Override
     protected void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.STORMSTRIKE,
-                SkillTooltip.DAMAGE_OVER_TIME.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 3)),
-                SkillTooltip.DURATION.tooltip(60));
-        this.addSkillDetails(SBSkills.ELECTRIFY, SkillTooltip.TARGET_SHOCK_RESIST.tooltip(-30F));
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 3)),
+                SkillTooltip.DURATION.tooltip(60)
+        );
+        this.addSkillDetails(SBSkills.STATIC_SHOCK, SkillTooltip.RADIUS.tooltip(3));
+        this.addSkillDetails(SBSkills.ELECTRIFY,
+                SkillTooltip.TARGET_SHOCK_RESIST.tooltip(-30F),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SHOCK_FACTOR, SkillTooltip.MANA_TO_DAMAGE.tooltip(1F));
+        this.addSkillDetails(SBSkills.PURGE, SkillTooltip.MANA_TO_DAMAGE.tooltip(10F));
+        this.addSkillDetails(SBSkills.REFRACTION,
+                SkillTooltip.MANA.tooltip(5),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.PULSATION,
+                SkillTooltip.PROC_CHANCE.tooltip(10F),
+                SkillTooltip.EFFECT_DURATION.tooltip(20),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.STORM_SHARD, SkillTooltip.COOLDOWN.tooltip(24000));
+        this.addSkillDetails(SBSkills.CHARGED_ATMOSPHERE,
+                SkillTooltip.MANA_COST.tooltip(-25F),
+                SkillTooltip.EFFECT_DURATION.tooltip(160)
+        );
+        this.addSkillDetails(SBSkills.DISARM,
+                SkillTooltip.PROC_CHANCE.tooltip(20F),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUPERCHARGE,
+                SkillTooltip.POTENCY.tooltip(50F),
+                SkillTooltip.EFFECT_DURATION.tooltip(200)
+        );
     }
 
     @Override
@@ -82,8 +111,7 @@ public class StormstrikeSpell extends AnimatedSpell {
             Level level = context.getLevel();
             LivingEntity caster = context.getCaster();
             var handler = context.getSpellHandler();
-            var skills = context.getSkills();
-            if (skills.hasSkill(SBSkills.STATIC_SHOCK.value()))
+            if (context.hasSkill(SBSkills.STATIC_SHOCK))
                 hurtSurroundingEnemies(level, caster, handler, bolt, 3, false);
 
             bolt.discard();

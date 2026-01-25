@@ -31,7 +31,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                 .manaCost(27)
                 .castCondition((context, purgeMagicSpell) -> {
                     if (context.isChoice(SBSkills.PURGE_MAGIC))
-                        return context.getSkills().hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
+                        return context.hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
                     return true;
                 })
                 .fullRecast();
@@ -45,15 +45,14 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        var skills = context.getSkills();
         if (!level.isClientSide) {
             if (context.isChoice(SBSkills.COUNTER_MAGIC)) {
                 caster.addEffect(new MobEffectInstance(SBEffects.COUNTER_MAGIC, 200, 0, false, false));
-                if (skills.hasSkill(SBSkills.CLEANSE.value()))
+                if (context.hasSkill(SBSkills.CLEANSE))
                     this.cleanseCaster();
             } else {
                 List<LivingEntity> targets = new ObjectArrayList<>();
-                if (skills.hasSkill(SBSkills.RADIO_WAVES.value())) {
+                if (context.hasSkill(SBSkills.RADIO_WAVES)) {
                     targets.addAll(level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(3), EntitySelector.NO_CREATIVE_OR_SPECTATOR));
                 } else {
                     targets.add((LivingEntity) context.getTarget());
@@ -68,7 +67,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         spell.endSpell();
                     }
 
-                    if (skills.hasSkill(SBSkills.DOMINANT_MAGIC.value()))
+                    if (context.hasSkill(SBSkills.DOMINANT_MAGIC))
                         addSkillBuff(
                                 target,
                                 SBSkills.DOMINANT_MAGIC,
@@ -78,7 +77,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                                 100
                         );
 
-                    if (skills.hasSkill(SBSkills.RESIDUAL_DISRUPTION.value())) {
+                    if (context.hasSkill(SBSkills.RESIDUAL_DISRUPTION)) {
                         addSkillBuff(
                                 target,
                                 SBSkills.RESIDUAL_DISRUPTION,
@@ -89,7 +88,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         );
                     }
 
-                    if (skills.hasSkill(SBSkills.UNFOCUSED))
+                    if (context.hasSkill(SBSkills.UNFOCUSED))
                         addSkillBuff(
                                 target,
                                 SBSkills.UNFOCUSED,
@@ -99,10 +98,10 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                                 200
                         );
 
-                    if (skills.hasSkill(SBSkills.MAGIC_POISONING.value()))
+                    if (context.hasSkill(SBSkills.MAGIC_POISONING))
                         targetHandler.consumeMana(Math.max(20 * activeSpells.size(), 20));
 
-                    if (skills.hasSkill(SBSkills.NULLIFICATION.value())) {
+                    if (context.hasSkill(SBSkills.NULLIFICATION)) {
                         List<ItemStack> itemSlots = new ObjectArrayList<>();
                         target.getAllSlots().forEach(itemSlots::add);
                         itemSlots = itemSlots.stream().filter(ItemStack::isEnchanted).toList();
@@ -116,7 +115,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                     }
 
                     var spellList = targetHandler.getSpellList();
-                    if (skills.hasSkillReady(SBSkills.EXPUNGE.value()) && context.hasCatalyst(SBItems.FOOL_SHARD.get()) && !spellList.isEmpty()) {
+                    if (context.hasSkillReady(SBSkills.EXPUNGE) && context.hasCatalyst(SBItems.FOOL_SHARD.get()) && !spellList.isEmpty()) {
                         int randSpell = target.getRandom().nextInt(0, spellList.size());
                         SpellType<?> spellType = targetHandler.getSpellList().stream().toList().get(randSpell);
                         targetHandler.removeSpell(spellType);

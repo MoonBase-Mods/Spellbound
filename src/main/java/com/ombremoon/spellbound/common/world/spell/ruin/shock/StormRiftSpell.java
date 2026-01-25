@@ -102,7 +102,7 @@ public class StormRiftSpell extends AnimatedSpell {
                         }
                     });
 
-                    if (context.getSkills().hasSkill(SBSkills.STORM_FURY))
+                    if (context.hasSkill(SBSkills.STORM_FURY))
                         rift.allowGrowth();
                 });
                 if (context.hasSkill(SBSkills.STORM_CALLER) && stormRift != null) {
@@ -361,14 +361,16 @@ public class StormRiftSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        this.portalMap.serialize(compoundTag);
-        compoundTag.putInt("Charge", this.portalCharge);
-        compoundTag.putIntArray("StormClouds", this.stormClouds.stream().toList());
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        this.portalMap.serialize(nbt);
+        nbt.putInt("Charge", this.portalCharge);
+        nbt.putIntArray("StormClouds", this.stormClouds.stream().toList());
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.portalMap.deserialize(nbt);
         this.portalCharge = nbt.getInt("Charge");
         this.stormClouds = new IntOpenHashSet(nbt.getIntArray("StormClouds"));

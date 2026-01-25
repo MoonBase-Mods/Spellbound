@@ -41,7 +41,6 @@ public class MysticArmorSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
-        var skills = context.getSkills();
         addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
@@ -50,19 +49,19 @@ public class MysticArmorSpell extends AnimatedSpell {
                 PRE_DAMAGE,
                 pre -> {
                     if (isSpellDamage(pre.getSource())) {
-                        float f = 0.15F + 0.03F * Math.min(10, context.getSkills().getPathLevel(SpellPath.TRANSFIGURATION)) + (0.05F * context.getSpellLevel());
+                        float f = 0.15F + 0.03F * Math.min(10, context.getPathLevel()) + (0.05F * context.getSpellLevel());
                         pre.setNewDamage(pre.getOriginalDamage() * potency(f));
                     }
 
-                    if (skills.hasSkill(SBSkills.COMBAT_PERCEPTION) && isPhysicalDamage(pre.getSource()) && RandomUtil.percentChance(0.1))
+                    if (context.hasSkill(SBSkills.COMBAT_PERCEPTION) && isPhysicalDamage(pre.getSource()) && RandomUtil.percentChance(0.1))
                         pre.setNewDamage(0);
 
-                    if (skills.hasSkillReady(SBSkills.SOUL_RECHARGE) && context.hasCatalyst(SBItems.SOUL_SHARD.get()) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.1F) {
+                    if (context.hasSkillReady(SBSkills.SOUL_RECHARGE) && context.hasCatalyst(SBItems.SOUL_SHARD.get()) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.1F) {
                         pre.setNewDamage(0);
                         caster.setHealth(caster.getMaxHealth());
                         context.useCatalyst(SBItems.SOUL_SHARD.get());
                         addCooldown(SBSkills.SOUL_RECHARGE, 3600);
-                    } else if (skills.hasSkillReady(SBSkills.ELDRITCH_INTERVENTION) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.2F) {
+                    } else if (context.hasSkillReady(SBSkills.ELDRITCH_INTERVENTION) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.2F) {
                         caster.heal(caster.getMaxHealth() / 2 - caster.getHealth());
                         addCooldown(SBSkills.ELDRITCH_INTERVENTION, 2400);
                     }
@@ -76,14 +75,14 @@ public class MysticArmorSpell extends AnimatedSpell {
                 post -> {
                     Entity entity = post.getSource().getEntity();
                     if (entity instanceof LivingEntity living) {
-                        if (skills.hasSkill(SBSkills.EQUILIBRIUM))
+                        if (context.hasSkill(SBSkills.EQUILIBRIUM))
                             hurt(living, post.getSource(), caster.getMaxHealth() * 0.1F);
 
-                        if (skills.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(post.getSource()))
+                        if (context.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(post.getSource()))
                             hurt(living, post.getSource(), post.getNewDamage() * 0.3F);
                     }
                 });
-        if (skills.hasSkill(SBSkills.ARCANE_VENGEANCE)) {
+        if (context.hasSkill(SBSkills.ARCANE_VENGEANCE)) {
             addEventBuff(
                     caster,
                     SBSkills.ARCANE_VENGEANCE,
@@ -99,7 +98,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                             200));
         }
 
-        if (skills.hasSkill(SBSkills.PURSUIT))
+        if (context.hasSkill(SBSkills.PURSUIT))
             addSkillBuff(
                     caster,
                     SBSkills.PURSUIT,
@@ -107,7 +106,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(PURSUIT, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
 
-        if (skills.hasSkill(SBSkills.CRYSTALLINE_ARMOR))
+        if (context.hasSkill(SBSkills.CRYSTALLINE_ARMOR))
             addSkillBuff(
                     caster,
                     SBSkills.CRYSTALLINE_ARMOR,
@@ -131,10 +130,9 @@ public class MysticArmorSpell extends AnimatedSpell {
         super.onSpellTick(context);
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        var skills = context.getSkills();
 
         if (!level.isClientSide) {
-            if (skills.hasSkill(SBSkills.SUBLIME_BEACON))
+            if (context.hasSkill(SBSkills.SUBLIME_BEACON))
                 caster.heal(caster.getArmorValue() * 0.25F);
         }
     }

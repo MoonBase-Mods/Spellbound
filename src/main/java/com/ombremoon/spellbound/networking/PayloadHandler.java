@@ -66,8 +66,8 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new EquipSpellPayload(spellType, equip));
     }
 
-    public static void castSpell() {
-        PacketDistributor.sendToServer(new CastSpellPayload());
+    public static void castSpell(int charges) {
+        PacketDistributor.sendToServer(new CastSpellPayload(charges));
     }
 
     public static void setCastingSpell(SpellType<?> spellType, SpellContext context) {

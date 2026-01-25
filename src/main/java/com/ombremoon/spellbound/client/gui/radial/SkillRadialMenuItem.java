@@ -58,8 +58,8 @@ public class SkillRadialMenuItem extends RadialMenuItem {
 
     @Override
     public boolean isSelected() {
-        var handler = SpellUtil.getSpellHandler(this.owner.getScreen().getMinecraft().player);
-        return handler.getChoice(this.spellType).equals(this.skill);
+        var skills = SpellUtil.getSkills(this.owner.getScreen().getMinecraft().player);
+        return skills.getChoice(this.spellType).equals(this.skill);
     }
 
     @Override

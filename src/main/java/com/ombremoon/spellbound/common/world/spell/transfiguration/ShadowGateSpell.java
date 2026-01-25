@@ -62,7 +62,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         if (!level.isClientSide) {
-            boolean hasReach = context.getSkills().hasSkill(SBSkills.REACH);
+            boolean hasReach = context.hasSkill(SBSkills.REACH);
             this.summonEntity(context, SBEntities.SHADOW_GATE.get(), hasReach ? 100 : 50, shadowGate -> {
                 int maxPortals = context.hasSkill(SBSkills.DUAL_DESTINATION) ? 3 : 2;
                 if (context.isChoice(SBSkills.GRAVITY_SHIFT))
@@ -186,12 +186,14 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        this.portalMap.serialize(compoundTag);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        this.portalMap.serialize(nbt);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.portalMap.deserialize(nbt);
     }
 }

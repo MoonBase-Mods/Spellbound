@@ -60,7 +60,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
-    private final Map<SpellType<?>, Skill> spellChoices = new Object2ObjectOpenHashMap<>();
     private final Map<SkillBuff<?>, Integer> skillBuffs = new Object2IntOpenHashMap<>();
     private final Set<Integer> glowEntities = new IntOpenHashSet();
     private IntOpenHashSet openArenas = new IntOpenHashSet();
@@ -278,7 +277,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         var locations = spellType.getSkills().stream().map(Skill::location).collect(Collectors.toSet());
         this.spellSet.remove(spellType);
         this.equippedSpellSet.remove(spellType);
-        this.spellChoices.remove(spellType);
+        this.skillHolder.removeChoice(spellType);
         this.upgradeTree.remove(locations);
         if (this.caster instanceof Player player) {
             this.upgradeTree.update(player, locations);
@@ -293,9 +292,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.spellSet.forEach(skillHolder::resetSkills);
         this.spellSet.forEach(skillHolder::resetSpellXP);
         this.skillHolder.clearModifiers();
+        this.skillHolder.clearChoices();
         this.spellSet.clear();
         this.equippedSpellSet.clear();
-        this.spellChoices.clear();
         this.selectedSpell = null;
         if (this.caster instanceof Player player) {
             this.upgradeTree.clear(player);
@@ -465,16 +464,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
             return false;
         });
-    }
-
-    public Skill getChoice(SpellType<?> spellType) {
-        return this.spellChoices.getOrDefault(spellType, spellType.getRootSkill());
-    }
-
-    public void setChoice(SpellType<?> spellType, Skill skill) {
-        this.spellChoices.put(spellType, skill);
-        if (this.caster.level().isClientSide)
-            PayloadHandler.updateChoice(spellType, skill);
     }
 
     public void applyFearEffect(LivingEntity target, Vec3 source, int ticks) {

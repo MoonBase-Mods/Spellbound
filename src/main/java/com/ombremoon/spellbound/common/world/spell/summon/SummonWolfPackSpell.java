@@ -7,4 +7,9 @@ public class SummonWolfPackSpell extends SummonSpell {
     public SummonWolfPackSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
     }
+
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
 }

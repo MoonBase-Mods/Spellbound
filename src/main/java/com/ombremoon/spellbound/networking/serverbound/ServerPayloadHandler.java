@@ -20,8 +20,8 @@ public class ServerPayloadHandler {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(context.player());
             AbstractSpell spell = handler.getCurrentlyCastSpell();
+            spell.setCharges(payload.charges());
             spell.castSpell(context.player());
-//            handler.setCurrentlyCastingSpell(null);
         }
     }
 
@@ -70,8 +70,8 @@ public class ServerPayloadHandler {
     }
 
     public static void handleNetworkUpdateChoice(final UpdateChoicePayload payload, final IPayloadContext context) {
-        var handler = SpellUtil.getSpellHandler(context.player());
-        handler.setChoice(payload.spellType(), payload.skill());
+        var skills = SpellUtil.getSkills(context.player());
+        skills.setChoice(payload.spellType(), payload.skill());
     }
 
     public static void handleNetworkChargeOrChannel(final ChargeOrChannelPayload payload, final IPayloadContext context) {

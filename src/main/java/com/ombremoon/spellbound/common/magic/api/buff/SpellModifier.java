@@ -12,10 +12,12 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -26,7 +28,7 @@ import java.util.function.Predicate;
  * @param spellPredicate The condition necessary for the modifier to take effect
  * @param modifier The amount the attribute is modified by. Modifiers are <b><u>ALWAYS</u></b> multiplicative.
  */
-public record SpellModifier(ResourceLocation id, ModifierType modifierType, Predicate<SpellType<?>> spellPredicate, float modifier) {
+public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier) {
     private static final Map<ResourceLocation, SpellModifier> MODIFIER_REGISTRY = new HashMap<>();
     public static final Codec<SpellModifier> CODEC = ResourceLocation.CODEC
             .comapFlatMap(
@@ -43,29 +45,29 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
             .map(SpellModifier::getTypeFromLocation, SpellModifier::id);
 
     //Skill
-    public static final SpellModifier FEAR = registerModifier("fear", ModifierType.POTENCY, spellType -> true, 0.75F);
-    public static final SpellModifier UNWANTED_GUESTS = registerModifier("unwanted_guests", ModifierType.POTENCY, spellType -> true, 0.9F);
-    public static final SpellModifier REPRISAL = registerModifier("reprisal", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.DIVINE, 1.5F);
-    public static final SpellModifier ICE_CHARGE = registerModifier("ice_charge", ModifierType.MANA, spell -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.FROST, 1.25F);
-    public static final SpellModifier CHARGED_ATMOSPHERE = registerModifier("charged_atmosphere", ModifierType.MANA, spell -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.SHOCK, 0.75F);
-    public static final SpellModifier SUPERCHARGE = registerModifier("supercharge", ModifierType.POTENCY, spell -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.SHOCK, 1.5F);
-    public static final SpellModifier DIVINE_BALANCE_MANA = registerModifier("divine_balance_mana", ModifierType.MANA, spell -> spell == SBSpells.HEALING_TOUCH.get(), 1.5F);
-    public static final SpellModifier DIVINE_BALANCE_DURATION = registerModifier("divine_balance_duration", ModifierType.DURATION, spell -> spell == SBSpells.HEALING_TOUCH.get(), 2F);
-    public static final SpellModifier POISON_ESSENCE = registerModifier("poison_essence", ModifierType.POTENCY, spell -> spell == SBSpells.WILD_MUSHROOM.get(), 1.25F);
-    public static final SpellModifier SYNTHESIS = registerModifier("synthesis", ModifierType.MANA, spell -> spell == SBSpells.WILD_MUSHROOM.get(), 0F);
-    public static final SpellModifier ENDURANCE = registerModifier("endurance", ModifierType.DURATION, spell -> spell == SBSpells.STRIDE.get(), 2F);
-    public static final SpellModifier FORESIGHT = registerModifier("foresight", ModifierType.MANA, spell -> spell == SBSpells.MYSTIC_ARMOR.get(), 0.85F);
+    public static final SpellModifier FEAR = registerModifier("fear", ModifierType.POTENCY, (spellType, target) -> true, 0.75F);
+    public static final SpellModifier UNWANTED_GUESTS = registerModifier("unwanted_guests", ModifierType.POTENCY, (spellType, target) -> true, 0.9F);
+    public static final SpellModifier REPRISAL = registerModifier("reprisal", ModifierType.POTENCY, (spellType, target) -> spellType.getPath() == SpellPath.DIVINE, 1.5F);
+    public static final SpellModifier ICE_CHARGE = registerModifier("ice_charge", ModifierType.MANA, (spell, target) -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.FROST, 1.25F);
+    public static final SpellModifier CHARGED_ATMOSPHERE = registerModifier("charged_atmosphere", ModifierType.MANA, (spell, target) -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.SHOCK, 0.75F);
+    public static final SpellModifier SUPERCHARGE = registerModifier("supercharge", ModifierType.POTENCY, (spell, target) -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.SHOCK, 1.5F);
+    public static final SpellModifier DIVINE_BALANCE_MANA = registerModifier("divine_balance_mana", ModifierType.MANA, (spell, target) -> spell == SBSpells.HEALING_TOUCH.get(), 1.5F);
+    public static final SpellModifier DIVINE_BALANCE_DURATION = registerModifier("divine_balance_duration", ModifierType.DURATION, (spell, target) -> spell == SBSpells.HEALING_TOUCH.get(), 2F);
+    public static final SpellModifier POISON_ESSENCE = registerModifier("poison_essence", ModifierType.POTENCY, (spell, target) -> spell == SBSpells.WILD_MUSHROOM.get(), 1.25F);
+    public static final SpellModifier SYNTHESIS = registerModifier("synthesis", ModifierType.MANA, (spell, target) -> spell == SBSpells.WILD_MUSHROOM.get(), 0F);
+    public static final SpellModifier ENDURANCE = registerModifier("endurance", ModifierType.DURATION, (spell, target) -> spell == SBSpells.STRIDE.get(), 2F);
+    public static final SpellModifier FORESIGHT = registerModifier("foresight", ModifierType.MANA, (spell, target) -> spell == SBSpells.MYSTIC_ARMOR.get(), 0.85F);
 //    public static final SpellModifier GALE_FORCE = registerModifier("gale_force", ModifierType.DURATION, path -> path == SBSpells.CYCLONE.get(), 2F);
-    public static final SpellModifier RESIDUAL_DISRUPTION = registerModifier("residual_disruption", ModifierType.CAST_CHANCE, spell -> true, 0.5F);
-    public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, spell -> true, 0.8F);
+    public static final SpellModifier RESIDUAL_DISRUPTION = registerModifier("residual_disruption", ModifierType.CAST_CHANCE, (spell, target) -> true, 0.5F);
+    public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, (spell, target) -> true, 0.8F);
 
     //Set bonus
-    public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.FIRE, 1.2F);
-    public static final SpellModifier STORMWEAVER_SET = registerModifier("stormweaver_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.SHOCK, 1.2F);
-    public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.FROST, 1.2F);
-    public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
+    public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.FIRE, 1.2F);
+    public static final SpellModifier STORMWEAVER_SET = registerModifier("stormweaver_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.SHOCK, 1.2F);
+    public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.FROST, 1.2F);
+    public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
 
-    private static SpellModifier registerModifier(String name, ModifierType type, Predicate<SpellType<?>> spellPredicate, float modifier) {
+    private static SpellModifier registerModifier(String name, ModifierType type, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier);
         registerModifier(spellModifier);
         return spellModifier;

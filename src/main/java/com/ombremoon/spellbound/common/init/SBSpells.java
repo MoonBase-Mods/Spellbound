@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpell;
@@ -37,6 +38,10 @@ public class SBSpells {
     public static final DeferredRegister<SpellType<?>> SPELL_TYPES = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Ruin
+    public static final Supplier<SpellType<FlameJetSpell>> FLAME_JET = registerSpell("flame_jet", fireRuinBuilder("flame_jet", SpellMastery.NOVICE, FlameJetSpell::new)
+            .skills(SBSkills.FLAME_JET, SBSkills.JET_ENGINE, SBSkills.FLAME_GEYSER, SBSkills.TWIN_JETS,
+                    SBSkills.IGNITION_BURST, SBSkills.TURBO_CHARGE, SBSkills.EXPULSION_BLAST,
+                    SBSkills.TURBULENCE_STREAM, SBSkills.JET_STABILIZATION, SBSkills.AFTERSHOCK_COMPRESSION, SBSkills.IRON_MAN));
     public static final Supplier<SpellType<SolarRaySpell>> SOLAR_RAY = registerSpell("solar_ray", fireRuinBuilder("solar_ray", SpellMastery.EXPERT, SolarRaySpell::new)
             .skills(SBSkills.SOLAR_RAY, SBSkills.SUNSHINE, SBSkills.OVERPOWER, SBSkills.HEALING_LIGHT,
                     SBSkills.CONCENTRATED_HEAT, SBSkills.OVERHEAT, SBSkills.SOLAR_BURST,

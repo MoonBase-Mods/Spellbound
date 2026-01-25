@@ -7,4 +7,9 @@ public class SummonVillagerSpell extends SummonSpell {
     public SummonVillagerSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
     }
+
+    @Override
+    protected void registerSkillTooltips() {
+
+    }
 }
