@@ -36,12 +36,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.HOLY_SHARD);
 
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
+        simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
         simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
         simpleGeneratedModel(SBItems.CREATIONIST_LEGGINGS);
         simpleGeneratedModel(SBItems.CREATIONIST_HELMET);
         simpleGeneratedModel(SBItems.CHALK);
-
 
         simpleGeneratedModel(SBItems.CRYOMANCER_BOOTS);
         simpleGeneratedModel(SBItems.CRYOMANCER_CHESTPLATE);
