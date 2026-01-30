@@ -6,6 +6,7 @@ import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -145,6 +146,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         this.addSkillDetails(SBSkills.TURBO_CHARGE,
                 SkillTooltip.CHARGE_DURATION.tooltip(60),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
+                SkillTooltip.MANA.tooltip(15, SBData.TEST),
                 SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.IGNITION_BURST,
@@ -284,8 +286,8 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     }
 
     @Override
-    public boolean canCharge(SkillTester skills) {
-        return skills.test(SBSkills.TURBO_CHARGE);
+    public boolean canCharge(SpellContext context) {
+        return context.isChoice(SBSkills.TURBO_CHARGE);
     }
 
     @Override

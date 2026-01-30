@@ -306,6 +306,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         }
     }
 
+    public boolean isCasting() {
+        return this.castTick > 0;
+    }
+
     /**
      * Adds an {@link AbstractSpell} to the active spells map.
      * @param spell The AbstractSpell

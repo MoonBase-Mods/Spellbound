@@ -105,7 +105,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         } else if (isEnding()) {
             data.setAnimation(RawAnimation.begin().thenPlay("end"));
         } else {
-            data.setAnimation(RawAnimation.begin().thenLoop("idle"));
+            data.setAnimation(RawAnimation.begin().thenLoop("test"));
         }
         return PlayState.CONTINUE;
     }

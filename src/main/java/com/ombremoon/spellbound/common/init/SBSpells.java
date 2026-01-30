@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpe
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.DolphinsFinSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.MysticArmorSpell;
@@ -88,8 +89,10 @@ public class SBSpells {
                     SBSkills.CRYSTALLINE_ARMOR, SBSkills.ELDRITCH_INTERVENTION, SBSkills.SUBLIME_BEACON, SBSkills.SOUL_RECHARGE));
 
     //Summons
-//    public static final Supplier<SpellType<SummonUndeadSpell>> SUMMON_UNDEAD = registerSpell("summon_undead", summonBuilder("summon_undead", SummonUndeadSpell::new)
-//            .skills(SBSkills.SUMMON_UNDEAD));
+    public static final Supplier<SpellType<SummonUndeadSpell>> SUMMON_UNDEAD = registerSpell("summon_undead", summonBuilder("summon_undead", SpellMastery.NOVICE, SummonUndeadSpell::new)
+            .skills(SBSkills.SUMMON_UNDEAD, SBSkills.SUMMON_HUSK, SBSkills.SUMMON_SKELETON, SBSkills.SUMMON_PHANTOM,
+                    SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.DESERT_RESILIENCE,
+                    SBSkills.DAYWALKER, SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
     public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder("wild_mushroom", SpellMastery.ADEPT, WildMushroomSpell::new)
             .skills(SBSkills.WILD_MUSHROOM, SBSkills.VILE_INFLUENCE, SBSkills.HASTENED_GROWTH, SBSkills.ENVENOM,
                     SBSkills.PARASITIC_FUNGUS, SBSkills.NATURES_DOMINANCE, SBSkills.POISON_ESSENCE,

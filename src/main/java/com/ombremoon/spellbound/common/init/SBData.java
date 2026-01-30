@@ -112,6 +112,7 @@ public class SBData {
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));
 
     public static final Supplier<DataComponentType<Unit>> DETAILS = COMPONENT_TYPES.registerComponentType("details", builder -> builder.persistent(Unit.CODEC));
+    public static final Supplier<DataComponentType<Unit>> TEST = COMPONENT_TYPES.registerComponentType("test", builder -> builder.persistent(Unit.CODEC));
 
     public static void register(IEventBus modEventBus) {
         SBData.ATTACHMENT_TYPES.register(modEventBus);

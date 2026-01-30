@@ -59,9 +59,7 @@ public class SpellCastEvents {
 
         AnimationHelper.tick(player);
         var handler = SpellUtil.getSpellHandler(player);
-        var skills = SpellUtil.getSkills(player);
-
-        var spellType = handler.getSelectedSpell();
+        SpellType<?> spellType = handler.getSelectedSpell();
         if (spellType == null) return;
 
         AbstractSpell spell = handler.getCurrentlyCastSpell();
@@ -80,7 +78,7 @@ public class SpellCastEvents {
             boolean castKeyJustPressed = isCastKeyPressed && !wasCastKeyPressed;
 
             if (castKeyJustPressed) {
-                if (canChargeSpell(skills, spell)) {
+                if (canChargeSpell(spell)) {
                     if (handler.isChargingOrChannelling()) {
                         stopChargeOrChannel(player, handler, spell, true);
                     } else if (handler.castTick == 0) {
@@ -137,8 +135,8 @@ public class SpellCastEvents {
         return context;
     }
 
-    private static boolean canChargeSpell(SkillHolder skills, AbstractSpell spell) {
-        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge((skill, choice) -> skills.hasSkill(skill) && (choice == null || skills.getChoice(spell.spellType()) == choice.value()));
+    private static boolean canChargeSpell(AbstractSpell spell) {
+        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge(spell.getCurrentContext());
     }
 
     private static void startCasting(Player player, SpellHandler handler, AbstractSpell spell) {

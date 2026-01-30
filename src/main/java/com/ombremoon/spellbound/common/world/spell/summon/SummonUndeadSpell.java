@@ -1,12 +1,12 @@
-/*
-package com.ombremoon.spellbound.common.world.path.summon;
+package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import net.minecraft.world.Difficulty;
 
-public class SummonUndeadSpell extends SummonSpell {
+public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell {
     public static Builder<SummonUndeadSpell> createSummonBuilder() {
         return createSummonBuilder(SummonUndeadSpell.class)
                 .manaCost(10)
@@ -16,6 +16,11 @@ public class SummonUndeadSpell extends SummonSpell {
 
     public SummonUndeadSpell() {
         super(SBSpells.SUMMON_UNDEAD.get(), createSummonBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+
     }
 
     @Override
@@ -29,5 +34,14 @@ public class SummonUndeadSpell extends SummonSpell {
 //            }
         }
     }
+
+    @Override
+    public int maxCharges() {
+        return 0;
+    }
+
+    @Override
+    public boolean canCharge(SpellContext context) {
+        return false;
+    }
 }
-*/

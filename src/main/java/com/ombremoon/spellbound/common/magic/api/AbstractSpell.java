@@ -1,15 +1,15 @@
 package com.ombremoon.spellbound.common.magic.api;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.client.CameraEngine;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.client.particle.EffectCache;
+import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
-import com.ombremoon.spellbound.client.particle.FXEmitter;
-import com.ombremoon.spellbound.common.world.effect.SBEffect;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -22,6 +22,8 @@ import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.effect.SBEffect;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -95,7 +97,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected static final float HEAL_MODIFIER = 0.25F;
     protected static final AtomicInteger SPELL_COUNTER = new AtomicInteger();
     private final Map<Skill, List<Component>> skillTooltips = new HashMap<>();
-    private final Map<Skill, DataComponentType<?>> tooltipComponents = new HashMap<>();
+    private final Multimap<Skill, DataComponentType<?>> tooltipComponents = ArrayListMultimap.create();
     private final SpellType<?> spellType;
     private final int manaCost;
     private final int duration;
@@ -340,9 +342,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         List<Component> tooltips = this.skillTooltips.getOrDefault(skill.value(), new ArrayList<>());
         Consumer<Component> adder = tooltips::add;
         for (SkillTooltipProvider provider : providers) {
-            if (provider.component() != null && this.tooltipComponents.get(skill.value()) != provider.component()) {
+            if (provider.component() != null && !this.tooltipComponents.get(skill.value()).contains(provider.component())) {
                 ResourceLocation location = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(Objects.requireNonNull(provider.component()));
                 if (location != null) {
+                    if (provider.component() != SBData.DETAILS.get())
+                        adder.accept(CommonComponents.NEW_LINE);
+
                     adder.accept(CommonComponents.EMPTY);
                     adder.accept(Component.translatable("spellbound.skill_tooltip." + location.getPath()).withStyle(ChatFormatting.GRAY));
                     this.tooltipComponents.put(skill.value(), provider.component());
@@ -397,8 +402,16 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return The casting specific spells context
      */
     @ApiStatus.Internal
-    public SpellContext getCastContext() {
+    public final SpellContext getCastContext() {
         return this.castContext;
+    }
+
+    public final SpellContext getCurrentContext() {
+        if (this.caster == null)
+            return null;
+
+        var handler = SpellUtil.getSpellHandler(this.caster);
+        return handler.isCasting() ? this.castContext : this.context;
     }
 
     /**

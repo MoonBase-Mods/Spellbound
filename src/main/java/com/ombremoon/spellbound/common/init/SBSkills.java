@@ -192,6 +192,19 @@ public class SBSkills {
     public static final Holder<Skill> REINFORCED = registerSkill("reinforced", 0, 50, preReqs(COBBLED_HIDE));
     public static final Holder<Skill> VIRAL = registerSkill("viral", 0, 50, preReqs(COBBLED_HIDE));
 
+    //Summon Undead
+    public static final Holder<Skill> SUMMON_UNDEAD = registerSkill("summon_undead");
+    public static final Holder<Skill> SUMMON_HUSK = registerSkill("summon_husk", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_SKELETON = registerSkill("summon_skeleton", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_PHANTOM = registerSkill("summon_phantom", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_DROWNED = registerSkill("summon_drowned", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> ROTTEN_SOLDIERS = registerSkill("rotten_soldiers", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> DESERT_RESILIENCE = registerSkill("desert_resilience", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> DAYWALKER = registerSkill("daywalker", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> HALL_OF_THE_DEAD = registerSkill("hall_of_the_dead", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SILENT_NIGHT = registerSkill("silent_night", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUNKEN_BREATH = registerSkill("sunken_breath", 0, 0, preReqs(SUMMON_UNDEAD));
+
     //Wild Mushroom
     public static final Holder<Skill> WILD_MUSHROOM = registerSkill("wild_mushroom");
     public static final Holder<Skill> VILE_INFLUENCE = registerSkill("vile_influence", -50, 50, preReqs(WILD_MUSHROOM));
@@ -270,8 +283,6 @@ public class SBSkills {
     public static Holder<Skill> MAGIC_POISONING = registerSkill("magic_poisoning", 75, 100, preReqs(DOMINANT_MAGIC));
     public static Holder<Skill> NULLIFICATION = registerSkill("nullification", 75, 150, preReqs(MAGIC_POISONING));
     public static Holder<Skill> EXPUNGE = registerSkill("expunge", 0, 200, preReqs(AVERSION, UNFOCUSED, NULLIFICATION));
-
-    public static Holder<Skill> SUMMON_UNDEAD = registerSkill("summon_undead");
 
     //Totem Spirit
     //TODO: Tree
