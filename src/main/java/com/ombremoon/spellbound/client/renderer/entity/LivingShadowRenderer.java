@@ -17,8 +17,8 @@ public class LivingShadowRenderer extends HumanoidMobRenderer<LivingShadow, Huma
 
     @Override
     public ResourceLocation getTextureLocation(LivingShadow entity) {
-        if (entity.getOwner() != null) {
-            AbstractClientPlayer player = (AbstractClientPlayer) entity.getOwner();
+        if (entity.getSummoner() != null) {
+            AbstractClientPlayer player = (AbstractClientPlayer) entity.getSummoner();
             if (player != null) return player.getSkin().texture();
         }
         return DefaultPlayerSkin.getDefaultTexture();

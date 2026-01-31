@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
 import com.ombremoon.spellbound.client.particle.FXEmitter;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
@@ -855,13 +856,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.removeSkillBuff(livingEntity, skill.value());
     }
 
-    public void removeSkillBuff(LivingEntity livingEntity, Skill skill) {
+    public void removeSkillBuff(LivingEntity livingEntity, SkillProvider skill) {
         var handler = SpellUtil.getSpellHandler(livingEntity);
         var buffs = handler.getBuffs().stream().filter(skillBuff -> skillBuff.isSkill(skill)).toList();
         this.removeSkillBuff(livingEntity, skill, buffs.size());
     }
 
-    private void removeSkillBuff(LivingEntity livingEntity, Skill skill, int iterations) {
+    private void removeSkillBuff(LivingEntity livingEntity, SkillProvider skill, int iterations) {
         if (livingEntity.level().isClientSide)
             return;
 
@@ -903,7 +904,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param livingEntity The living entity
      * @return The modifier amount
      */
-    public float getModifier(ModifierType modifierType, LivingEntity livingEntity) {
+    public float    getModifier(ModifierType modifierType, LivingEntity livingEntity) {
         var skills = SpellUtil.getSkills(livingEntity);
         float f = 1;
         for (var modifier : skills.getModifiers()) {

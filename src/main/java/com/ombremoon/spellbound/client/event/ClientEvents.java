@@ -9,9 +9,8 @@ import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
 import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
-import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.PlaceholderRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.*;
+import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
@@ -105,10 +104,17 @@ public class ClientEvents {
 
             event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
 
+            event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
+
             event.registerBlockEntityRenderer(SBBlockEntities.VALKY_STATUE.get(), ValkyrStatueRenderer::new);
             event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);
             event.registerBlockEntityRenderer(SBBlockEntities.SUMMON_PORTAL.get(), SummonPortalRenderer::new);
             event.registerBlockEntityRenderer(SBBlockEntities.TRANSFIGURATION_DISPLAY.get(), TransfigurationDisplayRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+            event.registerLayerDefinition(SBModelLayerLocs.FROG, FrogModel::createBodyLayer);
         }
 
         @SubscribeEvent

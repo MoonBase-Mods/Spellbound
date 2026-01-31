@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.world.entity.living.*;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
@@ -25,6 +26,9 @@ public class SBEntities {
     public static final Supplier<EntityType<TestDummy>> TEST_DUMMY = registerMob("test_dummy", TestDummy::new, MobCategory.MISC, 0.6F, 1.8F, 8, TestDummy::createTestDummyAttributes);
 
     public static final Supplier<EntityType<SpellBroker>> SPELL_BROKER = registerMob("spell_broker", SpellBroker::new, MobCategory.CREATURE, 0.9F, 1.95F, 8, SpellBroker::createAttributes);
+
+    //Familiars
+    public static final Supplier<EntityType<FrogEntity>> FROG = registerMob("frog", FrogEntity::new, MobCategory.MISC, 1f, 1f, 8, FrogEntity::createAttributes, false);
 
     public static final Supplier<EntityType<WildMushroom>> MUSHROOM = registerEntity("wild_mushroom", WildMushroom::new, 0.9f, 0.9f);
     public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9f, 0.9f);

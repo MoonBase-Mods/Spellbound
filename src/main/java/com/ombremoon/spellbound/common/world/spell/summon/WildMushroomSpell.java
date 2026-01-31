@@ -45,7 +45,7 @@ public class WildMushroomSpell extends SummonSpell {
                 .baseDamage(4.0F)
                 .castCondition((context, spell) -> {
                     var skills = context.getSkills();
-                    if (skills.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getOwner()) {
+                    if (skills.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getSummoner()) {
                         WildMushroomSpell mushroomSpell = mushroom.getSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());

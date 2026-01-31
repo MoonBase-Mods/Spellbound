@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
@@ -78,6 +79,7 @@ public class NeoForgeEvents {
         event.addEntry(SolarRaySpell.SOLAR_BURST_FRONT);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END_EXTENDED);
+        event.addEntry(OwlFamiliar.TWISTED_OBB);
     }
 
     @SubscribeEvent
@@ -85,6 +87,8 @@ public class NeoForgeEvents {
         if (event.getEntity() instanceof LivingEntity livingEntity) {
             Level level = livingEntity.level();
             var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.initData(livingEntity);
+            SpellUtil.getFamiliarHandler(livingEntity);
             handler.initData(livingEntity);
 
             if (livingEntity instanceof Player player) {
@@ -118,6 +122,8 @@ public class NeoForgeEvents {
             ServerLevel serverLevel = (ServerLevel) level;
             var handler = SpellUtil.getSpellHandler(player);
             handler.endSpells();
+            var famHandler = SpellUtil.getFamiliarHandler(player);
+            if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
 
             if (ArenaSavedData.isArena(serverLevel)) {
                 ArenaSavedData data = ArenaSavedData.get(serverLevel);
@@ -151,6 +157,7 @@ public class NeoForgeEvents {
         if (event.getEntity() instanceof LivingEntity entity) {
             var handler = SpellUtil.getSpellHandler(entity);
             handler.tick();
+            SpellUtil.getFamiliarHandler(entity).tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
@@ -271,10 +278,10 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity().getType() == EntityType.PIGLIN_BRUTE) {
-            LogUtils.getLogger().debug(String.valueOf(SpellUtil.getSpellEffects(event.getEntity()).getBuildUp(EffectManager.Effect.FIRE)));
-        }
         LivingEntity livingEntity = event.getEntity();
+        var famHandler = SpellUtil.getFamiliarHandler(livingEntity);
+        famHandler.discardFamiliar();
+
         if (livingEntity.level().isClientSide)
             return;
 
@@ -325,6 +332,19 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Post event) {
         if (event.getEntity().level().isClientSide) return;
+
+        if (event.getSource().getEntity() instanceof LivingEntity sourceEntity) {
+            var handler = SpellUtil.getSpellHandler(sourceEntity);
+            for (int id : handler.getSummons()) {
+                Entity summon = sourceEntity.level().getEntity(id);
+                if (summon instanceof LivingEntity livingSummon) SpellUtil.setTarget(livingSummon, event.getEntity());
+            }
+
+            var familiarHandler = SpellUtil.getFamiliarHandler(sourceEntity);
+            if (familiarHandler.hasActiveFamiliar()) {
+                SpellUtil.setTarget(familiarHandler.getActiveEntity(), event.getEntity());
+            }
+        }
 
         LivingEntity entity = event.getEntity();
         SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.POST_DAMAGE, new DamageEvent.Post(entity, event));

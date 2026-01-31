@@ -65,6 +65,9 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
     public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.RUIN && spellType.getSubPath() == SpellPath.FROST, 1.2F);
     public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
 
+    //Familiar
+    public static final SpellModifier MURKY_HABITAT = registerModifier("murky_habitat", ModifierType.POTENCY, spellType -> true, 1.1F);
+
     private static SpellModifier registerModifier(String name, ModifierType type, Predicate<SpellType<?>> spellPredicate, float modifier) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier);
         registerModifier(spellModifier);

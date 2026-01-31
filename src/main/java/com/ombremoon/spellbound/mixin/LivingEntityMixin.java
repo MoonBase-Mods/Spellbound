@@ -1,11 +1,13 @@
 package com.ombremoon.spellbound.mixin;
 
 import com.ombremoon.spellbound.common.events.EventFactory;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.SBFamiliarEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,6 +34,7 @@ public class LivingEntityMixin {
         MobEffectInstance mobeffectinstance = this.activeEffects.get(effectInstance.getEffect());
         EventFactory.onEffectAdded(spellbound$self(), mobeffectinstance, effectInstance, entity);
     }
+
 
     @Unique
     private LivingEntity spellbound$self() {

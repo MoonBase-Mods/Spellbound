@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -40,6 +41,9 @@ public class SBData {
             "skill_handler", () -> AttachmentType.serializable(SkillHolder::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<EffectManager>> STATUS_EFFECTS = ATTACHMENT_TYPES.register(
             "effect_handler", () -> AttachmentType.serializable(EffectManager::new).build());
+    public static final Supplier<AttachmentType<FamiliarHandler>> FAMILIAR_HANDLER = ATTACHMENT_TYPES.register(
+            "familiar_handler", () -> AttachmentType.serializable(FamiliarHandler::new).copyOnDeath().build()
+    );
 
     //Mana
     public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(

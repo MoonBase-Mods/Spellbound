@@ -7,6 +7,7 @@ import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import io.netty.buffer.ByteBuf;
@@ -29,7 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
-public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buffObject, T object) {
+public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObject<T> buffObject, T object) {
     private static final Logger LOGGER = Constants.LOG;
     private static final Map<String, BuffObject<?>> REGISTERED_OBJECTS = Maps.newHashMap();
     public static final StreamCodec<RegistryFriendlyByteBuf, SkillBuff<?>> STREAM_CODEC = StreamCodec.ofMember(
@@ -88,10 +89,8 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
-        SBSkills.REGISTRY.byNameCodec()
-                .encodeStart(NbtOps.INSTANCE, this.skill)
-                .resultOrPartial(LOGGER::error)
-                .ifPresent(nbt -> tag.put("Skill", nbt));
+        tag.putString("SkillProviderType", this.skill.getType().name());
+        tag.putString("Skill", this.skill.location().toString());
         BuffCategory.CODEC
                 .encodeStart(NbtOps.INSTANCE, this.category)
                 .resultOrPartial(LOGGER::error)
@@ -110,10 +109,10 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
     }
 
     public static <T> SkillBuff<T> load(CompoundTag tag) {
-        Skill skill = SBSkills.REGISTRY.byNameCodec()
-                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Skill")))
-                .resultOrPartial(LOGGER::error)
-                .orElse(null);
+        Skill skill = SkillProvider.getFromId(
+                SkillProvider.Type.valueOf(tag.getString("SkillProviderType")),
+                ResourceLocation.parse(tag.getString("Skill"))
+        );
         BuffCategory category = BuffCategory.CODEC
                 .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Category")))
                 .resultOrPartial(LOGGER::error)
@@ -133,14 +132,15 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
     }
 
     private void toNetwork(RegistryFriendlyByteBuf buf) {
-        ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).encode(buf, this.skill);
+        buf.writeUtf(this.skill.getType().name());
+        this.skill.encode(buf);
         NeoForgeStreamCodecs.enumCodec(BuffCategory.class).encode(buf, this.category);
         BuffObject.STREAM_CODEC.encode(buf, this.buffObject);
         this.buffObject.objectStreamCodec.encode(buf, this.object);
     }
 
     private static <T> SkillBuff<T> fromNetwork(RegistryFriendlyByteBuf buf) {
-        Skill skill = ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).decode(buf);
+        SkillProvider skill = SkillProvider.decode(SkillProvider.Type.valueOf(buf.readUtf()), buf);
         BuffCategory category = NeoForgeStreamCodecs.enumCodec(BuffCategory.class).decode(buf);
         BuffObject<T> buffObject = (BuffObject<T>) BuffObject.STREAM_CODEC.decode(buf);
         T object = buffObject.objectStreamCodec.decode(buf);
@@ -168,7 +168,7 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
             this.buffObject.removeObject().accept(livingEntity, this.object);
     }
 
-    public boolean isSkill(Skill skill) {
+    public boolean isSkill(SkillProvider skill) {
         return this.skill.equals(skill);
     }
 
@@ -193,7 +193,7 @@ public record SkillBuff<T>(Skill skill, BuffCategory category, BuffObject<T> buf
 
     @Override
     public String toString() {
-        return "SkillBuff: [" + "Skill: " + this.skill + ", Type: " + this.buffObject.name + ", Category: " + this.category + ", Buff: " + this.object + "]";
+        return "SkillBuff: [" + this.skill + ", Type: " + this.buffObject.name + ", Category: " + this.category + ", Buff: " + this.object + "]";
     }
 
     public record BuffObject<T>(
