@@ -1,19 +1,24 @@
 package com.ombremoon.spellbound.common.magic.skills;
 
+import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.main.CommonClass;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class Skill {
+public class Skill implements SkillProvider {
     private final int xPos;
     private final int yPos;
     @Nullable
@@ -126,12 +131,22 @@ public class Skill {
     }
 
     @Override
+    public void encode(RegistryFriendlyByteBuf buf) {
+        ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).encode(buf, this);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.SPELL;
+    }
+
+    @Override
     public int hashCode() {
         return this.location().hashCode();
     }
 
     @Override
     public String toString() {
-        return this.location().toString();
+        return string();
     }
 }

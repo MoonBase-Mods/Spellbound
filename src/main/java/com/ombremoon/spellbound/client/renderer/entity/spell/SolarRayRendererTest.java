@@ -27,7 +27,7 @@ public class SolarRayRendererTest extends EntityRenderer<SolarRay> {
 
     @Override
     public void render(SolarRay solarRay, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        Entity owner = solarRay.getOwner();
+        Entity owner = solarRay.getSummoner();
         if (owner == null) return;
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-owner.getYRot()));

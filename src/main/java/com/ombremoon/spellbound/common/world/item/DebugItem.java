@@ -14,6 +14,7 @@ import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -40,7 +41,7 @@ public class DebugItem extends Item implements Loggable {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var handler = SpellUtil.getSpellHandler(player);
         var skillHandler = SpellUtil.getSkills(player);
-//        duckDebug(level, player, usedHand, handler, skillHandler);
+        duckDebug(level, player, usedHand, handler, skillHandler);
         ombreDebug(level, player, usedHand, handler, skillHandler);
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
@@ -70,7 +71,8 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        if (level.isClientSide) return;
-        skillHolder.awardSpellXp(SBSpells.HEALING_BLOSSOM.get(), 1000);
+        var handler = SpellUtil.getFamiliarHandler(player);
+        handler.awardBond(SBFamiliars.FROG, handler.getMaxXPForFamiliar(SBFamiliars.FROG));
+        player.sendSystemMessage(handler.selectFamiliar(SBFamiliars.FROG) ? Component.literal("Selected frog") : Component.literal("Failed to set familiar"));
     }
 }

@@ -14,7 +14,7 @@ public class ShadowGateRenderer extends OutlineSpellRenderer<ShadowGate> {
     @Override
     protected void applyRotations(ShadowGate animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
-        if (animatable.getOwner() != null) {
+        if (animatable.getSummoner() != null) {
             if (animatable.isShifted()) {
                 poseStack.translate(0, -0.05F, 0);
                 poseStack.mulPose(Axis.XP.rotationDegrees(30));

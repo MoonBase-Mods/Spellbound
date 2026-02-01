@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import io.netty.buffer.ByteBuf;
@@ -34,7 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
-public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory category, BuffObject<T> buffObject, T object) {
+public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategory category, BuffObject<T> buffObject, T object) {
     private static final Logger LOGGER = Constants.LOG;
     private static final Map<String, BuffObject<?>> REGISTERED_OBJECTS = Maps.newHashMap();
     public static final StreamCodec<RegistryFriendlyByteBuf, SkillBuff<?>> STREAM_CODEC = StreamCodec.ofMember(
@@ -112,10 +113,8 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
-        SBSkills.REGISTRY.byNameCodec()
-                .encodeStart(NbtOps.INSTANCE, this.skill)
-                .resultOrPartial(LOGGER::error)
-                .ifPresent(nbt -> tag.put("Skill", nbt));
+        tag.putString("SkillProviderType", this.skill.getType().name());
+        tag.putString("Skill", this.skill.location().toString());
         ResourceLocation.CODEC
                 .encodeStart(NbtOps.INSTANCE, this.id)
                 .resultOrPartial(LOGGER::error)
@@ -138,10 +137,10 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
     }
 
     public static <T> SkillBuff<T> load(CompoundTag tag) {
-        Skill skill = SBSkills.REGISTRY.byNameCodec()
-                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Skill")))
-                .resultOrPartial(LOGGER::error)
-                .orElse(null);
+        Skill skill = SkillProvider.getFromId(
+                SkillProvider.Type.valueOf(tag.getString("SkillProviderType")),
+                ResourceLocation.parse(tag.getString("Skill"))
+        );
         ResourceLocation id = ResourceLocation.CODEC
                 .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Id")))
                 .resultOrPartial(LOGGER::error)
@@ -165,7 +164,8 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
     }
 
     private void toNetwork(RegistryFriendlyByteBuf buf) {
-        ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).encode(buf, this.skill);
+        buf.writeUtf(this.skill.getType().name());
+        this.skill.encode(buf);
         ResourceLocation.STREAM_CODEC.encode(buf, this.id);
         NeoForgeStreamCodecs.enumCodec(BuffCategory.class).encode(buf, this.category);
         BuffObject.STREAM_CODEC.encode(buf, this.buffObject);
@@ -173,7 +173,7 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
     }
 
     private static <T> SkillBuff<T> fromNetwork(RegistryFriendlyByteBuf buf) {
-        Skill skill = ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY).decode(buf);
+        SkillProvider skill = SkillProvider.decode(SkillProvider.Type.valueOf(buf.readUtf()), buf);
         ResourceLocation id = ResourceLocation.STREAM_CODEC.decode(buf);
         BuffCategory category = NeoForgeStreamCodecs.enumCodec(BuffCategory.class).decode(buf);
         BuffObject<T> buffObject = (BuffObject<T>) BuffObject.STREAM_CODEC.decode(buf);
@@ -201,7 +201,7 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
             this.buffObject.removeObject().accept(livingEntity, this.object);
     }
 
-    public boolean isSkill(Skill skill) {
+    public boolean isSkill(SkillProvider skill) {
         return this.skill.equals(skill);
     }
 
@@ -234,7 +234,7 @@ public record SkillBuff<T>(Skill skill, ResourceLocation id, BuffCategory catego
 
     @Override
     public String toString() {
-        return "SkillBuff: [" + "Skill: " + this.skill + ", Type: " + this.buffObject.name + ", Category: " + this.category + ", Buff: " + this.object + "]";
+        return "SkillBuff: [" + this.skill + ", Type: " + this.buffObject.name + ", Category: " + this.category + ", Buff: " + this.object + "]";
     }
 
     public record BuffObject<T>(

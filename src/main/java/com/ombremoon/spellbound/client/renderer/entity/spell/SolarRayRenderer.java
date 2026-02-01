@@ -18,7 +18,7 @@ public class SolarRayRenderer extends EmissiveOutlineSpellRenderer<SolarRay> {
     @Override
     protected void applyRotations(SolarRay animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
 //        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
-        Entity owner = animatable.getOwner();
+        Entity owner = animatable.getSummoner();
         if (owner == null) return;
         poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.lerp(partialTick, owner.yRotO, owner.getYRot())));
     }

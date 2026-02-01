@@ -39,8 +39,8 @@ public class SolarRay extends SpellEntity<SolarRaySpell> {
     @Override
     public void tick() {
         super.tick();
-        if (this.getOwner() != null)
-            this.setPos(this.getOwner().position());
+        if (this.getSummoner() != null)
+            this.setPos(this.getSummoner().position());
     }
 
     @Override

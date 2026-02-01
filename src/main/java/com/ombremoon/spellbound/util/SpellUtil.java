@@ -8,11 +8,13 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
+import com.ombremoon.spellbound.common.world.entity.SBSummonable;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -58,6 +60,13 @@ public class SpellUtil {
 
     public static SkillHolder getSkills(LivingEntity livingEntity) {
         return livingEntity.getData(SBData.SKILL_HOLDER);
+    }
+
+    public static FamiliarHandler getFamiliarHandler(LivingEntity livingEntity) {
+        var handler = livingEntity.getData(SBData.FAMILIAR_HANDLER);
+        if (!handler.isInitialised())
+            handler.init(livingEntity);
+        return handler;
     }
 
     public static EffectManager getSpellEffects(LivingEntity livingEntity) {
@@ -153,8 +162,8 @@ public class SpellUtil {
      * @param owner The owner of the summon
      */
     public static void setOwner(@NotNull Entity entity, @NotNull LivingEntity owner) {
-        if (entity instanceof ISpellEntity<?> spellEntity) {
-            spellEntity.setOwner(owner);
+        if (entity instanceof SBSummonable summonable) {
+            summonable.setSummoner(owner);
         } else {
             entity.setData(SBData.OWNER_ID, owner.getId());
         }
@@ -170,8 +179,8 @@ public class SpellUtil {
      */
     @Nullable
     public static Entity getOwner(@NotNull Entity entity) {
-        if (entity instanceof ISpellEntity<?> spellEntity) {
-            return spellEntity.getOwner();
+        if (entity instanceof SBSummonable spellEntity) {
+            return spellEntity.getSummoner();
         }
 
         return entity.level().getEntity(entity.getData(SBData.OWNER_ID));

@@ -23,7 +23,7 @@ public class GiantMushroomRenderer extends GenericLivingEntityRenderer<GiantMush
 
     @Override
     public ResourceLocation getTextureLocation(GiantMushroom animatable) {
-        return animatable.isBouncingAndAirborne() ? MUSHROOM_JUMP : !animatable.hasOwner() ? MUSHROOM_ANGRY : super.getTextureLocation(animatable);
+        return animatable.isBouncingAndAirborne() ? MUSHROOM_JUMP : !animatable.hasSummoner() ? MUSHROOM_ANGRY : super.getTextureLocation(animatable);
     }
 
     @Override

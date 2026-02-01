@@ -32,7 +32,7 @@ public class WildMushroom extends SpellEntity<WildMushroomSpell> {
 
     public WildMushroom(Level level, GiantMushroom owner) {
         super(SBEntities.MUSHROOM.get(), level);
-        this.setOwner(owner);
+        this.setSummoner(owner);
         this.setPhase(owner.getPhase());
     }
 
@@ -51,7 +51,7 @@ public class WildMushroom extends SpellEntity<WildMushroomSpell> {
     public void tick() {
         super.tick();
         Level level = this.level();
-        Entity owner = this.getOwner();
+        Entity owner = this.getSummoner();
         if (owner instanceof GiantMushroom mushroom) {
             int phase = this.getPhase();
             int interval = phase == 1 ? 60 : 40;
@@ -59,7 +59,7 @@ public class WildMushroom extends SpellEntity<WildMushroomSpell> {
                 if (!level.isClientSide) {
                     List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3), livingEntity -> !(livingEntity instanceof MiniMushroom || livingEntity instanceof GiantMushroom));
                     for (LivingEntity livingEntity : entities) {
-                        if (mushroom.hurtTarget(livingEntity, mushroom.spellDamageSource(level), 8.0F * this.getPhase()) && (phase > 2 ||  mushroom.hasOwner())) {
+                        if (mushroom.hurtTarget(livingEntity, mushroom.spellDamageSource(level), 8.0F * this.getPhase()) && (phase > 2 ||  mushroom.hasSummoner())) {
                             livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60, this.getPhase()));
                         }
                     }
