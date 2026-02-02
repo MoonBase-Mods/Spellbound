@@ -60,6 +60,16 @@ public class TestDummy extends SBLivingEntity {
         controllers.add(new AnimationController<>(this, MOVEMENT, 5, this::testDummyMotionController));
     }
 
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
     protected <T extends GeoAnimatable> PlayState testDummyMotionController(AnimationState<T> data) {
         if (data.isMoving()) {
             data.setAnimation(RawAnimation.begin().thenLoop("walk"));

@@ -1,8 +1,8 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.HurtOwnerSensor;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.NearbyShrineSensor;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.OwnerAttackSenor;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.HurtOwnerSensor;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.NearbyShrineSensor;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.OwnerAttackSenor;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.sensing.SensorType;

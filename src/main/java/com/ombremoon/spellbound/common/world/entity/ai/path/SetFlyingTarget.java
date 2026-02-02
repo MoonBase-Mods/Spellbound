@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.world.entity.behavior.path;
+package com.ombremoon.spellbound.common.world.entity.ai.path;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;

@@ -10,13 +10,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -83,32 +83,31 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
 
     /**
      * Increments a given status effect by a set amount, will apply the effect upon reaching 100
-     * @param damageType The type of damage applied to the buildup
+     * @param effect The type of effect to buildup
      * @param amount amount to increase the build up by
      */
-    public void incrementRuinEffects(ResourceKey<DamageType> damageType, float amount) {
-        Effect effect = this.getEffectFromDamageType(damageType);
-        if (effect != null) {
-            Float progress = this.buildUp.get(effect);
-            float buildUpAmount = this.calculateBuildUp(effect, amount);
-            if (progress != null) {
-                progress = Math.clamp(progress + buildUpAmount, 0.0F, 100.0F);
-            } else {
-                progress = buildUpAmount;
-            }
+    public void incrementBuildEffects(Effect effect, float amount) {
+        Float progress = this.buildUp.get(effect);
+        float buildUpAmount = this.calculateBuildUp(effect, amount);
+        if (progress != null) {
+            progress = Math.clamp(progress + buildUpAmount, 0.0F, 100.0F);
+        } else {
+            progress = buildUpAmount;
+        }
 
-            this.buildUp.put(effect, progress);
-            if (progress >= 100.0F) {
-                tryApplyEffect(effect);
-                this.buildUp.put(effect, 0.0F);
-            }
+        this.buildUp.put(effect, progress);
+        if (progress >= 100.0F) {
+            tryApplyEffect(effect);
+            this.buildUp.put(effect, 0.0F);
         }
     }
 
     private float calculateBuildUp(Effect effect, float amount) {
         var skills = SpellUtil.getSkills(this.livingEntity);
         float resistance = 1.0F - effect.getEntityResistance(this.livingEntity);
-        float pathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(effect.getPath()));
+
+        SpellPath path = effect.getPath();
+        float pathAmount = path != null ? 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(path)) : 1.0F;
         float ruinPathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN));
         return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
     }
@@ -221,15 +220,17 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     public enum Effect {
         FIRE(SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE, 20),
         FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
-        SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100);
+        SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100),
+        DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100);
 
+        @Nullable
         private final SpellPath path;
         private final Holder<MobEffect> mobEffect;
         private final Holder<Attribute> resistance;
         private final ResourceKey<DamageType> damageType;
         private final int duration;
 
-        Effect(SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
+        Effect(@Nullable SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
             this.path = path;
             this.mobEffect = mobEffect;
             this.resistance = resistance;
@@ -237,7 +238,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
             this.duration = duration;
         }
 
-        public SpellPath getPath() {
+        public @Nullable SpellPath getPath() {
             return this.path;
         }
 

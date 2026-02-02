@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.world.entity.behavior;
+package com.ombremoon.spellbound.common.world.entity.ai;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;

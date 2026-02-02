@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.mixin;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -29,9 +30,11 @@ public class MobMixin {
         if (result != null) cir.setReturnValue(result);
     }
 
-    @Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;playAttackSound()V"))
-    private void doHurtTarget(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-
+    @Inject(method = "isSunBurnTick", at = @At("RETURN"), cancellable = true)
+    private void isSunBurnTick(CallbackInfoReturnable<Boolean> cir) {
+        if (SpellUtil.isSummon(self())) {
+            cir.setReturnValue(false);
+        }
     }
 
     private Mob self() {

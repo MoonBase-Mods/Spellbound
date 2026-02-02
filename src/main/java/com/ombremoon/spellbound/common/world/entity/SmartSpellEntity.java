@@ -234,10 +234,6 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         return new SmoothGroundNavigation(this, this.level());
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
 
     @Override
     public EntityType<?> entityType() {

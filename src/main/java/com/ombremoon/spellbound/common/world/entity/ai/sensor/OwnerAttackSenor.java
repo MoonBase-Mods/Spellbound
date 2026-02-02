@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.world.entity.behavior.sensor;
+package com.ombremoon.spellbound.common.world.entity.ai.sensor;
 
 import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.common.init.SBSensors;

@@ -1,9 +1,6 @@
 package com.ombremoon.spellbound.util;
 
-import com.ombremoon.spellbound.common.init.SBAttributes;
-import com.ombremoon.spellbound.common.init.SBData;
-import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.init.SBMemoryTypes;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -13,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -37,11 +35,18 @@ import java.util.*;
 import java.util.function.BiPredicate;
 
 public class SpellUtil {
-    public static final BiPredicate<Entity, LivingEntity> CAN_ATTACK_ENTITY = (entity, livingEntity) -> !livingEntity.isAlliedTo(entity) && !livingEntity.is(entity) && !livingEntity.hasEffect(SBEffects.COUNTER_MAGIC) && !(livingEntity instanceof OwnableEntity ownable && ownable.getOwner() == (entity));
-    public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (entity, livingEntity) -> entity != null && livingEntity.isAlliedTo(entity) || (livingEntity instanceof OwnableEntity ownable && ownable.getOwner() == entity);
+    public static final BiPredicate<Entity, LivingEntity> CAN_ATTACK_ENTITY = (attacker, target) -> !target.isAlliedTo(attacker) && !target.is(attacker) && !target.hasEffect(SBEffects.COUNTER_MAGIC) && !(target instanceof OwnableEntity ownable && ownable.getOwner() == (attacker));
+    public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
+            && (attacker.isAlliedTo(target)
+            || attacker instanceof OwnableEntity ownable && ownable.getOwner() == target
+            || isSummonOf(attacker, target));
 
     public static SpellDamageSource spellDamageSource(Level level, ResourceKey<DamageType> damageType, AbstractSpell spell, Entity ownerEntity, Entity attackEntity) {
         return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), spell, attackEntity, ownerEntity);
+    }
+
+    public static SpellDamageSource magicDamageSource(Level level, AbstractSpell spell, Entity ownerEntity, Entity attackEntity) {
+        return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SBDamageTypes.SB_GENERIC), spell, attackEntity, ownerEntity);
     }
 
     public static DamageSource damageSource(Level level, ResourceKey<DamageType> damageType, Entity ownerEntity, Entity attackEntity) {
@@ -128,6 +133,20 @@ public class SpellUtil {
         } else {
             entity.setData(SBData.SPELL_TYPE, spell.location());
             entity.setData(SBData.SPELL_ID, spell.getId());
+        }
+    }
+    public static AbstractSpell getSpell(@NotNull Entity entity) {
+        if (entity instanceof ISpellEntity<?> spellEntity) {
+            return spellEntity.getSpell();
+        } else {
+            Entity owner = getOwner(entity);
+            if (!(owner instanceof LivingEntity livingEntity))
+                return null;
+
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            SpellType<?> spellType = SBSpells.REGISTRY.get(entity.getData(SBData.SPELL_TYPE));
+            int spellId = entity.getData(SBData.SPELL_ID);
+            return handler.getSpell(spellType, spellId);
         }
     }
 
@@ -238,7 +257,7 @@ public class SpellUtil {
      * @param owner The player to check if they are the owner
      * @return true if owner, false if no owner/not the owner
      */
-    public static boolean isSummonOf(@NotNull Entity summon, @NotNull LivingEntity owner) {
+    public static boolean isSummonOf(@NotNull Entity summon, @NotNull Entity owner) {
         Entity entity = getOwner(summon);
         if (entity == null) return false;
         return entity.is(owner);

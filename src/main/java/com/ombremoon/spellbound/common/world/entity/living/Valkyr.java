@@ -1,8 +1,8 @@
 package com.ombremoon.spellbound.common.world.entity.living;
 
 import com.mojang.datafixers.util.Pair;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.NearbyShrineSensor;
-import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedInvalidateAttackTarget;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.NearbyShrineSensor;
+import com.ombremoon.spellbound.common.world.entity.ai.target.ExtendedInvalidateAttackTarget;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -270,6 +270,16 @@ public class Valkyr extends SBLivingEntity implements NeutralMob {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, MOVEMENT, 5, this::valkyrMotionController));
+    }
+
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
     }
 
     protected <T extends GeoAnimatable> PlayState valkyrMotionController(AnimationState<T> data) {

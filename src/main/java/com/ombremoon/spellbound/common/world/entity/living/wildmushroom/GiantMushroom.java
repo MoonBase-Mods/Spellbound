@@ -5,14 +5,13 @@ import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
-import com.ombremoon.spellbound.common.world.entity.behavior.attack.MushroomExplosion;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.HurtOwnerSensor;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.OwnerAttackSenor;
-import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedTargetOrRetaliate;
+import com.ombremoon.spellbound.common.world.entity.ai.attack.MushroomExplosion;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.HurtOwnerSensor;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.OwnerAttackSenor;
+import com.ombremoon.spellbound.common.world.entity.ai.target.ExtendedTargetOrRetaliate;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +35,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -56,7 +54,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableRanged
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
@@ -89,7 +86,6 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
         super(entityType, level);
         this.bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS);
         this.explosionTimer = 24;
-        this.setStartTick(50);
     }
 
     public static AttributeSupplier.Builder createGiantMushroomAttributes() {
@@ -471,6 +467,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        super.registerControllers(controllers);
         controllers.add(new AnimationController<>(this, MOVEMENT, 7, this::giantMushroomController));
         controllers.add(new AnimationController<>(this, EXPLOSION, 0, state -> PlayState.STOP)
                 .triggerableAnim("explode", RawAnimation.begin().thenPlay("explode")));
@@ -483,11 +480,21 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
                 .triggerableAnim("raise", RawAnimation.begin().thenPlay("root_raise")));
     }
 
+    @Override
+    public int getStartTick() {
+        return 50;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 10;
+    }
+
     protected <T extends GeoAnimatable> PlayState giantMushroomController(AnimationState<T> data) {
         if (!this.isBouncing()) {
-            if (this.isStarting() && !this.hasSpawned()) {
+            /*if (this.isStarting() && !this.hasSpawned()) {
                 data.setAnimation(RawAnimation.begin().thenPlay("spawn"));
-            } else if (this.isDeadOrDying()) {
+            } else */if (this.isDeadOrDying()) {
                 data.setAnimation(RawAnimation.begin().thenPlay("death"));
             } else {
                 data.setAnimation(RawAnimation.begin().thenLoop("idle"));

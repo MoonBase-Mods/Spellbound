@@ -43,6 +43,16 @@ public class SpellBroker extends SBMerchant {
     }
 
     @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
+    @Override
     public int getMerchantLevel() {
         return merchantLevel;
     }

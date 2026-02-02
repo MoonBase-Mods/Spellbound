@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
@@ -102,6 +103,9 @@ public class ModTagProvider {
 
             this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
                     .addTags(Tags.DamageTypes.IS_MAGIC);
+
+            this.tag(DamageTypeTags.IS_FIRE)
+                    .add(SBDamageTypes.RUIN_FIRE);
 
         }
     }

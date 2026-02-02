@@ -25,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, GeoEntity, FXEmitter, Loggable {
@@ -207,7 +210,11 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+        controllers.add(new AnimationController<>(this, "Spawn", 0, state -> {
+            if (this.isStarting())
+                return state.setAndContinue(RawAnimation.begin().thenPlay("spawn"));
+            return PlayState.STOP;
+        }));
     }
 
     @Override
@@ -219,25 +226,13 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
         return this.tickCount <= getStartTick();
     }
 
-    public int getStartTick() {
-        return this.entityData.get(START_TICK);
-    }
-
-    public void setStartTick(int startTick) {
-        this.entityData.set(START_TICK, startTick);
-    }
+    public abstract int getStartTick();
 
     public boolean isEnding() {
-        return getEndTick() > 0;
+        return this.deathTime < this.getEndTick();
     }
 
-    public int getEndTick() {
-        return this.entityData.get(END_TICK);
-    }
-
-    public void setEndTick(int endTick) {
-        this.entityData.set(END_TICK, this.tickCount + endTick);
-    }
+    public abstract int getEndTick();
 
     public boolean hasSpawned() {
         return this.entityData.get(SPAWNED);

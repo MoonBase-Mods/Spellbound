@@ -1,15 +1,13 @@
 package com.ombremoon.spellbound.common.world.entity.living.wildmushroom;
 
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
-import com.ombremoon.spellbound.common.world.entity.behavior.attack.MushroomExplosion;
-import com.ombremoon.spellbound.common.world.entity.behavior.move.FollowSummoner;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.HurtOwnerSensor;
-import com.ombremoon.spellbound.common.world.entity.behavior.sensor.OwnerAttackSenor;
-import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedInvalidateAttackTarget;
-import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedTargetOrRetaliate;
+import com.ombremoon.spellbound.common.world.entity.ai.attack.MushroomExplosion;
+import com.ombremoon.spellbound.common.world.entity.ai.move.FollowSummoner;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.HurtOwnerSensor;
+import com.ombremoon.spellbound.common.world.entity.ai.sensor.OwnerAttackSenor;
+import com.ombremoon.spellbound.common.world.entity.ai.target.ExtendedTargetOrRetaliate;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -26,7 +24,6 @@ import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -270,6 +267,16 @@ public class MiniMushroom extends LivingMushroom {
         controllers.add(new AnimationController<>(this, MOVEMENT, 7, this::miniMushroomController));
         controllers.add(new AnimationController<>(this, EXPLOSION, 0, state -> PlayState.STOP)
                 .triggerableAnim("explode", RawAnimation.begin().thenPlay("explode")));
+    }
+
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
     }
 
     protected <T extends GeoAnimatable> PlayState miniMushroomController(AnimationState<T> data) {

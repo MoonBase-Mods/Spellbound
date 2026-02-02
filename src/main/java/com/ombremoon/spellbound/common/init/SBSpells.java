@@ -90,9 +90,9 @@ public class SBSpells {
 
     //Summons
     public static final Supplier<SpellType<SummonUndeadSpell>> SUMMON_UNDEAD = registerSpell("summon_undead", summonBuilder("summon_undead", SpellMastery.NOVICE, SummonUndeadSpell::new)
-            .skills(SBSkills.SUMMON_UNDEAD, SBSkills.SUMMON_HUSK, SBSkills.SUMMON_SKELETON, SBSkills.SUMMON_PHANTOM,
-                    SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.DESERT_RESILIENCE,
-                    SBSkills.DAYWALKER, SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
+            .skills(SBSkills.SUMMON_UNDEAD, SBSkills.SUMMON_ZOMBIFIED_PIGLIN, SBSkills.SUMMON_SKELETON, SBSkills.SUMMON_PHANTOM,
+                    SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.CRIMSON_PACT,
+                    SBSkills.CORPSE_EXPLOSION, SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
     public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder("wild_mushroom", SpellMastery.ADEPT, WildMushroomSpell::new)
             .skills(SBSkills.WILD_MUSHROOM, SBSkills.VILE_INFLUENCE, SBSkills.HASTENED_GROWTH, SBSkills.ENVENOM,
                     SBSkills.PARASITIC_FUNGUS, SBSkills.NATURES_DOMINANCE, SBSkills.POISON_ESSENCE,

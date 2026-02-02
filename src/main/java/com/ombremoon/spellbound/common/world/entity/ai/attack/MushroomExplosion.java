@@ -1,9 +1,8 @@
-package com.ombremoon.spellbound.common.world.entity.behavior.attack;
+package com.ombremoon.spellbound.common.world.entity.ai.attack;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.LivingMushroom;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.tslat.smartbrainlib.api.core.behaviour.DelayedBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableRangedAttack;
 import net.tslat.smartbrainlib.object.MemoryTest;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import net.tslat.smartbrainlib.util.EntityRetrievalUtil;

@@ -1,7 +1,6 @@
-package com.ombremoon.spellbound.common.world.entity.behavior.move;
+package com.ombremoon.spellbound.common.world.entity.ai.move;
 
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowEntity;

@@ -18,6 +18,16 @@ public class DungeonShadow extends SBLivingEntity {
         super(entityType, level);
     }
 
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
     public static AttributeSupplier.Builder createDungeonShadowAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 1.0D)

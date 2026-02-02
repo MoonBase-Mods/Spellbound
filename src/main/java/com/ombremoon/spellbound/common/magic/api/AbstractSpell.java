@@ -12,10 +12,7 @@ import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.*;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.magic.api.events.SpellEvent;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -79,6 +76,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * The main class used to create spells. Spells exist on both the client and server and must be handled as such. In general, spells should extend {@link AnimatedSpell} unless you don't want the player to have an animation while casting the spells.
@@ -177,6 +175,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public boolean isSpellType(AbstractSpell spell) {
         return this.spellType == spell.spellType;
+    }
+
+    public <T extends AbstractSpell> boolean isSpellType(Supplier<SpellType<T>> spell) {
+        return this.spellType == spell.get();
     }
 
     public boolean is(AbstractSpell spell) {
@@ -778,7 +780,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         var effects = SpellUtil.getSpellEffects(this.caster);
         SpellPath path = this.spellType().getIdentifiablePath();
         float levelDamage = amount * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * skills.getSpellLevel(spellType()));
-        float judgementFactor = this.getPath() == SpellPath.DIVINE ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
+        float judgementFactor = this.getPath().isDivine() ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
         levelDamage *= 1 + PATH_LEVEL_DAMAGE_MODIFIER * ((float) skills.getPathLevel(path) / 100) * (1.0F + judgementFactor);
         return potency(ownerEntity, targetEntity, levelDamage);
     }
@@ -806,20 +808,27 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param amount The damage amount
      * @return The modified xp value
      */
-    private float calculateHurtXP(float amount) {
+    protected float calculateHurtXP(float amount) {
         return amount * xpModifier * (1.0F + HURT_XP_MODIFIER * (this.getManaCost() / this.manaCost));
     }
 
     /**
      * Increments the effect build up for ruin spells (or other registered damage types)
      * @param targetEntity The hurt entity
-     * @param damageType The damage type
+     * @param effect The effect type
      * @param amount The amount of damage dealt
      */
-    private void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> damageType, float amount) {
+    protected void incrementEffect(LivingEntity targetEntity, EffectManager.Effect effect, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
-        effects.incrementRuinEffects(damageType, amount);
+        effects.incrementBuildEffects(effect, amount);
     }
+
+    protected void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> key, float amount) {
+        var effects = SpellUtil.getSpellEffects(targetEntity);
+        EffectManager.Effect effect = effects.getEffectFromDamageType(key);
+        this.incrementEffect(targetEntity, effect, amount);
+    }
+
 
     /**
      * Heals the target, scaling with path level, potency, and judgment.
@@ -827,10 +836,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param healEntity The entity being healed
      * @param amount The base heal amount
      */
-    protected void heal(LivingEntity healEntity, float amount) {
+    public void heal(LivingEntity healEntity, float amount) {
         var skills = this.context.getSkills();
         var effects = SpellUtil.getSpellEffects(this.caster);
-        float judgementFactor = this.getPath() == SpellPath.DIVINE ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
+        float judgementFactor = this.getPath().isDivine() ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
         float healAmount = potency(amount * (1 + HEAL_MODIFIER * skills.getSpellLevel(spellType())) * judgementFactor);
         double health = healEntity.getHealth();
         healEntity.heal(healAmount);
@@ -1316,7 +1325,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return new ClipContext(fromPos, toPos, ClipContext.Block.OUTLINE, fluidContext, livingEntity);
     }
 
-    protected AABB getInflatedBB(Entity entity, double range) {
+    public AABB getInflatedBB(Entity entity, double range) {
         if (this.hasTransfigurationStaffBuff(this.context))
             range *= 1.5F;
 

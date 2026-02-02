@@ -19,6 +19,16 @@ public class LivingShadow extends SmartSpellEntity<ShadowbondSpell> {
     }
 
     @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (this.tickCount >= 200) discard();

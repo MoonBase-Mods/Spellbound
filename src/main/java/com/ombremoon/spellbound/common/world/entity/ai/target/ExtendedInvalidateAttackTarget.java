@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.world.entity.behavior.target;
+package com.ombremoon.spellbound.common.world.entity.ai.target;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
