@@ -3,6 +3,9 @@ package com.ombremoon.spellbound.common.world.entity;
 import com.ombremoon.spellbound.client.particle.EffectCache;
 import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.util.EntityUtil;
 import com.ombremoon.spellbound.util.Loggable;
@@ -11,17 +14,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.navigation.SmoothGroundNavigation;
-import org.jetbrains.annotations.Nullable;
+import net.tslat.smartbrainlib.util.BrainUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -30,7 +35,9 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, GeoEntity, FXEmitter, Loggable {
+import java.util.function.Predicate;
+
+public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, GeoEntity, FXEmitter, Loggable, SBSummonable {
     protected static final String MOVEMENT = "Movement";
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> BOSS_PHASE = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);
@@ -70,6 +77,16 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide) {
+            if ((this.wasSummoned() && !this.hasSummoner()))
+                discard();
+        }
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         if (!this.level().isClientSide) {
@@ -97,30 +114,27 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
 
     @Override
     public boolean isAlliedTo(Entity entity) {
-        return entity instanceof LivingEntity livingEntity && (this.isOwner(livingEntity) || SpellUtil.IS_ALLIED.test(this.getOwner(), livingEntity)) || super.isAlliedTo(entity);
+        return entity instanceof LivingEntity livingEntity && (this.isSummoner(livingEntity) || SpellUtil.IS_ALLIED.test(this.getSummoner(), livingEntity)) || super.isAlliedTo(entity);
     }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return !this.isBoss() && this.getOwner() != null;
+        return !this.isBoss() && this.getSummoner() != null;
     }
 
-    @Nullable
-    public Entity getOwner() {
+    @Override
+    public Entity getSummoner() {
         return this.level().getEntity(this.entityData.get(OWNER_ID));
     }
 
-    public void setOwner(Entity entity) {
-        this.setOwner(entity.getId());
+    @Override
+    public void setSummoner(Entity entity) {
+        this.setSummoner(entity.getId());
     }
 
-    public void setOwner(int id) {
+    @Override
+    public void setSummoner(int id) {
         this.entityData.set(OWNER_ID, id);
-    }
-
-    protected boolean isOwner(LivingEntity entity) {
-        Entity owner = this.getOwner();
-        return owner != null && owner.is(entity);
     }
 
     public int getPhase() {
@@ -192,9 +206,9 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        Entity entity = this.getOwner();
+        Entity entity = this.getSummoner();
         if (entity != null)
-            compound.putInt("SpellboundOwner", this.getOwner().getId());
+            compound.putInt("SpellboundOwner", this.getSummoner().getId());
 
         compound.putInt("BossPhase", this.getPhase());
         compound.putBoolean("Spawned", this.hasSpawned());
@@ -203,7 +217,7 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setOwner(compound.getInt("SpellboundOwner"));
+        this.setSummoner(compound.getInt("SpellboundOwner"));
         this.setPhase(compound.getInt("BossPhase"));
         this.entityData.set(SPAWNED, compound.getBoolean("Spawned"));
     }
@@ -254,5 +268,37 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     @Override
     public EffectCache getFXCache() {
         return this.effectCache;
+    }
+
+    protected Predicate<LivingEntity> summonAttackPredicate() {
+        if (this.getBrain() == null) return livingEntity -> false; //This is needed, ignore intellij
+        Entity target = BrainUtils.getMemory(this, MemoryModuleType.HURT_BY_ENTITY);
+        return livingEntity -> !isSummoner(livingEntity) && ((target != null &&  target.is(livingEntity)) || isOwnersTarget(livingEntity));
+    }
+
+    protected boolean isOwnersTarget(LivingEntity entity) {
+        if (!this.hasData(SBData.TARGET_ID)) return false;
+        return entity.getId() == this.getData(SBData.TARGET_ID);
+    }
+
+    @Override
+    public boolean wasSummoned() {
+        return BrainUtils.hasMemory(this, SBMemoryTypes.SUMMON_OWNER.get());
+    }
+
+    @Override
+    public boolean isSummoner(LivingEntity entity) {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.is(entity);
+    }
+
+    @Override
+    public boolean hasSummoner() {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.isAlive();
+    }
+
+    public DamageSource spellDamageSource(Level level) {
+        return SpellUtil.damageSource(level, SBDamageTypes.SB_GENERIC, this.getSummoner(), this);
     }
 }

@@ -221,14 +221,14 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
     @Override
     public void startSeenByPlayer(ServerPlayer serverPlayer) {
         super.startSeenByPlayer(serverPlayer);
-        if (!this.hasOwner())
+        if (!this.hasSummoner())
             this.bossEvent.addPlayer(serverPlayer);
     }
 
     @Override
     public void stopSeenByPlayer(ServerPlayer serverPlayer) {
         super.stopSeenByPlayer(serverPlayer);
-        if (!this.hasOwner())
+        if (!this.hasSummoner())
             this.bossEvent.removePlayer(serverPlayer);
     }
 
@@ -240,7 +240,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
             boolean flag = this.getPhase() == 2;
             Entity entity = source.getDirectEntity();
             if (entity instanceof MiniMushroom mushroom) {
-                if (flag && mushroom.getOwner() != this) {
+                if (flag && mushroom.getSummoner() != this) {
                     amount *= 1.5F;
                     return super.hurt(source, amount);
                 } else {
@@ -285,7 +285,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
     @Override
     public @org.jetbrains.annotations.Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @org.jetbrains.annotations.Nullable SpawnGroupData spawnGroupData) {
         this.setStartPos(this.blockPosition());
-        if (this.hasOwner()) {
+        if (this.hasSummoner()) {
             AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
             if (health != null)
                 health.setBaseValue(60);
@@ -401,7 +401,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
                                         200
                                 )
                         )
-                                .startCondition(giantMushroom -> !giantMushroom.hasOwner() && giantMushroom.getPhase() == 3),
+                                .startCondition(giantMushroom -> !giantMushroom.hasSummoner() && giantMushroom.getPhase() == 3),
                         newMushroomBounceAttack(
                                 new MultiBounce()
                                         .numBounce(giantMushroom -> giantMushroom.getPhase() > 2 ? UniformInt.of(3, 5) : UniformInt.of(3, 8))

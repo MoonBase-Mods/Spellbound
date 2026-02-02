@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Constants;
@@ -467,7 +468,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet();
     }
 
-    public Optional<SkillBuff<?>> getSkillBuff(Skill skill) {
+    public Optional<SkillBuff<?>> getSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
 

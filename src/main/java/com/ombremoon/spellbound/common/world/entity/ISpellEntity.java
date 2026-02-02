@@ -20,11 +20,6 @@ public interface ISpellEntity<T extends AbstractSpell> extends GeoEntity, FXEmit
 
     EntityType<?> entityType();
 
-    void setOwner(@NotNull Entity entity);
-
-    @Nullable
-    Entity getOwner();
-
     void setSpell(@NotNull AbstractSpell spell);
 
     T getSpell();
@@ -33,9 +28,5 @@ public interface ISpellEntity<T extends AbstractSpell> extends GeoEntity, FXEmit
 
     default boolean requiresSpellToPersist() {
         return true;
-    }
-
-    default DamageSource spellDamageSource(Level level) {
-        return SpellUtil.spellDamageSource(level, SBDamageTypes.SB_GENERIC, this.getSpell(), this.getOwner(), this.getEntity());
     }
 }

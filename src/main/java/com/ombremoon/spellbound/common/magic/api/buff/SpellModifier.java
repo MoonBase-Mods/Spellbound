@@ -66,6 +66,9 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
     public static final SpellModifier STORMWEAVER_SET = registerModifier("stormweaver_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.SHOCK, 1.2F);
     public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.FROST, 1.2F);
     public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
+  
+    //Familiar
+    public static final SpellModifier MURKY_HABITAT = registerModifier("murky_habitat", ModifierType.POTENCY, (spellType, target) -> true, 1.1F);
 
     private static SpellModifier registerModifier(String name, ModifierType type, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier);

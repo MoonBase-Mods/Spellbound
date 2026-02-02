@@ -35,7 +35,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     private static final ResourceLocation HYPOTHERMIA = CommonClass.customLocation("hypothermia");
     private static final ResourceLocation GLACIAL_IMPACT_PERMAFROST = CommonClass.customLocation("glacial_impact_permafrost");
     private static final ResourceLocation GLACIAL_IMPACT_FROZEN = CommonClass.customLocation("glacial_impact_frozen");
-    private static final Predicate<SpellContext> CRYSTAL_PREDICATE = context -> context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getOwner();
+    private static final Predicate<SpellContext> CRYSTAL_PREDICATE = context -> context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getSummoner();
 
     public static Builder<ShatteringCrystalSpell> createShatteringCrystalBuild() {
         return createSimpleSpellBuilder(ShatteringCrystalSpell.class)
@@ -44,7 +44,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 .baseDamage(5)
                 .castAnimation(context -> context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context)))
                 .castCondition((context, shatteringCrystalSpell) -> {
-                    if (context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getOwner()) {
+                    if (context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getSummoner()) {
                         if (context.hasSkill(SBSkills.GLACIAL_IMPACT) && context.hasCatalyst(SBItems.FROZEN_SHARD.get()) && !crystal.marked) {
                             crystal.marked = true;
                             context.useCatalyst(SBItems.FROZEN_SHARD.get());
@@ -181,7 +181,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             boolean flag = context.hasSkill(SBSkills.CRYSTAL_ECHO) && !crystal.marked;
             int count = flag ? 2 : 1;
             for (Entity entity : entities) {
-                if (context.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getOwner()) {
+                if (context.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getSummoner()) {
                     ShatteringCrystalSpell spell = crystal1.getSpell();
                     if (spell != null && spell.primeCount < count) {
                         primeCrystal(context, crystal1);

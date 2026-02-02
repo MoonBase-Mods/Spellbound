@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.PathLevelUpEvent;
 import com.ombremoon.spellbound.common.events.custom.SpellLevelUpEvent;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.SpellPath;
@@ -57,6 +58,17 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public void resetSpellXP(SpellType<?> spellType) {
         spellXp.put(spellType, 0F);
+    }
+
+    public SpellMastery getMaster(SpellPath path) {
+        SpellMastery[] masteryValues = SpellMastery.values();
+        int level = getPathLevel(path);
+        int masteryOrdinal = 0;
+        for (int i = 0; i < masteryValues.length; i++) {
+            if (level >= masteryValues[i].getLevelRequirement()) masteryOrdinal = i;
+        }
+
+        return masteryValues[masteryOrdinal];
     }
 
     public int getPathLevel(SpellPath path) {

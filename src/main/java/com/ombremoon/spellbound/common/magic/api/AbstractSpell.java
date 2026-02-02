@@ -10,6 +10,10 @@ import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
+import com.ombremoon.spellbound.client.particle.FXEmitter;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
+import com.ombremoon.spellbound.common.world.effect.SBEffect;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.*;
@@ -948,19 +952,19 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.removeSkillBuff(livingEntity, skill.value());
     }
 
-    public void removeSkillBuff(LivingEntity livingEntity, Skill skill) {
+    public void removeSkillBuff(LivingEntity livingEntity, SkillProvider skill) {
         var handler = SpellUtil.getSpellHandler(livingEntity);
         var buffs = handler.getBuffs().stream().filter(skillBuff -> skillBuff.isSkill(skill)).toList();
         this.removeSkillBuff(livingEntity, skill, buffs.size());
     }
 
-    public void removeSkillBuff(LivingEntity livingEntity, Skill skill, ResourceLocation id) {
+    public void removeSkillBuff(LivingEntity livingEntity, SkillProvider skill, ResourceLocation id) {
         var handler = SpellUtil.getSpellHandler(livingEntity);
         var buffs = handler.getBuffs().stream().filter(skillBuff -> skillBuff.isSkill(skill) && skillBuff.id().equals(id)).toList();
         this.removeSkillBuff(livingEntity, skill, buffs.size());
     }
 
-    private void removeSkillBuff(LivingEntity livingEntity, Skill skill, int iterations) {
+    private void removeSkillBuff(LivingEntity livingEntity, SkillProvider skill, int iterations) {
         if (livingEntity.level().isClientSide)
             return;
 

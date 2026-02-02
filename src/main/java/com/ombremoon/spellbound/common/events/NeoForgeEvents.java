@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.events;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
@@ -10,6 +11,7 @@ import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
@@ -35,6 +37,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -80,6 +83,7 @@ public class NeoForgeEvents {
         event.addEntry(SolarRaySpell.SOLAR_BURST_FRONT);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END_EXTENDED);
+        event.addEntry(OwlFamiliar.TWISTED_OBB);
         FlameJetSpell.registerBoxes(event);
     }
 
@@ -88,6 +92,8 @@ public class NeoForgeEvents {
         if (event.getEntity() instanceof LivingEntity livingEntity) {
             Level level = livingEntity.level();
             var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.initData(livingEntity);
+            SpellUtil.getFamiliarHandler(livingEntity);
             handler.initData(livingEntity);
 
             if (livingEntity instanceof Player player) {
@@ -121,6 +127,8 @@ public class NeoForgeEvents {
             ServerLevel serverLevel = (ServerLevel) level;
             var handler = SpellUtil.getSpellHandler(player);
             handler.endSpells();
+            var famHandler = SpellUtil.getFamiliarHandler(player);
+            if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
 
             if (ArenaSavedData.isArena(serverLevel)) {
                 ArenaSavedData data = ArenaSavedData.get(serverLevel);
@@ -154,6 +162,7 @@ public class NeoForgeEvents {
         if (event.getEntity() instanceof LivingEntity entity) {
             var handler = SpellUtil.getSpellHandler(entity);
             handler.tick();
+            SpellUtil.getFamiliarHandler(entity).tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
@@ -296,11 +305,10 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity().getType() == EntityType.PIGLIN_BRUTE) {
-            LogUtils.getLogger().debug(String.valueOf(SpellUtil.getSpellEffects(event.getEntity()).getBuildUp(EffectManager.Effect.FIRE)));
-        }
-
         LivingEntity livingEntity = event.getEntity();
+        var famHandler = SpellUtil.getFamiliarHandler(livingEntity);
+        famHandler.discardFamiliar();
+
         if (livingEntity.level().isClientSide)
             return;
 
@@ -405,6 +413,21 @@ public class NeoForgeEvents {
                 summonSpell.onMobPostDamage(spell.getContext(), event);
             }
         }
+        if (event.getSource().getEntity() instanceof LivingEntity sourceEntity) {
+            var handler = SpellUtil.getSpellHandler(sourceEntity);
+            for (int id : handler.getSummons()) {
+                Entity summon = sourceEntity.level().getEntity(id);
+                if (summon instanceof LivingEntity livingSummon) SpellUtil.setTarget(livingSummon, event.getEntity());
+            }
+
+            var familiarHandler = SpellUtil.getFamiliarHandler(sourceEntity);
+            if (familiarHandler.hasActiveFamiliar()) {
+                SpellUtil.setTarget(familiarHandler.getActiveEntity(), event.getEntity());
+            }
+        }
+
+        LivingEntity entity = event.getEntity();
+        SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.POST_DAMAGE, new DamageEvent.Post(entity, event));
     }
 
     @SubscribeEvent

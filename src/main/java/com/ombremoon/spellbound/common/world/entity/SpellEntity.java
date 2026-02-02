@@ -29,7 +29,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class SpellEntity<T extends AbstractSpell> extends Entity implements ISpellEntity<T>, Loggable {
+public abstract class SpellEntity<T extends AbstractSpell> extends Entity implements ISpellEntity<T>, SBSummonable, Loggable {
     private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
@@ -49,11 +49,11 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
     @Override
     public boolean isAlliedTo(Entity entity) {
-        return entity instanceof LivingEntity livingEntity && (this.isOwner(livingEntity) || SpellUtil.IS_ALLIED.test(this.getOwner(), livingEntity)) || super.isAlliedTo(entity);
+        return entity instanceof LivingEntity livingEntity && (this.isOwner(livingEntity) || SpellUtil.IS_ALLIED.test(this.getSummoner(), livingEntity)) || super.isAlliedTo(entity);
     }
 
     protected boolean isOwner(LivingEntity entity) {
-        Entity owner = this.getOwner();
+        Entity owner = this.getSummoner();
         return owner != null && owner.is(entity);
     }
 
@@ -84,7 +84,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (this.getOwner() == null || !this.hasOwner() || this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && !this.isEnding() && (this.spell == null || this.spell.isInactive))
+            if (this.getSummoner() == null || !this.hasSummoner() || this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && !this.isEnding() && (this.spell == null || this.spell.isInactive))
                 discard();
 
             if (this.spell != null)
@@ -117,7 +117,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
     @Override
     public void onAddedToLevel() {
-        if (this.getOwner() instanceof Player player /*or instanceof SpellCaster*/) {
+        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
             this.handler = SpellUtil.getSpellHandler(player);
             this.skills = SpellUtil.getSkills(player);
         }
@@ -186,17 +186,9 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         this.entityData.set(END_TICK, this.tickCount + endTick);
     }
 
-    public void setOwner(Entity entity) {
-        this.entityData.set(OWNER_ID, entity.getId());
-    }
-
     @Override
-    public @Nullable Entity getOwner() {
+    public Entity getSummoner() {
         return this.level().getEntity(this.entityData.get(OWNER_ID));
-    }
-
-    public boolean hasOwner() {
-        return getOwner() != null && getOwner().isAlive();
     }
 
     @Override
@@ -212,5 +204,32 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     @Override
     public EffectCache getFXCache() {
         return this.effectCache;
+    }
+
+    @Override
+    public boolean isSummoner(LivingEntity entity) {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.is(entity);
+    }
+
+    @Override
+    public boolean hasSummoner() {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.isAlive();
+    }
+
+    @Override
+    public boolean wasSummoned() {
+        return true;
+    }
+
+    @Override
+    public void setSummoner(Entity entity) {
+        setSummoner(entity.getId());
+    }
+
+    @Override
+    public void setSummoner(int id) {
+        this.entityData.set(OWNER_ID, id);
     }
 }

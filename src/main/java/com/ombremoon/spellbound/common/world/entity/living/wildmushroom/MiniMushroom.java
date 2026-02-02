@@ -65,7 +65,7 @@ public class MiniMushroom extends LivingMushroom {
 
     public MiniMushroom(Level level, GiantMushroom owner) {
         super(SBEntities.MINI_MUSHROOM.get(), level);
-        this.setOwner(owner);
+        this.setSummoner(owner);
     }
 
     public static AttributeSupplier.Builder createMiniMushroomAttributes() {
@@ -88,7 +88,7 @@ public class MiniMushroom extends LivingMushroom {
         if (!itemStack.is(Items.BONE_MEAL)) {
             return InteractionResult.PASS;
         } else {
-            if (!this.isSpellCast() && this.getOwner() instanceof GiantMushroom mushroom) {
+            if (!this.isSpellCast() && this.getSummoner() instanceof GiantMushroom mushroom) {
                 if (!this.isDazed()) {
                     return InteractionResult.PASS;
                 }
@@ -96,7 +96,7 @@ public class MiniMushroom extends LivingMushroom {
 
                 this.setDazed(false);
                 this.enlarge();
-                this.setOwner(player);
+                this.setSummoner(player);
                 itemStack.consume(1, player);
                 BrainUtils.setTargetOfEntity(this, mushroom);
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
@@ -140,7 +140,7 @@ public class MiniMushroom extends LivingMushroom {
     public void die(DamageSource damageSource) {
         if (!this.level().isClientSide() && !this.isRemoved()) {
             if (!this.isSpellCast()
-                    && this.getOwner() instanceof GiantMushroom mushroom
+                    && this.getSummoner() instanceof GiantMushroom mushroom
                     && mushroom.getPhase() == 2
                     && AbstractSpell.isSpellDamage(damageSource)) {
                 this.setDazed(true);
@@ -225,7 +225,7 @@ public class MiniMushroom extends LivingMushroom {
                         .speedMod((miniMushroom, livingEntity) -> 1.5F),
                 new MushroomExplosion<MiniMushroom>(30)
                         .explosionRadius(miniMushroom -> {
-                            if (miniMushroom.getOwner() instanceof LivingEntity livingEntity) {
+                            if (miniMushroom.getSummoner() instanceof LivingEntity livingEntity) {
                                 var skills = SpellUtil.getSkills(livingEntity);
                                 if (skills.hasSkill(SBSkills.VILE_INFLUENCE)) {
                                     return 5.0F;
@@ -235,7 +235,7 @@ public class MiniMushroom extends LivingMushroom {
                             return 3.0F;
                         })
                         .explosionDamage(miniMushroom -> {
-                            if (miniMushroom.getOwner() instanceof GiantMushroom mushroom) {
+                            if (miniMushroom.getSummoner() instanceof GiantMushroom mushroom) {
                                 return 8.0F * mushroom.getPhase();
                             }
 

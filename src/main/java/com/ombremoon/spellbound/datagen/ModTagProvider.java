@@ -1,8 +1,10 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Constants;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,6 +18,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -39,11 +42,18 @@ public class ModTagProvider {
             populateTag(SBTags.Items.STAFF, SBItems.FIRE_STAFF, SBItems.ICE_STAFF, SBItems.SHOCK_STAFF, SBItems.CREATIONIST_STAFF);
             populateTagFromBlocks(SBTags.Items.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE, SBBlocks.PLAINS_DIVINE_SHRINE, SBBlocks.SANDSTONE_DIVINE_SHRINE);
             populateTagFromBlocks(Tags.Items.MUSHROOMS, SBBlocks.WILD_MUSHROOM);
+            populateTagFromBlocks(SBTags.Items.FROG_LIGHTS, net.minecraft.world.level.block.Blocks.OCHRE_FROGLIGHT, net.minecraft.world.level.block.Blocks.PEARLESCENT_FROGLIGHT, net.minecraft.world.level.block.Blocks.VERDANT_FROGLIGHT);
         }
 
         public void populateTagFromBlocks(TagKey<Item> tag, Supplier<Block>... items){
             for (Supplier<Block> item : items) {
                 tag(tag).add(BuiltInRegistries.ITEM.getResourceKey(item.get().asItem()).get());
+            }
+        }
+
+        public void populateTagFromBlocks(TagKey<Item> tag, Block... items){
+            for (Block item : items) {
+                tag(tag).add(BuiltInRegistries.ITEM.getResourceKey(item.asItem()).get());
             }
         }
 

@@ -74,15 +74,6 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         tickBrain(this);
     }
 
-    protected Predicate<LivingEntity> summonAttackPredicate() {
-        if (this.getBrain() == null) return livingEntity -> false; //This is needed, ignore intellij
-        Entity target = BrainUtils.getMemory(this, MemoryModuleType.HURT_BY_ENTITY);
-        return livingEntity -> !isOwner(livingEntity) && ((target != null &&  target.is(livingEntity)) || isOwnersTarget(livingEntity));
-    }
-
-    protected boolean wasSummoned() {
-        return BrainUtils.hasMemory(this, SBMemoryTypes.SUMMON_OWNER.get());
-    }
 
     //Each level above novice, add 20% phy resistance
     //Novice - mid tier
@@ -94,7 +85,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if ((this.wasSummoned() && !this.hasOwner()) || (this.isSpellCast() && (this.spell == null ||  this.spell.isInactive)))
+            if ((this.wasSummoned() && !this.hasSummoner()) || (this.isSpellCast() && (this.spell == null ||  this.spell.isInactive)))
                 discard();
         }
     }
@@ -174,7 +165,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
 
     @Override
     public void onAddedToLevel() {
-        if (this.getOwner() instanceof Player player /*or instanceof SpellCaster*/) {
+        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
             this.handler = SpellUtil.getSpellHandler(player);
             this.skills = SpellUtil.getSkills(player);
         }
@@ -214,20 +205,8 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         this.entityData.set(SPELL_ID, id);
     }
 
-    protected boolean isOwner(LivingEntity entity) {
-        Entity owner = this.getOwner();
-        return owner != null && owner.is(entity);
-    }
 
-    public boolean hasOwner() {
-        Entity owner = this.getOwner();
-        return owner != null && owner.isAlive();
-    }
 
-    protected boolean isOwnersTarget(LivingEntity entity) {
-        if (!this.hasData(SBData.TARGET_ID)) return false;
-        return entity.getId() == this.getData(SBData.TARGET_ID);
-    }
 
     @Override
     protected PathNavigation createNavigation(Level level) {
