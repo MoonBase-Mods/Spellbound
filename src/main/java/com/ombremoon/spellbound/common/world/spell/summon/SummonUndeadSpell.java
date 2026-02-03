@@ -45,7 +45,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
-                        AbstractSpell spell = SpellUtil.getSpell(livingEntity);
+                        AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
                         if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster)) {
                             spell.heal(caster, livingEntity.getHealth() * 0.1F);
                             livingEntity.kill();

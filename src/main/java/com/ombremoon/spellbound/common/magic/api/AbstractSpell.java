@@ -2,9 +2,6 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.CameraEngine;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
@@ -13,19 +10,13 @@ import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
-import com.ombremoon.spellbound.client.particle.FXEmitter;
-import com.ombremoon.spellbound.common.magic.api.serialization.SpellBuilder;
-import com.ombremoon.spellbound.common.magic.api.serialization.SpellSerializer;
-import com.ombremoon.spellbound.common.magic.api.serialization.SpellSerializers;
-import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
-import com.ombremoon.spellbound.common.world.effect.SBEffect;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.*;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.magic.api.events.SpellEvent;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
@@ -44,14 +35,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -75,7 +62,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.tslat.smartbrainlib.util.RandomUtil;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -99,10 +85,6 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, FXEmitter, Loggable {
-    /*public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpell> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY), AbstractSpell::spellType,
-            Builder.STREAM_CODEC,
-    )*/
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final DataTicket<AbstractSpell> DATA_TICKET = new DataTicket<>("abstract_spell", AbstractSpell.class);
     protected static final SpellDataKey<BlockPos> CAST_POS = SyncedSpellData.registerDataKey(AbstractSpell.class, SBDataTypes.BLOCK_POS.get());
@@ -1661,7 +1643,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * Base builder class for all spells builders. Should always be instantiated statically using the helper method from its parent class.
      * @param <T> Type extends AbstractSpell to give access to private fields in a static context
      */
-    public static class Builder<T extends AbstractSpell> implements SpellBuilder {
+    public static class Builder<T extends AbstractSpell> {
         protected int duration = 10;
         protected int manaCost;
         protected float baseDamage;
@@ -1822,93 +1804,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         public Builder<T> updateInterval(int updateInterval) {
             this.updateInterval = updateInterval;
             return this;
-        }
-
-        private static Builder<?> fromNetwork(RegistryFriendlyByteBuf buf) {
-            var builder = new Builder<>();
-            builder.duration = buf.readVarInt();
-            builder.manaCost = buf.readVarInt();
-            builder.baseDamage = buf.readFloat();
-            builder.castTime = buf.readVarInt();
-            builder.xpModifier = buf.readFloat();
-            builder.castType = NeoForgeStreamCodecs.enumCodec(CastType.class).decode(buf);
-            builder.castSound = ByteBufCodecs.registry(Registries.SOUND_EVENT).decode(buf);
-            builder.fullRecast = buf.readBoolean();
-            builder.resetDuration = buf.readBoolean();
-            builder.hasLayer = buf.readBoolean();
-            builder.updateInterval = buf.readVarInt();
-            return builder;
-        }
-
-        private static void toNetwork(RegistryFriendlyByteBuf buf, Builder<?> builder) {
-            buf.writeVarInt(builder.duration);
-            buf.writeVarInt(builder.manaCost);
-            buf.writeFloat(builder.baseDamage);
-            buf.writeVarInt(builder.castTime);
-            buf.writeFloat(builder.xpModifier);
-            NeoForgeStreamCodecs.enumCodec(CastType.class).encode(buf, builder.castType);
-            ByteBufCodecs.registry(Registries.SOUND_EVENT).encode(buf, builder.castSound);
-            buf.writeBoolean(builder.fullRecast);
-            buf.writeBoolean(builder.resetDuration);
-            buf.writeBoolean(builder.hasLayer);
-            buf.writeVarInt(builder.updateInterval);
-        }
-
-        @Override
-        public SpellSerializer<Builder<?>> getSerializer() {
-            return null;
-        }
-    }
-
-    public static class Serializer implements SpellSerializer<Builder<?>> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("abstract");
-        public static final StreamCodec<RegistryFriendlyByteBuf, Builder<?>> STREAM_CODEC = new StreamCodec<RegistryFriendlyByteBuf, Builder<?>>() {
-            @Override
-            public Builder<?> decode(RegistryFriendlyByteBuf buffer) {
-                var builder = new Builder<>();
-                builder.duration = buffer.readVarInt();
-                builder.manaCost = buffer.readVarInt();
-                builder.baseDamage = buffer.readFloat();
-                builder.castTime = buffer.readVarInt();
-                builder.xpModifier = buffer.readFloat();
-                builder.castType = NeoForgeStreamCodecs.enumCodec(CastType.class).decode(buffer);
-                builder.castSound = ByteBufCodecs.registry(Registries.SOUND_EVENT).decode(buffer);
-                builder.fullRecast = buffer.readBoolean();
-                builder.resetDuration = buffer.readBoolean();
-                builder.hasLayer = buffer.readBoolean();
-                builder.updateInterval = buffer.readVarInt();
-                return builder;
-            }
-
-            @Override
-            public void encode(RegistryFriendlyByteBuf buffer, Builder<?> builder) {
-                buffer.writeVarInt(builder.duration);
-                buffer.writeVarInt(builder.manaCost);
-                buffer.writeFloat(builder.baseDamage);
-                buffer.writeVarInt(builder.castTime);
-                buffer.writeFloat(builder.xpModifier);
-                NeoForgeStreamCodecs.enumCodec(CastType.class).encode(buffer, builder.castType);
-                ByteBufCodecs.registry(Registries.SOUND_EVENT).encode(buffer, builder.castSound);
-                buffer.writeBoolean(builder.fullRecast);
-                buffer.writeBoolean(builder.resetDuration);
-                buffer.writeBoolean(builder.hasLayer);
-                buffer.writeVarInt(builder.updateInterval);
-            }
-        };
-
-        @Override
-        public ResourceLocation id() {
-            return LOCATION;
-        }
-
-        @Override
-        public MapCodec<Builder<?>> codec() {
-            return null;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, Builder<?>> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 

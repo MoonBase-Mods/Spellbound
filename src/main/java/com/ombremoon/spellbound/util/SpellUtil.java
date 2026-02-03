@@ -11,7 +11,6 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.entity.SBSummonable;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.core.Holder;
@@ -145,6 +144,19 @@ public class SpellUtil {
         }
     }
     public static AbstractSpell getSpell(@NotNull Entity entity) {
+        if (entity instanceof ISpellEntity<?> spellEntity) {
+            return spellEntity.getSpell();
+        } else {
+            Entity owner = getOwner(entity);
+            if (!(owner instanceof LivingEntity livingEntity))
+                return null;
+
+            SpellType<?> spellType = SBSpells.REGISTRY.get(entity.getData(SBData.SPELL_TYPE));
+            return spellType != null ? spellType.createSpellWithData(livingEntity) : null;
+        }
+    }
+
+    public static AbstractSpell getActiveSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
             return spellEntity.getSpell();
         } else {

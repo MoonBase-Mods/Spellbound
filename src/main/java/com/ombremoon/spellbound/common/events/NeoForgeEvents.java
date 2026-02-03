@@ -1,8 +1,6 @@
 package com.ombremoon.spellbound.common.events;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.logging.LogUtils;
-import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
@@ -37,7 +35,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -389,7 +386,7 @@ public class NeoForgeEvents {
                 event.setCanceled(true);
             }
 
-            AbstractSpell spell = SpellUtil.getSpell(livingEntity);
+            AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobIncomingHurt(spell.getContext(), event);
             }
@@ -408,7 +405,7 @@ public class NeoForgeEvents {
         DamageSource source = event.getSource();
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity attacker && SpellUtil.isSummon(attacker)) {
-            AbstractSpell spell = SpellUtil.getSpell(attacker);
+            AbstractSpell spell = SpellUtil.getActiveSpell(attacker);
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPostDamage(spell.getContext(), event);
             }
@@ -443,12 +440,12 @@ public class NeoForgeEvents {
         DamageSource source = event.getSource();
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity attacker && SpellUtil.isSummon(attacker)) {
-            AbstractSpell spell = SpellUtil.getSpell(attacker);
+            AbstractSpell spell = SpellUtil.getActiveSpell(attacker);
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPreDamage(spell.getContext(), event);
             }
         } else if (SpellUtil.isSummon(livingEntity)) {
-            AbstractSpell spell = SpellUtil.getSpell(livingEntity);
+            AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPreHurt(spell.getContext(), event);
             }

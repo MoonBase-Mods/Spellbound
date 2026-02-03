@@ -126,7 +126,7 @@ public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
                     wildMushroom.setPos(result.getLocation());
                     WildMushroomSpell spell = mushroom.getSpell();
                     if (spell != null)
-                        wildMushroom.setSpell(mushroom.getSpell());
+                        wildMushroom.setSpell(spell);
 
                     level.addFreshEntity(wildMushroom);
                 }
