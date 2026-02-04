@@ -100,7 +100,7 @@ public class SpellCastEvents {
                 int castTime = spell.getCastTime();
                 if (spell instanceof ChargeableSpell chargeable && handler.isChargingOrChannelling()) {
                     int maxCharges = chargeable.maxCharges(spell.getCurrentContext());
-                    int ticksPerCharge = castTime / maxCharges;
+                    int ticksPerCharge = Math.max(1, castTime / maxCharges);
                     if (handler.castTick % ticksPerCharge == 0 && spell.getCharges() < maxCharges) {
                         spell.incrementCharges();
                     }

@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  * @param <S> AbstractSpell
  */
 public class SpellType<S extends AbstractSpell> {
-    private final ResourceLocation resourceLocation;
     private final SpellFactory<S> factory;
     private final SpellPath path;
     @Nullable
@@ -34,19 +33,18 @@ public class SpellType<S extends AbstractSpell> {
     private final SpellMastery mastery;
     private final Set<Holder<Skill>> availableSkills;
 
-    public SpellType(ResourceLocation resourceLocation, SpellPath path, @Nullable SpellPath subPath, SpellMastery mastery, Set<Holder<Skill>> skills, SpellFactory<S> factory) {
+    public SpellType(SpellPath path, @Nullable SpellPath subPath, SpellMastery mastery, Set<Holder<Skill>> skills, SpellFactory<S> factory) {
         this.path = path;
         this.subPath = subPath;
         this.mastery = mastery;
         this.availableSkills = skills;
         this.factory = factory;
-        this.resourceLocation = resourceLocation;
 
         if (this.getRootSkill() == null) throw new IllegalStateException(this + " does not contain a root skill");
     }
 
     public ResourceLocation location() {
-        return this.resourceLocation;
+        return SBSpells.REGISTRY.getKey(this);
     }
 
     public SpellPath getPath() {
@@ -81,6 +79,10 @@ public class SpellType<S extends AbstractSpell> {
         return this == spellType.get();
     }
 
+    public boolean is(ResourceLocation spellType) {
+        return this.location().equals(spellType);
+    }
+
     public S createSpell() {
         return this.factory.create();
     }
@@ -97,24 +99,22 @@ public class SpellType<S extends AbstractSpell> {
 
     @Override
     public String toString() {
-        return this.resourceLocation.toString();
+        return this.location().toString();
     }
 
     @Override
     public int hashCode() {
-        return this.resourceLocation.hashCode();
+        return this.location().hashCode();
     }
 
     public static class Builder<T extends AbstractSpell> {
-        private final ResourceLocation resourceLocation;
         private final SpellFactory<T> factory;
         private SpellPath path;
         private SpellPath subPath;
         private SpellMastery mastery;
         private final Set<Holder<Skill>> availableSkills = new ObjectOpenHashSet<>();
 
-        public Builder(String resourceLocation, SpellFactory<T> factory) {
-            this.resourceLocation = CommonClass.customLocation(resourceLocation);
+        public Builder(SpellFactory<T> factory) {
             this.factory = factory;
         }
 
@@ -143,7 +143,7 @@ public class SpellType<S extends AbstractSpell> {
         }
 
         public SpellType<T> build() {
-            return new SpellType<>(resourceLocation, path, subPath, mastery, availableSkills, factory);
+            return new SpellType<>(path, subPath, mastery, availableSkills, factory);
         }
     }
 }

@@ -5,9 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBLootFunctions;
 import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -37,7 +35,7 @@ public class SetSpellFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack itemStack, LootContext lootContext) {
-        itemStack.set(SBData.SPELL, this.spellType);
+        itemStack.set(SBData.SPELL_TOME, this.spellType);
         return itemStack;
     }
 

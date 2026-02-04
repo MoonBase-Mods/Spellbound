@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -56,15 +57,17 @@ public class SBData {
 
     //Summons
     public static final Supplier<AttachmentType<Integer>> OWNER_ID = ATTACHMENT_TYPES.register(
-            "owner_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+            "owner_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
     public static final Supplier<AttachmentType<Integer>> TARGET_ID = ATTACHMENT_TYPES.register(
-            "target_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+            "target_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
 
     //Spell Data
     public static final Supplier<AttachmentType<ResourceLocation>> SPELL_TYPE = ATTACHMENT_TYPES.register(
-            "spell_type", () -> AttachmentType.builder(() -> CommonClass.customLocation("")).serialize(ResourceLocation.CODEC).build());
+            "spell_type", () -> AttachmentType.builder(() -> CommonClass.customLocation("")).serialize(ResourceLocation.CODEC).sync(ResourceLocation.STREAM_CODEC).build());
     public static final Supplier<AttachmentType<Integer>> SPELL_ID = ATTACHMENT_TYPES.register(
-            "spell_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+            "spell_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
+    public static final Supplier<AttachmentType<AbstractSpell>> SPELL = ATTACHMENT_TYPES.register(
+            "spell", () -> AttachmentType.builder(() -> (AbstractSpell) null).build());
     public static final Supplier<AttachmentType<Integer>> MOVEMENT_TICK = ATTACHMENT_TYPES.register(
             "movement_tick", () -> AttachmentType.builder(() -> 0).build());
     public static final Supplier<AttachmentType<Vec3>> MOVEMENT_SOURCE = ATTACHMENT_TYPES.register(
@@ -101,7 +104,7 @@ public class SBData {
     );
 
     //Components
-    public static final Supplier<DataComponentType<SpellType<?>>> SPELL = COMPONENT_TYPES.registerComponentType("spells",
+    public static final Supplier<DataComponentType<SpellType<?>>> SPELL_TOME = COMPONENT_TYPES.registerComponentType("spells",
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
     public static final Supplier<DataComponentType<Integer>> RUNE_INDEX = COMPONENT_TYPES.registerComponentType("rune_type",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));

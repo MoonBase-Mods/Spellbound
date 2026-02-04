@@ -221,6 +221,4 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
             );
         }
     }
-
-
 }

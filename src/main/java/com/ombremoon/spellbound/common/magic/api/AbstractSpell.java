@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.client.CameraEngine;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
@@ -36,9 +37,12 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -85,6 +89,11 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, FXEmitter, Loggable {
+    public static final Codec<AbstractSpell> CODEC = SBSpells.REGISTRY.byNameCodec()
+            .xmap(SpellType::createSpell, AbstractSpell::spellType);
+    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpell> STREAM_CODEC = ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)
+            .map(SpellType::createSpell, AbstractSpell::spellType);
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final DataTicket<AbstractSpell> DATA_TICKET = new DataTicket<>("abstract_spell", AbstractSpell.class);
     protected static final SpellDataKey<BlockPos> CAST_POS = SyncedSpellData.registerDataKey(AbstractSpell.class, SBDataTypes.BLOCK_POS.get());
@@ -828,6 +837,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> key, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
         EffectManager.Effect effect = effects.getEffectFromDamageType(key);
+
+        if (effect == null)
+            return;
+        
         this.incrementEffect(targetEntity, effect, amount);
     }
 
@@ -1551,7 +1564,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, target, this.isRecast);
     }
 
-    protected void initNoCast(LivingEntity caster) {
+    public void initNoCast(LivingEntity caster) {
         this.initNoCast(caster, caster.level(), caster.getOnPos(), this.getTargetEntity(caster, SpellUtil.getCastRange(caster)));
     }
 

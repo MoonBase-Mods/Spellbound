@@ -171,6 +171,13 @@ public abstract class SummonSpell extends AnimatedSpell {
         }
     }
 
+    protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
+        var handler = context.getSpellHandler();
+        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
+        log(spell.choice);
+        return !list.isEmpty();
+    }
+
     /**
      * Returns the IDs of all summons created by this spells
      * @return Set of entity IDs

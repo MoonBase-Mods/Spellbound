@@ -80,7 +80,7 @@ public class NeoForgeEvents {
         event.addEntry(SolarRaySpell.SOLAR_BURST_FRONT);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END_EXTENDED);
-        event.addEntry(OwlFamiliar.TWISTED_OBB);
+//        event.addEntry(OwlFamiliar.TWISTED_OBB);
         FlameJetSpell.registerBoxes(event);
     }
 

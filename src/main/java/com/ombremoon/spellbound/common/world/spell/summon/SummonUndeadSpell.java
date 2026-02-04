@@ -1,13 +1,13 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
-import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
+import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -33,6 +33,7 @@ import java.util.List;
 public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, RadialSpell {
     private static final ResourceLocation SUNKEN_BREATH = CommonClass.customLocation("sunken_breath");
     private static final ResourceLocation SILENT_NIGHT = CommonClass.customLocation("silent_night");
+    private static final SpellDataKey<Boolean> CAN_EXPLODE = SyncedSpellData.registerDataKey(SummonUndeadSpell.class, SBDataTypes.BOOLEAN.get());
     private long piglinBonusTick;
 
     public static Builder<SummonUndeadSpell> createSummonBuilder() {
@@ -44,9 +45,11 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .castAnimation(context -> new SpellAnimation(shouldExplodeCorpse(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
+                    var handler = context.getSpellHandler();
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
                         AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
-                        if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster)) {
+                        AbstractSpell spell1 = handler.getCurrentlyCastSpell();
+                        if (spell instanceof SummonUndeadSpell && spell1 instanceof SummonUndeadSpell summonUndeadSpell && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && summonUndeadSpell.canExplode()) {
                             spell.heal(caster, livingEntity.getHealth() * 0.1F);
                             livingEntity.kill();
 
@@ -67,9 +70,9 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     private static boolean shouldExplodeCorpse(SpellContext context) {
         LivingEntity caster = context.getCaster();
-        if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
-            AbstractSpell spell = SpellUtil.getSpell(livingEntity);
-            return spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster);
+        if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity && SpellUtil.isSummonOf(livingEntity, caster)) {
+            ResourceLocation spell = livingEntity.getData(SBData.SPELL_TYPE);
+            return SBSpells.SUMMON_UNDEAD.get().is(spell);
         }
 
         return false;
@@ -85,9 +88,22 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     }
 
     @Override
+    protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
+        builder.define(CAN_EXPLODE, false);
+    }
+
+    @Override
     public int getCastTime(SpellContext context) {
-        log(shouldExplodeCorpse(context));
-        return shouldExplodeCorpse(context) ? 5 : this.maxCharges(context) * 20;
+        return shouldExplodeCorpse(context) ? 1 : this.maxCharges(context) * 20;
+    }
+
+    @Override
+    public void onCastStart(SpellContext context) {
+        super.onCastStart(context);
+        if (shouldExplodeCorpse(context)) {
+            this.setExploding(true);
+        }
     }
 
     @Override
@@ -199,6 +215,15 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return true;
+        log(!shouldExplodeCorpse(context));
+        return /*!this.hasSpecialChoice(this, context) &&*/ /*!shouldExplodeCorpse(context)*/true;
+    }
+
+    public void setExploding(boolean exploding) {
+        this.spellData.set(CAN_EXPLODE, exploding);
+    }
+
+    public boolean canExplode() {
+        return this.spellData.get(CAN_EXPLODE);
     }
 }

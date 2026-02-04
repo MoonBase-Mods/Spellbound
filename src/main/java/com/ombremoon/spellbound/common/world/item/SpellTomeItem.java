@@ -2,14 +2,12 @@ package com.ombremoon.spellbound.common.world.item;
 
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.init.SBStats;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,7 +29,7 @@ public class SpellTomeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        SpellType<?> spell = itemStack.get(SBData.SPELL);
+        SpellType<?> spell = itemStack.get(SBData.SPELL_TOME);
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(player);
             if (handler.getSpellList().contains(spell)) {
@@ -55,7 +53,7 @@ public class SpellTomeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        SpellType<?> spellType = stack.get(SBData.SPELL);
+        SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
         if (spellType == null) {
             tooltipComponents.add(Component.translatable("chat.spelltome.nospell").withStyle(ChatFormatting.GRAY));
             return;
@@ -78,7 +76,7 @@ public class SpellTomeItem extends Item {
 
     public static ItemStack createWithSpell(SpellType<?> spellType) {
         ItemStack tome = new ItemStack(SBItems.SPELL_TOME.get());
-        tome.set(SBData.SPELL, spellType);
+        tome.set(SBData.SPELL_TOME, spellType);
 
         return tome;
     }

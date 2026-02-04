@@ -39,7 +39,7 @@ public class SpellUtil {
     public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
             && (attacker.isAlliedTo(target)
             || attacker instanceof OwnableEntity ownable && ownable.getOwner() == target
-            || isSummonOf(attacker, target));
+            || isSummonOf(target, attacker));
     public static final BiPredicate<LivingEntity, LivingEntity> CAN_ATTACK_ENTITY = (attacker, target) -> !IS_ALLIED.test(target, attacker) && !target.is(attacker) && !target.hasEffect(SBEffects.COUNTER_MAGIC) && !(target instanceof OwnableEntity ownable && ownable.getOwner() == (attacker));
 
     public static SpellDamageSource spellDamageSource(Level level, ResourceKey<DamageType> damageType, AbstractSpell spell, Entity ownerEntity, Entity attackEntity) {
@@ -141,18 +141,16 @@ public class SpellUtil {
         } else {
             entity.setData(SBData.SPELL_TYPE, spell.location());
             entity.setData(SBData.SPELL_ID, spell.getId());
+            entity.setData(SBData.SPELL, spell);
         }
     }
+
+    @Nullable
     public static AbstractSpell getSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
             return spellEntity.getSpell();
         } else {
-            Entity owner = getOwner(entity);
-            if (!(owner instanceof LivingEntity livingEntity))
-                return null;
-
-            SpellType<?> spellType = SBSpells.REGISTRY.get(entity.getData(SBData.SPELL_TYPE));
-            return spellType != null ? spellType.createSpellWithData(livingEntity) : null;
+            return entity.getData(SBData.SPELL);
         }
     }
 

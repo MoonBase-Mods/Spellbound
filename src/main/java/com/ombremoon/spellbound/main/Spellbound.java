@@ -11,12 +11,8 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
-import com.zigythebird.playeranim.animation.PlayerAnimResources;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.animation.PlayerRawAnimationBuilder;
 import com.zigythebird.playeranim.api.PlayerAnimationFactory;
-import com.zigythebird.playeranimcore.animation.Animation;
-import com.zigythebird.playeranimcore.animation.RawAnimation;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.neoforged.bus.api.IEventBus;
@@ -100,7 +96,7 @@ public class Spellbound {
         for (SpellPath spellPath : SpellPath.values()) {
             if (!spellPath.isSubPath()) {
                 ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
-                    SpellType<?> spellType = stack.get(SBData.SPELL);
+                    SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
                     if (spellType != null) {
                         SpellPath spellPath1 = spellType.getPath();
                         return spellPath == spellPath1 ? 1.0F : 0.0F;
