@@ -8,6 +8,7 @@ import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -16,10 +17,13 @@ import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
+import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.UnknownNullability;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -41,6 +46,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     private static final List<AABBSentinelBox> FLAME_INFERNO_BOXES = createFlameInfernoBoxes();
     private static final List<AABBSentinelBox> FLAME_GEYSER_BOXES = createFlameGeyserBoxes();
     private static final OBBSentinelBox REAR_JET_BOX = createRearJet();
+    private static final SpellDataKey<Vector3f> GEYSER_POS = SyncedSpellData.registerDataKey(FlameJetSpell.class, SBDataTypes.VECTOR3.get());
     private int turbulenceCharges;
     private long lastFlameJetCast;
     private float damageMultiplier = 1.0F;
@@ -73,7 +79,8 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     String castPrefix = flag ? "" : "walking_";
                     return new SpellAnimation(castPrefix + "instant_cast", SpellAnimation.Type.CAST, flag);
                 })
-                .fullRecast(true);
+                .fullRecast(true)
+                .updateInterval(1);
     }
 
     private static List<OBBSentinelBox> createFlameJetBoxes() {
@@ -176,6 +183,21 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     }
 
     @Override
+    protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
+        builder.define(GEYSER_POS, new Vector3f());
+    }
+
+    public void setGeyserPosition(Vec3 pos) {
+        this.spellData.set(GEYSER_POS, new Vector3f((float)pos.x(), (float)pos.y(), (float)pos.z()));
+    }
+
+    public Vec3 getGeyserPosition() {
+        Vector3f pos = this.spellData.get(GEYSER_POS);
+        return new Vec3(pos.x(), pos.y(), pos.z());
+    }
+
+    @Override
     public void onCastStart(SpellContext context) {
         super.onCastStart(context);
         LivingEntity caster = context.getCaster();
@@ -234,9 +256,17 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 boxOwner.triggerSentinelBox(geyserBox);
             }
         } else {
-            this.addFX(
-                    EffectBuilder.Entity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
-            );
+            if (context.isChoice(SBSkills.FLAME_JET) || context.isChoice(SBSkills.TURBO_CHARGE)) {
+                this.addFX(
+                        EffectBuilder.Entity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                );
+            } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
+                this.addFX(
+                        EffectBuilder.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
+                                .setOffset(0, -2.0, 0)
+                                .setRotation(0, 0, 90)
+                );
+            }
         }
     }
 
@@ -388,12 +418,16 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     FlameJetSpell spell = handler.getSpell(SBSpells.FLAME_JET.get());
                     if (spell != null) {
                         double castRange = SpellUtil.getCastRange(livingEntity);
-                        Entity target = spell.getTargetEntity(livingEntity, castRange);
+                        Entity target = handler.getTargetEntity();
                         if (target != null) {
-                            return target.getPosition(partialTick);
+                            Vec3 vec3 = target.getPosition(partialTick);
+                            spell.setGeyserPosition(vec3);
+                            return vec3;
                         }
 
-                        return spell.getSpawnVec(castRange);
+                        Vec3 vec3 = spell.getSpawnVec(castRange);
+                        spell.setGeyserPosition(vec3);
+                        return vec3;
                     }
 
                     return entity.getPosition(partialTick);

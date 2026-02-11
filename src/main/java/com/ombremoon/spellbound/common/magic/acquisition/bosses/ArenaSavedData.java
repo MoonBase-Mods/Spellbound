@@ -4,7 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -41,7 +41,7 @@ public class ArenaSavedData extends SavedData {
     private int arenaId;
     private final Multimap<UUID, Integer> closedArenas = ArrayListMultimap.create();
 
-    //For arena levels
+    //Arena levels
     private final PortalCache portalCache = new PortalCache();
     private boolean spawnedArena;
     private boolean fightStarted;
@@ -51,7 +51,7 @@ public class ArenaSavedData extends SavedData {
     private BoundingBox arenaBounds;
 
     public static ArenaSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ArenaSavedData::create, ArenaSavedData::load), "_dynamic_dimension");
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ArenaSavedData::create, ArenaSavedData::load), "_static_arena");
     }
 
     private ArenaSavedData() {}
@@ -101,7 +101,7 @@ public class ArenaSavedData extends SavedData {
     }
 
     public void spawnArena(ServerLevel level) {
-        if (DynamicDimensionFactory.spawnArena(level, this.spellLocation)) {
+        if (DynamicDimensionFactory.spawnSpellStructure(level, this.spellLocation)) {
             this.spawnedArena = true;
             this.setDirty();
             notifyPortalReady(level.getServer());
@@ -122,7 +122,7 @@ public class ArenaSavedData extends SavedData {
                 BlockPos blockPos = basePos.offset(i, 0, j);
                 if (portalLevel.getBlockState(blockPos).is(SBBlocks.SUMMON_PORTAL.get())) {
                     BlockEntity blockEntity = portalLevel.getBlockEntity(blockPos);
-                    if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
+                    if (blockEntity instanceof SummonPortalBlockEntity summonBlockEntity) {
                         summonBlockEntity.setArenaReady(true);
                     }
                 }

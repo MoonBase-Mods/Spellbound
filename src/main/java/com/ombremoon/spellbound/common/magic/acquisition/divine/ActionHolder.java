@@ -7,10 +7,10 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-public record ActionHolder(ResourceLocation id, DivineAction value) {
+public record ActionHolder(ResourceLocation id, SpellAction value) {
     public static final StreamCodec<RegistryFriendlyByteBuf, ActionHolder> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, ActionHolder::id,
-            DivineAction.STREAM_CODEC, ActionHolder::value,
+            SpellAction.STREAM_CODEC, ActionHolder::value,
             ActionHolder::new
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, List<ActionHolder>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());

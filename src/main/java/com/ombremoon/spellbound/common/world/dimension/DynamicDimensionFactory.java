@@ -32,6 +32,7 @@ import org.slf4j.Logger;
  */
 public class DynamicDimensionFactory {
     private static final Logger LOGGER = Constants.LOG;
+    public static final BlockPos ORIGIN = new BlockPos(0, 64, 0);
 
     public static ServerLevel getOrCreateDimension(MinecraftServer server, ResourceKey<Level> levelKey) {
         return DimensionCreator.get().getOrCreateLevel(server, levelKey, () -> createLevel(server));
@@ -44,7 +45,7 @@ public class DynamicDimensionFactory {
     }
 
     public static void spawnInArena(ServerLevel level, Entity entity, BossFight bossFight) {
-        BlockPos blockPos = BossFight.ORIGIN;
+        BlockPos blockPos = ORIGIN;
         level.getChunkAt(blockPos);
 
         Vec3 spawnOffset = bossFight.getPlayerSpawnOffset();
@@ -56,14 +57,14 @@ public class DynamicDimensionFactory {
         sendToDimension(entity, level, targetVec);
     }
 
-    public static boolean spawnArena(ServerLevel level, ResourceLocation spell) {
-        BlockPos origin = BossFight.ORIGIN;
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation spell) {
+        BlockPos origin = ORIGIN;
         level.getChunkAt(origin);
-        return spawnArena(level, origin, spell);
+        return spawnSpellStructure(level, origin, spell);
     }
 
-    private static boolean spawnArena(ServerLevel level, BlockPos origin, ResourceLocation spell) {
-        Structure structure = getArena(level, spell).value();
+    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation spell) {
+        Structure structure = getSpellStructure(level, spell).value();
         ChunkGenerator generator = level.getChunkSource().getGenerator();
         StructureStart start = structure.generate(
                 level.registryAccess(),
@@ -79,7 +80,7 @@ public class DynamicDimensionFactory {
         );
         if (start.isValid()) {
             BoundingBox boundingBox = start.getBoundingBox();
-            LOGGER.debug("[Arena Spawn] Structure valid | BoundingBox: min({}, {}, {}) max({}, {}, {})",
+            LOGGER.debug("[Spell Structure Spawn] Structure valid | BoundingBox: min({}, {}, {}) max({}, {}, {})",
                     boundingBox.minX(), boundingBox.minY(), boundingBox.minZ(),
                     boundingBox.maxX(), boundingBox.maxY(), boundingBox.maxZ());
 
@@ -89,7 +90,7 @@ public class DynamicDimensionFactory {
             ChunkPos chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.minX()), SectionPos.blockToSectionCoord(boundingBox.minZ()));
             ChunkPos chunkPos1 = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.maxX()), SectionPos.blockToSectionCoord(boundingBox.maxZ()));
 
-            LOGGER.debug("[Arena Spawn] Placing in chunks from {} to {}", chunkPos, chunkPos1);
+            LOGGER.debug("[Spell Structure Spawn] Placing in chunks from {} to {}", chunkPos, chunkPos1);
 
             ChunkPos.rangeClosed(chunkPos, chunkPos1)
                     .forEach(pos -> start.placeInChunk(
@@ -108,16 +109,16 @@ public class DynamicDimensionFactory {
                             pos
                     ));
 
-            LOGGER.debug("[Arena Spawn] Arena generation complete");
+            LOGGER.debug("[Spell Structure Spawn] Spell structure generation complete");
             return true;
         }
 
-        LOGGER.warn("[Arena Spawn] Structure generation FAILED - StructureStart invalid | Spell: {}", spell);
+        LOGGER.warn("[Spell Structure Spawn] Structure generation FAILED - StructureStart invalid | Spell: {}", spell);
         return false;
     }
 
-    private static Holder.Reference<Structure> getArena(ServerLevel level, ResourceLocation spell) {
-        ResourceKey<Structure> resourceKey = ResourceKey.create(Registries.STRUCTURE, spell);
+    private static Holder.Reference<Structure> getSpellStructure(ServerLevel level, ResourceLocation structure) {
+        ResourceKey<Structure> resourceKey = ResourceKey.create(Registries.STRUCTURE, structure);
         var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
         return registry.getHolder(resourceKey).orElseGet(() -> registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, CommonClass.customLocation("broker_tower"))));
     }

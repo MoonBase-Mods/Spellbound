@@ -82,7 +82,7 @@ public class SpellContext {
     }
 
     public @Nullable Entity getTarget() {
-        return this.spellHandler.getCachedTarget();
+        return this.spellHandler.getTargetEntity();
     }
 
     public float getRotation() {

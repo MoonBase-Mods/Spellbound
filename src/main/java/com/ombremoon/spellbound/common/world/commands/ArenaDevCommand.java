@@ -5,8 +5,9 @@ import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.common.world.block.SummonStoneBlock;
-import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
+import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -91,7 +92,7 @@ public class ArenaDevCommand {
                     BlockPos pos = playerPos.offset(x, y, z);
                     if (level.getBlockState(pos).is(SBBlocks.SUMMON_PORTAL.get())) {
                         BlockEntity be = level.getBlockEntity(pos);
-                        if (be instanceof SummonBlockEntity summonBE) {
+                        if (be instanceof SummonPortalBlockEntity summonBE) {
                             int arenaId = summonBE.getArenaID();
                             ArenaSavedData data = ArenaSavedData.get(level);
                             ResourceKey<Level> levelKey = data.getOrCreateKey(level.getServer(), arenaId);
@@ -134,7 +135,7 @@ public class ArenaDevCommand {
                     if (state.is(SBBlocks.SUMMON_PORTAL.get()) || state.is(SBBlocks.SUMMON_STONE.get()) || state.is(SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get())) {
                         if (state.is(SBBlocks.SUMMON_PORTAL.get())) {
                             BlockEntity be = level.getBlockEntity(pos);
-                            if (be instanceof SummonBlockEntity summonBE) {
+                            if (be instanceof SummonPortalBlockEntity summonBE) {
                                 int arenaId = summonBE.getArenaID();
                                 ArenaSavedData data = ArenaSavedData.get(level);
                                 ResourceKey<Level> levelKey = data.getOrCreateKey(level.getServer(), arenaId);
@@ -190,7 +191,7 @@ public class ArenaDevCommand {
 
         var bossFight = data.getCurrentBossFight();
         Vec3 spawnOffset = bossFight != null ? bossFight.getBossFight().getPlayerSpawnOffset() : Vec3.ZERO;
-        BlockPos origin = BossFight.ORIGIN;
+        BlockPos origin = DynamicDimensionFactory.ORIGIN;
         BlockPos spawnPos = origin.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
 
         PayloadHandler.sendArenaDebug(player, true, bounds, spawnPos, origin);

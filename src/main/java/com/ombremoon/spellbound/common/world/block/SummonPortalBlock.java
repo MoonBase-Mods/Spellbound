@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
-import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -37,7 +37,7 @@ public class SummonPortalBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SummonBlockEntity(pos, state);
+        return new SummonPortalBlockEntity(pos, state);
     }
 
     @Override
@@ -48,14 +48,14 @@ public class SummonPortalBlock extends BaseEntityBlock {
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof SummonBlockEntity summonBlockEntity)
+        if (blockEntity instanceof SummonPortalBlockEntity summonBlockEntity)
             summonBlockEntity.entityInside(state, level, pos, entity);
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        boolean isReady = blockEntity instanceof SummonBlockEntity summon && summon.isArenaReady();
+        boolean isReady = blockEntity instanceof SummonPortalBlockEntity summon && summon.isArenaReady();
 
         double x = (double) pos.getX() + random.nextDouble();
         double y = (double) pos.getY() + 0.8;

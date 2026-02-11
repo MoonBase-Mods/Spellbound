@@ -7,7 +7,8 @@ Rooms creation will support 3 room template sizes:
 
 Will allow for custom swapping of templates (as long as they remain within template guidelines)
 
-Templates can chain up to 3 times to create larger puzzle rooms
+Templates can chain up to 3 times to create larger puzzle rooms. Can also choose different configurations for each
+template.
 
 Since puzzle rooms are in static dimensions, can create saved data specific to each for level
 related features
@@ -25,6 +26,7 @@ Flicker - 1 Small Room
   chasm. While the chasm has nothing but spike traps on the caster's side of the glass, the other side shows a parkour
   path of different stone bricks leading to the altar. The caster must navigate the invisible path to reach the altar.
   Solid stone bricks are safe to walk on, but cracked bricks are fake and will cause the caster to fall into the chasm.
+  (3 maze configurations)
 
 - Rules:
   - No Flying
@@ -42,15 +44,12 @@ Flicker - 1 Small Room
   - On Hurt (DamageSource is Spike Trap)
 
 
-Shadow Veil
+Shadow Veil - 1 Small Room
 
-
-Cursed Rune - 1 Small Room
-
-- Description: The caster spawns in a room with a Dark Altar on the other side. Invisible runes are scattered across the
-  floor between the caster and the altar. Stepping on a rune blasts the caster back to the start, dealing minor damage.
-  The caster is given a stack of Throwing Stones, which can be used to test if a space is safe to walk on. Runes will
-  vanish in a push of smoke, but is only discharged for 2 seconds.
+- Description: The caster spawns in a room with a Dark Alter on the other side. Above the Altar is a Watchful Eye that
+  will shoot the caster the minute they are within its line of sight. Throughout the room are moving veils of dark mist.
+  Standing in the mist will remove the caster from the line of sight of the Eye. The caster must navigate through the
+  mist to reach the Altar, unseen by the Eye. (3 maze configurations)
 
 - Rules:
   - No Flying
@@ -63,6 +62,30 @@ Cursed Rune - 1 Small Room
   - Interact With Altar
 
 - On Start: N/A
+
+- Reset Condition:
+  - On Hurt (DamageSource is Watchful Eye)
+
+
+Cursed Rune - 1 Small Room
+
+- Description: The caster spawns in a room with a Dark Altar on the other side. Invisible runes are scattered across the
+  floor between the caster and the altar. Stepping on a rune blasts the caster back to the start, dealing minor damage.
+  The caster is given a stack of Throwing Stones, which can be used to test if a space is safe to walk on. Runes will
+  vanish in a push of smoke, but is only discharged for 2 seconds. (3 maze configurations)
+
+- Rules:
+  - No Flying
+  - No Spellcasting
+  - No Mining
+  - No Building
+  - No Using Items
+
+- Objective Action:
+  - Interact With Altar
+
+- On Start:
+    - Give Throwing Stones
 
 - Reset Condition:
   - On Hurt (DamageSource is Cursed Rune)

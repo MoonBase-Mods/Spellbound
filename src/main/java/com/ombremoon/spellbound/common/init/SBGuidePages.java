@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -29,7 +29,6 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -1736,11 +1735,11 @@ public interface SBGuidePages {
         return translatable("spells.spellbound." + spell.location().getPath());
     }
 
-    record ItemActionEntry(ResourceKey<DivineAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, Ingredient ingredient) implements ActionEntry {}
+    record ItemActionEntry(ResourceKey<SpellAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, Ingredient ingredient) implements ActionEntry {}
 
-    record EntityActionEntry(ResourceKey<DivineAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, EntityEntry entity) implements ActionEntry {}
+    record EntityActionEntry(ResourceKey<SpellAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, EntityEntry entity) implements ActionEntry {}
 
-    record ImageActionEntry(ResourceKey<DivineAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, ImageEntryWithScale image) implements ActionEntry {}
+    record ImageActionEntry(ResourceKey<SpellAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, ImageEntryWithScale image) implements ActionEntry {}
 
     record EntityEntry(EntityType<?> entityType, int yOffset, float scale) {
 
@@ -1902,7 +1901,7 @@ public interface SBGuidePages {
     }
 
     interface ActionEntry {
-        ResourceKey<DivineAction> action();
+        ResourceKey<SpellAction> action();
 
         ResourceLocation loreScrap();
 

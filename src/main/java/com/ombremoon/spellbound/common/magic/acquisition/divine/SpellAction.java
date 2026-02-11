@@ -4,14 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
 import net.neoforged.neoforge.common.conditions.ConditionalOps;
@@ -21,25 +17,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>> criteria, ActionRequirements requirements, int cooldown) {
-    public static final ResourceKey<Registry<DivineAction>> REGISTRY = ResourceKey.createRegistryKey(CommonClass.customLocation("divine_action"));
+public record SpellAction(ActionRewards rewards, Map<String, ActionCriterion<?>> criteria, ActionRequirements requirements, int cooldown) {
+//    public static final ResourceKey<Registry<SpellAction>> REGISTRY = ResourceKey.createRegistryKey(CommonClass.customLocation("divine_action"));
     public static final Codec<Map<String, ActionCriterion<?>>> CRITERIA_CODEC = Codec.unboundedMap(Codec.STRING, ActionCriterion.CODEC)
-            .validate(map -> map.isEmpty() ? DataResult.error(() -> "Divine action cannot be empty") : DataResult.success(map));
-    public static final Codec<DivineAction> CODEC = RecordCodecBuilder.<DivineAction>create(
+            .validate(map -> map.isEmpty() ? DataResult.error(() -> "Spell action cannot be empty") : DataResult.success(map));
+    public static final Codec<SpellAction> CODEC = RecordCodecBuilder.<SpellAction>create(
             instance -> instance.group(
-                    ActionRewards.CODEC.optionalFieldOf("rewards", ActionRewards.EMPTY).forGetter(DivineAction::rewards),
-                    CRITERIA_CODEC.fieldOf("criteria").forGetter(DivineAction::criteria),
+                    ActionRewards.CODEC.optionalFieldOf("rewards", ActionRewards.EMPTY).forGetter(SpellAction::rewards),
+                    CRITERIA_CODEC.fieldOf("criteria").forGetter(SpellAction::criteria),
                     ActionRequirements.CODEC.optionalFieldOf("requirements").forGetter(action -> Optional.of(action.requirements())),
-                    Codec.INT.optionalFieldOf("cooldown", 0).forGetter(DivineAction::cooldown)
+                    Codec.INT.optionalFieldOf("cooldown", 0).forGetter(SpellAction::cooldown)
             ).apply(instance, (actionRewards, criterionMap, actionRequirements, cooldown) -> {
                 ActionRequirements requirements1 = actionRequirements.orElseGet(() -> ActionRequirements.allOf(criterionMap.keySet()));
-                return new DivineAction(actionRewards, criterionMap, requirements1, cooldown);
+                return new SpellAction(actionRewards, criterionMap, requirements1, cooldown);
             })
-    ).validate(DivineAction::validate);
-    public static final StreamCodec<RegistryFriendlyByteBuf, DivineAction> STREAM_CODEC = StreamCodec.ofMember(DivineAction::write, DivineAction::read);
-    public static final Codec<Optional<WithConditions<DivineAction>>> CONDITIONAL_CODEC = ConditionalOps.createConditionalCodecWithConditions(CODEC);
+    ).validate(SpellAction::validate);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellAction> STREAM_CODEC = StreamCodec.ofMember(SpellAction::write, SpellAction::read);
+    public static final Codec<Optional<WithConditions<SpellAction>>> CONDITIONAL_CODEC = ConditionalOps.createConditionalCodecWithConditions(CODEC);
 
-    private static DataResult<DivineAction> validate(DivineAction action) {
+    private static DataResult<SpellAction> validate(SpellAction action) {
         return action.requirements().validate(action.criteria().keySet()).map(requirements -> action);
     }
 
@@ -48,8 +44,8 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
         buffer.writeVarInt(this.cooldown);
     }
 
-    private static DivineAction read(RegistryFriendlyByteBuf buffer) {
-        return new DivineAction(ActionRewards.EMPTY, Map.of(), new ActionRequirements(buffer), buffer.readVarInt());
+    private static SpellAction read(RegistryFriendlyByteBuf buffer) {
+        return new SpellAction(ActionRewards.EMPTY, Map.of(), new ActionRequirements(buffer), buffer.readVarInt());
     }
 
     public void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
@@ -66,7 +62,7 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
         private ActionRequirements.Strategy requirementsStrategy = ActionRequirements.Strategy.AND;
         private int cooldown;
 
-        public static Builder divineAction() {
+        public static Builder action() {
             return new Builder();
         }
 
@@ -99,17 +95,17 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
             return this;
         }
 
-        public DivineAction build() {
+        public SpellAction build() {
             Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
             ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));
-            return new DivineAction(this.rewards, map, requirements, this.cooldown);
+            return new SpellAction(this.rewards, map, requirements, this.cooldown);
         }
 
         public ActionHolder build(ResourceLocation id) {
             Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
             ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));
             return new ActionHolder(
-                    id, new DivineAction(this.rewards, map, requirements, this.cooldown)
+                    id, new SpellAction(this.rewards, map, requirements, this.cooldown)
             );
         }
 

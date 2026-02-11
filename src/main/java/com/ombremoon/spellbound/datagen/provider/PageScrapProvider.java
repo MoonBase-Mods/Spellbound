@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.datagen.provider;
 
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionHolder;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -37,7 +37,7 @@ public abstract class PageScrapProvider implements DataProvider {
                     throw new IllegalStateException("Duplicate page scrap " + actionHolder.id());
                 } else {
                     Path path = this.pathProvider.json(actionHolder.id());
-                    list.add(DataProvider.saveStable(output, provider, DivineAction.CODEC, actionHolder.value(), path));
+                    list.add(DataProvider.saveStable(output, provider, SpellAction.CODEC, actionHolder.value(), path));
                 }
             };
             this.generate(provider, consumer);

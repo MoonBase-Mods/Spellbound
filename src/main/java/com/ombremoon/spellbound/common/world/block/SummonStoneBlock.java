@@ -6,7 +6,7 @@ import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.mixin.ConnectionAccessor;
@@ -93,7 +93,7 @@ public class SummonStoneBlock extends Block {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(SBItems.MAGIC_ESSENCE.get())) {
+        if (stack.is(SBItems.MAGIC_ESSENCE.get()) && !state.getValue(POWERED)) {
             if (level.isClientSide) {
                 return ItemInteractionResult.SUCCESS;
             } else if (!ArenaSavedData.isArena(level)) {
@@ -105,63 +105,61 @@ public class SummonStoneBlock extends Block {
     }
 
     public void activateStone(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand) {
-        if (!state.getValue(POWERED)) {
-            boolean canTeleportInDimension = level.dimension() == Level.NETHER || level.dimension() == Level.OVERWORLD;
-            if (this.hasSpell() && canTeleportInDimension) {
-                BlockPattern.BlockPatternMatch blockPatternMatch = getOrCreatePortalShape().find(level, pos);
-                if (blockPatternMatch != null) {
-                    var handler = SpellUtil.getSpellHandler(player);
-                    if (!level.isClientSide) {
-                        ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
-                        int arenaId = data.incrementId();
+        boolean canTeleportInDimension = level.dimension() == Level.NETHER || level.dimension() == Level.OVERWORLD;
+        if (this.hasSpell() && canTeleportInDimension) {
+            BlockPattern.BlockPatternMatch blockPatternMatch = getOrCreatePortalShape().find(level, pos);
+            if (blockPatternMatch != null) {
+                var handler = SpellUtil.getSpellHandler(player);
+                if (!level.isClientSide) {
+                    ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
+                    int arenaId = data.incrementId();
 
-                        handler.openArena(arenaId);
-                        BlockPos frontTopLeft = blockPatternMatch.getFrontTopLeft();
-                        BlockPos blockPos = frontTopLeft.offset(-3, 0, -3);
+                    handler.openArena(arenaId);
+                    BlockPos frontTopLeft = blockPatternMatch.getFrontTopLeft();
+                    BlockPos blockPos = frontTopLeft.offset(-3, 0, -3);
 
-                        for (int i = 0; i < 3; i++) {
-                            for (int j = 0; j < 3; j++) {
-                                BlockPos blockPos1 = blockPos.offset(i, 0, j);
-                                level.setBlock(blockPos1, SBBlocks.SUMMON_PORTAL.get().defaultBlockState(), 3);
-                                BlockEntity blockEntity = level.getBlockEntity(blockPos1);
-                                if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
-                                    summonBlockEntity.setArenaID(arenaId);
-                                }
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            BlockPos blockPos1 = blockPos.offset(i, 0, j);
+                            level.setBlock(blockPos1, SBBlocks.SUMMON_PORTAL.get().defaultBlockState(), 3);
+                            BlockEntity blockEntity = level.getBlockEntity(blockPos1);
+                            if (blockEntity instanceof SummonPortalBlockEntity summonBlockEntity) {
+                                summonBlockEntity.setArenaID(arenaId);
                             }
-                        }
-
-                        MinecraftServer server = level.getServer();
-                        for (int i = 0; i < 3; i++) {
-                            for (int j = 0; j < 3; j++) {
-                                BlockPos blockPos1 = blockPos.offset(i, 0, j);
-                                server.getPlayerList().broadcastAll(
-                                        new ClientboundBlockUpdatePacket(level, blockPos1)
-                                );
-                            }
-                        }
-                        for (var serverPlayer : server.getPlayerList().getPlayers()) {
-                            ((ConnectionAccessor) serverPlayer.connection.getConnection()).invokeFlush();
-                        }
-                        ResourceKey<Level> levelKey = data.getOrCreateKey(server, arenaId);
-                        ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
-                        if (arena != null && this.spell != null) {
-                            ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                            arenaData.initializeArena(arena, player, arenaId, frontTopLeft, level.dimension(), this.spell, this.getBossFight());
                         }
                     }
-                } else {
-                    return;
+
+                    MinecraftServer server = level.getServer();
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            BlockPos blockPos1 = blockPos.offset(i, 0, j);
+                            server.getPlayerList().broadcastAll(
+                                    new ClientboundBlockUpdatePacket(level, blockPos1)
+                            );
+                        }
+                    }
+                    for (var serverPlayer : server.getPlayerList().getPlayers()) {
+                        ((ConnectionAccessor) serverPlayer.connection.getConnection()).invokeFlush();
+                    }
+                    ResourceKey<Level> levelKey = data.getOrCreateKey(server, arenaId);
+                    ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
+                    if (arena != null && this.spell != null) {
+                        ArenaSavedData arenaData = ArenaSavedData.get(arena);
+                        arenaData.initializeArena(arena, player, arenaId, frontTopLeft, level.dimension(), this.spell, this.getBossFight());
+                    }
                 }
             } else {
-                BlockState blockState = state.setValue(POWERED, Boolean.TRUE);
-                level.setBlock(pos, blockState, 3);
+                return;
             }
-
-            level.levelEvent(1503, pos, 0);
-
-            if (!player.getAbilities().instabuild)
-                player.getItemInHand(hand).shrink(1);
+        } else {
+            BlockState blockState = state.setValue(POWERED, Boolean.TRUE);
+            level.setBlock(pos, blockState, 3);
         }
+
+        level.levelEvent(1503, pos, 0);
+
+        if (!player.getAbilities().instabuild)
+            player.getItemInHand(hand).shrink(1);
     }
 
     public static BlockPattern getOrCreatePortalShape() {

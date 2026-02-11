@@ -178,7 +178,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         if (this.stationaryTicks > 0)
             this.stationaryTicks--;
 
-        this.updateCachedTarget();
+        this.updateTargetEntity();
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
@@ -551,14 +551,15 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
     /**
      * Updates the cached target entity by performing a raycast.
-     * The target remains cached for 2 seconds (40 ticks) unless a new target is found.
+     * The target remains cached for 1/2 second (10 ticks) unless a new target is found.
      */
-    private void updateCachedTarget() {
+    private void updateTargetEntity() {
         Entity newTarget = getTargetEntity(SpellUtil.getCastRange(this.caster));
 
         if (newTarget != null) {
             this.cachedTarget = newTarget;
-            this.cachedTargetTimer = 20;
+            //Change to config
+            this.cachedTargetTimer = 10;
         } else if (this.cachedTargetTimer > 0) {
             this.cachedTargetTimer--;
         } else {
@@ -571,7 +572,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @return The cached target entity, or null if no target is found
      */
     @Nullable
-    public Entity getCachedTarget() {
+    public Entity getTargetEntity() {
         return this.cachedTarget;
     }
 

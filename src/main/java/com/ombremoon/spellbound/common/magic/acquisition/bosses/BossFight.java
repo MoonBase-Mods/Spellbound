@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 
 public abstract class BossFight {
     protected static final Logger LOGGER = Constants.LOG;
-    public static final BlockPos ORIGIN = new BlockPos(0, 64, 0);
     protected final SpellType<?> spell;
     protected final Vec3 playerSpawnOffset;
     protected final DimensionData dimensionData;

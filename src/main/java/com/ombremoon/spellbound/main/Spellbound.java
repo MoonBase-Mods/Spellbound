@@ -6,15 +6,23 @@ import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
+import com.zigythebird.playeranim.animation.PlayerAnimResources;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationFactory;
+import com.zigythebird.playeranimcore.animation.Animation;
+import com.zigythebird.playeranimcore.animation.RawAnimation;
+import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractFadeModifier;
+import com.zigythebird.playeranimcore.easing.EasingType;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -62,7 +70,8 @@ public class Spellbound {
             event.dataPackRegistry(Keys.RITUAL, TransfigurationRitual.DIRECT_CODEC, TransfigurationRitual.DIRECT_CODEC);
             event.dataPackRegistry(Keys.MULTIBLOCKS, Multiblock.CODEC);
             event.dataPackRegistry(Keys.GUIDE_BOOK, GuideBookPage.CODEC, GuideBookPage.CODEC);
-            event.dataPackRegistry(Keys.DIVINE_ACTION, DivineAction.CODEC, DivineAction.CODEC);
+            event.dataPackRegistry(Keys.DIVINE_ACTION, SpellAction.CODEC, SpellAction.CODEC);
+            event.dataPackRegistry(Keys.PUZZLE_CONFIG, PuzzleConfiguration.CODEC, PuzzleConfiguration.CODEC);
         });
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
@@ -81,14 +90,35 @@ public class Spellbound {
 
         event.enqueueWork(() -> {
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    AnimationHelper.SPELL_CAST_ANIMATION,
-                    1000,
-                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
+                    AnimationHelper.MOVEMENT_ANIMATION,
+                    1,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> {
+                        ResourceLocation id = CommonClass.customLocation("idle");
+                        if (state.isMoving()) {
+                            if (player.zza < 0) {
+                                id = CommonClass.customLocation("walk_backwards");
+                            } else if (player.isCrouching()) {
+                                id = CommonClass.customLocation("walk_sneak");
+                            } else if (player.isSprinting()) {
+                                id = CommonClass.customLocation("run");
+                            } else {
+                                id = CommonClass.customLocation("walk");
+                            }
+                        } else {
+                            if (player.isCrouching()) {
+                                id = CommonClass.customLocation("sneak");
+                            }
+                        }
+
+                        Animation animation = PlayerAnimResources.getAnimation(id);
+//                        controller.addModifierBefore(AbstractFadeModifier.standardFadeIn(2, EasingType.EASE_IN_OUT_SINE));
+                        return setter.setAnimation(RawAnimation.begin().thenPlay(animation));
+                    })
             );
 
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    AnimationHelper.MOVEMENT_ANIMATION,
-                    1,
+                    AnimationHelper.SPELL_CAST_ANIMATION,
+                    1000,
                     player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
             );
         });

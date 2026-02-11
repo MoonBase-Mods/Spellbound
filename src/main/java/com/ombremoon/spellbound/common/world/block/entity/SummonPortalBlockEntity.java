@@ -25,16 +25,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public class SummonBlockEntity extends BlockEntity {
+public class SummonPortalBlockEntity extends BlockEntity {
     protected static final Logger LOGGER = Constants.LOG;
     private int arenaId;
     private boolean arenaReady;
 
-    protected SummonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    protected SummonPortalBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
-    public SummonBlockEntity(BlockPos pos, BlockState blockState) {
+    public SummonPortalBlockEntity(BlockPos pos, BlockState blockState) {
         this(SBBlockEntities.SUMMON_PORTAL.get(), pos, blockState);
     }
 
@@ -54,7 +54,7 @@ public class SummonBlockEntity extends BlockEntity {
         )) {
             MinecraftServer server = level.getServer();
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof SummonBlockEntity) {
+            if (blockEntity instanceof SummonPortalBlockEntity) {
                 ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
                 ResourceKey<Level> levelKey = data.getOrCreateKey(server, this.arenaId);
                 ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);

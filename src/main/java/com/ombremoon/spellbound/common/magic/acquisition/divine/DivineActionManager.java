@@ -40,7 +40,7 @@ public class DivineActionManager extends SimpleJsonResourceReloadListener {
         ImmutableMap.Builder<ResourceLocation, ActionHolder> builder = ImmutableMap.builder();
         object.forEach((location, jsonElement) -> {
             try {
-                DivineAction action = ICondition.getWithWithConditionsCodec(DivineAction.CONDITIONAL_CODEC, registryOps, jsonElement).orElse(null);
+                SpellAction action = ICondition.getWithWithConditionsCodec(SpellAction.CONDITIONAL_CODEC, registryOps, jsonElement).orElse(null);
                 if (action == null) {
                     LOGGER.debug("Skipping loading divine action {} as its conditions were not met", location);
                     return;
@@ -55,7 +55,7 @@ public class DivineActionManager extends SimpleJsonResourceReloadListener {
         LOGGER.info("Loaded {} divine actions", ACTIONS.size());
     }
 
-    private void validate(ResourceLocation location, DivineAction action) {
+    private void validate(ResourceLocation location, SpellAction action) {
         ProblemReporter.Collector problemreporter$collector = new ProblemReporter.Collector();
         action.validate(problemreporter$collector, this.registries.asGetterLookup());
         problemreporter$collector.getReport().ifPresent(p_344260_ -> LOGGER.warn("Found validation problems in action {}: \n{}", location, p_344260_));

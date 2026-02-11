@@ -5,8 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionHolder;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineActionManager;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.RegistryOps;
@@ -43,7 +42,7 @@ public class PageScrapManager extends SimpleJsonResourceReloadListener {
         ImmutableMap.Builder<ResourceLocation, ActionHolder> builder = ImmutableMap.builder();
         object.forEach((location, jsonElement) -> {
             try {
-                DivineAction action = ICondition.getWithWithConditionsCodec(DivineAction.CONDITIONAL_CODEC, registryOps, jsonElement).orElse(null);
+                SpellAction action = ICondition.getWithWithConditionsCodec(SpellAction.CONDITIONAL_CODEC, registryOps, jsonElement).orElse(null);
                 if (action == null) {
                     LOGGER.debug("Skipping loading page_scrap {} as its conditions were not met", location);
                     return;
@@ -57,7 +56,7 @@ public class PageScrapManager extends SimpleJsonResourceReloadListener {
         ACTIONS = builder.buildOrThrow();
     }
 
-    private void validate(ResourceLocation location, DivineAction action) {
+    private void validate(ResourceLocation location, SpellAction action) {
         ProblemReporter.Collector problemreporter$collector = new ProblemReporter.Collector();
         action.validate(problemreporter$collector, this.registries.asGetterLookup());
         problemreporter$collector.getReport().ifPresent(p_344260_ -> LOGGER.warn("Found validation problems in scrap {}: \n{}", location, p_344260_));
