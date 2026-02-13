@@ -61,6 +61,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleGeneratedModel(SBItems.MAGIC_ESSENCE);
         simpleGeneratedModel(SBItems.MANA_TEAR);
+        simpleGeneratedModel(SBItems.DUNGEON_KEY);
 
         simpleGeneratedModel(SBItems.DECEPTION_BOOK);
         simpleGeneratedModel(SBItems.DIVINE_BOOK);
