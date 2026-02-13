@@ -173,8 +173,8 @@ public class SpellCastEvents {
     }
 
     private static boolean isPlayingCastingAnimation(AbstractClientPlayer player, SpellHandler handler) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, AnimationHelper.SPELL_CAST_ANIMATION);
-        SpellAnimation animation = handler.getAnimationForLayer(AnimationHelper.SPELL_CAST_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.SPELL_CAST_ANIMATION);
+        SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.SPELL_CAST_ANIMATION);
         return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 

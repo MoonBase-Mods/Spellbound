@@ -50,17 +50,9 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
                 .withLuck(player.getLuck())
                 .create(LootContextParamSets.ADVANCEMENT_REWARD);
         boolean flag = false;
-
         var effects = SpellUtil.getSpellEffects(player);
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
         if (blockState != null) {
-            for (var key : this.loot) {
-                for (ItemStack stack : player.server.reloadableRegistries().getLootTable(key).getRandomItems(lootParams)) {
-                    if (this.addOrDropItem(player, stack))
-                        flag = true;
-                }
-            }
-
             if (effects.getJudgement() >= this.judgementRequired) {
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
@@ -70,10 +62,17 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
                     }
                 }
             }
+        }
 
-            if (flag) {
-                player.containerMenu.broadcastChanges();
+        for (var key : this.loot) {
+            for (ItemStack stack : player.server.reloadableRegistries().getLootTable(key).getRandomItems(lootParams)) {
+                if (this.addOrDropItem(player, stack))
+                    flag = true;
             }
+        }
+
+        if (flag) {
+            player.containerMenu.broadcastChanges();
         }
 
         effects.giveJudgement(this.judgementGranted);

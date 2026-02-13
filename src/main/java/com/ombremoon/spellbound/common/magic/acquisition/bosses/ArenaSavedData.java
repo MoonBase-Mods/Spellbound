@@ -4,8 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBBlocks;
+import com.ombremoon.spellbound.common.world.StructureHolderData;
 import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
-import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArenaSavedData extends SavedData {
+public class ArenaSavedData extends SavedData implements StructureHolderData {
     public static final Logger LOGGER = Constants.LOG;
 
     //Global
@@ -101,7 +101,7 @@ public class ArenaSavedData extends SavedData {
     }
 
     public void spawnArena(ServerLevel level) {
-        if (DynamicDimensionFactory.spawnSpellStructure(level, this.spellLocation)) {
+        if (DynamicDimensionFactory.spawnArena(level, this.spellLocation)) {
             this.spawnedArena = true;
             this.setDirty();
             notifyPortalReady(level.getServer());
@@ -170,29 +170,12 @@ public class ArenaSavedData extends SavedData {
         this.setDirty();
     }
 
-    public void destroyPortal(ServerLevel level) {
-        DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
+    @Override
+    public void destroyDimension(ServerLevel level) {
+        StructureHolderData.super.destroyDimension(level);
         ServerLevel portalLevel = level.getServer().getLevel(this.portalCache.getPortalLevel());
         if (portalLevel != null)
             this.portalCache.destroyPortal(portalLevel);
-    }
-
-    public PortalCache getPortalCache() {
-        return this.portalCache;
-    }
-
-    public BossFightInstance<?, ?> getCurrentBossFight() {
-        return this.currentBossFight;
-    }
-
-    @Nullable
-    public BoundingBox getArenaBounds() {
-        return this.arenaBounds;
-    }
-
-    public void setArenaBounds(@Nullable BoundingBox bounds) {
-        this.arenaBounds = bounds;
-        this.setDirty();
     }
 
     public void cacheClosedArena(UUID owner, int id) {
@@ -218,6 +201,25 @@ public class ArenaSavedData extends SavedData {
                 this.setDirty();
             }
         }
+    }
+
+    public PortalCache getPortalCache() {
+        return this.portalCache;
+    }
+
+    public BossFightInstance<?, ?> getCurrentBossFight() {
+        return this.currentBossFight;
+    }
+
+    @Override
+    public @Nullable BoundingBox getStructureBounds() {
+        return this.arenaBounds;
+    }
+
+    @Override
+    public void setStructureBounds(@Nullable BoundingBox bounds) {
+        this.arenaBounds = bounds;
+        this.setDirty();
     }
 
     @Override

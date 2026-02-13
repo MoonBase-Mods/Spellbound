@@ -3,7 +3,7 @@ package com.ombremoon.spellbound.common.magic;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -65,7 +65,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private EffectManager effectManager;
     private UpgradeTree upgradeTree;
     private FamiliarHandler familiars;
-    private PlayerDivineActions divineActions;
+    private PlayerSpellActions divineActions;
     protected boolean castMode;
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
     private Set<SpellType<?>> equippedSpellSet = new ObjectOpenHashSet<>();
@@ -144,7 +144,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.skillBuffs.forEach((skillBuff, integer) -> this.removeSkillBuff(skillBuff));
 
         if (!this.isClientSide()) {
-            this.getDivineActions();
+            this.getSpellActions();
             if (this.caster instanceof Player player)
                 PayloadHandler.syncMana(player);
         }
@@ -781,7 +781,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.effectManager;
     }
 
-    public PlayerDivineActions getDivineActions() {
+    public PlayerSpellActions getSpellActions() {
         if (!(this.caster instanceof Player))
             return null;
 
@@ -791,7 +791,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         }
 
         if (this.divineActions == null)
-            this.divineActions = new PlayerDivineActions((ServerPlayer) this.caster);
+            this.divineActions = new PlayerSpellActions((ServerPlayer) this.caster);
 
         return this.divineActions;
     }

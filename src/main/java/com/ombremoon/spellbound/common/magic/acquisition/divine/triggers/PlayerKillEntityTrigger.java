@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.Optional;
 
-public class KillActionTrigger extends SimpleTrigger<KillActionTrigger.Instance> {
+public class PlayerKillEntityTrigger extends SimpleTrigger<PlayerKillEntityTrigger.Instance> {
 
     @Override
     public Codec<Instance> codec() {

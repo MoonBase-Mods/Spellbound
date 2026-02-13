@@ -1,7 +1,10 @@
 package com.ombremoon.spellbound.common.world.dimension;
 
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
+import com.ombremoon.spellbound.common.world.StructureHolderData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
@@ -14,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -57,14 +61,33 @@ public class DynamicDimensionFactory {
         sendToDimension(entity, level, targetVec);
     }
 
-    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation spell) {
-        BlockPos origin = ORIGIN;
-        level.getChunkAt(origin);
-        return spawnSpellStructure(level, origin, spell);
+    public static void spawnInDungeon(ServerLevel level, Player player, PuzzleDefinition puzzle, StructureHolderData structure) {
+        BlockPos center = structure.getStructureCenter();
+        if (center != null) {
+            level.getChunkAt(center);
+            Vec3 spawnOffset = puzzle.spawnData().playerOffset();
+            BlockPos offsetPos = center.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
+            Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
+            sendToDimension(player, level, targetVec);
+        }
     }
 
-    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation spell) {
-        Structure structure = getSpellStructure(level, spell).value();
+    public static boolean spawnArena(ServerLevel level, ResourceLocation structureLoc) {
+        return spawnSpellStructure(level, structureLoc, ArenaSavedData.get(level));
+    }
+
+    public static boolean spawnDungeon(ServerLevel level, ResourceLocation structureLoc) {
+        return spawnSpellStructure(level, structureLoc, PuzzleDungeonData.get(level));
+    }
+
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, StructureHolderData dimension) {
+        BlockPos origin = ORIGIN;
+        level.getChunkAt(origin);
+        return spawnSpellStructure(level, origin, structureLoc, dimension);
+    }
+
+    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation structureLoc, StructureHolderData dimension) {
+        Structure structure = getSpellStructure(level, structureLoc).value();
         ChunkGenerator generator = level.getChunkSource().getGenerator();
         StructureStart start = structure.generate(
                 level.registryAccess(),
@@ -84,8 +107,7 @@ public class DynamicDimensionFactory {
                     boundingBox.minX(), boundingBox.minY(), boundingBox.minZ(),
                     boundingBox.maxX(), boundingBox.maxY(), boundingBox.maxZ());
 
-            ArenaSavedData arenaData = ArenaSavedData.get(level);
-            arenaData.setArenaBounds(boundingBox);
+            dimension.setStructureBounds(boundingBox);
 
             ChunkPos chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.minX()), SectionPos.blockToSectionCoord(boundingBox.minZ()));
             ChunkPos chunkPos1 = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.maxX()), SectionPos.blockToSectionCoord(boundingBox.maxZ()));
@@ -113,7 +135,7 @@ public class DynamicDimensionFactory {
             return true;
         }
 
-        LOGGER.warn("[Spell Structure Spawn] Structure generation FAILED - StructureStart invalid | Spell: {}", spell);
+        LOGGER.warn("[Spell Structure Spawn] Structure generation FAILED - StructureStart invalid | Structure Location: {}", structureLoc);
         return false;
     }
 

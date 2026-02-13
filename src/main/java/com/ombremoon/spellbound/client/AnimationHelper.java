@@ -1,8 +1,6 @@
 package com.ombremoon.spellbound.client;
 
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -11,11 +9,8 @@ import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractFadeMod
 import com.zigythebird.playeranimcore.animation.layered.modifier.SpeedModifier;
 import com.zigythebird.playeranimcore.easing.EasingType;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
 
 public class AnimationHelper {
-    public static final ResourceLocation SPELL_CAST_ANIMATION = CommonClass.customLocation("spell_cast");
-    public static final ResourceLocation MOVEMENT_ANIMATION = CommonClass.customLocation("movement");
 
     public static void playAnimation(AbstractClientPlayer player, SpellAnimation animation, float animationSpeed) {
         PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
@@ -36,7 +31,7 @@ public class AnimationHelper {
     }
 
     public static void tick(AbstractClientPlayer player) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SPELL_CAST_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.SPELL_CAST_ANIMATION);
         if (spellController != null) {
             if (!spellController.isActive() && spellController.getModifierCount() > 0) {
                 spellController.removeAllModifiers();
@@ -44,7 +39,7 @@ public class AnimationHelper {
                 player.setYBodyRot(player.getYHeadRot());
                 PayloadHandler.updateRotation(player.yBodyRot);
                 var handler = SpellUtil.getSpellHandler(player);
-                SpellAnimation animation = handler.getAnimationForLayer(SPELL_CAST_ANIMATION);
+                SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.SPELL_CAST_ANIMATION);
                 if (animation != null && isAnimationPlaying(spellController, animation) && animation.stationary())
                     handler.setStationaryTicks(1);
             }

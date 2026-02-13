@@ -176,11 +176,12 @@ repositories {
 
 dependencies {
     implementation "com.zigythebird.playeranim:PlayerAnimationLibNeo:$project.pal_version"
+//    jarJar(implementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:$project.pal_version"))
 
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}"
-    implementation "curse.maven:sentinellib-1074465:7591873"
-//    implementation ("local:sentinellib:1.1.7.a")
+    implementation "curse.maven:sentinellib-1074465:7612154"
+//    implementation ("local:sentinellib:1.1.7.b")
     implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.1.3.a") {transitive = false}
     implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.1.9") {transitive = false}
 

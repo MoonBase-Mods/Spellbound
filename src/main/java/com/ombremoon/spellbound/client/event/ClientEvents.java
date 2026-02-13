@@ -1,9 +1,13 @@
 package com.ombremoon.spellbound.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
 import com.ombremoon.spellbound.client.gui.SpellSelectScreen;
+import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
+import com.ombremoon.spellbound.client.gui.guide.elements.*;
+import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
@@ -27,6 +31,8 @@ import com.ombremoon.spellbound.client.renderer.types.EmissiveSpellProjectileRen
 import com.ombremoon.spellbound.client.renderer.types.GenericLivingEntityRenderer;
 import com.ombremoon.spellbound.client.renderer.types.GenericSpellRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
+import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
@@ -41,6 +47,12 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
+import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.api.PlayerAnimationFactory;
+import com.zigythebird.playeranimcore.animation.Animation;
+import com.zigythebird.playeranimcore.animation.RawAnimation;
+import com.zigythebird.playeranimcore.enums.PlayState;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -52,7 +64,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -61,6 +75,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.util.Color;
@@ -165,6 +180,91 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) ->  level != null && pos != null && level.getBlockEntity(pos) instanceof RuneBlockEntity runeBlock ? runeBlock.getData(SBData.RUNE_COLOR.get()) : -1, SBBlocks.RUNE.get());
+    }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        registerElementRenderers();
+
+        event.enqueueWork(() -> {
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    SpellAnimation.MOVEMENT_ANIMATION,
+                    1,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> {
+                        var handler = SpellUtil.getSpellHandler(player);
+                        if (handler.inCastMode()) {
+                            ResourceLocation id = CommonClass.customLocation("idle");
+                            if (state.isMoving()) {
+                                if (player.zza < 0) {
+                                    id = CommonClass.customLocation("walk_backwards");
+                                } else if (player.isCrouching()) {
+                                    id = CommonClass.customLocation("walk_sneak");
+                                } else if (player.isSprinting()) {
+                                    id = CommonClass.customLocation("run");
+                                } else {
+                                    id = CommonClass.customLocation("walk");
+                                }
+                            } else {
+                                if (player.isCrouching()) {
+                                    id = CommonClass.customLocation("sneak");
+                                }
+                            }
+
+                            Animation animation = PlayerAnimResources.getAnimation(id);
+                            return setter.setAnimation(RawAnimation.begin().thenPlay(animation));
+                        }
+
+                        return PlayState.STOP;
+                    })
+            );
+
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    SpellAnimation.SPELL_CAST_ANIMATION,
+                    1000,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
+            );
+        });
+
+        for (SpellPath spellPath : SpellPath.values()) {
+            if (!spellPath.isSubPath()) {
+                ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
+                    SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
+                    if (spellType != null) {
+                        SpellPath spellPath1 = spellType.getPath();
+                        return spellPath == spellPath1 ? 1.0F : 0.0F;
+                    }
+
+                    return 0.0F;
+                });
+            }
+        }
+
+        ItemProperties.register(SBItems.RITUAL_TALISMAN.get(), CommonClass.customLocation("rings"), (stack, level, entity, seed) -> {
+            if (stack.is(SBItems.RITUAL_TALISMAN.get())) {
+                Integer rings = stack.get(SBData.TALISMAN_RINGS.get());
+                if (rings != null) {
+                    return rings == 3 ? 1.0F : rings == 2 ? 0.5F : 0.0F;
+                }
+            }
+
+            return 0.0F;
+        });
+    }
+
+    private static void registerElementRenderers() {
+        ElementRenderDispatcher.register(GuideEntityElement.class, new GuideEntityRenderer());
+        ElementRenderDispatcher.register(GuideImageElement.class, new GuideImageRenderer());
+        ElementRenderDispatcher.register(GuideStaticItemElement.class, new GuideStaticItemRenderer());
+        ElementRenderDispatcher.register(GuideItemListElement.class, new GuideItemListRenderer());
+        ElementRenderDispatcher.register(GuideRecipeElement.class, new GuideRecipeRenderer());
+        ElementRenderDispatcher.register(GuideSpellInfoElement.class, new GuideSpellInfoRenderer());
+        ElementRenderDispatcher.register(GuideTextElement.class, new GuideTextRenderer());
+        ElementRenderDispatcher.register(GuideTextListElement.class, new GuideTextListRenderer());
+        ElementRenderDispatcher.register(GuideItemElement.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
+        ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
+        ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
+        ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
     }
 
     @SubscribeEvent

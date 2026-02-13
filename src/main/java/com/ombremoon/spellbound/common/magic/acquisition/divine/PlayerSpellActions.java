@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic.acquisition.divine;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.events.custom.MobInteractEvent;
@@ -15,6 +16,7 @@ import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
@@ -41,7 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
-public class PlayerDivineActions implements Loggable {
+public class PlayerSpellActions implements Loggable {
     private final Map<ActionHolder, ActionProgress> progress = new LinkedHashMap<>();
     private final Map<ActionHolder, Integer> recentActions = new Object2IntOpenHashMap<>();
     private final ServerPlayer player;
@@ -52,7 +54,7 @@ public class PlayerDivineActions implements Loggable {
     private final Multimap<BlockPos, Block> shrineDecorations = ArrayListMultimap.create();
     private Entity healTarget;
 
-    public PlayerDivineActions(ServerPlayer player) {
+    public PlayerSpellActions(ServerPlayer player) {
         this.player = player;
         this.registerListeners();
     }
@@ -86,7 +88,8 @@ public class PlayerDivineActions implements Loggable {
     public void award(ActionHolder action, String key) {
         var progress = this.getOrStartProgress(action);
         boolean flag2 = progress.isDone();
-        if (this.recentActions.containsKey(action) && this.player.tickCount < this.recentActions.get(action))
+        this.refreshRecentActions();
+        if (this.recentlyPerformedAction(action))
             return;
 
         if (progress.grantProgress(key)) {
@@ -96,10 +99,24 @@ public class PlayerDivineActions implements Loggable {
                 if (!this.isPageScrap(action))
                     this.recentActions.put(action, this.player.tickCount + action.value().cooldown());
 
+                ServerLevel level = (ServerLevel) this.player.level();
+                if (PuzzleDungeonData.isDungeon(level)) {
+                    PuzzleDungeonData puzzle = PuzzleDungeonData.get(level);
+                    if (puzzle.shouldCompleteObjective(action))
+                        puzzle.completeObjective(action);
+                }
+
                 for (String s : progress.getCompletedCriteria()) {
                     this.revoke(action, s);
                 }
             }
+        }
+    }
+
+    private void refreshRecentActions() {
+        for (var entry : this.recentActions.entrySet()) {
+            if (this.player.tickCount > entry.getValue())
+                this.recentActions.remove(entry.getKey());
         }
     }
 
@@ -113,6 +130,10 @@ public class PlayerDivineActions implements Loggable {
         return flag;
     }
 
+    public boolean recentlyPerformedAction(ActionHolder action) {
+        return this.recentActions.containsKey(action) && this.player.tickCount < this.recentActions.get(action);
+    }
+
     public void resetProgress(ActionHolder action) {
         var progress = this.getOrStartProgress(action);
         this.unregisterListeners(action);
@@ -123,7 +144,7 @@ public class PlayerDivineActions implements Loggable {
         }
     }
 
-    private void registerListeners(ActionHolder action) {
+    public void registerListeners(ActionHolder action) {
         ActionProgress progress = this.getOrStartProgress(action);
         if (!progress.isDone()) {
             for (var entry : action.value().criteria().entrySet()) {
@@ -138,7 +159,7 @@ public class PlayerDivineActions implements Loggable {
         criterion.trigger().addPlayerListener(this, new ActionTrigger.Listener<>(criterion.triggerInstance(), action, key));
     }
 
-    private void unregisterListeners(ActionHolder action) {
+    public void unregisterListeners(ActionHolder action) {
         var progress = this.getOrStartProgress(action);
 
         for (var entry : action.value().criteria().entrySet()) {
@@ -170,7 +191,7 @@ public class PlayerDivineActions implements Loggable {
     public static void onDataReload(OnDatapackSyncEvent event) {
         for (Player player : event.getRelevantPlayers().toList()) {
             var handler = SpellUtil.getSpellHandler(player);
-            var actions = handler.getDivineActions();
+            var actions = handler.getSpellActions();
             actions.reload();
         }
     }
@@ -182,7 +203,7 @@ public class PlayerDivineActions implements Loggable {
         BlockState state = event.getPlacedBlock();
         BlockPos blockPos = event.getPos();
         if (accessor instanceof Level level && !level.isClientSide && entity instanceof ServerPlayer player && state.is(BlockTags.FLOWERS)) {
-            var actions = SpellUtil.getSpellHandler(player).getDivineActions();
+            var actions = SpellUtil.getSpellHandler(player).getSpellActions();
             var shrine = DivineShrineBlock.getNearestShrine(level, blockPos);
             if (shrine != null) {
                 BlockPos shrinePos = shrine.getFirst();
@@ -207,7 +228,7 @@ public class PlayerDivineActions implements Loggable {
         BlockState state = event.getState();
         BlockPos blockPos = event.getPos();
         if (accessor instanceof Level level && !level.isClientSide) {
-            var actions = SpellUtil.getSpellHandler(player).getDivineActions();
+            var actions = SpellUtil.getSpellHandler(player).getSpellActions();
             if (state.is(BlockTags.FLOWERS)) {
                 var shrine = DivineShrineBlock.getNearestShrine(level, blockPos);
                 if (shrine != null) {
@@ -230,7 +251,7 @@ public class PlayerDivineActions implements Loggable {
             return;
 
         if (event.getSource().getEntity() instanceof ServerPlayer player) {
-            PlayerDivineActions actions = SpellUtil.getSpellHandler(player).getDivineActions();
+            PlayerSpellActions actions = SpellUtil.getSpellHandler(player).getSpellActions();
             SBTriggers.PLAYER_KILL.get().trigger(player, livingEntity, source, 0);
 
             if (livingEntity.getType().is(EntityTypeTags.UNDEAD)) {

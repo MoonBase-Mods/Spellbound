@@ -172,6 +172,10 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
+    public static void updateAbilities(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new UpdateAbilitiesPayload());
+    }
+
     public static void updateGlowEffect(Player player, int entityId, boolean remove) {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateGlowEffectPayload(entityId, remove));
     }
@@ -282,6 +286,11 @@ public class PayloadHandler {
                 CreateParticlesPayload.TYPE,
                 CreateParticlesPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleCreateParticles
+        );
+        registrar.playToClient(
+                UpdateAbilitiesPayload.TYPE,
+                UpdateAbilitiesPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateAbilities
         );
         registrar.playToClient(
                 UpdateGlowEffectPayload.TYPE,

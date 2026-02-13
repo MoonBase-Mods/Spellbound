@@ -3,14 +3,10 @@ package com.ombremoon.spellbound.common.magic.acquisition.bosses;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.ombremoon.spellbound.common.init.SBBossFights;
-import com.ombremoon.spellbound.main.Constants;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
-import java.util.Map;
 import java.util.function.Function;
 
 public abstract class BossFightInstance<T extends BossFight, S extends BossFightInstance<T, S>> {
@@ -89,7 +85,7 @@ public abstract class BossFightInstance<T extends BossFight, S extends BossFight
         data.endFight();
 
         if (destroyPortal)
-            data.destroyPortal(level);
+            data.destroyDimension(level);
     }
 
     public T getBossFight() {

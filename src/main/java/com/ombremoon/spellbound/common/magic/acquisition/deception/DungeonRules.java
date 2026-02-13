@@ -8,7 +8,6 @@ import java.util.List;
 
 public class DungeonRules {
     private static List<ResourceLocation> RULES = new ArrayList<>();
-    public static ResourceLocation NO_MINING = makeRule("no_mining");
     public static ResourceLocation NO_BUILDING = makeRule("no_building");
     public static ResourceLocation NO_INTERACT = makeRule("no_interact");
     public static ResourceLocation NO_PVP = makeRule("no_pvp");
@@ -17,6 +16,11 @@ public class DungeonRules {
     public static ResourceLocation NO_FLYING = makeRule("no_flying");
     public static ResourceLocation NO_SPELL_CASTING = makeRule("no_spell_casting");
 
+    public static boolean isRule(ResourceLocation rule) {
+        return RULES.contains(rule);
+    }
+
+    //Add registration event
     private static ResourceLocation makeRule(String key) {
         ResourceLocation rule = CommonClass.customLocation(key);
         if (RULES.contains(rule))

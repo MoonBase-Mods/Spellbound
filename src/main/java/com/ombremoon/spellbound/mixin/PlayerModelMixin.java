@@ -30,9 +30,9 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
             T entity,
             float limbSwing,
             float limbSwingAmount,
-            float ageInTicks, 
-            float netHeadYaw, 
-            float headPitch, 
+            float ageInTicks,
+            float netHeadYaw,
+            float headPitch,
             CallbackInfo ci) {
         if (entity instanceof Player player) {
             PoseStack stack = new PoseStack();

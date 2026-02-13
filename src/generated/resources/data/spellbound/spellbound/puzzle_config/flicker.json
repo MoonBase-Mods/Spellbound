@@ -1,0 +1,78 @@
+{
+  "puzzles": [
+    {
+      "alternative_configs": [
+        "spellbound:flicker_1",
+        "spellbound:flicker_2",
+        "spellbound:flicker_3"
+      ],
+      "objectives": [
+        {
+          "criteria": {
+            "interact_with_altar": {
+              "conditions": {
+                "block": {
+                  "blocks": "minecraft:chest"
+                }
+              },
+              "trigger": "spellbound:interact_with_block"
+            }
+          },
+          "requirements": [
+            [
+              "interact_with_altar"
+            ]
+          ]
+        }
+      ],
+      "puzzle_id": "spellbound:flicker",
+      "reset_conditions": [
+        {
+          "criteria": {
+            "hurt_by_magic": {
+              "conditions": {
+                "damage": {
+                  "type": {
+                    "tags": [
+                      {
+                        "expected": true,
+                        "id": "spellbound:spell_damage"
+                      }
+                    ]
+                  }
+                }
+              },
+              "trigger": "spellbound:player_hurt"
+            }
+          },
+          "requirements": [
+            [
+              "hurt_by_magic"
+            ]
+          ]
+        }
+      ],
+      "rules": [
+        "spellbound:no_building",
+        "spellbound:no_flying",
+        "spellbound:no_pve",
+        "spellbound:no_pvp",
+        "spellbound:no_pve_or_pvp",
+        "spellbound:no_spell_casting"
+      ],
+      "spawn_data": {
+        "player_offset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "player_rotation": 0.0,
+        "spell_offset": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionRewards;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.CuredZombieVillagerTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.HealActionTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.KillActionTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.PlayerKillEntityTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
@@ -87,7 +87,7 @@ public interface SBDivineActions {
         register(context,
                 KILL_VILLAGER,
                 SpellAction.Builder.action()
-                        .addCriterion("kill_villager", KillActionTrigger.Instance.playerKilledVillager(
+                        .addCriterion("kill_villager", PlayerKillEntityTrigger.Instance.playerKilledVillager(
                                 EntityPredicate.Builder.entity(),
                                 MinMaxBounds.Ints.exactly(5)))
                         .rewards(ActionRewards.Builder.spell(SBSpells.STORM_RIFT/*SIPHON*/.get()).addExperience(20)));

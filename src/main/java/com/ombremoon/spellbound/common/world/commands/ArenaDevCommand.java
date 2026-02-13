@@ -3,7 +3,6 @@ package com.ombremoon.spellbound.common.world.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.common.world.block.SummonStoneBlock;
 import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
@@ -78,7 +77,7 @@ public class ArenaDevCommand {
 
         if (ArenaSavedData.isArena(level)) {
             ArenaSavedData arenaData = ArenaSavedData.get(level);
-            arenaData.destroyPortal(level);
+            arenaData.destroyDimension(level);
             source.sendSuccess(() -> Component.literal("Arena destroyed and portal removed"), true);
             return 1;
         }
@@ -99,7 +98,7 @@ public class ArenaDevCommand {
                             ServerLevel arena = level.getServer().getLevel(levelKey);
                             if (arena != null) {
                                 ArenaSavedData arenaData = ArenaSavedData.get(arena);
-                                arenaData.destroyPortal(arena);
+                                arenaData.destroyDimension(arena);
                                 source.sendSuccess(() -> Component.literal("Found and destroyed arena " + arenaId), true);
                                 return 1;
                             }
@@ -180,7 +179,7 @@ public class ArenaDevCommand {
         }
 
         ArenaSavedData data = ArenaSavedData.get(level);
-        BoundingBox bounds = data.getArenaBounds();
+        BoundingBox bounds = data.getStructureBounds();
 
         if (bounds == null) {
             PayloadHandler.sendArenaDebugDisable(player);

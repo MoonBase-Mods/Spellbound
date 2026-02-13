@@ -1,10 +1,17 @@
 package com.ombremoon.spellbound.common.world.block;
 
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
+import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
+import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.mixin.ConnectionAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -39,15 +46,25 @@ public class DeceptionTestBlock extends Block {
     }
 
     private void sendToDungeon(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player) {
-        /*MinecraftServer server = level.getServer();
-        *//*for (var serverPlayer : server.getPlayerList().getPlayers()) {
+        MinecraftServer server = level.getServer();
+        ServerLevel overworld = server.getLevel(Level.OVERWORLD);
+        PuzzleDungeonData data = PuzzleDungeonData.get(overworld);
+        int dungeonId = data.incrementId();
+        for (var serverPlayer : server.getPlayerList().getPlayers()) {
             ((ConnectionAccessor) serverPlayer.connection.getConnection()).invokeFlush();
-        }*//*
-        ResourceKey<Level> levelKey = data.getOrCreateKey(server, arenaId);
-        ServerLevel arena = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
-        if (arena != null && this.spell != null) {
-            ArenaSavedData arenaData = ArenaSavedData.get(arena);
-            arenaData.initializeArena(arena, player, arenaId, frontTopLeft, level.dimension(), this.spell, this.getBossFight());
-        }*/
+        }
+        ResourceKey<Level> levelKey = data.getOrCreateKey(server, dungeonId);
+        ServerLevel dungeon = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
+//        SpellType<?> spell = stack.get(SBData.DUNGEON_SPELL);
+        SpellType<?> spell = SBSpells.FLICKER.get();
+        if (dungeon != null/* && spell != null*/) {
+            PuzzleDungeonData dungeonData = PuzzleDungeonData.get(dungeon);
+            ResourceKey<PuzzleConfiguration> configKey = ResourceKey.create(Keys.PUZZLE_CONFIG, spell.location());
+            PuzzleConfiguration config = level.registryAccess().registryOrThrow(Keys.PUZZLE_CONFIG).getOrThrow(configKey);
+            dungeonData.initializeDungeon(player, configKey, config);
+        }
+
+        if (!player.getAbilities().instabuild)
+            stack.shrink(1);
     }
 }

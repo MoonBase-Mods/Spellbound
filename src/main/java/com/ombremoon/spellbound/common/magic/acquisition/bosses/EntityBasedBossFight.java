@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.magic.acquisition.bosses;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +10,6 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataCom
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
-import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.main.Keys;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -24,9 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -112,7 +107,7 @@ public class EntityBasedBossFight extends BossFight {
                         spawnPos.above(2),
                         SpellTomeItem.createWithSpell(bossFight.spell),
                         DataComponentStorage.optionalOf(
-                                new TypedDataComponent<>(SBData.BOSS_PICKUP.get(), true)
+                                new TypedDataComponent<>(SBData.SPECIAL_PICKUP.get(), true)
                         ));
             }
         }

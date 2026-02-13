@@ -4,11 +4,11 @@ import com.mojang.serialization.Codec;
 import net.minecraft.advancements.CriterionTriggerInstance;
 
 public interface ActionTrigger<T extends CriterionTriggerInstance> {
-    void addPlayerListener(PlayerDivineActions playerActions, Listener<T> listener);
+    void addPlayerListener(PlayerSpellActions playerActions, Listener<T> listener);
 
-    void removePlayerListener(PlayerDivineActions playerActions, Listener<T> listener);
+    void removePlayerListener(PlayerSpellActions playerActions, Listener<T> listener);
 
-    void removePlayerListener(PlayerDivineActions playerActions);
+    void removePlayerListener(PlayerSpellActions playerActions);
 
     Codec<T> codec();
 
@@ -17,7 +17,7 @@ public interface ActionTrigger<T extends CriterionTriggerInstance> {
     }
 
     record Listener<T extends CriterionTriggerInstance>(T trigger, ActionHolder action, String criterion) {
-        public void run(PlayerDivineActions playerActions) {
+        public void run(PlayerSpellActions playerActions) {
             playerActions.award(this.action, this.criterion);
         }
     }

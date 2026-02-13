@@ -63,7 +63,7 @@ public class SummonPortalBlockEntity extends BlockEntity {
                     if (arenaData.getCurrentBossFight() != null && arenaData.spawnedArena()) {
                         arenaData.spawnInArena(arena, entity);
                     } else if (arenaData.getCurrentBossFight() == null) {
-                        arenaData.destroyPortal(arena);
+                        arenaData.destroyDimension(arena);
                     }
                 }
             }

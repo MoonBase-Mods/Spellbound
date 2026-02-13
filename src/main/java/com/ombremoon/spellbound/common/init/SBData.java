@@ -86,19 +86,13 @@ public class SBData {
             "interact_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
+            "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
+    );
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
             "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
                     .serialize(ResourceLocation.CODEC.listOf())
-                    .sync(StreamCodec.<RegistryFriendlyByteBuf, List<ResourceLocation>>of((buf, list) -> {
-                        buf.writeInt(list.size());
-                        for (ResourceLocation res : list) buf.writeUtf(res.toString());
-                    }, (buf) -> {
-                        List<ResourceLocation> list = new ArrayList<>();
-                        int length = buf.readInt();
-                        for (int i = 0; i < length; i++) list.add(ResourceLocation.parse(buf.readUtf()));
-
-                        return list;
-                    }))
+                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .copyOnDeath()
                     .build()
     );
@@ -112,8 +106,10 @@ public class SBData {
             builder -> builder.persistent(Codec.INT.listOf()).networkSynchronized(ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<Integer>> TALISMAN_RINGS = COMPONENT_TYPES.registerComponentType("talisman_rings",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-    public static final Supplier<DataComponentType<Boolean>> BOSS_PICKUP = COMPONENT_TYPES.registerComponentType("boss_pickup",
+    public static final Supplier<DataComponentType<Boolean>> SPECIAL_PICKUP = COMPONENT_TYPES.registerComponentType("special_pickup",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final Supplier<DataComponentType<SpellType<?>>> DUNGEON_SPELL = COMPONENT_TYPES.registerComponentType("dungeon_spell",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

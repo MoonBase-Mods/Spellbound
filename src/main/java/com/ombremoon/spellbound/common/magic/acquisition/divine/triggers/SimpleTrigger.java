@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -20,15 +20,15 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class SimpleTrigger<T extends SimpleTrigger.Instance> implements ActionTrigger<T> {
-    private final Map<PlayerDivineActions, Set<ActionTrigger.Listener<T>>> players = Maps.newIdentityHashMap();
+    private final Map<PlayerSpellActions, Set<ActionTrigger.Listener<T>>> players = Maps.newIdentityHashMap();
 
     @Override
-    public void addPlayerListener(PlayerDivineActions playerActions, Listener<T> listener) {
-        this.players.computeIfAbsent(playerActions, playerDivineActions -> Sets.newHashSet()).add(listener);
+    public void addPlayerListener(PlayerSpellActions playerActions, Listener<T> listener) {
+        this.players.computeIfAbsent(playerActions, playerSpellActions -> Sets.newHashSet()).add(listener);
     }
 
     @Override
-    public void removePlayerListener(PlayerDivineActions playerActions, Listener<T> listener) {
+    public void removePlayerListener(PlayerSpellActions playerActions, Listener<T> listener) {
         var set = this.players.get(playerActions);
         if (set != null) {
             set.remove(listener);
@@ -38,13 +38,13 @@ public abstract class SimpleTrigger<T extends SimpleTrigger.Instance> implements
     }
 
     @Override
-    public void removePlayerListener(PlayerDivineActions playerActions) {
+    public void removePlayerListener(PlayerSpellActions playerActions) {
         this.players.remove(playerActions);
     }
 
     protected void trigger(ServerPlayer player, Predicate<T> testTrigger) {
         var handler = SpellUtil.getSpellHandler(player);
-        PlayerDivineActions divineActions = handler.getDivineActions();
+        PlayerSpellActions divineActions = handler.getSpellActions();
         var set = this.players.get(divineActions);
         if (set != null && !set.isEmpty()) {
             LootContext context = EntityPredicate.createContext(player, player);

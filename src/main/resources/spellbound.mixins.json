@@ -11,7 +11,9 @@
     "HurtByTargetGoalMixin",
     "LivingEntityMixin",
     "MobMixin",
+    "PlayerMixin",
     "ServerboundSetStructureBlockPacketMixin",
+    "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "StructureBlockEntityMixin",
@@ -20,11 +22,13 @@
   "client": [
     "EffectRenderingInventoryScreenMixin",
     "GameRendererMixin",
+    "HumanoidModelMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "MinecraftMixin",
     "ParticleEngineMixin",
     "PlayerModelMixin",
+    "PlayerRendererMixin",
     "StructureBlockRendererMixin"
   ],
   "injectors": {

@@ -25,6 +25,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
         return createSimpleSpellBuilder(FlickerSpell.class)
                 .duration(5)
                 .manaCost(27)
+                .castTime(5)
                 .castAnimation(context -> {
                     boolean flag = !context.hasSkill(SBSkills.SWIFT_SHADOWS);
                     String castPrefix = flag ? "" : "walking_";

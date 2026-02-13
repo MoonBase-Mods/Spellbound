@@ -1,29 +1,44 @@
 package com.ombremoon.spellbound.common.magic.acquisition.deception;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionCriterion;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.StaticLevelSpawnData;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public record PuzzleDefinition(
+        ResourceLocation puzzleId,
         List<SpellAction> objectives,
         List<ResourceLocation> rules,
-        List<ActionCriterion<?>> resetConditions,
-        Optional<List<ResourceLocation>> alternativeConfigs
+        List<SpellAction> resetConditions,
+        Optional<List<ResourceLocation>> alternativeConfigs,
+        StaticLevelSpawnData spawnData
 ) {
-    public static final Codec<PuzzleDefinition> CODEC = RecordCodecBuilder.create(
+    public static final Codec<PuzzleDefinition> CODEC = RecordCodecBuilder.<PuzzleDefinition>create(
             instance -> instance.group(
+                    ResourceLocation.CODEC.fieldOf("puzzle_id").forGetter(PuzzleDefinition::puzzleId),
                     SpellAction.CODEC.listOf().fieldOf("objectives").forGetter(PuzzleDefinition::objectives),
                     ResourceLocation.CODEC.listOf().fieldOf("rules").forGetter(PuzzleDefinition::rules),
-                    ActionCriterion.CODEC.listOf().fieldOf("reset_conditions").forGetter(PuzzleDefinition::resetConditions),
-                    ResourceLocation.CODEC.listOf().optionalFieldOf("alternative_configs").forGetter(PuzzleDefinition::alternativeConfigs)
+                    SpellAction.CODEC.listOf().fieldOf("reset_conditions").forGetter(PuzzleDefinition::resetConditions),
+                    ResourceLocation.CODEC.listOf().optionalFieldOf("alternative_configs").forGetter(PuzzleDefinition::alternativeConfigs),
+                    StaticLevelSpawnData.CODEC.fieldOf("spawn_data").forGetter(PuzzleDefinition::spawnData)
             ).apply(instance, PuzzleDefinition::new)
-    );
+    ).validate(PuzzleDefinition::validate);
+
+    private static DataResult<PuzzleDefinition> validate(PuzzleDefinition properties) {
+        for (ResourceLocation rule : properties.rules()) {
+            if (!DungeonRules.isRule(rule))
+                return DataResult.error(() -> "Invalid rule: " + rule);
+        }
+
+        return DataResult.success(properties);
+    }
 
     public List<SpellAction> getObjectives() {
         return objectives;
@@ -33,14 +48,32 @@ public record PuzzleDefinition(
         return rules.contains(rule);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else {
+            return obj instanceof PuzzleDefinition definition && this.puzzleId.equals(definition.puzzleId);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.puzzleId.hashCode();
+    }
+
     public static class Builder {
+        private ResourceLocation puzzleId;
         private final List<SpellAction> objectives = new ArrayList<>();
         private final List<ResourceLocation> rules = new ArrayList<>();
-        private final List<ActionCriterion<?>> resetConditions = new ArrayList<>();
+        private final List<SpellAction> resetConditions = new ArrayList<>();
         private List<ResourceLocation> alternativeConfigs = new ArrayList<>();
+        private StaticLevelSpawnData spawnData = new StaticLevelSpawnData(Vec3.ZERO, 0f, Vec3.ZERO);
 
-        public static Builder configuration() {
-            return new Builder();
+        public static Builder define(ResourceLocation puzzleId) {
+            Builder builder = new Builder();
+            builder.puzzleId = puzzleId;
+            return builder;
         }
 
         public Builder withObjective(SpellAction.Builder action) {
@@ -53,8 +86,8 @@ public record PuzzleDefinition(
             return this;
         }
 
-        public Builder resetOn(ActionCriterion<?> criterion) {
-            this.resetConditions.add(criterion);
+        public Builder resetOn(SpellAction.Builder action) {
+            this.resetConditions.add(action.build());
             return this;
         }
 
@@ -63,8 +96,13 @@ public record PuzzleDefinition(
             return this;
         }
 
+        public Builder spawnData(StaticLevelSpawnData.Builder spawnData) {
+            this.spawnData = spawnData.build();
+            return this;
+        }
+
         public PuzzleDefinition build() {
-            return new PuzzleDefinition(objectives, rules, resetConditions, Optional.of(alternativeConfigs));
+            return new PuzzleDefinition(puzzleId, objectives, rules, resetConditions, Optional.of(alternativeConfigs), this.spawnData);
         }
     }
 }

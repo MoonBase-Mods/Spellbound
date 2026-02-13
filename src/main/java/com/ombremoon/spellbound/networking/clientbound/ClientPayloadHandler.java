@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
-import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -23,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Set;
@@ -176,6 +176,14 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> {
             var level = context.player().level();
             level.addParticle(payload.particle(), payload.x(), payload.y(), payload.z(), payload.xSpeed(), payload.ySpeed(), payload.zSpeed());
+        });
+    }
+
+    public static void handleUpdateAbilities(UpdateAbilitiesPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            player.getAbilities().mayfly = false;
+            player.setData(SBData.NO_FLY_DUNGEON, true);
         });
     }
 

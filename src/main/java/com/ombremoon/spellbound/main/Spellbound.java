@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimResources;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationFactory;
@@ -74,7 +75,6 @@ public class Spellbound {
             event.dataPackRegistry(Keys.PUZZLE_CONFIG, PuzzleConfiguration.CODEC, PuzzleConfiguration.CODEC);
         });
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::registerRegistry);
         CommonClass.init(modEventBus);
 
@@ -83,70 +83,6 @@ public class Spellbound {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
 
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event) {
-        registerElementRenderers();
-
-        event.enqueueWork(() -> {
-            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    AnimationHelper.MOVEMENT_ANIMATION,
-                    1,
-                    player -> new PlayerAnimationController(player, (controller, state, setter) -> {
-                        ResourceLocation id = CommonClass.customLocation("idle");
-                        if (state.isMoving()) {
-                            if (player.zza < 0) {
-                                id = CommonClass.customLocation("walk_backwards");
-                            } else if (player.isCrouching()) {
-                                id = CommonClass.customLocation("walk_sneak");
-                            } else if (player.isSprinting()) {
-                                id = CommonClass.customLocation("run");
-                            } else {
-                                id = CommonClass.customLocation("walk");
-                            }
-                        } else {
-                            if (player.isCrouching()) {
-                                id = CommonClass.customLocation("sneak");
-                            }
-                        }
-
-                        Animation animation = PlayerAnimResources.getAnimation(id);
-//                        controller.addModifierBefore(AbstractFadeModifier.standardFadeIn(2, EasingType.EASE_IN_OUT_SINE));
-                        return setter.setAnimation(RawAnimation.begin().thenPlay(animation));
-                    })
-            );
-
-            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    AnimationHelper.SPELL_CAST_ANIMATION,
-                    1000,
-                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
-            );
-        });
-
-        for (SpellPath spellPath : SpellPath.values()) {
-            if (!spellPath.isSubPath()) {
-                ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
-                    SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
-                    if (spellType != null) {
-                        SpellPath spellPath1 = spellType.getPath();
-                        return spellPath == spellPath1 ? 1.0F : 0.0F;
-                    }
-
-                    return 0.0F;
-                });
-            }
-        }
-
-        ItemProperties.register(SBItems.RITUAL_TALISMAN.get(), CommonClass.customLocation("rings"), (stack, level, entity, seed) -> {
-            if (stack.is(SBItems.RITUAL_TALISMAN.get())) {
-                Integer rings = stack.get(SBData.TALISMAN_RINGS.get());
-                if (rings != null) {
-                    return rings == 3 ? 1.0F : rings == 2 ? 0.5F : 0.0F;
-                }
-            }
-
-            return 0.0F;
-        });
     }
 
     private void registerRegistry(NewRegistryEvent event) {
@@ -158,21 +94,5 @@ public class Spellbound {
         event.register(SBRitualEffects.REGISTRY);
         event.register(SBPageElements.REGISTRY);
         event.register(SBBossFights.REGISTRY);
-    }
-
-    private void registerElementRenderers() {
-        ElementRenderDispatcher.register(GuideEntityElement.class, new GuideEntityRenderer());
-        ElementRenderDispatcher.register(GuideImageElement.class, new GuideImageRenderer());
-        ElementRenderDispatcher.register(GuideStaticItemElement.class, new GuideStaticItemRenderer());
-        ElementRenderDispatcher.register(GuideItemListElement.class, new GuideItemListRenderer());
-        ElementRenderDispatcher.register(GuideRecipeElement.class, new GuideRecipeRenderer());
-        ElementRenderDispatcher.register(GuideSpellInfoElement.class, new GuideSpellInfoRenderer());
-        ElementRenderDispatcher.register(GuideTextElement.class, new GuideTextRenderer());
-        ElementRenderDispatcher.register(GuideTextListElement.class, new GuideTextListRenderer());
-        ElementRenderDispatcher.register(GuideItemElement.class, new GuideItemRenderer());
-        ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
-        ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
-        ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
-        ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
     }
 }

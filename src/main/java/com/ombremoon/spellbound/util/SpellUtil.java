@@ -3,6 +3,8 @@ package com.ombremoon.spellbound.util;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -19,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -90,9 +93,13 @@ public class SpellUtil {
 
     public static boolean canCastSpell(LivingEntity livingEntity, AbstractSpell spell) {
         var handler = getSpellHandler(livingEntity);
+        Level level = livingEntity.level();
         if (!handler.inCastMode()) return false;
         if (livingEntity instanceof Player player && player.getAbilities().instabuild) return true;
         if (EffectManager.isSilenced(livingEntity)) return false;
+
+        if (!level.isClientSide && PuzzleDungeonData.hasRule((ServerLevel) level, DungeonRules.NO_SPELL_CASTING))
+            return false;
 
         return handler.consumeMana(spell.getManaCost(livingEntity), false);
     }

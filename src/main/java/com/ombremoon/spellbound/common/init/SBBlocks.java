@@ -257,7 +257,7 @@ public class SBBlocks {
                         .randomTicks()));
     public static final Supplier<Block> WILD_MUSHROOM_SUMMON_STONE = registerSummonStone("wild_mushroom", BossFights.WILD_MUSHROOM);
 
-    public static final Supplier<Block> DECEPTION_TEST_BLOCK = registerBlock("deception_test_block", () -> new DeceptionTestBlock(blockProperties()));
+    public static final Supplier<Block> DECEPTION_TEST_BLOCK = registerBlock("deception_test_block", () -> new DeceptionTestBlock(blockProperties().noLootTable()));
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return true;

@@ -4,12 +4,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
@@ -31,6 +33,7 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,6 +55,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
 import java.util.List;
@@ -95,6 +99,7 @@ public class NeoForgeEvents {
 
             if (livingEntity instanceof Player player) {
                 if (!level.isClientSide) {
+                    ServerLevel serverLevel = (ServerLevel) level;
                     handler.sync();
                     handler.giveBook();
 
@@ -111,6 +116,12 @@ public class NeoForgeEvents {
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         PayloadHandler.sendGuideBooks(serverPlayer);
+
+                        if (!PuzzleDungeonData.isDungeon(level) && serverPlayer.getData(SBData.NO_FLY_DUNGEON)) {
+                            serverPlayer.setData(SBData.NO_FLY_DUNGEON, false);
+                            serverPlayer.gameMode.getGameModeForPlayer().updatePlayerAbilities(serverPlayer.getAbilities());
+                            serverPlayer.connection.send(new ClientboundPlayerAbilitiesPacket(serverPlayer.getAbilities()));
+                        }
                     }
                 }
             }
@@ -130,8 +141,13 @@ public class NeoForgeEvents {
             if (ArenaSavedData.isArena(serverLevel)) {
                 ArenaSavedData data = ArenaSavedData.get(serverLevel);
                 if (handler.isArenaOwner(data.getCurrentId())) {
-                    data.destroyPortal(serverLevel);
+                    data.destroyDimension(serverLevel);
                 }
+            }
+
+            if (PuzzleDungeonData.isDungeon(serverLevel)) {
+                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                puzzle.destroyDimension(serverLevel);
             }
         }
     }
@@ -148,8 +164,13 @@ public class NeoForgeEvents {
             if (ArenaSavedData.isArena(serverLevel)) {
                 ArenaSavedData data = ArenaSavedData.get(serverLevel);
                 if (handler.isArenaOwner(data.getCurrentId())) {
-                    data.destroyPortal(serverLevel);
+                    data.destroyDimension(serverLevel);
                 }
+            }
+
+            if (PuzzleDungeonData.isDungeon(serverLevel)) {
+                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                puzzle.destroyDimension(serverLevel);
             }
         }
     }
@@ -243,7 +264,18 @@ public class NeoForgeEvents {
                 } else if (bossFight != null && arenaData.hasFightStarted()) {
                     arenaData.handleBossFightLogic(serverLevel);
                 } else if (arenaData.hasFightStarted() && ArenaSavedData.isArenaEmpty(serverLevel)) {
-                    arenaData.destroyPortal(serverLevel);
+                    arenaData.destroyDimension(serverLevel);
+                }
+            }
+
+            if (PuzzleDungeonData.isDungeon(serverLevel)) {
+                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                if (!puzzle.spawnedDungeon()) {
+                    puzzle.spawnDungeon(serverLevel);
+                } else if (puzzle.hasPuzzleStarted() && !puzzle.isPuzzleCompleted()) {
+                    puzzle.handleDungeonLogic(serverLevel);
+                } else if (puzzle.hasPuzzleStarted() && PuzzleDungeonData.isDungeonEmpty(serverLevel)) {
+                    puzzle.destroyDimension(serverLevel);
                 }
             }
         }
@@ -255,14 +287,17 @@ public class NeoForgeEvents {
         Level level = player.level();
         ItemStack itemStack = event.getOriginalStack();
         ItemStack newStack = event.getCurrentStack();
-        Boolean bool = itemStack.get(SBData.BOSS_PICKUP);
-        if (!level.isClientSide && ArenaSavedData.isArena(level) && bool != null && bool) {
+        Boolean bool = itemStack.get(SBData.SPECIAL_PICKUP);
+        if (!level.isClientSide && bool != null && bool) {
             ServerLevel serverLevel = (ServerLevel) level;
-            newStack.set(SBData.BOSS_PICKUP, false);
-            itemStack.set(SBData.BOSS_PICKUP, false);
-
-            ArenaSavedData data = ArenaSavedData.get(serverLevel);
-            data.destroyPortal(serverLevel);
+            newStack.set(SBData.SPECIAL_PICKUP, false);
+            if (ArenaSavedData.isArena(level)) {
+                ArenaSavedData arena = ArenaSavedData.get(serverLevel);
+                arena.destroyDimension(serverLevel);
+            } else if (PuzzleDungeonData.isDungeon(level)) {
+                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                puzzle.destroyDimension(serverLevel);
+            }
         }
     }
 
@@ -378,6 +413,7 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity livingEntity = event.getEntity();
+        Level level = livingEntity.level();
         if (SpellUtil.isSummon(livingEntity)) {
             Entity owner = SpellUtil.getOwner(livingEntity);
             DamageSource source = event.getSource();
@@ -389,6 +425,17 @@ public class NeoForgeEvents {
             AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobIncomingHurt(spell.getContext(), event);
+            }
+        }
+
+        if (!level.isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE_OR_PVP)) {
+                event.setCanceled(true);
+            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVP) && livingEntity instanceof Player) {
+                event.setCanceled(true);
+            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE)) {
+                event.setCanceled(true);
             }
         }
     }
