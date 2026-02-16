@@ -34,7 +34,6 @@ public final class BuildingBlock implements Predicate<BlockState> {
     public static final BuildingBlock EMPTY = of(BlockTags.AIR);
     public static final BuildingBlock ANY = of(SBTags.Blocks.RITUAL_COMPATIBLE);
     private final Value[] values;
-    private final boolean hasProperties;
     @Nullable
     private Block[] blockStates;
     public static final Codec<BuildingBlock> CODEC = codec(true);
@@ -45,19 +44,10 @@ public final class BuildingBlock implements Predicate<BlockState> {
 
     private BuildingBlock(Stream<? extends Value> values) {
         this.values = values.toArray(Value[]::new);
-        this.hasProperties = computeHasProperties(this.values);
     }
 
     private BuildingBlock(Value[] values) {
         this.values = values;
-        this.hasProperties = computeHasProperties(values);
-    }
-
-    private static boolean computeHasProperties(Value[] values) {
-        for (Value value : values) {
-            if (value.getProperties().isPresent()) return true;
-        }
-        return false;
     }
 
     public Block[] getBlocks() {
@@ -76,22 +66,8 @@ public final class BuildingBlock implements Predicate<BlockState> {
         } else if (this.isEmpty()) {
             return block.isAir();
         } else {
-            Block testBlock = block.getBlock();
-            boolean blockMatches = false;
-            for (Block b : this.getBlocks()) {
-                if (b == testBlock) {
-                    blockMatches = true;
-                    break;
-                }
-            }
-            if (!blockMatches) return false;
-            if (!this.hasProperties) return true;
-
             for (Value value : this.values) {
-                if (value.getBlocks().contains(testBlock)) {
-                    if (value.getProperties().isEmpty()) return true;
-                    if (value.getProperties().get().matches(block)) return true;
-                }
+                if (value.matches(block)) return true;
             }
         }
 
@@ -204,6 +180,12 @@ public final class BuildingBlock implements Predicate<BlockState> {
         }
 
         @Override
+        public boolean matches(BlockState state) {
+            if (!state.is(this.block)) return false;
+            return this.state.isEmpty() || this.state.get().matches(state);
+        }
+
+        @Override
         public Set<Block> getBlocks() {
             return Collections.singleton(this.block);
         }
@@ -238,6 +220,15 @@ public final class BuildingBlock implements Predicate<BlockState> {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof TagValue tagValue && tagValue.tag.location().equals(this.tag.location());
+        }
+
+        @Override
+        public boolean matches(BlockState blockState) {
+            boolean tagMatch = (this.tag == SBTags.Blocks.RITUAL_COMPATIBLE)
+                    ? !blockState.is(this.tag)
+                    : blockState.is(this.tag);
+            if (!tagMatch) return false;
+            return this.state.isEmpty() || this.state.get().matches(blockState);
         }
 
         @Override
@@ -285,6 +276,8 @@ public final class BuildingBlock implements Predicate<BlockState> {
                     }
                 }
         );
+
+        boolean matches(BlockState state);
 
         Set<Block> getBlocks();
 
