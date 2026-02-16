@@ -73,16 +73,20 @@ public class TransfigurationRitual {
     }
 
     public boolean matches(List<ItemStack> from, NonNullList<Ingredient> to) {
-        Iterator<Ingredient> iter = NonNullList.copyOf(to).iterator();
+        List<Ingredient> remaining = new ArrayList<>(to);
         for (ItemStack itemStack : from) {
+            boolean found = false;
+            Iterator<Ingredient> iter = remaining.iterator();
             while (iter.hasNext()) {
                 if (iter.next().test(itemStack)) {
                     iter.remove();
+                    found = true;
                     break;
                 }
             }
+            if (!found) return false;
         }
-        return !iter.hasNext();
+        return remaining.isEmpty();
     }
 
     private NonNullList<Ingredient> convertValueToIngredient(NonNullList<Value> values) {
