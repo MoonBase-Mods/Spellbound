@@ -34,6 +34,7 @@ public final class BuildingBlock implements Predicate<BlockState> {
     public static final BuildingBlock EMPTY = of(BlockTags.AIR);
     public static final BuildingBlock ANY = of(SBTags.Blocks.RITUAL_COMPATIBLE);
     private final Value[] values;
+    private final boolean hasProperties;
     @Nullable
     private Block[] blockStates;
     public static final Codec<BuildingBlock> CODEC = codec(true);
@@ -44,10 +45,19 @@ public final class BuildingBlock implements Predicate<BlockState> {
 
     private BuildingBlock(Stream<? extends Value> values) {
         this.values = values.toArray(Value[]::new);
+        this.hasProperties = computeHasProperties(this.values);
     }
 
     private BuildingBlock(Value[] values) {
         this.values = values;
+        this.hasProperties = computeHasProperties(values);
+    }
+
+    private static boolean computeHasProperties(Value[] values) {
+        for (Value value : values) {
+            if (value.getProperties().isPresent()) return true;
+        }
+        return false;
     }
 
     public Block[] getBlocks() {
@@ -66,18 +76,21 @@ public final class BuildingBlock implements Predicate<BlockState> {
         } else if (this.isEmpty()) {
             return block.isAir();
         } else {
-            var potentialValues = Arrays.stream(this.getValues()).filter(value -> value.getBlocks().contains(block.getBlock())).toList();
-            if (potentialValues.isEmpty()) {
-                return false;
-            } else {
-                for (Value value : potentialValues) {
-                    if (value.getProperties().isEmpty()) {
-                        return true;
-                    } else {
-                        if (value.getProperties().get().matches(block)) {
-                            return true;
-                        }
-                    }
+            Block testBlock = block.getBlock();
+            boolean blockMatches = false;
+            for (Block b : this.getBlocks()) {
+                if (b == testBlock) {
+                    blockMatches = true;
+                    break;
+                }
+            }
+            if (!blockMatches) return false;
+            if (!this.hasProperties) return true;
+
+            for (Value value : this.values) {
+                if (value.getBlocks().contains(testBlock)) {
+                    if (value.getProperties().isEmpty()) return true;
+                    if (value.getProperties().get().matches(block)) return true;
                 }
             }
         }
