@@ -149,6 +149,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
             this.resetDuration = resetDuration;
             return this;
         }
+
         public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;

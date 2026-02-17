@@ -57,6 +57,7 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -388,11 +389,12 @@ public class NeoForgeEvents {
             }
 
             if (spell instanceof SummonSpell summonSpell) {
-                summonSpell.onMobRemoved(livingEntity, spell.getContext(), Entity.RemovalReason.KILLED);
+                summonSpell.onMobRemoved(livingEntity, spell.getContext(), event.getSource(), Entity.RemovalReason.KILLED);
                 summonSpell.removeSummon(livingEntity);
             }
         }
 
+        SpellUtil.getSpellHandler(livingEntity).getListener().fireEvent(SpellEventListener.Events.DEATH, new DeathEvent(livingEntity, event));
         if (event.getSource().getEntity() instanceof LivingEntity sourceEntity)
             SpellUtil.getSpellHandler(sourceEntity).getListener().fireEvent(SpellEventListener.Events.ENTITY_KILL, new DeathEvent(sourceEntity, event));
     }
@@ -445,6 +447,15 @@ public class NeoForgeEvents {
                 event.setCancellationResult(InteractionResult.SUCCESS_NO_ITEM_USED);
                 event.setCanceled(true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockDrops(BlockDropsEvent event) {
+        Entity entity = event.getBreaker();
+        if (entity instanceof Player player && !player.level().isClientSide) {
+            var handler = SpellUtil.getSpellHandler(player);
+            handler.getListener().fireEvent(SpellEventListener.Events.BLOCK_DROPS, new BlockItemDropsEvent(player, event));
         }
     }
 

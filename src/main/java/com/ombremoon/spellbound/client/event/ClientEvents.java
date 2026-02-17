@@ -19,7 +19,7 @@ import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.projectile.VFXProjectileRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
@@ -103,19 +103,20 @@ public class ClientEvents {
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SBEntities.TEST_DUMMY.get(), GenericLivingEntityRenderer::new);
 
-        event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
-        event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.FIREBALL.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
-        event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
         event.registerEntityRenderer(SBEntities.ICE_BOLT.get(), EmissiveSpellProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
         event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
         event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
-        event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
 
         event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
@@ -124,7 +125,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
         event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
 
-        event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
         event.registerEntityRenderer(SBEntities.CAT.get(), CatRenderer::new);

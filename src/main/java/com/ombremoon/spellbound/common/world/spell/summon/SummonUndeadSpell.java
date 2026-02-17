@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -194,7 +195,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     }
 
     @Override
-    public void onMobRemoved(LivingEntity entity, SpellContext context, Entity.RemovalReason reason) {
+    public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED) {
             //Spawn pile of bones
         }

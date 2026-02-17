@@ -1,15 +1,18 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
+import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -28,12 +31,23 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class MushroomProjectile extends VFXSpellProjectile<WildMushroomSpell> {
     private boolean primaryProjectile;
 
     public MushroomProjectile(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
+        return EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                .setRotation(180, 180, 0)
+                .setOffset(0, -0.5, 0);
+    }
+
+    @Override
+    protected ResourceLocation getEffectLocation() {
+        return CommonClass.customLocation("toxic_projectile");
     }
 
     public MushroomProjectile(Level level, LivingEntity thrower) {
@@ -44,24 +58,6 @@ public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
                 thrower.getEyeY() - 0.1F,
                 thrower.getZ() + (double)(thrower.getBbWidth() + 1.0F) * 0.5 * (double)Mth.cos(thrower.yBodyRot * (float) (Math.PI / 180.0))
         );
-    }
-
-    @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
-        if (this.level().isClientSide) {
-            this.addFX(EffectBuilder.Entity.of(
-                    CommonClass.customLocation("toxic_projectile"),
-                    this.getId(),
-                    EntityEffectExecutor.AutoRotate.LOOK)
-                    .setRotation(180, 180, 0)
-                    .setOffset(0, -0.5, 0));
-        }
-    }
-
-    @Override
-    public void onClientRemoval() {
-        this.removeFX(CommonClass.customLocation("toxic_projectile"));
     }
 
     protected double getDefaultGravity() {
@@ -142,15 +138,5 @@ public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
 
     public void setPrimaryProjectile(boolean primaryProjectile) {
         this.primaryProjectile = primaryProjectile;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
     }
 }

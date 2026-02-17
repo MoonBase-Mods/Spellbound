@@ -50,7 +50,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     @Override
     protected double getDefaultGravity() {
-        return 0.06;
+        return this.isHoming() ? 0.0 : 0.06;
     }
 
     @Override
@@ -76,8 +76,8 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         if (this.isHoming()) {
             Entity entity = this.getHomingTarget();
             if (entity instanceof LivingEntity) {
-                Vec3 vec31 = entity.position().subtract(this.position());
-                vec3 = vec31.normalize().scale(0.5F);
+                Vec3 vec31 = entity.position().add(0.0, entity.getBbHeight() / 2, 0.0).subtract(this.position());
+                vec3 = vec31.normalize().scale(1.5F);
                 this.setDeltaMovement(vec3);
             }
         }
@@ -127,6 +127,11 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     @Override
     public boolean isSpellCast() {
         return this.isSpellCast;
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return this.isHoming() || super.isNoGravity();
     }
 
     @Override
@@ -192,6 +197,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     public void setHomingTarget(LivingEntity entity) {
+        this.setHoming(true);
         this.entityData.set(HOMING_TARGET_ID, entity.getId());
     }
 

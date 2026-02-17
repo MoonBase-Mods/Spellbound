@@ -70,6 +70,8 @@ public class SBData {
             "movement_tick", () -> AttachmentType.builder(() -> 0).build());
     public static final Supplier<AttachmentType<Vec3>> MOVEMENT_SOURCE = ATTACHMENT_TYPES.register(
             "movement_source", () -> AttachmentType.builder(() -> Vec3.ZERO).build());
+    public static final Supplier<AttachmentType<Vec3>> STICKY_BOMB_LOCATION = ATTACHMENT_TYPES.register(
+            "sticky_bomb_location", () -> AttachmentType.builder(() -> Vec3.ZERO).serialize(Vec3.CODEC).sync(ByteBufCodecs.fromCodec(Vec3.CODEC)).build());
     public static final Supplier<AttachmentType<Integer>> HEAT_TICK = ATTACHMENT_TYPES.register(
             "heat_tick", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Boolean>> FORCE_WARP = ATTACHMENT_TYPES.register(

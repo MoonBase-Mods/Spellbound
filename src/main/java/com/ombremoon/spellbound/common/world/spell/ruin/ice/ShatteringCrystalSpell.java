@@ -91,7 +91,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             ShatteringCrystal crystal = this.getCrystal(context);
             if (!this.isSpawning()) {
                 if (crystal != null && (context.hasSkill(SBSkills.THIN_ICE) || context.hasSkill(SBSkills.CHILL))) {
-                    List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, crystal.getBoundingBox().inflate(4), this.getAttackPredicate());
+                    List<LivingEntity> entities = this.getAttackableEntities(crystal, 4.0D);
                     if (context.hasSkill(SBSkills.CHILL) && this.tickCount % 20 == 0) {
                         for (LivingEntity entity : entities) {
                             this.hurt(crystal, entity, this.getBaseDamage() / 2);

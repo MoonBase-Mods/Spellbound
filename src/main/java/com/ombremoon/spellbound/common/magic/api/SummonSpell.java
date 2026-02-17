@@ -12,14 +12,17 @@ import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
 import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashSet;
@@ -30,6 +33,7 @@ import java.util.function.*;
 
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
+    private static final SpellDataKey<BlockPos> SUMMON_POS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.BLOCK_POS.get());
     private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
     private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
@@ -58,7 +62,12 @@ public abstract class SummonSpell extends AnimatedSpell {
                         }
                     }
 
-                    return spell.hasValidSpawnPos();
+                    if (spell.hasValidSpawnPos()) {
+                        spell.setSummonPos(spell.getSpawnPos());
+                        return true;
+                    }
+
+                    return false;
                 });
     }
 
@@ -71,6 +80,7 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(SUMMONS, new HashSet<>());
+        builder.define(SUMMON_POS, BlockPos.ZERO);
     }
 
     protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
@@ -120,7 +130,6 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void onSpellTick(SpellContext context) {
         Level level = context.getLevel();
         var summons = this.getSummons();
-//        log(this);
         if (!level.isClientSide && this.summonedEntity && summons.isEmpty())
             endSpell();
     }
@@ -131,7 +140,7 @@ public abstract class SummonSpell extends AnimatedSpell {
         }
     }
 
-    public void onMobRemoved(LivingEntity entity, SpellContext context, Entity.RemovalReason reason) {
+    public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
 
     }
 
@@ -167,7 +176,7 @@ public abstract class SummonSpell extends AnimatedSpell {
             for (int summonId : summons) {
                 Entity entity = level.getEntity(summonId);
                 if (entity instanceof LivingEntity livingEntity && livingEntity.isAlive()) {
-                    this.onMobRemoved(livingEntity, context, Entity.RemovalReason.DISCARDED);
+                    this.onMobRemoved(livingEntity, context, null, Entity.RemovalReason.DISCARDED);
                     if (entity instanceof SmartSpellEntity) {
                         //SET DESPAWN ANIMATIONS
                     }
@@ -214,6 +223,14 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected int getMaxSummons(SpellContext context) {
         int i = this.hasSummonStaffBuff(context) ? 1 : 0;
         return context.getSpellLevel() + 1 + i;
+    }
+
+    public Vec3 getSummonPos() {
+        return Vec3.atBottomCenterOf(this.spellData.get(SUMMON_POS));
+    }
+
+    public void setSummonPos(BlockPos pos) {
+        this.spellData.set(SUMMON_POS, pos);
     }
 
     protected Vec3 getSurroundingSpawnPosition(Vec3 origin, float yaw, float radius, int charge, int maxCharges) {
@@ -304,6 +321,13 @@ public abstract class SummonSpell extends AnimatedSpell {
             this.castSound = castSound;
             return this;
         }
+
+        public Builder<T> fullRecast(boolean resetDuration) {
+            this.fullRecast = true;
+            this.resetDuration = resetDuration;
+            return this;
+        }
+
         public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;

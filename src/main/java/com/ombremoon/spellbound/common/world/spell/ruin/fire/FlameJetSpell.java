@@ -333,12 +333,17 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
     @Override
     public int getCastTime(SpellContext context) {
-        return context.isChoice(SBSkills.TURBO_CHARGE) ? 60 : super.getCastTime(context);
+        return this.canCharge(context) ? 60 : super.getCastTime(context);
     }
 
     @Override
     public boolean canCharge(SpellContext context) {
         return context.isChoice(SBSkills.TURBO_CHARGE);
+    }
+
+    @Override
+    public boolean shouldRender(SpellContext context) {
+        return false;
     }
 
     @Override

@@ -835,6 +835,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return livingEntity -> SpellUtil.CAN_ATTACK_ENTITY.test(this.caster, livingEntity);
     }
 
+    protected List<LivingEntity> getAttackableEntities(double range) {
+        return this.getAttackableEntities(this.caster, range);
+    }
+
+    protected List<LivingEntity> getAttackableEntities(Entity source, double range) {
+        return this.level.getEntitiesOfClass(LivingEntity.class, source.getBoundingBox().inflate(range), this.getAttackPredicate());
+    }
+
     /**
      * Increments the effect build up for ruin spells (or other registered damage types)
      * @param targetEntity The hurt entity
@@ -1018,6 +1026,18 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return potency(null, initialAmount);
     }
 
+    public float invertedPotency(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
+        return initialAmount * (1.0F - getModifier(ModifierType.POTENCY, livingEntity, target));
+    }
+
+    public float invertedPotency(LivingEntity target, float initialAmount) {
+        return invertedPotency(this.caster, target, initialAmount);
+    }
+
+    public float invertedPotency(float initialAmount) {
+        return invertedPotency(null, initialAmount);
+    }
+
     /**
      * Returns the modifier amount for the caster of the spells specifically.
      * @param modifierType The type of modifier
@@ -1156,6 +1176,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return blockPos;
     }
 
+    protected BlockPos getSpawnPos() {
+        return this.getSpawnPos(SpellUtil.getCastRange(this.caster));
+    }
+
     protected boolean hasValidSpawnPos() {
         float range = SpellUtil.getCastRange(this.caster);
         return hasValidSpawnPos(range);
@@ -1204,7 +1228,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return Whether the damage source has the {@link SBTags.DamageTypes Physical Damage} tag
      */
     public static boolean isPhysicalDamage(@NotNull DamageSource damageSource) {
-        return damageSource.is(SBTags.DamageTypes.PHYSICAL_DAMAGE);
+        return !isSpellDamage(damageSource);
     }
 
     public boolean checkForCounterMagic(LivingEntity targetEntity) {
@@ -1419,7 +1443,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public void awardXp(float amount) {
-        this.context.getSkills().awardSpellXp(spellType(), amount);
+        this.context.getSkills().awardSpellXp(spellType(), getModifier(ModifierType.SPELL_XP) * amount);
     }
 
     /**

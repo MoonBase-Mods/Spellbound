@@ -142,7 +142,9 @@ public class SpellEventListener {
         public static Events<DealtDamageEvent.Pre> DEALT_DAMAGE_PRE = new Events<>(false);
         public static Events<EffectApplicableEvent> EFFECT_APPLICABLE = new Events<>(false);
         public static Events<LivingBlockEvent> BLOCK = new Events<>(false);
+        public static Events<DeathEvent> DEATH = new Events<>(false);
         public static Events<DeathEvent> ENTITY_KILL = new Events<>(false);
+        public static Events<BlockItemDropsEvent> BLOCK_DROPS = new Events<>(false);
         public static Events<MouseInputEvent.Pre> PRE_MOUSE_INPUT = new Events<>(true);
         public static Events<MouseInputEvent.Post> POST_MOUSE_INPUT = new Events<>(true);
 

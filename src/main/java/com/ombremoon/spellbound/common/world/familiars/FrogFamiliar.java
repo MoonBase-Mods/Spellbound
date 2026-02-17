@@ -172,8 +172,6 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     }
 
     private void magmaDigestion(DeathEvent event) {
-        LivingDeathEvent deathEvent = event.getDeathEvent();
-
         boolean flag = (SpellUtil.isSummon(event.getCaster()) && SpellUtil.getOwner(event.getCaster()).is(this.getOwner()))
                 || event.getCaster().is(getOwner());
 
@@ -190,7 +188,7 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
                     .asItem()
                     .getDefaultInstance();
 
-            deathEvent.getEntity().spawnAtLocation(stack);
+            event.getKilledEntity().spawnAtLocation(stack);
         }
     }
 
