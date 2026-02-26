@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Keys;
@@ -40,7 +41,7 @@ public class TransfigurationRitual {
                                         }
                                     }, DataResult::success)
                                     .forGetter(recipe -> recipe.elementMaterials),
-                            MagicEffect.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
+                            EffectHolder.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
                     )
                     .apply(p_344998_, TransfigurationRitual::new)
     );
@@ -49,10 +50,10 @@ public class TransfigurationRitual {
     private final RitualDefinition definition;
     private final NonNullList<Value> elementMaterials;
     private final NonNullList<Ingredient> materials = NonNullList.create();
-    private final List<MagicEffect> effects;
+    private final List<EffectHolder> effects;
     private final int startupTime;
 
-    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<MagicEffect> effects) {
+    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<EffectHolder> effects) {
         this.definition = definition;
         this.elementMaterials = elementMaterials;
         this.effects = effects;
@@ -65,7 +66,7 @@ public class TransfigurationRitual {
         if (items.size() != this.materials.size()) {
             return false;
         } else {
-            return this.matches(items, this.materials) && this.definition.tier == input.getRings() && this.hasValidEffects(input);
+            return this.definition.tier == input.getRings() && this.matches(items, this.materials);
         }
     }
 
@@ -97,15 +98,6 @@ public class TransfigurationRitual {
         return list;
     }
 
-    public boolean hasValidEffects(TransfigurationMultiblock multiblock) {
-        for (MagicEffect effect : this.effects) {
-            if (!effect.isValid(multiblock))
-                return false;
-        }
-
-        return true;
-    }
-
     public RitualDefinition definition() {
         return this.definition;
     }
@@ -114,7 +106,7 @@ public class TransfigurationRitual {
         return this.elementMaterials;
     }
 
-    public List<MagicEffect> effects() {
+    public List<EffectHolder> effects() {
         return this.effects;
     }
 
@@ -133,7 +125,7 @@ public class TransfigurationRitual {
     public static class Builder {
         private final RitualDefinition definition;
         private final NonNullList<Value> materials = NonNullList.create();
-        private final List<MagicEffect> effects = new ObjectArrayList<>();
+        private final List<EffectHolder> effects = new ObjectArrayList<>();
 
         public Builder(RitualDefinition definition) {
             this.definition = definition;
@@ -148,7 +140,7 @@ public class TransfigurationRitual {
             return this;
         }
 
-        public Builder withEffect(MagicEffect effect) {
+        public Builder withEffect(EffectHolder effect) {
             this.effects.add(effect);
             return this;
         }

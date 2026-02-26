@@ -20,4 +20,8 @@ public record MovementData(float xxa, float zza, boolean jumping, boolean shiftK
             ByteBufCodecs.BOOL, MovementData::shiftKeyDown,
             MovementData::new
     );
+
+    public boolean isMoving() {
+        return this.xxa != 0 || this.zza != 0;
+    }
 }

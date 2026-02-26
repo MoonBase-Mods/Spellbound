@@ -3,7 +3,6 @@ package com.ombremoon.spellbound.client.photon;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.gameobject.IFXObject;
-import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -86,7 +85,6 @@ public class StaticEntityEffect extends EntityEffectExecutor {
         this.runtime = fx.createRuntime();
         var root = this.runtime.getRoot();
 
-        // Calculate offset based on entity view direction
         Vec3 lookAngle = entity.getForward();
         Vec3 rightVector = lookAngle.cross(new Vec3(0, 1, 0)).normalize();
         Vec3 upVector = rightVector.cross(lookAngle).normalize();
@@ -102,5 +100,8 @@ public class StaticEntityEffect extends EntityEffectExecutor {
         root.updateScale(scale);
         this.runtime.emmit(this, delay);
         effects.add(this);
+    }
+
+    public static class Vec3EffectExecutor {
     }
 }

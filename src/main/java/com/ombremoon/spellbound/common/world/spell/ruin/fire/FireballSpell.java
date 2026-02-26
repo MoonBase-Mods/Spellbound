@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.fire;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -8,16 +10,25 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class FireballSpell extends AnimatedSpell implements RadialSpell, ChargeableSpell {
     public static Builder<FireballSpell> createFireballBuilder() {
@@ -25,6 +36,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                 .manaCost(30)
                 .baseDamage(3)
                 .castCondition((context, fireballSpell) -> {
+                    fireballSpell.choice = context.getChoice();
                     if (context.isChoice(SBSkills.HOMING_MISSILE)) {
                         return context.hasSkill(SBSkills.AUTO_TARGETING) || context.getTarget() instanceof LivingEntity;
                     }
@@ -32,7 +44,9 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                     return true;
                 });
     }
+    private Skill choice;
     private float fireballRange;
+    private int pierceCount;
 
     public FireballSpell() {
         super(SBSpells.FIREBALL.get(), createFireballBuilder());
@@ -40,7 +54,59 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.FIREBALL,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(2.0F),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.RAPID_FIRE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage(this.getBaseDamage() / 2))),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(1.0F),
+                SkillTooltip.RADIUS.tooltip(1.0F),
+                SkillTooltip.PROJECTILE_COUNT.tooltip(3),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.STICKY_BOMB,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(2.0F),
+                SkillTooltip.DURATION.tooltip(60),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.CHARGED_BLAST,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(2.0F),
+                SkillTooltip.FLAT_DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 1.0F)),
+                SkillTooltip.FLAT_RADIUS_PER_CHARGE.tooltip(1.0F),
+                SkillTooltip.MAX_CHARGES.tooltip(3),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.VOLATILE_CLUSTER,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage(this.getBaseDamage() / 2))),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(1.0F),
+                SkillTooltip.PROJECTILE_COUNT_PER_CHARGE.tooltip(1),
+                SkillTooltip.MAX_CHARGES.tooltip(3),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.HOMING_MISSILE,
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.EXPLOSIVE_AMPLIFIER,
+                SkillTooltip.MODIFY_RADIUS.tooltip(20F)
+        );
+        this.addSkillDetails(SBSkills.BURNING_ADHESIVE,
+                DAMAGE_TO_ARMOR.tooltip(5F)
+        );
+        this.addSkillDetails(SBSkills.MOLTEN_CORE,
+                DAMAGE_PER_PIERCE.tooltip(-25F)
+        );
+        this.addSkillDetails(SBSkills.CLUSTER_STRIKE,
+                SkillTooltip.MAX_CHARGES.tooltip(5)
+        );
+        this.addSkillDetails(SBSkills.AUTO_TARGETING,
+                SkillTooltip.RADIUS.tooltip(10.0F)
+        );
     }
 
     @Override
@@ -76,6 +142,8 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
                     if (context.isChoice(SBSkills.CHARGED_BLAST)) {
                         projectile.setSize(this.getCharges());
+                    } else  if (context.isChoice(SBSkills.RAPID_FIRE)) {
+                        projectile.setSize(0.75F);
                     }
                 });
             }
@@ -86,7 +154,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
         Level level = context.getLevel();
-        if (!level.isClientSide && context.isChoice(SBSkills.RAPID_FIRE) && this.tickCount % 2 == 1) {
+        if (!level.isClientSide && this.choice.equals(SBSkills.RAPID_FIRE.value()) && this.tickCount % 2 == 1) {
             this.shootProjectile(context, SBEntities.FIREBALL.get(), 2.5F, 1.0F);
         }
     }
@@ -130,9 +198,11 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
     }
 
     public void explode(SpellContext context, Fireball fireball, boolean discard) {
-        var list = this.getAttackableEntities(fireball, this.getFireballRange(context) + fireball.getSize());
+        var list = this.getAttackableEntities(fireball, this.fireballRange + fireball.getSize());
+        float damage = fireball.getSize() >= 1.0F ? this.getBaseDamage() + fireball.getSize() : this.getBaseDamage() / 2;
+        damage *= (float) Math.pow(0.75F, this.pierceCount);
         for (LivingEntity entity : list) {
-            if (this.hurt(entity, this.getBaseDamage() + fireball.getSize())) {
+            if (this.hurt(entity, damage)) {
                 if (context.hasSkill(SBSkills.BURNING_ADHESIVE) && fireball.isSticky() && fireball.getHomingTarget() == entity) {
                     for (ItemStack stack : entity.getArmorSlots()) {
                         if (!stack.isEmpty() && stack.getItem() instanceof ArmorItem armorItem) {
@@ -143,8 +213,11 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
             }
         }
 
-        if (discard)
+        if (discard) {
             fireball.discard();
+        } else {
+            this.pierceCount++;
+        }
     }
 
     private float getFireballAngle(LivingEntity caster, int i, int count) {
@@ -198,4 +271,38 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
     public boolean shouldRender(SpellContext context) {
         return false;
     }
+
+    public static SkillTooltip<Float> DAMAGE_TO_ARMOR = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.burning_adhesive", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> DAMAGE_PER_PIERCE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.molten_core", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }

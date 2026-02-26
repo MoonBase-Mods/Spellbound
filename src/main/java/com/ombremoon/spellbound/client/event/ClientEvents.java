@@ -42,6 +42,7 @@ import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import com.ombremoon.spellbound.util.EntityUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimResources;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -112,7 +113,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
         event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
-        event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), VFXSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), CursedRuneRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
         event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
 
@@ -193,10 +194,8 @@ public class ClientEvents {
                         if (handler.inCastMode()) {
                             ResourceLocation id = CommonClass.customLocation("idle");
                             MovementData movementData = player.getData(SBData.MOVEMENT_DATA.get());
-                            if (isMoving(player)) {
-                                if (!player.getDisplayName().getString().contains("1"))
-                                    Constants.LOG.debug("{}", movementData.zza());
-
+//                            if (EntityUtil.isMoving(player)) {
+                            if (movementData.isMoving()) {
                                 if (movementData.zza() < 0) {
                                     id = CommonClass.customLocation("walk_backwards");
                                 } else if (player.isCrouching()) {
@@ -251,10 +250,6 @@ public class ClientEvents {
 
             return 0.0F;
         });
-    }
-
-    private static boolean isMoving(Player player) {
-        return player.xo != player.getX() || player.yo != player.getY() || player.zo != player.getZ();
     }
 
     private static void registerElementRenderers() {

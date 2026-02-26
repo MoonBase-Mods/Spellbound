@@ -1,8 +1,10 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
@@ -10,7 +12,12 @@ import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,7 +25,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class CobbledHideSpell extends AnimatedSpell {
     private static final ResourceLocation COBBLED_HIDE = CommonClass.customLocation("hide_spell_mod");
@@ -38,7 +50,6 @@ public class CobbledHideSpell extends AnimatedSpell {
     private static Builder<CobbledHideSpell> createCobbledHideBuilder() {
         return createSimpleSpellBuilder(CobbledHideSpell.class)
                 .manaCost(30)
-                .castTime(20)
                 .duration(1200)
                 .selfBuffCast()
                 .fullRecast(true);
@@ -50,7 +61,56 @@ public class CobbledHideSpell extends AnimatedSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.COBBLED_HIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(COBBLED_HIDE, potency(5F), AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.DURATION.tooltip(1200),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.IRON_HIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(IRON_HIDE, potency(8F), AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.PROJECTILE_DAMAGE_REDUX.tooltip(potency(10F)),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.DIAMOND_HIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(DIAMOND_HIDE, potency(13F), AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.SPELL_DAMAGE_REDUX.tooltip(potency(10F)),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.DRAGON_HIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(DRAGON_HIDE, potency(20F), AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.FIRE_RESISTANCE),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.BEDROCK_BASTION,
+                SkillTooltip.HP_THRESHOLD.tooltip(20F),
+                SkillTooltip.EFFECT_DURATION.tooltip(60),
+                SkillTooltip.COOLDOWN.tooltip(24000)
+        );
+        this.addSkillDetails(SBSkills.SHATTER_SKIN,
+                ARMOR_TO_DAMAGE.tooltip(75F),
+                SkillTooltip.RADIUS.tooltip(4F),
+                SkillTooltip.MODIFY_MANA_COST.tooltip(-50F)
+        );
+        this.addSkillDetails(SBSkills.STONE_WALL,
+                SkillTooltip.MODIFY_DURATION.tooltip(50F)
+        );
+        this.addSkillDetails(SBSkills.GRANITE_GRIP,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(GRANITE_GRIP, 1.0F, AttributeModifier.Operation.ADD_VALUE)))
+        );
+        this.addSkillDetails(SBSkills.MASONRY_WARD,
+                SkillTooltip.SPELL_DAMAGE_REDUX.tooltip(potency(25F)),
+                SkillTooltip.PROC_DURATION.tooltip(120),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.BOULDERBACK,
+                SkillTooltip.DAMAGE_REFLECTION.tooltip(potency(25F)),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.INFUSED_STONE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(INFUSED_STONE, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
     }
 
     @Override
@@ -77,7 +137,7 @@ public class CobbledHideSpell extends AnimatedSpell {
                     COBBLED_HIDE,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.ARMOR, new AttributeModifier(COBBLED_HIDE, this.armorBonus, AttributeModifier.Operation.ADD_VALUE))
+                    new ModifierData(Attributes.ARMOR, new AttributeModifier(COBBLED_HIDE, potency(this.armorBonus), AttributeModifier.Operation.ADD_VALUE))
             );
 
             if (isIronHide) {
@@ -194,7 +254,7 @@ public class CobbledHideSpell extends AnimatedSpell {
     @Override
     protected void onSpellRecast(SpellContext context) {
         Level level = context.getLevel();
-        if (!level.isClientSide) {
+        if (!level.isClientSide && context.hasSkill(SBSkills.SHATTER_SKIN)) {
             var list = this.getAttackableEntities(4.0D);
             for (LivingEntity entity : list) {
                 this.hurt(entity, this.armorBonus * potency(0.5F));
@@ -222,7 +282,7 @@ public class CobbledHideSpell extends AnimatedSpell {
                         SpellEventListener.Events.PRE_DAMAGE,
                         BEDROCK_BASTION,
                         pre -> {
-                            //Play sound
+                            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.ANVIL_BREAK, caster.getSoundSource(), 1.0F, 1.0F);
                             if (this.getRemainingTime() > 100) {
                                 this.setRemainingTicks(100);
                             }
@@ -259,4 +319,26 @@ public class CobbledHideSpell extends AnimatedSpell {
     protected int getDuration(SpellContext context) {
         return context.hasSkill(SBSkills.STONE_WALL) ? 1800 : super.getDuration(context);
     }
+
+    @Override
+    public float getManaCost(SpellContext context) {
+        return context.isChoice(SBSkills.SHATTER_SKIN) && context.isRecast() ? super.getManaCost(context) * 0.5F : super.getManaCost(context);
+    }
+
+    public static SkillTooltip<Float> ARMOR_TO_DAMAGE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.shatter_skin", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }

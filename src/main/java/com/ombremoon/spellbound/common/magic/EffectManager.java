@@ -3,23 +3,31 @@ package com.ombremoon.spellbound.common.magic;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBEffects;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
+import com.ombremoon.spellbound.common.magic.effects.MagicEffectInstance;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
@@ -29,6 +37,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     public static final int MIN_JUDGEMENT = -100;
     private LivingEntity livingEntity;
     private final Map<Effect, Float> buildUp = new HashMap<>();
+    private final List<MagicEffectInstance> magicEffects = new ObjectArrayList<>();
     private int judgement;
 
     /**
@@ -112,6 +121,14 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
     }
 
+    public void addMagicEffect(EffectHolder effect, @Nullable Entity source) {
+        if (!livingEntity.level().isClientSide) {
+            MagicEffectInstance instance = new MagicEffectInstance(effect);
+            instance.initializeEffect(source);
+            this.magicEffects.add(instance);
+        }
+    }
+
     public int getJudgement() {
         return this.judgement;
     }
@@ -168,6 +185,10 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
                     this.buildUp.replace(effect, amount - 1);
             });
         }
+
+        if (!this.livingEntity.level().isClientSide) {
+            this.magicEffects.removeIf(effectHolder -> !effectHolder.attemptToActivateOrRemoveEffect((ServerLevel) this.livingEntity.level(), 0, this.livingEntity, this.livingEntity.blockPosition(), null));
+        }
     }
 
     /**
@@ -191,6 +212,36 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         } else {
             //ADD DAMAGE BUILD UP EVENT
             return null;
+        }
+    }
+
+    public void doPostAttackEffects(LivingDamageEvent.Post event) {
+        LivingEntity target = event.getEntity();
+        Level level = this.livingEntity.level();
+        if (!level.isClientSide) {
+            for (MagicEffectInstance effect : this.magicEffects) {
+                effect.doPostAttackEffects(target, this.livingEntity, 0, this.livingEntity.blockPosition(), null, event.getSource());
+            }
+        }
+    }
+
+    public void doPreAttackEffects(LivingDamageEvent.Pre event) {
+        LivingEntity target = event.getEntity();
+        Level level = this.livingEntity.level();
+        if (!level.isClientSide) {
+            for (MagicEffectInstance effect : this.magicEffects) {
+                effect.doPreAttackEffects(target, this.livingEntity, 0, this.livingEntity.blockPosition(), null, event.getContainer());
+            }
+        }
+    }
+
+    public void doPreDamageEffects(LivingDamageEvent.Pre event) {
+        Entity source = event.getSource().getEntity();
+        Level level = this.livingEntity.level();
+        if (!level.isClientSide) {
+            for (MagicEffectInstance effect : this.magicEffects) {
+                effect.doPreDamageEffects(this.livingEntity, source, 0, this.livingEntity.blockPosition(), null, event.getContainer());
+            }
         }
     }
 

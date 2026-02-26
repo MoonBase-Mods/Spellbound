@@ -185,12 +185,6 @@ public class RadialMenu {
             drawItems(graphics, x, y, z, screen.width, screen.height, font);
             poseStack.popPose();
 
-//            if (items.size() > 5) {
-                poseStack.pushPose();
-                drawArrow(graphics, x, y, z);
-                poseStack.popPose();
-//            }
-
             Component currentCentralText = centralText;
             for (RadialMenuItem item : this.items) {
                 if (item.isHovered()) {
@@ -246,7 +240,29 @@ public class RadialMenu {
             drawPieArc(builder, x, y, z, radiusIn, radiusOut, s, e, color);
         });
         BufferUploader.drawWithShader(builder.buildOrThrow());
+
+        // Draw red outline on outer edgevar outlineBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+        ////        drawOuterEdge(outlineBuilder, x, y, z, radiusOut, 0xFFFF0000); // Red color
+        ////        BufferUploader.drawWithShader(outlineBuilder.buildOrThrow());
+//
+
         RenderSystem.disableBlend();
+    }
+
+    private void drawOuterEdge(BufferBuilder buffer, float x, float y, float z, float radius, int color) {
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        int a = (color >> 24) & 0xFF;
+
+        // Draw a complete circle using line strip
+        int segments = 360; // Number of segments for a smooth circle
+        for (int i = 0; i <= segments; i++) {
+            float angle = (float) (i * TWO_PI / segments);
+            float posX = x + radius * (float) Math.cos(angle);
+            float posY = y + radius * (float) Math.sin(angle);
+            buffer.addVertex(posX, posY, z).setColor(r, g, b, a);
+        }
     }
 
     private void drawPieArc(BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int color) {

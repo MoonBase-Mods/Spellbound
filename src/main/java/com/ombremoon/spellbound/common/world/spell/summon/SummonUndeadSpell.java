@@ -1,13 +1,16 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -20,6 +23,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
@@ -54,7 +59,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                             spell.heal(caster, livingEntity.getHealth() * 0.1F);
                             livingEntity.kill();
 
-                            List<LivingEntity> list = livingEntity.level().getEntitiesOfClass(LivingEntity.class, spell.getInflatedBB(livingEntity, 1));
+                            List<LivingEntity> list = spell1.getAttackableEntities(livingEntity, 2);
                             for (LivingEntity entity : list) {
                                 if (!spell.isCaster(entity)) {
                                     spell.hurt(entity, 2.0F);
@@ -85,7 +90,46 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SUMMON_UNDEAD,
+                SkillTooltip.DURATION.tooltip(2400),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip(),
+                SkillTooltip.CAST_SCALES.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUMMON_SKELETON,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUMMON_DROWNED,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUMMON_PHANTOM,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUMMON_ZOMBIFIED_PIGLIN,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.CRIMSON_PACT,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SUNKEN_BREATH, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+        );
+        this.addSkillDetails(SBSkills.CORPSE_EXPLOSION,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2F))),
+                SkillTooltip.RADIUS.tooltip(2F),
+                SkillTooltip.HEAL_FROM_TARGET.tooltip(10F)
+        );
+        this.addSkillDetails(SBSkills.HALL_OF_THE_DEAD,
+                SkillTooltip.PROC_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.SILENT_NIGHT,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
+                SkillTooltip.EFFECT_DURATION.tooltip(60)
+        );
+        this.addSkillDetails(SBSkills.SILENT_NIGHT,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.WATER_BREATHING)
+        );
     }
 
     @Override
@@ -161,12 +205,10 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         LivingEntity target = event.getEntity();
         Level level = context.getLevel();
         if (mob instanceof ZombifiedPiglin && context.hasSkill(SBSkills.CRIMSON_PACT)) {
-            if (target.getLastAttacker().is(context.getCaster())) {
-                this.piglinBonusTick = level.getGameTime() + 100;
-            }
-
             if (level.getGameTime() < this.piglinBonusTick) {
-                event.setNewDamage(event.getOriginalDamage());
+                event.setNewDamage(event.getOriginalDamage() * potency(1.15F));
+            } else if (target.getLastAttacker().is(context.getCaster())) {
+                this.piglinBonusTick = level.getGameTime() + 100;
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -7,8 +8,8 @@ import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.main.CommonClass;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -27,6 +28,11 @@ public class StrideSpell extends AnimatedSpell {
     protected static final ResourceLocation SUREFOOTED = CommonClass.customLocation("surefooted");
     protected static final ResourceLocation FLEETFOOTED = CommonClass.customLocation("fleetfooted");
     protected static final ResourceLocation MOMENTUM = CommonClass.customLocation("momentum");
+    private int initialFoodLevel;
+    private Vec3 currentPos;
+    private int movementTicks;
+    private Entity mount;
+    private float modifierAmount;
 
     public static Builder<StrideSpell> createStrideBuilder() {
         return createSimpleSpellBuilder(StrideSpell.class)
@@ -37,12 +43,6 @@ public class StrideSpell extends AnimatedSpell {
                 .fullRecast(true);
     }
 
-    private int initialFoodLevel;
-    private BlockPos currentPos;
-    private int movementTicks;
-    private Entity mount;
-    private float moveDist;
-
     public StrideSpell() {
         super(SBSpells.STRIDE.get(), createStrideBuilder());
     }
@@ -52,6 +52,7 @@ public class StrideSpell extends AnimatedSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide) {
+            this.modifierAmount = potency(context.hasSkill(SBSkills.GALLOPING_STRIDE) ? 1.5F : 1.25F);
             applyMovementBenefits(caster, context);
 
             if (caster instanceof Player player) {
@@ -59,14 +60,50 @@ public class StrideSpell extends AnimatedSpell {
                     this.initialFoodLevel = player.getFoodData().getFoodLevel();
 
                 if (context.hasSkill(SBSkills.MOMENTUM))
-                    this.currentPos = context.getBlockPos();
+                    this.currentPos = caster.position();
             }
         }
     }
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.STRIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.DURATION.tooltip(600),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.QUICK_SPRINT,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(200),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.GALLOPING_STRIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.FLEETFOOTED,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.RANGE.tooltip(5F),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.GALLOPING_STRIDE, SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))))
+                ),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUREFOOTED,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(SUREFOOTED, 0.4, AttributeModifier.Operation.ADD_VALUE)))
+        );
+        this.addSkillDetails(SBSkills.ENDURANCE,
+                SkillTooltip.MODIFY_DURATION.tooltip(100F)
+        );
+        this.addSkillDetails(SBSkills.MOMENTUM,
+                SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, potency(0.04F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.MAX_CHARGES.tooltip(5),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.STAMPEDE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))),
+                SkillTooltip.KNOCKBACK.tooltip(0.4F)
+        );
     }
 
     @Override
@@ -99,7 +136,7 @@ public class StrideSpell extends AnimatedSpell {
             }
 
             if (context.hasSkill(SBSkills.FLEETFOOTED)) {
-                var allies = level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(5), livingEntity -> livingEntity.isAlliedTo(caster));
+                var allies = this.getAlliedEntities(5);
                 for (LivingEntity ally : allies) {
                     addSkillBuff(
                             ally,
@@ -107,7 +144,7 @@ public class StrideSpell extends AnimatedSpell {
                             FLEETFOOTED,
                             BuffCategory.BENEFICIAL,
                             SkillBuff.ATTRIBUTE_MODIFIER,
-                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FLEETFOOTED, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FLEETFOOTED, this.modifierAmount * potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                             20);
                 }
             }
@@ -137,9 +174,9 @@ public class StrideSpell extends AnimatedSpell {
 
             if (context.hasSkill(SBSkills.MOMENTUM)) {
                 if (this.tickCount % 4 == 0) {
-                    if (!this.currentPos.equals(caster.getOnPos())) {
+                    if (!this.currentPos.equals(caster.position())) {
                         this.movementTicks += 4;
-                        this.currentPos = caster.getOnPos();
+                        this.currentPos = caster.position();
                         if (this.movementTicks % 20 == 0)
                             addSkillBuff(
                                     caster,
@@ -147,7 +184,7 @@ public class StrideSpell extends AnimatedSpell {
                                     MOMENTUM,
                                     BuffCategory.BENEFICIAL,
                                     SkillBuff.ATTRIBUTE_MODIFIER,
-                                    new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, Math.min(0.04 * this.movementTicks / 20, 0.2), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                    new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, potency((float) Math.min(0.04 * this.movementTicks / 20, 0.2)), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                     100);
                     } else {
                         this.movementTicks = 0;
@@ -178,7 +215,7 @@ public class StrideSpell extends AnimatedSpell {
                     STRIDE,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(context.hasSkill(SBSkills.GALLOPING_STRIDE) ? 1.5F : 1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, this.modifierAmount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
             if (context.hasSkill(SBSkills.QUICK_SPRINT))
                 addSkillBuff(
                         livingEntity,
@@ -186,7 +223,7 @@ public class StrideSpell extends AnimatedSpell {
                         QUICK_SPRINT,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
-                        new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(QUICK_SPRINT, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+                        new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(QUICK_SPRINT, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
 
             if (context.hasSkill(SBSkills.SUREFOOTED))
                 addSkillBuff(

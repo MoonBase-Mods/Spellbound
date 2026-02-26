@@ -122,7 +122,7 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
             PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
             return isDungeon(level) && data.currentDungeon != null && data.currentDungeon.hasRule(rule);
         } else {
-            return player.getData(SBData.PUZZLE_RULES).contains(rule);
+            return isDungeon(level) && player.getData(SBData.PUZZLE_RULES).contains(rule);
         }
     }
 

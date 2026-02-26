@@ -7,9 +7,17 @@
   },
   "effects": [
     {
-      "type": "spellbound:create_spell_tome",
-      "spell": "spellbound:stride",
-      "tier": 1
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_spell_tome",
+        "path": "spellbound:stride",
+        "tier": 1
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
     }
   ],
   "ingredients": [

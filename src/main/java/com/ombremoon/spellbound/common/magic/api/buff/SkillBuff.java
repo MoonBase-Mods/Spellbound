@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.main.Constants;
@@ -76,6 +77,16 @@ public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategor
             },
             SpellModifier.CODEC,
             SpellModifier.STREAM_CODEC);
+
+    public static final BuffObject<EffectHolder> MAGIC_EFFECT = registerBuffObject(
+            "magic_effect",
+            (source, livingEntity, effectHolder) -> {
+                var effects = SpellUtil.getSpellEffects(livingEntity);
+                effects.addMagicEffect(effectHolder, source);
+            },
+            (livingEntity, spellModifier) -> {},
+            EffectHolder.CODEC,
+            EffectHolder.STREAM_CODEC);
 
     public static final BuffObject<DataComponentStorage> DATA_ATTACHMENT = registerBuffObject(
             "data_attachment",

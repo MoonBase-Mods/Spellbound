@@ -148,12 +148,6 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleClientManaSync(SyncManaPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            context.player().setData(SBData.MANA, payload.mana());
-        });
-    }
-
     public static void handleClientSkillSync(SyncSkillPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();

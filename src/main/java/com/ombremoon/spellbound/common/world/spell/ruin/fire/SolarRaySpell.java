@@ -4,6 +4,7 @@ import com.ombremoon.sentinellib.api.box.AABBSentinelBox;
 import com.ombremoon.sentinellib.api.box.OBBSentinelBox;
 import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.ISentinel;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
@@ -14,6 +15,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.entity.spell.SolarRay;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -35,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.List;
@@ -103,7 +106,7 @@ public class SolarRaySpell extends ChanneledSpell {
         return createChannelledSpellBuilder(SolarRaySpell.class)
                 .manaCost(40)
                 .manaTickCost(10)
-                .baseDamage(3)
+                .baseDamage(4)
                 .castTime(23)
                 .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, !context.hasSkill(SBSkills.OVERPOWER)))
@@ -116,7 +119,42 @@ public class SolarRaySpell extends ChanneledSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SOLAR_RAY,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.RANGE.tooltip(7.7F),
+                SkillTooltip.PROC_DURATION.tooltip(20)
+        );
+        this.addSkillDetails(SBSkills.SUNSHINE, SkillTooltip.MODIFY_RANGE.tooltip(100F));
+        this.addSkillDetails(SBSkills.HEALING_LIGHT,
+                SkillTooltip.HEAL.tooltip(this.getModifiedHeal(2)),
+                SkillTooltip.PROC_DURATION.tooltip(20)
+        );
+        this.addSkillDetails(SBSkills.CONCENTRATED_HEAT,
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 100F))
+        );
+        this.addSkillDetails(SBSkills.OVERHEAT,
+                SkillTooltip.PROC_DURATION.tooltip(100),
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.RADIUS.tooltip(3F)
+        );
+        this.addSkillDetails(SBSkills.SOLAR_BURST,
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.RADIUS.tooltip(2F)
+        );
+        this.addSkillDetails(SBSkills.SOLAR_BORE,
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(4F)
+        );
+        this.addSkillDetails(SBSkills.AFTERGLOW,
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 20F))
+        );
+        this.addSkillDetails(SBSkills.BLINDING_LIGHT,
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.POWER_OF_THE_SUN, SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 50F)));
     }
 
     @Override
@@ -249,7 +287,7 @@ public class SolarRaySpell extends ChanneledSpell {
                         if (spell != null) {
                             boolean isAllied = SpellUtil.IS_ALLIED.test(caster, livingEntity);
                             if (skills.hasSkill(SBSkills.HEALING_LIGHT) && isAllied) {
-                                livingEntity.heal(2);
+                                spell.heal(livingEntity, 2);
                             } else if (!isAllied) {
                                 float damage = spell.getBaseDamage();
                                 int bonus = spell.concentratedHeatSet.contains(livingEntity.getId()) ? 2 : 1;
@@ -267,7 +305,7 @@ public class SolarRaySpell extends ChanneledSpell {
                                                 livingEntity.setData(SBData.HEAT_TICK, livingEntity.tickCount);
                                                 spell.concentratedHeatSet.remove(entityID);
                                             } else {
-                                                if (livingEntity.tickCount == startTime + 100)
+                                                if (livingEntity.tickCount == startTime + 60)
                                                     spell.concentratedHeatSet.add(livingEntity.getId());
                                             }
 
@@ -322,9 +360,10 @@ public class SolarRaySpell extends ChanneledSpell {
 
     private static OBBSentinelBox createSolarBurstEnd(boolean isExtended) {
         String name = "solar_burst_end";
+        float range = isExtended ? 18.4F : 9.2F;
         String newName = isExtended ? name + "_extended" : name;
         return OBBSentinelBox.Builder.of(newName)
-                .sizeAndOffset(2, 0, 2, 9.2F)
+                .sizeAndOffset(2, 0, 2, range)
                 .moverType(SentinelBox.MoverType.HEAD_NO_X)
                 .noDuration(entity -> false)
                 .activeTicks((entity, integer) -> integer % 60 == 0)
@@ -339,7 +378,7 @@ public class SolarRaySpell extends ChanneledSpell {
                         if (skills.hasSkill(SBSkills.SOLAR_BORE)) {
                             Vec3 vec3 = instance.getCenter();
                             if (instance.tickCount % 60 == 0)
-                                level.explode(livingEntity, Explosion.getDefaultDamageSource(level, livingEntity), null, vec3.x(), vec3.y(), vec3.z(), 4.0F, true, Level.ExplosionInteraction.TNT);
+                                level.explode(livingEntity, Explosion.getDefaultDamageSource(level, livingEntity), null, vec3.x(), vec3.y(), vec3.z(), 4.0F, EventHooks.canEntityGrief(level, livingEntity), Level.ExplosionInteraction.MOB);
                         }
 
                         SolarRaySpell spell = handler.getSpell(SBSpells.SOLAR_RAY.get());

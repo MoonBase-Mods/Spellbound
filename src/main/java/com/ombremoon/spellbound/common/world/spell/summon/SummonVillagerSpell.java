@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
@@ -8,12 +10,18 @@ import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -27,16 +35,20 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class SummonVillagerSpell extends SummonSpell implements RadialSpell, ChargeableSpell {
     private static final SpellDataKey<Integer> VILLAGER_ID = SyncedSpellData.registerDataKey(SummonVillagerSpell.class, SBDataTypes.INT.get());
-    public static final ResourceLocation BOUNTIFUL = CommonClass.customLocation("bountiful");
     public static final ResourceLocation FARMER = CommonClass.customLocation("farmer");
     public static final ResourceLocation LIBRARIAN = CommonClass.customLocation("librarian");
     public static final ResourceLocation CARTOGRAPHER = CommonClass.customLocation("cartographer");
@@ -63,7 +75,56 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SUMMON_VILLAGER,
+                SkillTooltip.DURATION.tooltip(6000),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip(),
+                SkillTooltip.CAST_SCALES.tooltip()
+        );
+        this.addSkillDetails(SBSkills.FARMER_VILLAGER,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.LIBRARIAN_VILLAGER,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.TOOLSMITH_VILLAGER,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.CARTOGRAPHER_VILLAGER,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.CLERIC_VILLAGER,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
+        );
+        this.addSkillDetails(SBSkills.EXTENDED_SERVICE,
+                SkillTooltip.MODIFY_DURATION.tooltip(50F)
+        );
+        this.addSkillDetails(SBSkills.SHOW_ME_THE_ROPES,
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.FARMER_VILLAGER, INCREASE_CROP_YIELD.tooltip())
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.LIBRARIAN_VILLAGER, SkillTooltip.MODIFY_SPELL_XP.tooltip(25F))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.TOOLSMITH_VILLAGER,
+                                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(TOOLSMITH_DAMAGE, 2, AttributeModifier.Operation.ADD_VALUE))),
+                                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(TOOLSMITH_SPEED, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+                        )
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.CARTOGRAPHER_VILLAGER, SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TARGET_AURA))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.FARMER_VILLAGER, SkillTooltip.MOB_EFFECT.tooltip(MobEffects.REGENERATION))
+                )
+        );
     }
 
     @Override
@@ -225,4 +286,21 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
     public boolean canCharge(SpellContext context) {
         return true;
     }
+
+    public static SkillTooltip<Unit> INCREASE_CROP_YIELD = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.farmer_villager").withStyle(ChatFormatting.GRAY)));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }

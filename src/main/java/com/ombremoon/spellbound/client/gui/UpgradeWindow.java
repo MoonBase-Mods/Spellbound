@@ -106,7 +106,7 @@ public class UpgradeWindow {
         int i = widget.getX();
         int j = i + 32;
         int k = -widget.getY();
-        int l = k + 32;
+        int l = k + 96;
         this.minX = Math.min(this.minX, i);
         this.maxX = Math.max(this.maxX, j);
         this.minY = Math.min(this.minY, k);

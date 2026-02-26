@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -10,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
@@ -50,7 +52,7 @@ public class WildMushroomSpell extends SummonSpell {
                         WildMushroomSpell mushroomSpell = mushroom.getSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());
-                        mushroomSpell.setRemainingTicks(1200);
+                        mushroomSpell.setRemainingTicks(2400);
                         mushroom.discard();
                         return false;
                     }
@@ -61,6 +63,47 @@ public class WildMushroomSpell extends SummonSpell {
 
     public WildMushroomSpell() {
         super(SBSpells.WILD_MUSHROOM.get(), createMushroomBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.WILD_MUSHROOM,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage())),
+                SkillTooltip.RADIUS.tooltip(3F),
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.DURATION.tooltip(240)
+        );
+        this.addSkillDetails(SBSkills.VILE_INFLUENCE,
+                SkillTooltip.MODIFY_RADIUS.tooltip(50F)
+        );
+        this.addSkillDetails(SBSkills.HASTENED_GROWTH,
+                SkillTooltip.PROC_DURATION.tooltip(40)
+        );
+        this.addSkillDetails(SBSkills.ENVENOM,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.POISON),
+                SkillTooltip.EFFECT_DURATION.tooltip(80)
+        );
+        this.addSkillDetails(SBSkills.PARASITIC_FUNGUS,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TAUNT),
+                SkillTooltip.EFFECT_DURATION.tooltip(60)
+        );
+        this.addSkillDetails(SBSkills.NATURES_DOMINANCE,
+                SkillTooltip.DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, potency(10F)))
+        );
+        this.addSkillDetails(SBSkills.FUNGAL_HARVEST,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+        );
+        this.addSkillDetails(SBSkills.POISON_ESSENCE,
+                SkillTooltip.POTENCY.tooltip(potency(25F)),
+                SkillTooltip.EFFECT_DURATION.tooltip(200)
+        );
+        this.addSkillDetails(SBSkills.SYNTHESIS,
+                SkillTooltip.MODIFY_MANA_COST.tooltip(-100F),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.LIVING_FUNGUS,
+                SkillTooltip.DURATION.tooltip(2400)
+        );
     }
 
     @Override
@@ -87,7 +130,7 @@ public class WildMushroomSpell extends SummonSpell {
                         FUNGAL_HARVEST,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
-                        new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                        new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 );
         }
     }
@@ -105,11 +148,11 @@ public class WildMushroomSpell extends SummonSpell {
                 if (this.tickCount % interval == 0) {
                     float damage = this.getBaseDamage();
                     if (context.hasSkill(SBSkills.NATURES_DOMINANCE))
-                        damage *= (float) (1.0 + 0.1F * context.getActiveSpells());
+                        damage *= (float) (1.0 + potency(0.1F) * context.getActiveSpells());
 
-                    List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, mushroom.getBoundingBox().inflate(context.hasSkill(SBSkills.VILE_INFLUENCE) ? 5 : 3));
+                    List<LivingEntity> entities = this.getAttackableEntities(mushroom, context.hasSkill(SBSkills.VILE_INFLUENCE) ? 5 : 3);
                     for (LivingEntity entity : entities) {
-                        if (!this.isCaster(entity) && this.hurt(entity, damage)) {
+                        if (this.hurt(entity, damage)) {
                             if (context.hasSkill(SBSkills.ENVENOM))
                                 this.addSkillBuff(
                                         entity,
@@ -184,12 +227,7 @@ public class WildMushroomSpell extends SummonSpell {
 
     @Override
     protected int getDuration(SpellContext context) {
-        return this.hasEvolvedMushroom(context) ? 24000 : super.getDuration(context);
-    }
-
-    @Override
-    public void registerSkillTooltips() {
-
+        return this.hasEvolvedMushroom(context) ? 2400 : super.getDuration(context);
     }
 
     private boolean hasEvolvedMushroom(SpellContext context) {
@@ -216,17 +254,6 @@ public class WildMushroomSpell extends SummonSpell {
             }
         }
     }
-
-/*    private void removeSpores(Level level, BlockPos center, int range) {
-        BlockPos blockpos = BlockPos.containing(center.getCenter());
-        for (BlockPos blockpos1 : BlockPos.betweenClosed(blockpos.offset(-range, -2, -range), blockpos.offset(range, 2, range))) {
-            BlockState blockState = level.getBlockState(blockpos1);
-            if (blockpos1.distToCenterSqr(center.getCenter().x(), (double)blockpos1.getY() + 0.5, center.getCenter().z()) < (double) Mth.square(range)
-                    && blockState.is(SBBlocks.MYCELIUM_CARPET.get())) {
-                level.setBlockAndUpdate(blockpos1, blockState.setValue(MyceliumCarpetBlock.DESPAWN, true));
-            }
-        }
-    }*/
 
     private void setMushroom(int mushroom) {
         this.spellData.set(MUSHROOM, mushroom);

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
@@ -7,12 +8,14 @@ import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.StormBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.StormCloud;
 import com.ombremoon.spellbound.common.world.entity.spell.StormRift;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.EntityUtil;
+import com.ombremoon.spellbound.util.RandomPosUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.ombremoon.spellbound.util.portal.PortalInfo;
 import com.ombremoon.spellbound.util.portal.PortalMap;
@@ -34,6 +37,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.util.RandomUtil;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
@@ -43,14 +47,14 @@ public class StormRiftSpell extends AnimatedSpell {
         return createSimpleSpellBuilder(StormRiftSpell.class)
                 .manaCost(50)
                 .duration(500)
-                .baseDamage(8)
+                .baseDamage(5)
                 .castCondition((context, spell) -> {
                     Entity entity = context.getTarget();
                     if ((context.hasSkill(SBSkills.IMPLOSION) || context.hasSkill(SBSkills.ORBITAL_SHELL)) && entity instanceof StormRift stormRift && stormRift.tickCount >= 100 && context.hasCatalyst(SBItems.STORM_SHARD.get()) && spell.portalMap.containsKey(stormRift.getId()))
                         return true;
                     
                     int activePortals = spell.portalMap.size();
-                    double range = SpellUtil.getCastRange(context.getCaster());
+                    double range = spell.getCastRange();
                     BlockPos blockPos = spell.getSpawnPos(range);
 
                     if (blockPos != null && activePortals > 1) {
@@ -77,6 +81,47 @@ public class StormRiftSpell extends AnimatedSpell {
 
     public StormRiftSpell() {
         super(SBSpells.STORM_RIFT.get(), createStormRiftBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.STORM_RIFT,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage())),
+                SkillTooltip.MANA_DAMAGE.tooltip(this.getModifiedDamage()),
+                SkillTooltip.DURATION.tooltip(500)
+        );
+        this.addSkillDetails(SBSkills.DISPLACEMENT_FIELD,
+                SkillTooltip.RADIUS.tooltip(10.0F)
+        );
+        this.addSkillDetails(SBSkills.STORM_FURY,
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 100F))
+        );
+        this.addSkillDetails(SBSkills.MAGNETIC_FIELD,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, -0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+        );
+        this.addSkillDetails(SBSkills.EVENT_HORIZON,
+                SkillTooltip.RADIUS.tooltip(10.0F)
+        );
+        this.addSkillDetails(SBSkills.CHARGED_RIFT,
+                SkillTooltip.FLAT_DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 1.0F)),
+                SkillTooltip.MAX_CHARGES.tooltip(5)
+        );
+        this.addSkillDetails(SBSkills.MOTION_SICKNESS,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOTION_SICKNESS_MOVEMENT, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOTION_SICKNESS_ATTACK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(MOTION_SICKNESS_BLOCK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(200)
+        );
+        this.addSkillDetails(SBSkills.STORM_CALLER,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage(5)))
+        );
+        this.addSkillDetails(SBSkills.IMPLOSION,
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(6F),
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.STORMSTRIKE)
+        );
+        this.addSkillDetails(SBSkills.ORBITAL_SHELL,
+                SkillTooltip.RADIUS.tooltip(3F)
+        );
     }
 
     @Override
@@ -129,7 +174,7 @@ public class StormRiftSpell extends AnimatedSpell {
             for (var entry : this.portalMap.entrySet()) {
                 Entity entity =  level.getEntity(entry.getKey());
                 if (entity instanceof StormRift stormRift && stormRift.tickCount >= 100) {
-                    float damage = context.hasSkill(SBSkills.STORM_FURY) ? 10 : 5;
+                    float damage = context.hasSkill(SBSkills.STORM_FURY) ? 10 : this.getBaseDamage();
                     damage += Math.min(this.portalCharge, 5);
                     if (this.portalMap.size() > 1 || context.hasSkill(SBSkills.DISPLACEMENT_FIELD))
                         this.pullTargets(context);
@@ -191,20 +236,16 @@ public class StormRiftSpell extends AnimatedSpell {
                                 }
                             }
                         } else if (teleportEntity instanceof LivingEntity livingEntity && context.hasSkill(SBSkills.DISPLACEMENT_FIELD) && !EntityUtil.isBoss(livingEntity) && !stormRift.isOnCooldown(livingEntity)) {
-                            int i = Mth.floor(livingEntity.getX());
-                            int j = Mth.floor(livingEntity.getY());
-                            int k = Mth.floor(livingEntity.getZ());
                             for (int l = 0; l < 50; ++l) {
-                                int i1 = i + Mth.nextInt(livingEntity.getRandom(), 7, 15) * Mth.nextInt(livingEntity.getRandom(), -1, 1);
-                                int j1 = j + Mth.nextInt(livingEntity.getRandom(), 7, 15) * Mth.nextInt(livingEntity.getRandom(), -1, 1);
-                                int k1 = k + Mth.nextInt(livingEntity.getRandom(), 7, 15) * Mth.nextInt(livingEntity.getRandom(), -1, 1);
-                                BlockPos blockpos = new BlockPos(i1, j1, k1);
-                                if (level.getBlockState(blockpos).isAir()) {
-                                    livingEntity.teleportTo(blockpos.getX(), blockpos.getY(), blockpos.getZ());
-                                    this.hurt(stormRift, livingEntity, damage);
-                                    this.consumeMana(livingEntity, 15);
-                                    break;
-                                }
+                                Vec3 vec3 = RandomPosUtil.getAirAndWaterPos(livingEntity, 10, 10, 0, RandomUtil.randomValueBetween(-1.0, 1.0), RandomUtil.randomValueBetween(-1.0, 1.0), Mth.TWO_PI);
+                                if (vec3 == null)
+                                    continue;
+
+                                BlockPos blockpos = BlockPos.containing(vec3);
+                                livingEntity.teleportTo(blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                                this.hurt(stormRift, livingEntity, damage);
+                                this.consumeMana(livingEntity, 15);
+                                break;
                             }
 
                             if (context.hasSkill(SBSkills.EVENT_HORIZON))
@@ -329,7 +370,7 @@ public class StormRiftSpell extends AnimatedSpell {
                                     MAGNETIC_FIELD,
                                     BuffCategory.HARMFUL,
                                     SkillBuff.ATTRIBUTE_MODIFIER,
-                                    new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, 0.75F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                    new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, -0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                     100
                             );
                         }
@@ -360,11 +401,6 @@ public class StormRiftSpell extends AnimatedSpell {
         livingEntity.setDeltaMovement(direction);
         livingEntity.hurtMarked = true;
         this.thrownEntities.add(livingEntity.getId());
-    }
-
-    @Override
-    public void registerSkillTooltips() {
-
     }
 
     @Override

@@ -184,7 +184,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
     }
 
-    public static class StaticEntity extends EffectBuilder<EntityEffectExecutor> {
+    public static class StaticEntity extends EffectBuilder<StaticEntityEffect> {
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
         private Vec3 effectPos = Vec3.ZERO;

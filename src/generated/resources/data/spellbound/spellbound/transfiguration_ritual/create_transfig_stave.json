@@ -7,8 +7,16 @@
   },
   "effects": [
     {
-      "type": "spellbound:create_item",
-      "item": "spellbound:creationist_staff"
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_item",
+        "item": "spellbound:creationist_staff"
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
     }
   ],
   "ingredients": [

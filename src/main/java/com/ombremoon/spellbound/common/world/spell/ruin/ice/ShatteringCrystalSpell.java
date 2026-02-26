@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
+import com.mojang.datafixers.util.Pair;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -9,11 +11,13 @@ import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -72,6 +76,51 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(CRYSTAL, 0);
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.SHATTERING_CRYSTAL,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage())),
+                SkillTooltip.EXPLOSION_RADIUS.tooltip(4F),
+                SkillTooltip.PROC_RANGE.tooltip(4F),
+                SkillTooltip.CAST_SCALES.tooltip()
+        );
+        this.addSkillDetails(SBSkills.ICE_SHARD, SkillTooltip.COOLDOWN.tooltip(24000));
+        this.addSkillDetails(SBSkills.FRIGID_BLAST,
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FRIGID_BLAST, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                ),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.FROZEN_SHRAPNEL,
+                SkillTooltip.RANDOM_PROJECTILE_COUNT.tooltip(IntIntPair.of(6, 12)),
+                SkillTooltip.RANDOM_DAMAGE.tooltip(Pair.of(
+                        new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(3)),
+                        new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(5)))
+                )
+        );
+        this.addSkillDetails(SBSkills.HYPOTHERMIA,
+                SkillTooltip.TARGET_ICE_RESIST.tooltip(-10F),
+                SkillTooltip.EFFECT_DURATION.tooltip(200),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.CRYSTAL_ECHO,
+                SkillTooltip.DURATION.tooltip(200)
+        );
+        this.addSkillDetails(SBSkills.CHILL,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(this.getBaseDamage() / 2))),
+                SkillTooltip.PROC_DURATION.tooltip(20)
+        );
+        this.addSkillDetails(SBSkills.LINGERING_FROST,
+                SkillTooltip.FROST_BUILD_UP.tooltip(34F),
+                SkillTooltip.DURATION.tooltip(200)
+        );
+        this.addSkillDetails(SBSkills.GLACIAL_IMPACT,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.FROZEN),
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.PERMAFROST),
+                SkillTooltip.CATALYST.tooltip(SBItems.FROZEN_SHARD.get())
+        );
     }
 
     @Override
@@ -148,11 +197,6 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
         return context != null && CRYSTAL_PREDICATE.test(context) ? 5 : super.getCastTime(context);
     }
 
-    @Override
-    public void registerSkillTooltips() {
-
-    }
-
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {
         ShatteringCrystalSpell spell = crystal.getSpell();
         int count = context.hasSkill(SBSkills.CRYSTAL_ECHO) ? 2 : 1;
@@ -200,7 +244,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                                 HYPOTHERMIA,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.ATTRIBUTE_MODIFIER,
-                                new ModifierData(SBAttributes.FROST_SPELL_RESIST, new AttributeModifier(HYPOTHERMIA, -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                new ModifierData(SBAttributes.FROST_SPELL_RESIST, new AttributeModifier(HYPOTHERMIA, potency(-0.2F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                 200
                         );
 

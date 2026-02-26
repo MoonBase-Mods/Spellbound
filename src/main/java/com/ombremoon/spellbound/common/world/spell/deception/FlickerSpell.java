@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.spell.deception;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.KeyBinds;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -21,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -51,7 +53,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                     return new SpellAnimation(castPrefix + "instant_cast", SpellAnimation.Type.CAST, flag);
                 })
                 .castCondition((context, flickerSpell) -> {
-                    double range = SpellUtil.getCastRange(context.getCaster());
+                    double range = flickerSpell.getCastRange();
                     if (!context.hasSkill(SBSkills.DISTANT_FLICKER))
                         range /= 2;
 
@@ -83,7 +85,34 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.FLICKER,
+                SkillTooltip.RANGE.tooltip(this.getCastRange() / 2),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.DISTANT_FLICKER,
+                SkillTooltip.MODIFY_RANGE.tooltip(100F)
+        );
+        this.addSkillDetails(SBSkills.STEP_INTO_SHADOW,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.EFFECT_DURATION.tooltip(80),
+                SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
+        );
+        this.addSkillDetails(SBSkills.BLINDING_MIRAGE,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.BLINDNESS),
+                SkillTooltip.EFFECT_DURATION.tooltip(40)
+        );
+        this.addSkillDetails(SBSkills.PHANTOM_LURE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TAUNT),
+                SkillTooltip.EFFECT_DURATION.tooltip(40)
+        );
+        this.addSkillDetails(SBSkills.LOOK_OVER_HERE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.DURATION.tooltip(80),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.SKILL.tooltip(SBSkills.STEP_INTO_SHADOW)
+        );
     }
 
     @Override
@@ -117,7 +146,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                 }
 
                 caster.teleportTo(vec3.x, vec3.y, vec3.z);
-                if (context.hasSkill(SBSkills.STEP_INTO_SHADOW)) {
+                if (context.hasSkill(SBSkills.STEP_INTO_SHADOW) && !caster.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     this.addSkillBuff(
                             caster,
                             SBSkills.STEP_INTO_SHADOW,

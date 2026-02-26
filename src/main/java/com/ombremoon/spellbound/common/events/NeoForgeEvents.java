@@ -5,7 +5,6 @@ import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
@@ -38,7 +37,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -58,12 +56,10 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
 import java.util.List;
@@ -305,7 +301,7 @@ public class NeoForgeEvents {
 
             if (PuzzleDungeonData.isDungeon(serverLevel)) {
                 PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
-                if (!puzzle.spawnedDungeon()) {
+                if (!puzzle.spawnedDungeon() && puzzle.getCurrentDungeon() != null) {
                     puzzle.spawnDungeon(serverLevel);
                 } else if (puzzle.hasPuzzleStarted() && !puzzle.isPuzzleCompleted()) {
                     puzzle.handleDungeonLogic(serverLevel);
@@ -345,8 +341,7 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
-        player.setData(SBData.MANA, player.getAttribute(SBAttributes.MAX_MANA).getValue());
-        PayloadHandler.syncMana(player);
+        player.setData(SBData.MANA, player.getAttributeValue(SBAttributes.MAX_MANA));
     }
 
     @SubscribeEvent
@@ -448,10 +443,10 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onItemInteract(PlayerInteractEvent.RightClickItem event) {
         if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
-            if (PuzzleDungeonData.hasRule((ServerLevel) player.level(), DungeonRules.NO_INTERACT)) {
+            /*if (PuzzleDungeonData.hasRule((ServerLevel) player.level(), DungeonRules.NO_INTERACT)) {
                 event.setCancellationResult(InteractionResult.SUCCESS_NO_ITEM_USED);
                 event.setCanceled(true);
-            }
+            }*/
         }
     }
 
@@ -503,6 +498,7 @@ public class NeoForgeEvents {
         if (event.getEntity().level().isClientSide)
             return;
 
+        ServerLevel serverLevel = (ServerLevel) event.getEntity().level();
         LivingEntity livingEntity = event.getEntity();
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.getListener().fireEvent(SpellEventListener.Events.POST_DAMAGE, new DamageEvent.Post(livingEntity, event));
@@ -525,14 +521,21 @@ public class NeoForgeEvents {
             var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
             attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, event));
 
+            EffectManager effects = SpellUtil.getSpellEffects(sourceEntity);
+            effects.doPostAttackEffects(event);
+
+            RitualSavedData rituals = RitualSavedData.get(serverLevel);
+            rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPostAttackEffects(event));
         }
     }
 
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Pre event) {
         LivingEntity livingEntity = event.getEntity();
-        if (livingEntity.level().isClientSide) return;
+        if (livingEntity.level().isClientSide)
+            return;
 
+        ServerLevel serverLevel = (ServerLevel) livingEntity.level();
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.getListener().fireEvent(SpellEventListener.Events.PRE_DAMAGE, new DamageEvent.Pre(livingEntity, event));
 
@@ -547,6 +550,8 @@ public class NeoForgeEvents {
 
         DamageSource source = event.getSource();
         Entity entity = source.getEntity();
+        RitualSavedData rituals = RitualSavedData.get(serverLevel);
+        EffectManager effects = SpellUtil.getSpellEffects(livingEntity);
         if (entity instanceof LivingEntity attacker && SpellUtil.isSummon(attacker)) {
             AbstractSpell spell = SpellUtil.getActiveSpell(attacker);
             if (spell instanceof SummonSpell summonSpell) {
@@ -559,8 +564,15 @@ public class NeoForgeEvents {
             }
         } else if (source.getEntity() instanceof LivingEntity living) {
             var attackerHandler = SpellUtil.getSpellHandler(living);
+            EffectManager attackerEffects = SpellUtil.getSpellEffects(living);
             attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(living, event));
+
+            attackerEffects.doPreAttackEffects(event);
+            rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));
         }
+
+        effects.doPreDamageEffects(event);
+        rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));
     }
 
     @SubscribeEvent

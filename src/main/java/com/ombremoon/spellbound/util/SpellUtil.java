@@ -102,7 +102,8 @@ public class SpellUtil {
         if (!level.isClientSide && PuzzleDungeonData.hasRule((ServerLevel) level, DungeonRules.NO_SPELL_CASTING))
             return false;
 
-        return handler.consumeMana(spell.getManaCost(livingEntity), false);
+//        return handler.consumeMana(spell.getManaCost(livingEntity), false);
+        return handler.consumeMana(spell.getManaCost(), false);
     }
 
     public static <T extends SpellType<?>> void cycleSpells(SpellHandler handler, T activeSpell) {

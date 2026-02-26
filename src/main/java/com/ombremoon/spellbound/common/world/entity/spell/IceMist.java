@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -46,6 +47,7 @@ public class IceMist extends SpellEntity<ShatteringCrystalSpell> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity livingEntity && this.tickCount % 20 == 0) {
                         spell.hurt(this, livingEntity, 2);
+                        spell.incrementEffect(livingEntity, EffectManager.Effect.FROST, 34);
                         livingEntity.setIsInPowderSnow(true);
                     }
                 }

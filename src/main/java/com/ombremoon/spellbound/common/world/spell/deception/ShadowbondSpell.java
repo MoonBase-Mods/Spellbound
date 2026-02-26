@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -9,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.EntityUtil;
@@ -46,17 +49,21 @@ public class ShadowbondSpell extends AnimatedSpell {
                         if (spell.canReverse) {
                             return true;
                         } else if (context.hasSkill(SBSkills.SHADOW_CHAIN) && context.getTarget() != null && context.getTarget().getId() != spell.firstTarget) {
-                            return spell.secondTarget == 0;
+                            return canSwapTargets(context) && spell.secondTarget == 0;
                         } else if (!spell.isEarlyEnd() && !spell.canReverse) {
                             spell.spellData.set(EARLY_END, true);
                             return true;
                         }
                     }
-                    return !context.isRecast() && context.getTarget() instanceof LivingEntity target && !spell.checkForCounterMagic(target) && !EntityUtil.isBoss(target);
+                    return !context.isRecast() && canSwapTargets(context);
                 })
                 .instantCast()
                 .fullRecast(true)
                 .skipEndOnRecast();
+    }
+
+    private static boolean canSwapTargets(SpellContext context) {
+        return context.getTarget() instanceof LivingEntity target && !checkForCounterMagic(target) && !EntityUtil.isBoss(target);
     }
 
     private int firstTarget;
@@ -66,6 +73,48 @@ public class ShadowbondSpell extends AnimatedSpell {
 
     public ShadowbondSpell() {
         super(SBSpells.SHADOWBOND.get(), createShadowbondBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.SHADOWBOND,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.DURATION.tooltip(200),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.INVISIBILITY_OVERRIDE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.EVERLASTING_BOND,
+                SkillTooltip.MODIFY_DURATION.tooltip(100F)
+        );
+        this.addSkillDetails(SBSkills.SILENT_EXCHANGE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.SNARE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.ROOTED),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.DISORIENTED,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.CONFUSION),
+                SkillTooltip.EFFECT_DURATION.tooltip(200),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.TARGET_DAMAGE.tooltip(potency(-20F)),
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.OBSERVANT,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TARGET_AURA)
+        );
+        this.addSkillDetails(SBSkills.SNEAK_ATTACK,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SNEAK_ATTACK, potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.LIVING_SHADOW,
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.REVERSAL,
+                SkillTooltip.PROC_DURATION.tooltip(100)
+        );
     }
 
     @Override
@@ -183,11 +232,6 @@ public class ShadowbondSpell extends AnimatedSpell {
         return context.hasSkill(SBSkills.EVERLASTING_BOND) ? 500 : context.hasSkill(SBSkills.REVERSAL) ? duration + 100 : duration;
     }
 
-    @Override
-    public void registerSkillTooltips() {
-
-    }
-
     private void teleport(LivingEntity first, LivingEntity second) {
         Vec3 firstPos = first.position();
         Vec3 secondPosPos = second.position();
@@ -249,7 +293,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     SNEAK_ATTACK,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SNEAK_ATTACK, 0.5F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                    new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SNEAK_ATTACK, potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                     100);
             addEventBuff(
                     caster,
@@ -306,7 +350,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                             BuffCategory.HARMFUL,
                             SpellEventListener.Events.PRE_DAMAGE,
                             DISORIENTED,
-                            pre -> pre.setNewDamage(pre.getOriginalDamage() * 0.8F),
+                            pre -> pre.setNewDamage(pre.getOriginalDamage() * invertedPotency(0.8F)),
                             100);
 
                 }

@@ -81,7 +81,7 @@ public class TransfigurationMultiblock extends StandardMultiblock {
         Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(this, items, this.rings);
         if (optional.isPresent() && !level.isClientSide) {
             TransfigurationRitual ritual = optional.get();
-            RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
+            RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern, this.rings));
         } else {
             clearMultiblock(player, level, pattern);
         }

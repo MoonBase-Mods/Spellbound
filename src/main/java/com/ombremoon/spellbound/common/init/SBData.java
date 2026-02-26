@@ -16,6 +16,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
+import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -48,7 +49,7 @@ public class SBData {
 
     //Mana
     public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(
-            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).build());
+            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).sync(ByteBufCodecs.DOUBLE).build());
 
     //Upgrade Tree
     public static final Supplier<AttachmentType<UpgradeTree>> UPGRADE_TREE = ATTACHMENT_TYPES.register(
@@ -128,6 +129,12 @@ public class SBData {
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));
+
+    //Effect Components
+    public static final Supplier<DataComponentType<EnchantmentTarget>> PRE_DAMAGE = COMPONENT_TYPES.registerComponentType("pre_damage", builder -> builder.persistent(EnchantmentTarget.CODEC));
+    public static final Supplier<DataComponentType<EnchantmentTarget>> PRE_ATTACK = COMPONENT_TYPES.registerComponentType("pre_attack", builder -> builder.persistent(EnchantmentTarget.CODEC));
+    public static final Supplier<DataComponentType<EnchantmentTarget>> POST_ATTACK = COMPONENT_TYPES.registerComponentType("post_attack", builder -> builder.persistent(EnchantmentTarget.CODEC));
+    public static final Supplier<DataComponentType<Unit>> HIT_BLOCK = COMPONENT_TYPES.registerComponentType("hit_block", builder -> builder.persistent(Unit.CODEC));
 
     public static final Supplier<DataComponentType<Unit>> DETAILS = COMPONENT_TYPES.registerComponentType("details", builder -> builder.persistent(Unit.CODEC));
     public static final Supplier<DataComponentType<Unit>> TEST = COMPONENT_TYPES.registerComponentType("test", builder -> builder.persistent(Unit.CODEC));

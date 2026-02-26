@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -8,6 +9,7 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.spell.ShadowGate;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -33,7 +35,8 @@ import java.util.List;
 
 public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     private static final ResourceLocation BLINK = CommonClass.customLocation("blink");
-    private static final ResourceLocation UNWANTED_GUESTS = CommonClass.customLocation("unwanted_guests");
+    private static final ResourceLocation UNWANTED_GUESTS_DAMAGE = CommonClass.customLocation("unwanted_guests");
+    private static final ResourceLocation UNWANTED_GUESTS_POTENCY = CommonClass.customLocation("unwanted_guests_potency");
     private static final ResourceLocation SHADOW_ESCAPE = CommonClass.customLocation("shadow_escape");
     private static final ResourceLocation GRAVITY_SHIFT = CommonClass.customLocation("gravity_shift");
     private final PortalMap<ShadowGate> portalMap = new PortalMap<>();
@@ -60,6 +63,46 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
 
     public ShadowGateSpell() {
         super(SBSpells.SHADOW_GATE.get(), createShadowGateBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.SHADOW_GATE,
+                SkillTooltip.DURATION.tooltip(1200),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.RANGE.tooltip(50F),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.REACH,
+                SkillTooltip.MODIFY_RANGE.tooltip(100F)
+        );
+        this.addSkillDetails(SBSkills.BLINK,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(BLINK, 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(100)
+        );
+        this.addSkillDetails(SBSkills.SHADOW_ESCAPE,
+                SkillTooltip.HP_THRESHOLD.tooltip(50F),
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
+        );
+        this.addSkillDetails(SBSkills.QUICK_RECHARGE,
+                SkillTooltip.MANA.tooltip(10F)
+        );
+        this.addSkillDetails(SBSkills.UNWANTED_GUESTS,
+                SkillTooltip.TARGET_PHYSICAL_DAMAGE.tooltip(-10F),
+                SkillTooltip.TARGET_SPELL_DAMAGE.tooltip(-10F),
+                SkillTooltip.TARGET_SPELL_POTENCY.tooltip(-10F)
+        );
+        this.addSkillDetails(SBSkills.BAIT_AND_SWITCH,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, 5F)),
+                SkillTooltip.MANA_DAMAGE.tooltip(5F)
+        );
+        this.addSkillDetails(SBSkills.GRAVITY_SHIFT,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.SLOW_FALLING),
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.CHOICE.tooltip()
+        );
     }
 
     @Override
@@ -110,7 +153,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                             100);
 
                                 if (context.hasSkillReady(SBSkills.QUICK_RECHARGE)) {
-                                    context.getSpellHandler().awardMana(10);
+                                    this.consumeMana(caster, -10);
                                     addCooldown(SBSkills.QUICK_RECHARGE, 200);
                                 }
 
@@ -132,13 +175,13 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                             SBSkills.UNWANTED_GUESTS,
                                             BuffCategory.HARMFUL,
                                             SpellEventListener.Events.PRE_DAMAGE,
-                                            UNWANTED_GUESTS,
+                                            UNWANTED_GUESTS_DAMAGE,
                                             pre -> pre.setNewDamage(pre.getOriginalDamage() * 0.9F),
                                             200);
                                     addSkillBuff(
                                             entity,
                                             SBSkills.UNWANTED_GUESTS,
-                                            UNWANTED_GUESTS,
+                                            UNWANTED_GUESTS_POTENCY,
                                             BuffCategory.HARMFUL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.UNWANTED_GUESTS,
@@ -147,7 +190,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
 
                                 if (context.hasSkill(SBSkills.BAIT_AND_SWITCH) && !entity.isAlliedTo(caster)) {
                                     this.hurt(entity, 5);
-                                    SpellUtil.getSpellHandler(entity).consumeMana(5);
+                                    this.consumeMana(entity, 5);
                                 }
 
                                 ShadowGate adjacentGate = this.portalMap.getAdjacentPortal(shadowGate, level);
@@ -185,11 +228,6 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                     shadowGate.setEndTick(20);
             });
         }
-    }
-
-    @Override
-    public void registerSkillTooltips() {
-
     }
 
     @Override

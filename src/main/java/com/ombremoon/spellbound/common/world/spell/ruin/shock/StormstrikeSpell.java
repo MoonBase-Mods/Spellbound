@@ -30,8 +30,9 @@ public class StormstrikeSpell extends AnimatedSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.STORMSTRIKE,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 2)),
-                SkillTooltip.DURATION.tooltip(60)
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage())),
+                SkillTooltip.DURATION.tooltip(60),
+                SkillTooltip.PROC_DURATION.tooltip(20)
         );
         this.addSkillDetails(SBSkills.STATIC_SHOCK, SkillTooltip.RADIUS.tooltip(3F));
         this.addSkillDetails(SBSkills.ELECTRIFY,
@@ -41,7 +42,7 @@ public class StormstrikeSpell extends AnimatedSpell {
         this.addSkillDetails(SBSkills.SHOCK_FACTOR, SkillTooltip.MANA_TO_DAMAGE.tooltip(1F));
         this.addSkillDetails(SBSkills.PURGE, SkillTooltip.MANA_TO_DAMAGE.tooltip(10F));
         this.addSkillDetails(SBSkills.REFRACTION,
-                SkillTooltip.MANA.tooltip(5),
+                SkillTooltip.MANA.tooltip(potency(5)),
                 SkillTooltip.POTENCY_SCALING.tooltip()
         );
         this.addSkillDetails(SBSkills.PULSATION,
@@ -51,7 +52,7 @@ public class StormstrikeSpell extends AnimatedSpell {
         );
         this.addSkillDetails(SBSkills.STORM_SHARD, SkillTooltip.COOLDOWN.tooltip(24000));
         this.addSkillDetails(SBSkills.CHARGED_ATMOSPHERE,
-                SkillTooltip.MANA_COST.tooltip(-25F),
+                SkillTooltip.MODIFY_MANA_COST.tooltip(-25F),
                 SkillTooltip.EFFECT_DURATION.tooltip(160)
         );
         this.addSkillDetails(SBSkills.DISARM,

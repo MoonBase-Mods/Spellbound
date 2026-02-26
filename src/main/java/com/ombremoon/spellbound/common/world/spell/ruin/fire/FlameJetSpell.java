@@ -24,14 +24,12 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.UnknownNullability;
 import org.joml.Vector3f;
@@ -47,7 +45,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     private static final List<AABBSentinelBox> FLAME_GEYSER_BOXES = createFlameGeyserBoxes();
     private static final OBBSentinelBox REAR_JET_BOX = createRearJet();
     private static final SpellDataKey<Vector3f> GEYSER_POS = SyncedSpellData.registerDataKey(FlameJetSpell.class, SBDataTypes.VECTOR3.get());
-    private int turbulenceCharges;
+    private static final SpellDataKey<Integer> TURBULENCE_CHARGES = SyncedSpellData.registerDataKey(FlameJetSpell.class, SBDataTypes.INT.get());
     private long lastFlameJetCast;
     private float damageMultiplier = 1.0F;
     public static Builder<FlameJetSpell> createFlameJetBuilder() {
@@ -58,7 +56,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 .castTime(5)
                 .castCondition((context, spell) -> {
                     if (context.isChoice(SBSkills.FLAME_GEYSER)) {
-                        double range = SpellUtil.getCastRange(context.getCaster());
+                        double range = spell.getCastRange();
                         Entity target = spell.getTargetEntity(context.getCaster(), range);
                         if (target != null) {
                             spell.setGeyserPosition(target.position());
@@ -141,7 +139,10 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
     @Override
     public void registerSkillTooltips() {
-        this.addSkillDetails(SBSkills.FLAME_JET, SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())));
+        this.addSkillDetails(SBSkills.FLAME_JET,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
+                SkillTooltip.CHOICE.tooltip()
+        );
         this.addSkillDetails(SBSkills.EXPULSION_BLAST,
                 SkillTooltip.KNOCKBACK.tooltip(1F),
                 SkillTooltip.KNOCKBACK_PER_CHARGE.tooltip(25F)
@@ -153,13 +154,14 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         );
         this.addSkillDetails(SBSkills.FLAME_INFERNO,
                 SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, -50F)),
-                SkillTooltip.RADIUS.tooltip(1F),
+                SkillTooltip.RADIUS.tooltip(1.5F),
                 SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.TURBO_CHARGE,
                 SkillTooltip.CHARGE_DURATION.tooltip(60),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
-                SkillTooltip.CHOICE.tooltip()
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip()
         );
         this.addSkillDetails(SBSkills.IGNITION_BURST,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
@@ -170,19 +172,24 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 SkillTooltip.RANGE_PER_CHARGE.tooltip(0.25F),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
                 SkillTooltip.COOLDOWN.tooltip(40),
-                SkillTooltip.CHOICE_CONDITION.tooltip(
-                        new SkillTooltip.ChoiceTooltip(SBSkills.FLAME_INFERNO, SkillTooltip.RADIUS_PER_CHARGE.tooltip(25F))
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.FLAME_GEYSER, SkillTooltip.RANGE_PER_CHARGE.tooltip(50F))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.FLAME_INFERNO, SkillTooltip.RADIUS_PER_CHARGE.tooltip(50F))
                 )
         );
         this.addSkillDetails(SBSkills.AFTERSHOCK_COMPRESSION,
-                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 33F)),
+                SkillTooltip.DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 33F)),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
                 SkillTooltip.COOLDOWN.tooltip(40)
         );
         this.addSkillDetails(SBSkills.IRON_MAN,
                 SkillTooltip.MANA_TICK_COST.tooltip(-5),
                 SkillTooltip.DURATION.tooltip(100),
-                SkillTooltip.CHOICE.tooltip()
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHANNELED.tooltip(),
+                SkillTooltip.CATALYST.tooltip(SBItems.SMOLDERING_SHARD.get())
         );
     }
 
@@ -190,6 +197,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(GEYSER_POS, new Vector3f());
+        builder.define(TURBULENCE_CHARGES, 0);
     }
 
     public void setGeyserPosition(Vec3 pos) {
@@ -212,7 +220,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
             long lastCastTick = this.lastFlameJetCast;
             if (handler.previouslyCastSpell.isSpellType(this) && caster.level().getGameTime() - lastCastTick < 60 && lastCastTick != 0) {
                 FlameJetSpell prevSpell = (FlameJetSpell) handler.previouslyCastSpell;
-                this.turbulenceCharges = Math.min(prevSpell.turbulenceCharges + 1, 3);
+                this.setTurbulenceCharges(Math.min(prevSpell.getTurbulenceCharges() + 1, 3));
             }
         }
     }
@@ -235,7 +243,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
             long lastCastTick = this.lastFlameJetCast;
             if (handler.previouslyCastSpell.isSpellType(this) && caster.level().getGameTime() - lastCastTick < 60 && lastCastTick != 0) {
                 if (context.hasSkill(SBSkills.TURBULENCE_STREAM)) {
-                    charges += this.turbulenceCharges;
+                    charges += this.getTurbulenceCharges();
                 }
 
                 if (context.hasSkill(SBSkills.AFTERSHOCK_COMPRESSION)) {
@@ -272,15 +280,19 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                                 .setRotation(0, 180, 0)
                 );
             } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
+                float size = 0.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
                 this.addFX(
                         EffectBuilder.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
                                 .setOffset(0, -2.0, 0)
                                 .setRotation(0, 0, 90)
+                                .setScale(1, size, size)
                 );
             } else if (context.isChoice(SBSkills.FLAME_INFERNO)) {
+                float size = 1.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
                 this.addFX(
                         EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                 .setOffset(0, 1, 0)
+                                .setScale(size, size, size)
                 );
             }
         }
@@ -304,10 +316,18 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
             } else if (this.tickCount == 5 && context.isChoice(SBSkills.JET_ENGINE)) {
                 Vec3 lookVec = caster.getLookAngle();
                 caster.setDiscardFriction(true);
-                double strength = 2.0F + (Math.min(this.turbulenceCharges + this.getCharges(), 6) * 0.25F);
+                double strength = 2.0F + (Math.min(this.getTurbulenceCharges() + this.getCharges(), 6) * 0.25F);
                 Vec3 motion = new Vec3(lookVec.x * strength, lookVec.y * strength, lookVec.z * strength);
                 caster.setDeltaMovement(caster.getDeltaMovement().add(motion));
                 caster.hurtMarked = true;
+            }
+        } else {
+            if (context.isChoice(SBSkills.IRON_MAN) && this.tickCount % 5 == 0) {
+                this.addFX(
+                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
+                                .setOffset(0, -0.5, 2)
+                                .setRotation(0, 180, 0)
+                );
             }
         }
     }
@@ -341,22 +361,31 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         return context.isChoice(SBSkills.TURBO_CHARGE);
     }
 
+    private int getTurbulenceCharges() {
+        return this.spellData.get(TURBULENCE_CHARGES);
+    }
+
+    private void setTurbulenceCharges(int charges) {
+        this.spellData.set(TURBULENCE_CHARGES, charges);
+    }
+
+
     @Override
     public boolean shouldRender(SpellContext context) {
-        return false;
+        return context.isChoice(SBSkills.IRON_MAN);
     }
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
         CompoundTag nbt = super.saveData(compoundTag);
-        nbt.putInt("turbulence_charges", this.turbulenceCharges);
+        nbt.putInt("turbulence_charges", this.getTurbulenceCharges());
         return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
         super.loadData(nbt);
-        this.turbulenceCharges = nbt.getInt("turbulence_charges");
+        this.setTurbulenceCharges(nbt.getInt("turbulence_charges"));
     }
 
     private static OBBSentinelBox createFlameJet(int charges) {
@@ -382,7 +411,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
                             damage *= 1.0F + (0.15F * charges);
                             if (spell.hurt(livingEntity, damage) && context.hasSkill(SBSkills.EXPULSION_BLAST)) {
-                                double strength = 1.0F + (Math.min(spell.turbulenceCharges + spell.getCharges(), 6) * 0.25F);
+                                double strength = 1.0F + (Math.min(spell.getTurbulenceCharges() + spell.getCharges(), 6) * 0.25F);
                                 livingEntity.knockback(strength, caster.getX() - livingEntity.getX(), caster.getZ() - livingEntity.getZ());
                             }
                         }
@@ -393,7 +422,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     private static AABBSentinelBox createFlameInferno(int charges) {
         String name = "flame_inferno";
         name = charges != 0 ? name + "_" + charges : name;
-        float range = 1.0F + (0.25F * charges);
+        float range = 1.5F + (0.5F * charges);
         return AABBSentinelBox.Builder.of(name)
                 .sizeAndOffset(range, 0.5F, range, 0.0F, 1.0F, 0.0F)
                 .moverType(SentinelBox.MoverType.HEAD)
@@ -413,7 +442,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
                             damage *= 0.15F * charges;
                             if (spell.hurt(livingEntity, damage) && context.hasSkill(SBSkills.EXPULSION_BLAST)) {
-                                double strength = 1.0F + (Math.min(spell.turbulenceCharges + spell.getCharges(), 6) * 0.25F);
+                                double strength = 1.0F + (Math.min(spell.getTurbulenceCharges() + spell.getCharges(), 6) * 0.25F);
                                 livingEntity.knockback(strength, caster.getX() - livingEntity.getX(), caster.getZ() - livingEntity.getZ());
                             }
                         }
@@ -425,8 +454,9 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         String name = "flame_geyser";
         name = charges != 0 ? name + "_" + charges : name;
         float range = 1.5F + (0.5F * charges);
+        float size = 0.5F + (0.5F * charges);
         return AABBSentinelBox.Builder.of(name)
-                .sizeAndOffset(0.5F + (0.25F * charges), range, 0.5F + (0.25F * charges), 0.0F, range, 0.0F)
+                .sizeAndOffset(size, range, size, 0.0F, range, 0.0F)
                 .noDuration(entity -> entity instanceof LivingEntity livingEntity && !SpellUtil.isSpellActive(SBSpells.FLAME_JET.get(), livingEntity))
                 .activeTicks((entity, integer) -> integer == 1)
                 .attackCondition(NO_ATTACK)
@@ -457,7 +487,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
                             damage *= 0.15F * charges;
                             if (spell.hurt(livingEntity, damage) && context.hasSkill(SBSkills.EXPULSION_BLAST)) {
-                                double strength = 0.5F + (Math.min(spell.turbulenceCharges, 3) * 0.25F);
+                                double strength = 0.5F + (Math.min(spell.getTurbulenceCharges(), 3) * 0.25F);
                                 Vec3 upwardMotion = new Vec3(0, strength, 0);
                                 livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().add(upwardMotion.scale(1.0 - livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE))));
                                 livingEntity.hurtMarked = true;
@@ -472,7 +502,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         name = charges != 0 ? name + "_" + charges : name;
         float range = 1.0F + (0.5F * charges);
         return OBBSentinelBox.Builder.of(name)
-                .sizeAndOffset(0.75F, 0, 1.0F, 2.0F * range)
+                .sizeAndOffset(0.75F, 0, 1.0F, 1.5F * range)
                 .moverType(SentinelBox.MoverType.HEAD)
                 .noDuration(entity -> entity instanceof LivingEntity livingEntity && !SpellUtil.isSpellActive(SBSpells.FLAME_JET.get(), livingEntity))
                 .activeTicks((entity, integer) -> integer == 1)
@@ -481,9 +511,22 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     Level level = entity.level();
                     if (!(entity instanceof LivingEntity livingEntity)) return;
 
-                    if (!level.isClientSide && instance.tickCount == 1) {
+                    if (instance.tickCount == 1) {
                         Vec3 vec3 = instance.getCenter();
-                        level.explode(livingEntity, Explosion.getDefaultDamageSource(level, livingEntity), null, vec3.x(), vec3.y(), vec3.z(), 2.0F, false, Level.ExplosionInteraction.NONE);
+                        if (!level.isClientSide) {
+                            level.explode(livingEntity, Explosion.getDefaultDamageSource(level, livingEntity), null, vec3.x(), vec3.y(), vec3.z(), 2.0F, false, Level.ExplosionInteraction.NONE);
+                        } else {
+                            var handler = SpellUtil.getSpellHandler(livingEntity);
+                            FlameJetSpell spell = handler.getSpell(SBSpells.FLAME_JET.get());
+                            if (spell != null) {
+                                spell.addFX(
+                                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                                .setOffset(0, 1, 0)
+                                                .setPos(vec3)
+                                                .setScale(0.75F, 0.75F, 0.75F)
+                                );
+                            }
+                        }
                     }
                 }).build();
     }

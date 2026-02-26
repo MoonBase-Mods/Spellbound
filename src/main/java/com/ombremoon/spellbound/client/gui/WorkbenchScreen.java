@@ -28,6 +28,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,6 +67,12 @@ public class WorkbenchScreen extends Screen {
         super(title);
     }
 
+    private static List<SpellType<?>> sortSpellList(Collection<SpellType<?>> spellList) {
+        return spellList.stream()
+                .sorted((s1, s2) -> s1.location().getPath().compareToIgnoreCase(s2.location().getPath()))
+                .toList();
+    }
+
     @Override
     protected void init() {
         this.leftPos = (this.width - WIDTH) / 2;
@@ -74,8 +81,9 @@ public class WorkbenchScreen extends Screen {
         this.upgradeTree = this.player.getData(SBData.UPGRADE_TREE);
         this.spellHandler = SpellUtil.getSpellHandler(this.player);
         this.skillHolder = SpellUtil.getSkills(this.player);
-        this.spellList = this.spellHandler.getSpellList().stream().filter(spellType -> spellType.getPath().ordinal() == pageIndex).toList();
-        this.equippedSpellList = this.spellHandler.getEquippedSpells().stream().toList();
+        var list = this.spellHandler.getSpellList().stream().filter(spellType -> spellType.getPath().ordinal() == pageIndex).toList();
+        this.spellList = sortSpellList(list);
+        this.equippedSpellList = sortSpellList(this.spellHandler.getEquippedSpells());
         this.spellPath = SpellPath.RUIN;
         this.initSpellTrees();
         if (!this.spellList.isEmpty()) {
@@ -110,7 +118,8 @@ public class WorkbenchScreen extends Screen {
                 this.scrollOffs = 0;
                 this.scrollIndex = 0;
                 this.windowIndex = 0;
-                this.spellList = this.spellHandler.getSpellList().stream().filter(spellType -> spellType.getPath().ordinal() == pageIndex).toList();
+                var list = this.spellHandler.getSpellList().stream().filter(spellType -> spellType.getPath().ordinal() == pageIndex).toList();
+                this.spellList = sortSpellList(list);
                 this.selectedSpell = this.spellList.isEmpty() ? null : this.spellList.get(0);
                 this.selectedTree = this.selectedSpell != null ? this.spellTrees.get(this.selectedSpell) : null;
                 if (this.selectedTree != null) this.selectedTree.centered = false;
@@ -125,7 +134,8 @@ public class WorkbenchScreen extends Screen {
             this.scrollOffs = 0;
             this.scrollIndex = 0;
             this.windowIndex = 0;
-            this.spellList = this.spellHandler.getSpellList().stream().filter(spellType -> !this.spellHandler.getEquippedSpells().contains(spellType)).toList();
+            var list = this.spellHandler.getSpellList().stream().filter(spellType -> !this.spellHandler.getEquippedSpells().contains(spellType)).toList();
+            this.spellList = sortSpellList(list);
             this.selectedSpell = this.spellList.isEmpty() ? null : this.spellList.get(0);
             this.selectedTree = null;
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -140,8 +150,9 @@ public class WorkbenchScreen extends Screen {
                         if (spellType != null) {
                             this.spellHandler.unequipSpell(spellType);
                             this.selectedIndex = -1;
-                            this.spellList = this.spellHandler.getSpellList().stream().filter(spell -> !this.spellHandler.getEquippedSpells().contains(spell)).toList();
-                            this.equippedSpellList = this.spellHandler.getEquippedSpells().stream().toList();
+                            var list = this.spellHandler.getSpellList().stream().filter(spell -> !this.spellHandler.getEquippedSpells().contains(spell)).toList();
+                            this.spellList = sortSpellList(list);
+                            this.equippedSpellList = sortSpellList(this.spellHandler.getEquippedSpells());
                             PayloadHandler.equipSpell(spellType, false);
                             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                             return true;
@@ -388,7 +399,9 @@ public class WorkbenchScreen extends Screen {
         if (this.spellHandler.getEquippedSpells().size() < ConfigHandler.COMMON.maxSpellListSize.get()) {
             this.spellHandler.equipSpell(spellType);
             this.spellList = this.spellHandler.getSpellList().stream().filter(spell -> !this.spellHandler.getEquippedSpells().contains(spell)).toList();
-            this.equippedSpellList = this.spellHandler.getEquippedSpells().stream().toList();
+            this.equippedSpellList = this.spellHandler.getEquippedSpells().stream()
+                    .sorted((s1, s2) -> s1.createSpell().getName().getString().compareToIgnoreCase(s2.createSpell().getName().getString()))
+                    .toList();
             this.selectedIndex = -1;
             PayloadHandler.equipSpell(spellType, true);
         }

@@ -24,11 +24,13 @@ public class SBItems {
     public static final List<Supplier<? extends Item>> EXCLUDED_ITEMS = new ArrayList<>();
     public static final List<Supplier<? extends Item>> BLOCK_ITEM_LIST = new ArrayList<>();
 
-    public static final Supplier<Item> SOUL_SHARD = registerSimpleItem("soul_shard");
     public static final Supplier<Item> SMOLDERING_SHARD = registerSimpleItem("smoldering_shard");
     public static final Supplier<Item> FROZEN_SHARD = registerSimpleItem("frozen_shard");
     public static final Supplier<Item> STORM_SHARD = registerSimpleItem("storm_shard");
+    public static final Supplier<Item> FLUX_SHARD = registerSimpleItem("flux_shard");
+    public static final Supplier<Item> SOUL_SHARD = registerSimpleItem("soul_shard");
     public static final Supplier<Item> HOLY_SHARD = registerSimpleItem("holy_shard");
+    public static final Supplier<Item> CORRUPTED_SHARD = registerSimpleItem("corrupted_shard");
     public static final Supplier<Item> FOOL_SHARD = registerSimpleItem("fool_shard");
 
     public static final Supplier<Item> CREATIONIST_STAFF = registerItem("creationist_staff", () -> new CatalystItem(SpellPath.TRANSFIGURATION, getItemProperties().stacksTo(1).attributes(CatalystItem.createTransfigurationAttributes())), true);

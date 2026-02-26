@@ -122,7 +122,7 @@ public class SBSpells {
                     SBSkills.TRANQUILITY_OF_WATER, SBSkills.NATURES_TOUCH, SBSkills.CLEANSING_TOUCH,
                     SBSkills.OVERGROWTH, SBSkills.BLASPHEMY, SBSkills.CONVALESCENCE, SBSkills.OAK_BLESSING));
     public static final Supplier<SpellType<BlessingSpell>> BLESSING = registerSpell("blessing", divineBuilder(SpellMastery.NOVICE, BlessingSpell::new)
-            .skills(SBSkills.BLESSING, SBSkills.FORTIFIED_HEARTS, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
+            .skills(SBSkills.BLESSING, SBSkills.COURAGE, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
                     SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
                     SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
     public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
@@ -140,16 +140,16 @@ public class SBSpells {
                     SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
                     SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
     public static final Supplier<SpellType<CursedRuneSpell>> CURSED_RUNE = registerSpell("cursed_rune", deceptionBuilder(SpellMastery.NOVICE, CursedRuneSpell::new)
-            .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE,
-                    SBSkills.MIRROR_CURSE, SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_DROUGHT,
-                    SBSkills.CURSE_OF_WEAKNESS, SBSkills.CURSE_OF_SUSCEPTIBILITY, SBSkills.TANGLEFOOT_CURSE, SBSkills.HIDDEN_RUNE));
+            .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE, SBSkills.MIRROR_CURSE,
+                    SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_SILENCE, SBSkills.CURSE_OF_WEAKNESS, SBSkills.VANISHING_CURSE,
+                    SBSkills.CURSE_OF_SUSCEPTIBILITY, SBSkills.TANGLEFOOT_CURSE, SBSkills.HIDDEN_RUNE));
     public static final Supplier<SpellType<ShadowbondSpell>> SHADOWBOND = registerSpell("shadowbond", deceptionBuilder(SpellMastery.ADEPT, ShadowbondSpell::new)
             .skills(SBSkills.SHADOWBOND, SBSkills.EVERLASTING_BOND, SBSkills.SHADOW_STEP, SBSkills.SNEAK_ATTACK,
                     SBSkills.SILENT_EXCHANGE, SBSkills.SNARE, SBSkills.DISORIENTED,
                     SBSkills.OBSERVANT, SBSkills.LIVING_SHADOW, SBSkills.REVERSAL, SBSkills.SHADOW_CHAIN));
     public static final Supplier<SpellType<PurgeMagicSpell>> PURGE_MAGIC = registerSpell("purge_magic", deceptionBuilder(SpellMastery.ADEPT, PurgeMagicSpell::new)
             .skills(SBSkills.PURGE_MAGIC, SBSkills.COUNTER_MAGIC, SBSkills.RADIO_WAVES, SBSkills.DOMINANT_MAGIC,
-                    SBSkills.CLEANSE, SBSkills.AVERSION, SBSkills.RESIDUAL_DISRUPTION, SBSkills.UNFOCUSED,
+                    SBSkills.CLEANSE, SBSkills.MANA_SPONGE, SBSkills.RESIDUAL_DISRUPTION, SBSkills.UNFOCUSED,
                     SBSkills.MAGIC_POISONING, SBSkills.NULLIFICATION, SBSkills.EXPUNGE));
 
     private static <T extends AbstractSpell> Supplier<SpellType<T>> registerSpell(String name, SpellType.Builder<T> builder) {

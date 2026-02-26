@@ -173,10 +173,6 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new SetSpellDataPayload(entity.getId(), spellType, id, packedItems));
     }
 
-    public static void syncMana(Player player) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new SyncManaPayload(player.getData(SBData.MANA)));
-    }
-
     public static void updateTree(Player player, boolean reset, List<Skill> added, Set<ResourceLocation> removed) {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateTreePayload(reset, added, removed));
     }
@@ -297,11 +293,6 @@ public class PayloadHandler {
                 SetSpellDataPayload.TYPE,
                 SetSpellDataPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleClientSetSpellData
-        );
-        registrar.playToClient(
-                SyncManaPayload.TYPE,
-                SyncManaPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleClientManaSync
         );
         registrar.playToClient(
                 UpdateTreePayload.TYPE,

@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -10,15 +12,25 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.RandomUtil;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MysticArmorSpell extends AnimatedSpell {
     private static final ResourceLocation PRE_DAMAGE = CommonClass.customLocation("mystic_armor_pre_damage");
@@ -40,6 +52,53 @@ public class MysticArmorSpell extends AnimatedSpell {
     }
 
     @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.MYSTIC_ARMOR,
+                SkillTooltip.SPELL_DAMAGE_REDUX.tooltip(potency(15F)),
+                TRANSFIG_LEVEL.tooltip(3F),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.FORESIGHT,
+                SkillTooltip.MODIFY_MANA_COST.tooltip(-15F)
+        );
+        this.addSkillDetails(SBSkills.ARCANE_VENGEANCE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(ARCANE_VENGEANCE_DAMAGE, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.PURSUIT,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(PURSUIT, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+        );
+        this.addSkillDetails(SBSkills.EQUILIBRIUM,
+                SkillTooltip.HEALTH_TO_DAMAGE.tooltip(10F)
+        );
+        this.addSkillDetails(SBSkills.COMBAT_PERCEPTION,
+                SkillTooltip.PROC_CHANCE.tooltip(potency(10F)),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.PLANAR_DEFLECTION,
+                SkillTooltip.DAMAGE_REFLECTION.tooltip(30F)
+        );
+        this.addSkillDetails(SBSkills.CRYSTALLINE_ARMOR,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(CRYSTALLINE_ARMOR, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.ELDRITCH_INTERVENTION,
+                SkillTooltip.HP_THRESHOLD.tooltip(20F),
+                SkillTooltip.COOLDOWN.tooltip(2400)
+        );
+        this.addSkillDetails(SBSkills.SUBLIME_BEACON,
+                ARMOR_TO_HEALTH.tooltip(25F),
+                SkillTooltip.PROC_DURATION.tooltip(60)
+        );
+        this.addSkillDetails(SBSkills.SOUL_RECHARGE,
+                SkillTooltip.HP_THRESHOLD.tooltip(10F),
+                SkillTooltip.COOLDOWN.tooltip(1800),
+                SkillTooltip.CATALYST.tooltip(SBItems.FLUX_SHARD.get())
+        );
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         addEventBuff(
@@ -54,7 +113,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                         pre.setNewDamage(pre.getOriginalDamage() * potency(f));
                     }
 
-                    if (context.hasSkill(SBSkills.COMBAT_PERCEPTION) && isPhysicalDamage(pre.getSource()) && RandomUtil.percentChance(0.1))
+                    if (context.hasSkill(SBSkills.COMBAT_PERCEPTION) && isPhysicalDamage(pre.getSource()) && RandomUtil.percentChance(potency(0.1F)))
                         pre.setNewDamage(0);
 
                     if (context.hasSkillReady(SBSkills.SOUL_RECHARGE) && context.hasCatalyst(SBItems.SOUL_SHARD.get()) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.1F) {
@@ -96,7 +155,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                             ARCANE_VENGEANCE_DAMAGE,
                             BuffCategory.BENEFICIAL,
                             SkillBuff.ATTRIBUTE_MODIFIER,
-                            new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(ARCANE_VENGEANCE_DAMAGE, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                            new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(ARCANE_VENGEANCE_DAMAGE, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                             200));
         }
 
@@ -116,17 +175,12 @@ public class MysticArmorSpell extends AnimatedSpell {
                     CRYSTALLINE_ARMOR,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.ARMOR, new AttributeModifier(CRYSTALLINE_ARMOR, 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+                    new ModifierData(Attributes.ARMOR, new AttributeModifier(CRYSTALLINE_ARMOR, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
 
         context.getLevel()
                 .playSeededSound(
                         null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.ARMOR_EQUIP_NETHERITE, caster.getSoundSource(), 1.0F, 1.0F, caster.getRandom().nextLong()
                 );
-    }
-
-    @Override
-    public void registerSkillTooltips() {
-
     }
 
     @Override
@@ -137,7 +191,7 @@ public class MysticArmorSpell extends AnimatedSpell {
 
         if (!level.isClientSide) {
             if (context.hasSkill(SBSkills.SUBLIME_BEACON))
-                caster.heal(caster.getArmorValue() * 0.25F);
+                this.heal(caster, caster.getArmorValue() * 0.25F);
         }
     }
 
@@ -151,7 +205,46 @@ public class MysticArmorSpell extends AnimatedSpell {
     }
 
     @Override
+    public float getManaCost(SpellContext context) {
+        return context.hasSkill(SBSkills.FORESIGHT) ? super.getManaCost(context) * 0.85F : super.getManaCost(context);
+    }
+
+    @Override
     protected boolean shouldTickSpellEffect(SpellContext context) {
         return this.tickCount % 60 == 0;
     }
+
+    public static SkillTooltip<Float> TRANSFIG_LEVEL = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.mystic_armor", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> ARMOR_TO_HEALTH = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.sublime_beacon", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }
