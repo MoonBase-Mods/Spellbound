@@ -92,6 +92,14 @@ public class SBEntities {
         return entitySupplier;
     }
 
+    protected static <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height, int updateInterval) {
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, MobCategory.MISC).sized(width, height).fireImmune().clientTrackingRange(4).updateInterval(updateInterval);
+
+        return SBEntities.ENTITIES.register(name, () -> {
+            return builder.build(name);
+        });
+    }
+
     protected static <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
         EntityType.Builder<T> builder = EntityType.Builder.of(factory, MobCategory.MISC).sized(width, height).fireImmune().clientTrackingRange(4);
 

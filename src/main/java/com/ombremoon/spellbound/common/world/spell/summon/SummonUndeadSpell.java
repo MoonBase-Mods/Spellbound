@@ -47,7 +47,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .manaCost(10)
                 .duration(2400)
                 .isSpecialChoice()
-                .additionalCondition((context, summonUndeadSpell) -> summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
+                .additionalCondition((context, summonUndeadSpell) -> !summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
                 .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(spell, context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
@@ -157,13 +157,13 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         int charges = this.getCharges() + 1;
         if (!context.getLevel().isClientSide) {
             EntityType<?> undead = EntityType.ZOMBIE;
-            if (this.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
+            if (context.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
                 undead = EntityType.ZOMBIFIED_PIGLIN;
-            } else if (this.isChoice(SBSkills.SUMMON_SKELETON)) {
+            } else if (context.isChoice(SBSkills.SUMMON_SKELETON)) {
                 undead = EntityType.SKELETON;
-            } else if (this.isChoice(SBSkills.SUMMON_PHANTOM)) {
+            } else if (context.isChoice(SBSkills.SUMMON_PHANTOM)) {
                 undead = EntityType.PHANTOM;
-            } else if (this.isChoice(SBSkills.SUMMON_DROWNED)) {
+            } else if (context.isChoice(SBSkills.SUMMON_DROWNED)) {
                 undead = EntityType.DROWNED;
             }
 
@@ -176,7 +176,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
             }
         }
 
-        if (this.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
+        if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
             this.addSkillBuff(
                     caster,
                     SBSkills.SUNKEN_BREATH,
@@ -257,7 +257,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return true;
+        return !shouldExplodeCorpse(context);
     }
 
     public void setExploding(boolean exploding) {

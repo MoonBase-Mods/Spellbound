@@ -1647,6 +1647,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         var handler = this.context.getSpellHandler();
         handler.previouslyCastSpell = this;
+        handler.lastCastTick = level.getGameTime();
         handler.setCurrentlyCastingSpell(null);
         activateSpell();
         EventFactory.onSpellCast(caster, this, this.context);

@@ -386,7 +386,6 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         for (int i = 0; i < rebirthTag.size(); i++) {
             CompoundTag tag = rebirthTag.getCompound(i);
-            System.out.println(SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))).getIdentifier());
             this.familiarRebirths.put(
                     SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
                     tag.getInt("rebirths"));

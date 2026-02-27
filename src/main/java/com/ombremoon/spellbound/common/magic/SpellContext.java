@@ -137,6 +137,10 @@ public class SpellContext {
         return this.skillHolder.getChoice(this.spellType).equals(skill);
     }
 
+    public boolean isChoice(Holder<Skill> skill) {
+        return this.isChoice(skill.value());
+    }
+
     public Skill getChoice() {
         return this.skillHolder.getChoice(this.spellType);
     }

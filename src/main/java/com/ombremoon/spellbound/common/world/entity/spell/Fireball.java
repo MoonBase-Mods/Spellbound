@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
@@ -27,7 +28,8 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
 
     @Override
     protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
-        return null;
+//        float size = (this.getSize() * 0.5F) + 0.5F;
+        return EffectBuilder.FireballBuilder.of(this.getId());
     }
 
     @Override
@@ -52,7 +54,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
                 this.setPos(target.getX(), target.getY(), target.getZ());
                 this.setDeltaMovement(target.getDeltaMovement());
 
-                if (!this.level().isClientSide && this.tickCount >= this.stickTime) {
+                if (!this.level().isClientSide && this.tickCount >= this.stickTime && spell != null) {
                     spell.explode(this);
                 }
 
@@ -61,7 +63,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
                 this.setDeltaMovement(Vec3.ZERO);
                 this.setPos(this.blockPosition().getX() + .5, this.blockPosition().getY() + .5, this.blockPosition().getZ() + .5);
 
-                if (!this.level().isClientSide && this.tickCount >= this.stickTime) {
+                if (!this.level().isClientSide && this.tickCount >= this.stickTime && spell != null) {
                     spell.explode(this);
                 }
 

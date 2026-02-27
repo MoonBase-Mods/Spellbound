@@ -154,7 +154,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
         Level level = context.getLevel();
-        if (!level.isClientSide && this.choice.equals(SBSkills.RAPID_FIRE.value()) && this.tickCount % 2 == 1) {
+        if (!level.isClientSide && this.isChoice(SBSkills.RAPID_FIRE) && this.tickCount % 2 == 1) {
             this.shootProjectile(context, SBEntities.FIREBALL.get(), 2.5F, 1.0F);
         }
     }
@@ -264,7 +264,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return this.isChoice(SBSkills.CHARGED_BLAST) || this.isChoice(SBSkills.VOLATILE_CLUSTER);
+        return context.isChoice(SBSkills.CHARGED_BLAST) || context.isChoice(SBSkills.VOLATILE_CLUSTER);
     }
 
     @Override
