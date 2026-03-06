@@ -27,13 +27,19 @@
   "electric_charge_use": {
     "subtitle": "sounds.spellbound.electric_charge_use",
     "sounds": [
-      "minecraft:entity.lightning_bolt.thunder"
+      "spellbound:electric_charge_use"
     ]
   },
   "electric_charge_recast": {
     "subtitle": "sounds.spellbound.electric_charge_recast",
     "sounds": [
       "spellbound:electric_charge_recast"
+    ]
+  },
+  "cursed_rune_activated": {
+    "subtitle": "sounds.spellbound.cursed_rune_activated",
+    "sounds": [
+      "spellbound:cursed_rune_activated"
     ]
   }
 }

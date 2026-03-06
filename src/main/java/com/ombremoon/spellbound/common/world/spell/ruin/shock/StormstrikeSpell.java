@@ -8,6 +8,8 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,6 +71,7 @@ public class StormstrikeSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         if (!level.isClientSide) {
+            playCastSound(level, context);
             this.shootProjectile(context, SBEntities.STORMSTRIKE_BOLT.get(), 2.5F, 1.0F);
         }
     }
@@ -76,6 +79,13 @@ public class StormstrikeSpell extends AnimatedSpell {
     @Override
     protected void onSpellStop(SpellContext context) {
 
+    }
+
+    public void playCastSound(Level level, SpellContext context){
+        float volume = 0.2F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.7F + level.random.nextFloat() * 0.3F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.STORMSTRIKE_USE.get(),
+                SoundSource.PLAYERS, volume, pitch);
     }
 
     @Override

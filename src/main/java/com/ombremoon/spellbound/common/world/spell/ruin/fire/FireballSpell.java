@@ -156,7 +156,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
     }
 
     public void playCastSound(Level level, SpellContext context){
-        float volume = 0.3F + level.random.nextFloat() * 0.2F;
+        float volume = 0.2F + level.random.nextFloat() * 0.2F;
         float pitch = 1.0F + level.random.nextFloat() * 0.2F;
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_USE.get(),
                 SoundSource.PLAYERS, volume, pitch);

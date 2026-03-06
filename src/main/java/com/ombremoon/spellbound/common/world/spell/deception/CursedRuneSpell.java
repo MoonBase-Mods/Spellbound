@@ -15,12 +15,14 @@ import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.EntityResource;
 import com.ombremoon.spellbound.common.world.entity.spell.CursedRune;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.FluidPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.level.Level;
@@ -51,6 +53,11 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
     }
     private static final SpellDataKey<Integer> CURSED_RUNE = SyncedSpellData.registerDataKey(CursedRuneSpell.class, SBDataTypes.INT.get());
     private Vec3 spawnPos;
+
+    public enum CastSoundType {
+        PLACE,
+        DISCHARGE
+    }
 
     public CursedRuneSpell() {
         super(SBSpells.CURSED_RUNE.get(), createCursedRuneBuilder());
@@ -229,8 +236,27 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                 cursedRune.setRuneEffects(List.of(finalEffect));
                 cursedRune.setHidden(context.hasSkill(SBSkills.HIDDEN_RUNE));
                 this.setRune(cursedRune);
+                //sound
+                playCastSound(level, context, CastSoundType.PLACE);
             });
+
         }
+    }
+
+    public void playCastSound(Level level, SpellContext context, CastSoundType type){
+        float volume = 0;
+        float pitch = 0;
+
+        if (type == CastSoundType.PLACE) {
+            volume = 0.1F + level.random.nextFloat() * 0.1F;
+            pitch = 1.0F + level.random.nextFloat() * 0.3F;
+        } else if(type==CastSoundType.DISCHARGE){
+            volume = 0.5F + level.random.nextFloat() * 0.3F;
+            pitch = 0.3F + level.random.nextFloat() * 0.2F;
+    }
+        level.playSound(null, context.getBlockPos(),
+                SpellboundSounds.CURSED_RUNE_ACTIVATED.get(),
+                SoundSource.PLAYERS, volume, pitch);
     }
 
     @Override
@@ -239,6 +265,8 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
         Level level = context.getLevel();
         if (!level.isClientSide && this.getRune(context) == null) {
             this.endSpell();
+            playCastSound(level, context, CastSoundType.DISCHARGE);
+
         }
     }
 
@@ -249,6 +277,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
             CursedRune rune = this.getRune(context);
             if (rune != null) {
                 rune.setEndTick(10);
+                playCastSound(level, context, CastSoundType.DISCHARGE);
             }
         }
     }

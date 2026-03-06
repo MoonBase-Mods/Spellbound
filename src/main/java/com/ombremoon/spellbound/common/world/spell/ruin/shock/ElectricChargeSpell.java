@@ -10,11 +10,13 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.RandomUtil;
 import org.jetbrains.annotations.UnknownNullability;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class ElectricChargeSpell extends AnimatedSpell {
@@ -115,8 +118,12 @@ public class ElectricChargeSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         Entity target = context.getTarget();
-        if (target != null && this.entityIds.size() < context.getSpellLevel() + 1)
+        if (target != null && this.entityIds.size() < context.getSpellLevel() + 1) {
             this.entityIds.add(target.getId());
+
+        }
+        Level level = context.getLevel();
+        if(!level.isClientSide()) playCastSound(level, context, null);
     }
 
     @Override
@@ -126,6 +133,8 @@ public class ElectricChargeSpell extends AnimatedSpell {
         var handler = context.getSpellHandler();
         boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
         if (!level.isClientSide) {
+            playCastSound(level, context, "recast");
+
             if (context.hasSkill(SBSkills.AMPLIFY)) {
                 handler.setChargingOrChannelling(true);
                 return;
@@ -139,6 +148,19 @@ public class ElectricChargeSpell extends AnimatedSpell {
                 }
                 endSpell();
             }
+        }
+    }
+
+    public void playCastSound(Level level, SpellContext context, String flag){
+        float volume = 0.2F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.2F;
+        if("recast".equals(flag)){
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_RECAST.get(),
+                SoundSource.PLAYERS, volume, pitch);
+        }
+        else{
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_USE.get(),
+                    SoundSource.PLAYERS, volume, pitch);
         }
     }
 

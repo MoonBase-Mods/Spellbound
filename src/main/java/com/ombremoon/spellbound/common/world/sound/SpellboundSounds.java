@@ -21,10 +21,14 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> FIREBALL_USE = registerSoundEvent("fireball_use");
     public static final Supplier<SoundEvent> FIREBALL_TRAVEL = registerSoundEvent("fireball_travel");
     public static final Supplier<SoundEvent> FLAMEJET_USE = registerSoundEvent("flamejet_use");
+
     //SHOCK
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_USE = registerSoundEvent("electric_charge_use");
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_RECAST = registerSoundEvent("electric_charge_recast");
     public static final Supplier<SoundEvent> STORMSTRIKE_USE = registerSoundEvent("stormstrike_use");
+
+    //DECEPTION
+    public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");
 
     private static Supplier<SoundEvent> registerSoundEvent(String name){
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
