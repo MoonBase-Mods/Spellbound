@@ -20,11 +20,13 @@ import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -267,6 +269,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 SentinelBox geyserBox = FLAME_GEYSER_BOXES.get(Math.min(charges, 3));
                 boxOwner.triggerSentinelBox(geyserBox);
             }
+
         } else {
             if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
                 this.addFX(
@@ -296,7 +299,19 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 );
             }
         }
+        //sound
+        playCastSound(context.getLevel(), context);
     }
+
+    public void playCastSound(Level level, SpellContext context){
+        float volume = 0.3F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.3F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_USE.get(),
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null,context.getCaster().blockPosition(), SpellboundSounds.FLAMEJET_USE.get(),
+                SoundSource.PLAYERS, volume, pitch);
+    }
+
 
     @Override
     protected void onSpellTick(SpellContext context) {

@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.mixin.DuckRangedAttribute;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +42,8 @@ public class CommonClass {
         SBStructures.register(modEventBus);
         SBTriggers.register(modEventBus);
         SBLootModifiers.register(modEventBus);
+
+        SpellboundSounds.register(modEventBus);
 
         MageArmorItem.armorAttributeInit();
         fixAttributes();

@@ -1,0 +1,39 @@
+{
+  "fireball_use": {
+    "subtitle": "sounds.spellbound.fireball_use",
+    "sounds": [
+      "spellbound:fireball_use"
+    ]
+  },
+  "fireball_travel": {
+    "subtitle": "sounds.spellbound.fireball_travel",
+    "sounds": [
+      "spellbound:fireball_travel"
+    ]
+  },
+  "flamejet_use": {
+    "subtitle": "sounds.spellbound.flamejet_use",
+    "sounds": [
+      "spellbound:flamejet_use"
+    ]
+  },
+  "stormstrike_use": {
+    "subtitle": "sounds.spellbound.stormstrike_use",
+    "sounds": [
+      "spellbound:stormstrike_use1",
+      "spellbound:stormstrike_use2"
+    ]
+  },
+  "electric_charge_use": {
+    "subtitle": "sounds.spellbound.electric_charge_use",
+    "sounds": [
+      "minecraft:entity.lightning_bolt.thunder"
+    ]
+  },
+  "electric_charge_recast": {
+    "subtitle": "sounds.spellbound.electric_charge_recast",
+    "sounds": [
+      "spellbound:electric_charge_recast"
+    ]
+  }
+}

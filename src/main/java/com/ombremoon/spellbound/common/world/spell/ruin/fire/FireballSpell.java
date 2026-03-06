@@ -14,9 +14,12 @@ import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -147,7 +150,20 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                     }
                 });
             }
+            //sound
+           playCastSound(level, context);
         }
+    }
+
+    public void playCastSound(Level level, SpellContext context){
+        float volume = 0.3F + level.random.nextFloat() * 0.2F;
+        float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_USE.get(),
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null,context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_TRAVEL.get(),
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FLAMEJET_USE.get(),
+                SoundSource.PLAYERS, volume*0.7F, pitch*0.7F);
     }
 
     @Override
