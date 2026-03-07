@@ -26,6 +26,9 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_USE = registerSoundEvent("electric_charge_use");
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_RECAST = registerSoundEvent("electric_charge_recast");
     public static final Supplier<SoundEvent> STORMSTRIKE_USE = registerSoundEvent("stormstrike_use");
+    public static final Supplier<SoundEvent> INTERFERENCE_ZAP = registerSoundEvent("interference_zap");
+
+
 
     //DECEPTION
     public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");

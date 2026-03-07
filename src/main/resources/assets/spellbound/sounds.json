@@ -41,5 +41,11 @@
     "sounds": [
       "spellbound:cursed_rune_activated"
     ]
+  },
+  "interference_zap": {
+    "subtitle": "sounds.spellbound.interference_zap",
+    "sounds": [
+      "spellbound:interference_zap"
+    ]
   }
 }

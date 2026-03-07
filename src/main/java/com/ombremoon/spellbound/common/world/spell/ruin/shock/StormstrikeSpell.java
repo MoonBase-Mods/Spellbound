@@ -86,6 +86,8 @@ public class StormstrikeSpell extends AnimatedSpell {
         float pitch = 0.7F + level.random.nextFloat() * 0.3F;
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.STORMSTRIKE_USE.get(),
                 SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.INTERFERENCE_ZAP.get(),
+                SoundSource.PLAYERS, volume*0.6F, pitch);
     }
 
     @Override

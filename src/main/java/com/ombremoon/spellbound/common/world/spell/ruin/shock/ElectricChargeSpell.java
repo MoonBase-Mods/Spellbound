@@ -157,6 +157,8 @@ public class ElectricChargeSpell extends AnimatedSpell {
         if("recast".equals(flag)){
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_RECAST.get(),
                 SoundSource.PLAYERS, volume, pitch);
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.INTERFERENCE_ZAP.get(),
+                    SoundSource.PLAYERS, volume, pitch);
         }
         else{
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_USE.get(),

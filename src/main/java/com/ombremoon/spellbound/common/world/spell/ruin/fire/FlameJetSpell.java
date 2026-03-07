@@ -304,11 +304,12 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     }
 
     public void playCastSound(Level level, SpellContext context){
-        float volume = 0.3F + level.random.nextFloat() * 0.2F;
+        float volume = 0.25F + level.random.nextFloat() * 0.2F;
         float pitch = 0.8F + level.random.nextFloat() * 0.3F;
-        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_USE.get(),
-                SoundSource.PLAYERS, volume, pitch);
+
         level.playSound(null,context.getCaster().blockPosition(), SpellboundSounds.FLAMEJET_USE.get(),
+                SoundSource.PLAYERS, volume*0.6F, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.FIREBALL_USE.get(),
                 SoundSource.PLAYERS, volume, pitch);
     }
 
