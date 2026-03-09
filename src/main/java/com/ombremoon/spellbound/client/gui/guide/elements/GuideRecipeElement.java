@@ -8,9 +8,10 @@ import com.ombremoon.spellbound.client.gui.guide.elements.extras.RecipeExtras;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import com.ombremoon.spellbound.client.gui.guide.elements.special.IHoverable;
 import org.jetbrains.annotations.NotNull;
 
-public record GuideRecipeElement(ResourceLocation recipeLoc, String gridName, float scale, ElementPosition position, RecipeExtras extras) implements IPageElement {
+public record GuideRecipeElement(ResourceLocation recipeLoc, String gridName, float scale, ElementPosition position, RecipeExtras extras) implements IPageElement, IHoverable {
 
     public static final MapCodec<GuideRecipeElement> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("recipe").forGetter(GuideRecipeElement::recipeLoc),

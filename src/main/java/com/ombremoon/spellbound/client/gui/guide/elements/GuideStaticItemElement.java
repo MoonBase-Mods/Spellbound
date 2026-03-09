@@ -10,10 +10,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.NotNull;
 
+import com.ombremoon.spellbound.client.gui.guide.elements.special.IHoverable;
+
 import java.util.List;
 import java.util.Optional;
 
-public record GuideStaticItemElement(List<Ingredient> item, String tileName, ElementPosition position, StaticItemExtras extras) implements IPageElement {
+public record GuideStaticItemElement(List<Ingredient> item, String tileName, ElementPosition position, StaticItemExtras extras) implements IPageElement, IHoverable {
     public static final MapCodec<GuideStaticItemElement> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Ingredient.CODEC.listOf().fieldOf("item").forGetter(GuideStaticItemElement::item),
             Codec.STRING.optionalFieldOf("tileName", "basic").forGetter(GuideStaticItemElement::tileName),

@@ -18,6 +18,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -95,6 +98,72 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
             renderItem(guiGraphics, itemstack, j, k, scale);
         }
 
+    }
+
+    private boolean isLargeGrid(Recipe<?> recipe) {
+        return (recipe instanceof ShapedRecipe shapedRecipe && (shapedRecipe.getWidth() > 2 || shapedRecipe.getHeight() > 2))
+                || recipe instanceof ShapelessRecipe shapelessRecipe && shapelessRecipe.getIngredients().size() > 4;
+    }
+
+    private Optional<Recipe<?>> getRecipe(GuideRecipeElement element) {
+        RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
+        Optional<RecipeHolder<?>> holder = manager.byKey(element.recipeLoc());
+        if (holder.isEmpty() || holder.get().value().getType() != RecipeType.CRAFTING) return Optional.empty();
+        return Optional.of(holder.get().value());
+    }
+
+    @Override
+    public boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, GuideRecipeElement element) {
+        Optional<Recipe<?>> recipeOpt = getRecipe(element);
+        if (recipeOpt.isEmpty()) return false;
+
+        Recipe<?> recipe = recipeOpt.get();
+        boolean large = isLargeGrid(recipe);
+        int gridW = large ? (int) (81F * element.scale()) : (int) (60 * element.scale());
+        int gridH = large ? (int) (82F * element.scale()) : (int) (58 * element.scale());
+        int x = leftPos + element.position().xOffset();
+        int y = topPos + element.position().yOffset();
+        return mouseX >= x && mouseX <= x + gridW && mouseY >= y && mouseY <= y + gridH;
+    }
+
+    @Override
+    public void handleHover(GuideRecipeElement element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        if (!isVisible(element.extras().scrap())) return;
+
+        Optional<Recipe<?>> recipeOpt = getRecipe(element);
+        if (recipeOpt.isEmpty()) return;
+
+        Recipe<?> recipe = recipeOpt.get();
+        boolean large = isLargeGrid(recipe);
+        int slotSize = (int) (23 * element.scale());
+
+        int relX = mouseX - leftPos - element.position().xOffset();
+        int relY = mouseY - topPos - element.position().yOffset();
+
+        int cols = large ? 3 : 2;
+        int col = Math.min(relX / slotSize, cols - 1);
+        int row = Math.min(relY / slotSize, (large ? 3 : 2) - 1);
+
+        int index;
+        if (large) {
+            index = row * 3 + col;
+        } else {
+            index = row * 2 + col;
+        }
+
+        List<Ingredient> ingredients = recipe.getIngredients();
+        if (index < 0 || index >= ingredients.size()) return;
+
+        Ingredient ingredient = ingredients.get(index);
+        ItemStack[] items = ingredient.getItems();
+        if (items.length == 0) return;
+
+        ItemStack stack = items[Mth.floor(ElementRenderDispatcher.getTickCount() / 60f) % items.length];
+        guiGraphics.renderTooltip(Minecraft.getInstance().font,
+                stack.getTooltipLines(Item.TooltipContext.of(Minecraft.getInstance().level), Minecraft.getInstance().player, TooltipFlag.NORMAL),
+                Optional.empty(),
+                mouseX,
+                mouseY);
     }
 
     public static void renderItem(GuiGraphics graphics, ItemStack stack, int x, int y, float scale) {
