@@ -68,6 +68,32 @@ public class ModTagProvider {
 
         public Blocks(PackOutput pGenerator, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pGenerator, Registries.BLOCK, provider, Constants.MOD_ID, existingFileHelper);
+            populateTag(BlockTags.MINEABLE_WITH_PICKAXE,
+                    SBBlocks.STORM_CRYSTAL_BLOCK.get(),
+                    SBBlocks.STORM_CRYSTAL_CLUSTER.get(),
+                    SBBlocks.BUDDING_STORM_CRYSTAL.get(),
+                    SBBlocks.MEDIUM_STORM_CRYSTAL_BUD.get(),
+                    SBBlocks.SMALL_STORM_CRYSTAL_BUD.get(),
+                    SBBlocks.LARGE_STORM_CRYSTAL_BUD.get(),
+                    SBBlocks.FROZEN_CRYSTAL_CLUSTER.get(),
+                    SBBlocks.FROZEN_CRYSTAL_BLOCK.get(),
+                    SBBlocks.BUDDING_FROZEN_CRYSTAL.get(),
+                    SBBlocks.SMALL_FROZEN_CRYSTAL_BUD.get(),
+                    SBBlocks.MEDIUM_FROZEN_CRYSTAL_BUD.get(),
+                    SBBlocks.LARGE_FROZEN_CRYSTAL_BUD.get(),
+                    SBBlocks.SMOLDERING_CRYSTAL_BLOCK.get(),
+                    SBBlocks.SMOLDERING_CRYSTAL_CLUSTER.get(),
+                    SBBlocks.BUDDING_SMOLDERING_CRYSTAL.get(),
+                    SBBlocks.MEDIUM_SMOLDERING_CRYSTAL_BUD.get(),
+                    SBBlocks.SMALL_SMOLDERING_CRYSTAL_BUD.get(),
+                    SBBlocks.LARGE_SMOLDERING_CRYSTAL_BUD.get(),
+                    SBBlocks.SUMMON_STONE.get(),
+                    SBBlocks.RESONANCE_STONE.get(),
+                    SBBlocks.CRACKED_SUMMON_STONE.get(),
+                    SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get(),
+                    SBBlocks.JUNGLE_DIVINE_SHRINE.get(),
+                    SBBlocks.SANDSTONE_DIVINE_SHRINE.get(),
+                    SBBlocks.PLAINS_DIVINE_SHRINE.get());
         }
 
         @Override
