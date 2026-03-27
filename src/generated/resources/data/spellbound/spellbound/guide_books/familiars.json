@@ -75,8 +75,8 @@
       "type": "spellbound:recipe",
       "gridName": "necronomicon",
       "position": {
-        "xOffset": 237,
-        "yOffset": 110
+        "xOffset": 202,
+        "yOffset": 95
       },
       "recipe": "spellbound:resonance_stone"
     }

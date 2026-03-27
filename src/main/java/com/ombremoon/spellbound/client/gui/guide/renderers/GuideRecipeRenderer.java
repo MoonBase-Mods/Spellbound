@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideRecipeElement;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.GuideGhostItem;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -29,12 +30,10 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
 
     @Override
     public void render(GuideRecipeElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
-        RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
-        Optional<RecipeHolder<?>> recipeOpt = manager.byKey(element.recipeLoc());
+        Optional<Recipe<?>> recipeOpt = getRecipe(element);
         if (recipeOpt.isEmpty()) return;
 
-        RecipeHolder<?> recipeHolder = recipeOpt.get();
-        Recipe<?> recipe = recipeHolder.value();
+        Recipe<?> recipe = recipeOpt.get();
         if (recipe.getType() != RecipeType.CRAFTING) return;
 
         if (recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe) {
@@ -137,8 +136,8 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
         boolean large = isLargeGrid(recipe);
         int slotSize = (int) (23 * element.scale());
 
-        int relX = mouseX - leftPos - element.position().xOffset();
-        int relY = mouseY - topPos - element.position().yOffset();
+        int relX = mouseX - leftPos - element.position().xOffset() - (int) (6 * element.scale());
+        int relY = mouseY - topPos - element.position().yOffset() - (int) (6 * element.scale());
 
         int cols = large ? 3 : 2;
         int col = Math.min(relX / slotSize, cols - 1);

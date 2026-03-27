@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public record TextListExtras(int maxRows, int rowGap, int columnGap, int lineLength, boolean dropShadow, int textColour, String bulletPoint, boolean underlineClickable, boolean centered) implements IElementExtra {
     public static final Codec<TextListExtras> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Codec.INT.optionalFieldOf("maxRows", 0).forGetter(TextListExtras::maxRows),
+            Codec.INT.optionalFieldOf("maxColumns", 0).forGetter(TextListExtras::maxRows),
             Codec.INT.optionalFieldOf("rowGap", 20).forGetter(TextListExtras::rowGap),
             Codec.INT.optionalFieldOf("columnGap", 45).forGetter(TextListExtras::columnGap),
             Codec.INT.optionalFieldOf("lineLength", 150).forGetter(TextListExtras::lineLength),

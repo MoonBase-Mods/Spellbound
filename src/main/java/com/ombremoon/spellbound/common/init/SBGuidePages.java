@@ -11,8 +11,6 @@ import com.ombremoon.spellbound.datagen.provider.guide_builders.PageBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponentPredicate;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,15 +19,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -621,6 +616,8 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.summon.description"), SUMMON_DESCRIPTION),
                 new ContentsEntry(translatable("guide.summon.summoning_stone"), SUMMON_PORTALS),
                 new ContentsEntry(translatable("guide.summon.portal_activation"), SUMMON_PORTAL_ACTIVATION),
+                new ContentsEntry(spellName(SBSpells.SUMMON_UNDEAD.get()), SUMMON_UNDEAD),
+                new ContentsEntry(spellName(SBSpells.SUMMON_VILLAGER.get()), SUMMON_VILLAGER),
                 new ContentsEntry(spellName(SBSpells.WILD_MUSHROOM.get()), WILD_MUSHROOM));
         createDescription(
                 context,
@@ -671,7 +668,7 @@ public interface SBGuidePages {
                 translatable("block.spellbound.resonance_stone"),
                 false,
                 List.of(
-                        new RecipeEntry(loc("resonance_stone"), PAGE_TWO_START_X+65, 110)
+                        new RecipeEntry(loc("resonance_stone"), PAGE_TWO_START_X+30, 95)
                 ),
                 List.of(),
                 new TextEntry(translatable("guide.summon.familiars1"), 35),
@@ -686,7 +683,7 @@ public interface SBGuidePages {
                 translatable("guide.summon.familiar_types"),
                 false,
                 List.of(
-                        new RecipeEntry(loc("spirit_whistle"), 65, 110)
+                        new RecipeEntry(loc("spirit_whistle"), PAGE_START_CENTER_X-28, 105)
                 ),
                 List.of(),
                 new TextEntry(translatable("guide.summon.whistle"), 35),
@@ -1482,6 +1479,8 @@ public interface SBGuidePages {
                                             EntityType<?> boss,
                                             SpellType<?> spell
     ) {
+        var stack = Items.ARROW.getDefaultInstance();
+        stack.setCount(16);
         register(context,
                 currentPage,
                 PageBuilder
@@ -1537,8 +1536,8 @@ public interface SBGuidePages {
                                         .of()
                                         .addEntry(SpellTomeItem.createWithSpell(spell))
                                         .centered()
-                                        .maxRows(1)
-                                        .position(230, 140)
+                                        .maxColumns(3)
+                                        .position(PAGE_TWO_START_CENTER_X, 140)
                                         .build()
 
                         ));
@@ -1719,6 +1718,7 @@ public interface SBGuidePages {
                                 .position(xRenderPos, yRenderPos)
                                 .scale(2)
                                 .disableBackground()
+                                .disableTooltip()
                                 .build()
                 );
             } else if (entry instanceof EntityActionEntry entityEntry) {

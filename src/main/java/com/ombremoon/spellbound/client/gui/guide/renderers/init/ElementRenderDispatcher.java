@@ -1,6 +1,7 @@
-package com.ombremoon.spellbound.client.gui.guide.renderers;
+package com.ombremoon.spellbound.client.gui.guide.renderers.init;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.IPageElement;
+import com.ombremoon.spellbound.client.gui.guide.renderers.IPageElementRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;

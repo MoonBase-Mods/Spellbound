@@ -66,8 +66,8 @@
       "type": "spellbound:recipe",
       "gridName": "necronomicon",
       "position": {
-        "xOffset": 65,
-        "yOffset": 110
+        "xOffset": 44,
+        "yOffset": 105
       },
       "recipe": "spellbound:spirit_whistle"
     }

@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideStaticItemElement;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.GuideGhostItem;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -49,10 +50,12 @@ public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStatic
 
     @Override
     public boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, GuideStaticItemElement element) {
+        if (!element.extras().tooltip()) return false;
+
         float scale = 1.3f * element.extras().scale();
         int size = (int) (16 * 1.2f * scale);
-        int x = leftPos + element.position().xOffset();
-        int y = topPos + element.position().yOffset();
+        int x = leftPos + element.position().xOffset() + (int) (scale * 8);
+        int y = topPos + element.position().yOffset() + (int) (scale * 8);
         return mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size;
     }
 

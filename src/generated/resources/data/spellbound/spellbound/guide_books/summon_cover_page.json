@@ -93,6 +93,22 @@
         },
         {
           "component": {
+            "translate": "spells.spellbound.summon_undead"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:summon_undead"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.summon_villager"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:summon_villager"
+        },
+        {
+          "component": {
             "translate": "spells.spellbound.wild_mushroom"
           },
           "extraOffset": 0,

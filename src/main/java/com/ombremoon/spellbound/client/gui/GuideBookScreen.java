@@ -1,8 +1,6 @@
 package com.ombremoon.spellbound.client.gui;
 
-import com.mojang.math.Axis;
-import com.mojang.math.Transformation;
-import com.ombremoon.spellbound.client.gui.guide.renderers.ElementRenderDispatcher;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.client.gui.guide.elements.IPageElement;
@@ -10,7 +8,6 @@ import com.ombremoon.spellbound.client.gui.guide.elements.special.IClickable;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IHoverable;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IInteractable;
 import com.ombremoon.spellbound.main.CommonClass;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

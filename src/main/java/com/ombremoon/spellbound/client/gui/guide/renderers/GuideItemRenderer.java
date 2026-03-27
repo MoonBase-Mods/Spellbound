@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideItemElement;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.GuideGhostItem;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

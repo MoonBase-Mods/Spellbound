@@ -308,7 +308,7 @@ public class PageBuilder {
         private List<GuideItemListElement.ItemListEntry> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
-        private int maxRows;
+        private int maxColumns;
         private int rowGap;
         private int columnGap;
         private int countGap;
@@ -320,8 +320,8 @@ public class PageBuilder {
             this.entries = new ArrayList<>();
             this.position = ElementPosition.getDefault();
             this.pageScrap = GuideBookManager.FIRST_PAGE;
-            this.maxRows = 0;
-            this.rowGap = 20;
+            this.maxColumns = 0;
+            this.rowGap = 4;
             this.columnGap = 45;
             this.countGap = 33;
             this.dropShadow = false;
@@ -431,8 +431,8 @@ public class PageBuilder {
          * @param max number of rows
          * @return this
          */
-        public ItemList maxRows(int max) {
-            this.maxRows = max;
+        public ItemList maxColumns(int max) {
+            this.maxColumns = max;
             return this;
         }
 
@@ -495,7 +495,7 @@ public class PageBuilder {
                     entries,
                     new ItemListExtras(
                             pageScrap,
-                            maxRows,
+                            maxColumns,
                             rowGap,
                             columnGap,
                             countGap,
@@ -894,6 +894,7 @@ public class PageBuilder {
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private boolean disableBackground;
+        private boolean tooltip;
 
         private StaticItem() {
             this.ingredients = new ArrayList<>();
@@ -902,6 +903,7 @@ public class PageBuilder {
             this.position = ElementPosition.getDefault();
             this.pageScrap = GuideBookManager.FIRST_PAGE;
             this.disableBackground = false;
+            this.tooltip = true;
         }
 
         /**
@@ -910,6 +912,11 @@ public class PageBuilder {
          */
         public static StaticItem of() {
             return new StaticItem();
+        }
+
+        public StaticItem disableTooltip() {
+            this.tooltip = false;
+            return this;
         }
 
         /**
@@ -988,7 +995,7 @@ public class PageBuilder {
                     ingredients,
                     tile,
                     position,
-                    new StaticItemExtras(pageScrap, scale, disableBackground)
+                    new StaticItemExtras(pageScrap, scale, disableBackground, tooltip)
             );
         }
     }

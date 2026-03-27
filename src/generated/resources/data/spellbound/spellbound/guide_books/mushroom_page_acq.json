@@ -102,7 +102,8 @@
       "type": "spellbound:item_list",
       "extras": {
         "centered": true,
-        "maxRows": 1
+        "columnGap": 45,
+        "maxColumns": 3
       },
       "items": [
         {
@@ -118,7 +119,7 @@
         }
       ],
       "position": {
-        "xOffset": 230,
+        "xOffset": 247,
         "yOffset": 140
       }
     }

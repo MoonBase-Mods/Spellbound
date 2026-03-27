@@ -87,12 +87,6 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
     }
 
     @Override
-    public void handleHover(GuideTextElement element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-
-
-    }
-
-    @Override
     public boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, GuideTextElement element) {
         if (element.extras().hoverText().isBlank()) return false;
 

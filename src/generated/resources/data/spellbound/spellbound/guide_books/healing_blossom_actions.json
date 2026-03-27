@@ -75,7 +75,8 @@
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 2.0,
+        "tooltip": false
       },
       "item": [
         {
@@ -195,7 +196,8 @@
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 2.0,
+        "tooltip": false
       },
       "item": [
         {
@@ -211,7 +213,7 @@
       "type": "spellbound:text_list",
       "extras": {
         "bullet_point": "",
-        "maxRows": 3,
+        "maxColumns": 3,
         "rowGap": 55
       },
       "list": [
