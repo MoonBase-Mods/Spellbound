@@ -33,7 +33,7 @@ public class SpellCastEvents {
     private static boolean wasCastKeyPressed = false;
 
     @SubscribeEvent
-     public static void onSpellMode(InputEvent.InteractionKeyMappingTriggered event) {
+    public static void onSpellMode(InputEvent.InteractionKeyMappingTriggered event) {
         if (event.isCanceled()) return;
 
         Player player = Minecraft.getInstance().player;
