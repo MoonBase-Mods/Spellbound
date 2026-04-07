@@ -18,6 +18,7 @@ import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.entity.spell.SolarRay;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -25,6 +26,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -222,7 +224,15 @@ public class SolarRaySpell extends ChanneledSpell {
                         new ModifierData(Attributes.JUMP_STRENGTH, new AttributeModifier(OVERPOWER_JUMP, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 );
             }
+            playCastSound(context.getLevel(), context);
         }
+    }
+
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.4F + level.random.nextFloat() * 0.3F;
+        float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SOLAR_RAY.get(),
+                SoundSource.PLAYERS, volume, pitch);
     }
 
     @Override

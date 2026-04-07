@@ -18,6 +18,8 @@ import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -133,6 +135,8 @@ public class WildMushroomSpell extends SummonSpell {
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 );
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.WOOL_PLACE,
+                    SoundSource.PLAYERS, 0.6F, 0.6F);
         }
     }
 

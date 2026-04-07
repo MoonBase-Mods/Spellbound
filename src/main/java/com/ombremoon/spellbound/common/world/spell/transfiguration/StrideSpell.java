@@ -64,9 +64,16 @@ public class StrideSpell extends AnimatedSpell {
                 if (context.hasSkill(SBSkills.MOMENTUM))
                     this.currentPos = caster.position();
             }
-            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
-                    SoundSource.PLAYERS, 0.6F, 0.8F);
+            playCastSound(level, context);
         }
+    }
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.4F + level.random.nextFloat() * 0.3F;
+        float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SPEED.get(),
+                SoundSource.PLAYERS, volume*0.3F, pitch);
     }
 
     @Override

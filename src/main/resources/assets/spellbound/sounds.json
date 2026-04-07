@@ -60,5 +60,50 @@
       "spellbound:res_stone_open1",
       "spellbound:res_stone_open2"
     ]
-  }
+  },
+  "speed": {
+    "subtitle": "sounds.spellbound.speed",
+    "sounds": [
+      "spellbound:speed1",
+      "spellbound:speed2",
+      "spellbound:speed3"
+    ]
+  },
+  "purge_magic": {
+    "subtitle": "sounds.spellbound.purge_magic",
+    "sounds": [
+      "spellbound:purge_magic2",
+      "spellbound:purge_magic1"
+    ]
+  },
+  "cooling_armor": {
+    "subtitle": "sounds.spellbound.cooling_armor",
+    "sounds": [
+      "spellbound:cooling_armor"
+    ]
+  },
+  "blessing": {
+    "subtitle": "sounds.spellbound.blessing",
+    "sounds": [
+      "spellbound:blessing1"
+    ]
+  },
+  "magic_sparks": {
+    "subtitle": "sounds.spellbound.magic_sparks",
+    "sounds": [
+      "spellbound:magic_sparks"
+    ]
+  },
+  "crystal_shatter": {
+    "subtitle": "sounds.spellbound.crystal_shatter",
+    "sounds": [
+      "spellbound:crystal_shatter"
+    ]
+  },
+  "solar_ray": {
+  "subtitle": "sounds.spellbound.solar_ray",
+  "sounds": [
+    "spellbound:solar_ray"
+  ]
+}
 }

@@ -15,6 +15,7 @@ import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
@@ -131,6 +132,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
         if (!level.isClientSide) {
             ShatteringCrystal crystal = this.summonEntity(context, SBEntities.SHATTERING_CRYSTAL.get(), shatteringCrystal -> shatteringCrystal.setStartTick(100));
             this.setCrystal(crystal.getId());
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
+                    SoundSource.PLAYERS, 0.4F, 0.8F);
         }
     }
 
@@ -314,8 +317,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             } else {
                 endSpell();
             }
-            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
-                    SoundSource.PLAYERS, 0.6F, 0.8F);
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.CRYSTAL_SHATTER.get(),
+                    SoundSource.PLAYERS,  0.25F + level.random.nextFloat() * 0.3F, 0.5F + level.random.nextFloat() * 0.3F);
         }
 
         this.primed = false;

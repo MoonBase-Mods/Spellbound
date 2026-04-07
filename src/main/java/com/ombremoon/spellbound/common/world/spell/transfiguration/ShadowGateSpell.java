@@ -238,8 +238,8 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     }
 
     public void playCastSound(Level level, SpellContext context, CursedRuneSpell.CastSoundType type){
-       float volume = 0.15F + level.random.nextFloat() * 0.2F;
-       float pitch = 0.5F + level.random.nextFloat() * 0.2F;
+       float volume = 0.1F + level.random.nextFloat() * 0.3F;
+       float pitch = 0.5F + level.random.nextFloat() * 0.3F;
 
         if (type == CursedRuneSpell.CastSoundType.PLACE) {
             level.playSound(null, context.getBlockPos(),

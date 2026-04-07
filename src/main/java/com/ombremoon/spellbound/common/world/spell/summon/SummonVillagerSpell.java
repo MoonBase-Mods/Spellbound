@@ -20,6 +20,8 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
@@ -227,6 +229,8 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                     }
                 }
             });
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.VILLAGER_YES,
+                    SoundSource.PLAYERS, 0.4F, 1F);
         }
     }
 

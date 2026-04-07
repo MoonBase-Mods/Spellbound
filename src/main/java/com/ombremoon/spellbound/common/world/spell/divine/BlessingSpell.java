@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.EntityResource;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -20,6 +21,8 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -189,7 +192,16 @@ public class BlessingSpell extends AnimatedSpell {
                     );
                 }
             }
+            playCastSound(level, context);
         }
+    }
+
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.1F + level.random.nextFloat() * 0.1F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.1F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.BLESSING.get(),
+                SoundSource.PLAYERS, volume, pitch);
+
     }
 
     @Override

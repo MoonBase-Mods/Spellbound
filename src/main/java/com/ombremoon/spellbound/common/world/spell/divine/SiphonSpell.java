@@ -16,6 +16,8 @@ import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -183,6 +185,8 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                         }
                 );
             }
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.APPLY_EFFECT_BAD_OMEN,
+                    SoundSource.PLAYERS, 0.6F, 0.6F);
         }
     }
 

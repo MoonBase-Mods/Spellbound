@@ -11,12 +11,14 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -248,7 +250,16 @@ public class CobbledHideSpell extends AnimatedSpell {
                         }
                 );
             }
+            playCastSound(level, context);
         }
+    }
+
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.5F + level.random.nextFloat() * 0.2F;
+        float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.COOLING_ARMOR.get(),
+                SoundSource.PLAYERS, volume, pitch);
+
     }
 
     @Override

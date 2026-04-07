@@ -21,6 +21,7 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> FIREBALL_USE = registerSoundEvent("fireball_use");
     public static final Supplier<SoundEvent> FIREBALL_TRAVEL = registerSoundEvent("fireball_travel");
     public static final Supplier<SoundEvent> FLAMEJET_USE = registerSoundEvent("flamejet_use");
+    public static final Supplier<SoundEvent> SOLAR_RAY = registerSoundEvent("solar_ray");
     //SHOCK
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_USE = registerSoundEvent("electric_charge_use");
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_RECAST = registerSoundEvent("electric_charge_recast");
@@ -29,6 +30,13 @@ public class SpellboundSounds {
     //MISC
     public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");
     public static final Supplier<SoundEvent> SHADOW_PLACE = registerSoundEvent("shadow_place");
+    public static final Supplier<SoundEvent> SPEED = registerSoundEvent("speed");
+    public static final Supplier<SoundEvent> PURGE_MAGIC = registerSoundEvent("purge_magic");
+    public static final Supplier<SoundEvent> BLESSING = registerSoundEvent("blessing");
+    public static final Supplier<SoundEvent> COOLING_ARMOR = registerSoundEvent("cooling_armor");
+    public static final Supplier<SoundEvent> MAGIC_SPARKLES = registerSoundEvent("magic_sparks");
+    public static final Supplier<SoundEvent> CRYSTAL_SHATTER = registerSoundEvent("crystal_shatter");
+
     //MENU
     public static final  Supplier<SoundEvent> RES_STONE_OPEN = registerSoundEvent("res_stone_open");
 

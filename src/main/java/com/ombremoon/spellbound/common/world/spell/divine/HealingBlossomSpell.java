@@ -17,6 +17,8 @@ import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -125,6 +127,8 @@ public class HealingBlossomSpell extends AnimatedSpell {
                 }
 
                 this.setBlossom(healingBlossom);
+                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.CHORUS_FLOWER_GROW,
+                        SoundSource.PLAYERS, 0.6F, 0.8F);
             });
 
             if (context.hasSkill(SBSkills.REBIRTH)) {

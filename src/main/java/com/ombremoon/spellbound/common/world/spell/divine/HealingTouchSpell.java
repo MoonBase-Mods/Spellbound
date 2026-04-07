@@ -11,15 +11,20 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -139,9 +144,19 @@ public class HealingTouchSpell extends AnimatedSpell {
                         }
                 );
             }
+            playCastSound(context.getLevel(), context);
         }
     }
 
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.2F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.MAGIC_SPARKLES.get(),
+                SoundSource.PLAYERS, volume*0.3F, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE,
+                SoundSource.PLAYERS, volume, pitch);
+
+    }
     @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);

@@ -15,6 +15,8 @@ import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -174,6 +176,8 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 Vec3 spawnOffset = this.getSurroundingSpawnPosition(origin, yaw, radius, i, charges);
                 this.summonEntity(context, undead, spawnOffset);
             }
+            (context.getLevel()).playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
+                    SoundSource.PLAYERS, 1F, 0.8F);
         }
 
         if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {

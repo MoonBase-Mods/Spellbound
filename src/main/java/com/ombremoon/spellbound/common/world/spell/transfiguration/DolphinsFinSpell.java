@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -27,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -169,6 +171,8 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.WATER_MOVEMENT_EFFICIENCY, new AttributeModifier(DOLPHINS_FIN_MOVEMENT, 0.5F, AttributeModifier.Operation.ADD_VALUE))
             );
+            playCastSound(level, context);
+
         }
 
         if (context.hasSkill(SBSkills.HAMMERHEAD)) {
@@ -192,6 +196,17 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                     new MobEffectInstance(MobEffects.WATER_BREATHING, this.getDuration(), 0, false, false)
             );
         }
+    }
+
+
+    public void playCastSound(Level level, SpellContext context) {
+        float volume = 0.3F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.2F;
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.DOLPHIN_JUMP,
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.DOLPHIN_PLAY,
+                SoundSource.PLAYERS, volume, pitch);
+
     }
 
     //Coalesce mob effect duration
