@@ -41,6 +41,13 @@ public class SBBlocks {
             "arcanthus", () -> new ArcanthusCropBlock(
                     blockProperties()
                             .noOcclusion()
+                            .sound(SoundType.CROP)
+                            .noCollission()
+                            .lightLevel(state -> {
+                                int maxAge = ArcanthusCropBlock.MAX_AGE;
+                                int age = state.getValue(ArcanthusCropBlock.AGE);
+                                return age * 5 / maxAge;
+                            })
             )
     );
     public static final Supplier<Block> FROZEN_CRYSTAL_BLOCK = registerBlock(

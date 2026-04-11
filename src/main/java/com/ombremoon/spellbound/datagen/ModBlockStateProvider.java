@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
 import com.ombremoon.spellbound.common.world.block.SummonStoneBlock;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.main.Constants;
@@ -7,11 +8,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModBlockStateProvider extends BlockStateProvider {
@@ -27,6 +32,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         }
         blockWithItem(SBBlocks.MIRAGE_BLOCK);
         blockWithItem(SBBlocks.WOVEN_SHADE);
+        makeCrop(((CropBlock) SBBlocks.ARCANTHUS.get()), "arcanthus_stage", "arcanthus_stage");
     }
 
     private void blockItem(Supplier<Block> blockSupplier) {
@@ -55,6 +61,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     protected String getName(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block).getPath();
+    }
+
+
+    public void makeCrop(CropBlock block, String modelName, String textureName) {
+        Function<BlockState, ConfiguredModel[]> function = state -> states(state, block, modelName, textureName);
+
+        getVariantBuilder(block).forAllStates(function);
+    }
+
+    //WILL NEED ABSTRACTION
+    private ConfiguredModel[] states(BlockState state, CropBlock block, String modelName, String textureName) {
+        ConfiguredModel[] models = new ConfiguredModel[1];
+        models[0] = new ConfiguredModel(models().crop(modelName + state.getValue(((ArcanthusCropBlock) block).getAgeProperty()),
+                ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/" + textureName + state.getValue(((ArcanthusCropBlock) block).getAgeProperty()))).renderType("cutout"));
+
+        return models;
     }
 
 }

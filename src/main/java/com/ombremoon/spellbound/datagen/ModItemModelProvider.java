@@ -36,7 +36,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.HOLY_SHARD);
 
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
-        //simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
+        simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
         simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
