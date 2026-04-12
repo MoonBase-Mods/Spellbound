@@ -101,6 +101,8 @@ public class ModLangProvider extends LanguageProvider {
         guideContents();
         affinityDescriptions();
 
+        add("spellbound.item.chalk", "Chalk");
+
         add("spellbound.familiars.equipped", "Familiar Equipped: %1$s");
         add("spellbound.familiars.rebirthed", "Familiar Rebirthed: %1$s");
         add("spellbound.familiars.tooltip.equip", "Equip this familiar.");
