@@ -5,12 +5,15 @@
     "D": {
       "item": "minecraft:deepslate_bricks"
     },
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
     "M": {
       "item": "spellbound:magic_essence"
     }
   },
   "pattern": [
-    "DMD",
+    "DLD",
     "DMD",
     "D D"
   ],

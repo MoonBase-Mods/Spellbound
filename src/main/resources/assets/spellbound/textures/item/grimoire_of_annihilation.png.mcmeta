@@ -1,0 +1,16 @@
+{
+  "animation": {
+    "frames": [
+
+      { "index": 0, "time": 180 },
+      { "index": 1, "time": 7 },
+      { "index": 2, "time": 5 },
+      { "index": 3, "time": 8 },
+      { "index": 4, "time": 15 },
+      { "index": 3, "time": 5 },
+      { "index": 2, "time": 8 },
+      { "index": 1, "time": 4 }
+
+    ]
+  }
+}

@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.datagen.loot;
 
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBItems;
+import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -16,7 +17,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 
 import java.util.Set;
@@ -32,7 +35,6 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     protected void generate() {
         this.multiBlockDropSelf(SBBlocks.MAGI_WORKBENCH.get());
         this.dropSelf(SBBlocks.RESONANCE_STONE.get());
-        this.dropSelf(SBBlocks.ARCANTHUS.get());
         this.dropSelf(SBBlocks.FROZEN_CRYSTAL_BLOCK.get());
         this.dropSelf(SBBlocks.BUDDING_FROZEN_CRYSTAL.get());
         this.add(SBBlocks.FROZEN_CRYSTAL_CLUSTER.get(), block -> this.createShardDrops(block, SBItems.FROZEN_SHARD.get()));
@@ -70,6 +72,29 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.add(SBBlocks.PURPLE_SPORE_SLAB.get(), this::createSlabItemTable);
         this.add(SBBlocks.RED_SPORE_SLAB.get(), this::createSlabItemTable);
         this.add(SBBlocks.PINK_SPORE_SLAB.get(), this::createSlabItemTable);
+
+        //ARCANTHUS
+        this.add(SBBlocks.ARCANTHUS.get(),
+                block -> {
+                    LootItemCondition.Builder fullyGrown = LootItemBlockStatePropertyCondition
+                            .hasBlockStateProperties(block)
+                            .setProperties(StatePropertiesPredicate.Builder.properties()
+                                    .hasProperty(ArcanthusCropBlock.AGE, ArcanthusCropBlock.MAX_AGE));
+
+                    return LootTable.lootTable()
+                            .withPool(LootPool.lootPool()
+                                    .when(fullyGrown)
+                                    .add(LootItem.lootTableItem(block)
+                                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0f, 3.0f)))
+                                    )
+                            )
+                            //drop 1 if not fully grown
+                            .withPool(
+                                    LootPool.lootPool()
+                                            .when(fullyGrown.invert())
+                                            .add(LootItem.lootTableItem(block))
+                            );
+                });
     }
 
     @Override

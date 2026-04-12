@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "spellbound:block/arcanthus_stage0"
+    },
+    "age=1": {
+      "model": "spellbound:block/arcanthus_stage1"
+    },
+    "age=2": {
+      "model": "spellbound:block/arcanthus_stage2"
+    },
+    "age=3": {
+      "model": "spellbound:block/arcanthus_stage3"
+    }
+  }
+}
