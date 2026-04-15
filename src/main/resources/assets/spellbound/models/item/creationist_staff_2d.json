@@ -1,6 +1,0 @@
-{
-  "parent": "spellbound:item/handlend",
-  "textures": {
-    "layer0": "spellbound:item/creationist_staff_2d"
-  }
-}
