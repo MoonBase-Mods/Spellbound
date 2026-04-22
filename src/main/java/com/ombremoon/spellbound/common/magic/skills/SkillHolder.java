@@ -365,23 +365,28 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
         for (int i = 0; i < spellTag.size(); i++) {
             CompoundTag tag = spellTag.getCompound(i);
-            this.spellXp.put(SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell"))), tag.getFloat("Xp"));
+            SpellType<?> spellType = SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell")));
+            if (spellType != null) this.spellXp.put(spellType, tag.getFloat("Xp"));
         }
 
         for (int i = 0; i < skillPointTag.size(); i++) {
             CompoundTag tag = skillPointTag.getCompound(i);
-            this.skillPoints.put(SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell"))), tag.getInt("Points"));
+            SpellType<?> spellType = SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell")));
+            if (spellType != null) this.skillPoints.put(spellType, tag.getInt("Points"));
         }
 
         for (int i = 0; i < skillTag.size(); i++) {
             CompoundTag tag = skillTag.getCompound(i);
+            SpellType<?> spellType = SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell")));
+            if (spellType == null) continue;
             Set<Skill> skills = new HashSet<>();
             ListTag skillList = tag.getList("Skills", 10);
             for (int j = 0; j < skillList.size(); j++) {
                 CompoundTag nbt = skillList.getCompound(j);
-                skills.add(Skill.byName(ResourceLocation.tryParse(nbt.getString("Skill"))));
+                Skill skill = Skill.byName(ResourceLocation.tryParse(nbt.getString("Skill")));
+                if (skill != null) skills.add(skill);
             }
-            this.unlockedSkills.put(SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell"))), skills);
+            this.unlockedSkills.put(spellType, skills);
         }
 
         for (int i = 0; i < choiceTag.size(); i++) {

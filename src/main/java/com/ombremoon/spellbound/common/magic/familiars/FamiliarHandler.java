@@ -398,27 +398,23 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         for (int i = 0; i < rebirthTag.size(); i++) {
             CompoundTag tag = rebirthTag.getCompound(i);
-            this.familiarRebirths.put(
-                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
-                    tag.getInt("rebirths"));
+            FamiliarHolder familiar = SBFamiliars.REGISTRY.get(ResourceLocation.tryParse(tag.getString("familiar")));
+            if (familiar != null) this.familiarRebirths.put(familiar, tag.getInt("rebirths"));
         }
 
         for (int i = 0; i < bondTag.size(); i++) {
             CompoundTag tag = bondTag.getCompound(i);
-            this.familiarBond.put(
-                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
-                    tag.getFloat("bond"));
-
+            FamiliarHolder familiar = SBFamiliars.REGISTRY.get(ResourceLocation.tryParse(tag.getString("familiar")));
+            if (familiar != null) this.familiarBond.put(familiar, tag.getFloat("bond"));
         }
 
-        for (int i =0; i < familiars.size(); i++) {
-            this.ownedFamiliars.add(
-                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiars.getCompound(i).getString("familiar")))
-            );
+        for (int i = 0; i < familiars.size(); i++) {
+            FamiliarHolder familiar = SBFamiliars.REGISTRY.get(ResourceLocation.tryParse(familiars.getCompound(i).getString("familiar")));
+            if (familiar != null) this.ownedFamiliars.add(familiar);
         }
 
         String familiarId = compoundTag.getString("selected");
-        this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiarId));
+        this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.tryParse(familiarId));
 
         int entityId = compoundTag.getInt("entity");
         if (entityId != 0 && this.isInitialised()) loadFamiliar(entityId);

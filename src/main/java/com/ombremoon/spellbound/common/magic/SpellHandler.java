@@ -921,7 +921,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             Set<SpellType<?>> set = new ObjectOpenHashSet<>();
             for (int i = 0; i < spellList.size(); i++) {
                 CompoundTag compoundTag = spellList.getCompound(i);
-                set.add(AbstractSpell.getSpellByName(SpellUtil.getSpellId(compoundTag, "Spell")));
+                SpellType<?> spellType = AbstractSpell.getSpellByName(SpellUtil.getSpellId(compoundTag, "Spell"));
+                if (spellType != null) set.add(spellType);
             }
             this.spellSet = set;
         }
@@ -930,7 +931,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             Set<SpellType<?>> set = new ObjectOpenHashSet<>();
             for (int i = 0; i < spellList.size(); i++) {
                 CompoundTag compoundTag = spellList.getCompound(i);
-                set.add(AbstractSpell.getSpellByName(SpellUtil.getSpellId(compoundTag, "Spell")));
+                SpellType<?> spellType = AbstractSpell.getSpellByName(SpellUtil.getSpellId(compoundTag, "Spell"));
+                if (spellType != null) set.add(spellType);
             }
             this.equippedSpellSet = set;
         }/*

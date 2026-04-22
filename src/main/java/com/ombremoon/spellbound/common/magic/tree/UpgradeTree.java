@@ -196,7 +196,9 @@ public class UpgradeTree implements INBTSerializable<CompoundTag> {
             for (int i = 0; i < nodeList.size(); i++) {
                 CompoundTag tag = nodeList.getCompound(i);
                 ResourceLocation location = ResourceLocation.tryParse(tag.getString("Id"));
+                if (location == null) continue;
                 SkillNode skillNode = SkillNode.load(tag.getCompound("Node"));
+                if (skillNode == null) continue;
                 this.nodes.put(location, skillNode);
             }
         }
@@ -204,14 +206,16 @@ public class UpgradeTree implements INBTSerializable<CompoundTag> {
             ListTag rootList = nbt.getList("Roots", 10);
             for (int i = 0; i < rootList.size(); i++) {
                 CompoundTag tag = rootList.getCompound(i);
-                this.roots.add(SkillNode.load(tag));
+                SkillNode node = SkillNode.load(tag);
+                if (node != null) this.roots.add(node);
             }
         }
         if (nbt.contains("Children", 9)) {
             ListTag childList = nbt.getList("Children", 10);
             for (int i = 0; i < childList.size(); i++) {
                 CompoundTag tag = childList.getCompound(i);
-                this.children.add(SkillNode.load(tag));
+                SkillNode node = SkillNode.load(tag);
+                if (node != null) this.children.add(node);
             }
         }
     }
