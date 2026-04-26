@@ -126,6 +126,10 @@ public class SBData {
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
     public static final Supplier<DataComponentType<SpellType<?>>> DUNGEON_SPELL = COMPONENT_TYPES.registerComponentType("dungeon_spell",
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
+    public static final Supplier<DataComponentType<SpellType<?>>> IMBUEMENT = COMPONENT_TYPES.registerComponentType("imbuement",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
+    public static final Supplier<DataComponentType<ResourceLocation>> IMBUEMENT_FX_OVERRIDE = COMPONENT_TYPES.registerComponentType("imbuement_fx_override",
+            builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

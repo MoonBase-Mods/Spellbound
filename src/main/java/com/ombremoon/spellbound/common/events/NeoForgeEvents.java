@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
+import com.ombremoon.spellbound.common.world.commands.TestImbuementCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -46,6 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -76,6 +78,10 @@ public class NeoForgeEvents {
         new LearnSkillsCommand(dispatcher, context);
         new LearnSpellCommand(dispatcher, context);
         new SpellboundCommand(dispatcher, context);
+
+        if (!FMLEnvironment.production) {
+            new TestImbuementCommand(dispatcher);
+        }
 
         ConfigCommand.register(dispatcher);
     }

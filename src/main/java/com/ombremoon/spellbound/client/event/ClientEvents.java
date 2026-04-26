@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDis
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
+import com.ombremoon.spellbound.client.photon.ImbuementFXManager;
 import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
@@ -407,6 +408,11 @@ public class ClientEvents {
     public static void onComputeFogColor(ViewportEvent.ComputeFogColor event) {
         ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(Minecraft.getInstance().level);
 //        data.renderHailstormFog(event);
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent.Post event) {
+        ImbuementFXManager.clientTick();
     }
 
     @SubscribeEvent
