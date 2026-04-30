@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic.api;
 
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
@@ -200,8 +201,8 @@ public abstract class SummonSpell extends AnimatedSpell {
         return context.getSpellLevel() + 1 + i;
     }
 
-    public Vec3 getSummonPos() {
-        return Vec3.atBottomCenterOf(this.spellData.get(SUMMON_POS));
+    public BlockPos getSummonPos() {
+        return this.spellData.get(SUMMON_POS);
     }
 
     public void setSummonPos(BlockPos pos) {

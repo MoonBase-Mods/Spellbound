@@ -1,0 +1,81 @@
+{
+  "puzzles": [
+    {
+      "flags": [
+        "spellbound:reset_position"
+      ],
+      "max_reset_count": 99,
+      "objectives": [
+        {
+          "criteria": {
+            "player_killed_nightblade": {
+              "conditions": {
+                "entity": [
+                  {
+                    "condition": "minecraft:entity_properties",
+                    "entity": "this",
+                    "predicate": {
+                      "type": "spellbound:mini_mushroom"
+                    }
+                  }
+                ]
+              },
+              "trigger": "spellbound:player_kill"
+            }
+          },
+          "requirements": [
+            [
+              "player_killed_nightblade"
+            ]
+          ]
+        }
+      ],
+      "puzzle_id": "spellbound:nightblade",
+      "reset_conditions": [
+        {
+          "cooldown": 5,
+          "criteria": {
+            "hurt_by_fall": {
+              "conditions": {
+                "damage": {
+                  "type": {
+                    "tags": [
+                      {
+                        "expected": true,
+                        "id": "minecraft:is_fall"
+                      }
+                    ]
+                  }
+                }
+              },
+              "trigger": "spellbound:player_hurt"
+            }
+          },
+          "requirements": [
+            [
+              "hurt_by_fall"
+            ]
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "spellbound:no_building": []
+        }
+      ],
+      "spawn_data": {
+        "player_offset": [
+          -18.0,
+          -9.0,
+          0.0
+        ],
+        "player_rotation": -90.0,
+        "spell_offset": [
+          0.0,
+          -4.0,
+          0.0
+        ]
+      }
+    }
+  ]
+}

@@ -31,6 +31,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -63,6 +64,7 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
     private boolean puzzleCompleted;
     private int dungeonIndex;
     private int resetCount;
+    private ListTag cachedInventory;
     @Nullable
     private BoundingBox dungeonBounds;
 
@@ -112,18 +114,44 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
         return isDungeon(level) && level.getPlayers(player -> !player.isSpectator()).isEmpty();
     }
 
-    public static boolean hasRule(ServerLevel level, ResourceLocation rule) {
+    public static <T> boolean hasRule(ServerLevel level, RuleType<T> rule, @Nullable T exception) {
         PuzzleDungeonData data = PuzzleDungeonData.get(level);
-        return isDungeon(level) && data.currentDungeon!= null && data.currentDungeon.hasRule(rule);
+        if (isDungeon(level) && data.currentDungeon!= null) {
+            return testRuleExceptions(data.currentDungeon, rule, exception);
+        }
+
+        return false;
     }
 
-    public static boolean hasRule(Level level, Player player, ResourceLocation rule) {
-        if (!level.isClientSide) {
-            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
-            return isDungeon(level) && data.currentDungeon != null && data.currentDungeon.hasRule(rule);
-        } else {
-            return isDungeon(level) && player.getData(SBData.PUZZLE_RULES).contains(rule);
+    public static <T> boolean hasRule(ServerLevel level, RuleType<T> rule) {
+        return hasRule(level, rule, null);
+    }
+
+    public static <T> boolean hasRule(Level level, Player player, RuleType<T> rule, @Nullable T exception) {
+        if (isDungeon(level)) {
+            if (!level.isClientSide) {
+                return hasRule((ServerLevel) level, rule, exception);
+            } else {
+                PuzzleDefinition definition = player.getData(SBData.CLIENT_PUZZLE);
+                return testRuleExceptions(definition, rule, exception);
+            }
         }
+
+        return false;
+    }
+
+    public static <T> boolean hasRule(Level level, Player player, RuleType<T> rule) {
+        return hasRule(level, player, rule, null);
+    }
+
+    private static <T> boolean testRuleExceptions(PuzzleDefinition definition, RuleType<T> rule, T exception) {
+        DungeonRule<T> dungeonRule = definition.getRule(rule);
+        return dungeonRule != null && exception != null && !dungeonRule.test(exception);
+    }
+
+    public static boolean hasFlag(ServerLevel level, ResourceLocation flag) {
+        PuzzleDungeonData data = PuzzleDungeonData.get(level);
+        return isDungeon(level) && data.currentDungeon!= null && data.currentDungeon.hasFlag(flag);
     }
 
     public void spawnDungeon(ServerLevel level) {
@@ -144,6 +172,10 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
             if (!this.puzzleStarted) {
                 this.puzzleStarted = true;
                 this.setDirty();
+            }
+
+            if (hasFlag(level, ResetFlags.RESET_INVENTORY)) {
+                this.cachedInventory = player.getInventory().save(new ListTag());
             }
 
             if (checkFlightRule(level, player)) {
@@ -238,6 +270,14 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
         return false;
     }
 
+    public void loadCachedInventory(Player player) {
+        if (this.cachedInventory != null) {
+            Inventory inventory = player.getInventory();
+            inventory.clearContent();
+            inventory.load(this.cachedInventory);
+        }
+    }
+
     public void resetDungeon(ServerLevel level) {
         Player player = level.getPlayerByUUID(this.owner);
         if (player == null)
@@ -249,6 +289,16 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
         this.resetCount++;
         if (this.resetCount >= this.currentDungeon.maxResetCount()) {
             this.destroyDimension(level);
+        }
+
+        if (hasFlag(level, ResetFlags.RESET_INVENTORY)) {
+            this.loadCachedInventory(player);
+        }
+
+        if (hasFlag(level, ResetFlags.RESET_POSITION)) {
+            DynamicDimensionFactory.spawnInDungeon(level, player, this.currentDungeon, this);
+            this.setDirty();
+            return;
         }
 
         BlockPos center = this.dungeonBounds.getCenter();

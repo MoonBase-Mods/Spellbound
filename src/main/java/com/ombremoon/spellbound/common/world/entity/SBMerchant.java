@@ -2,46 +2,61 @@ package com.ombremoon.spellbound.common.world.entity;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.DataResult;
-import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.common.world.SBTrades;
 import com.ombremoon.spellbound.common.events.custom.ModifySpellTradesEvent;
+import com.ombremoon.spellbound.common.world.SBTrades;
+import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.Util;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.neoforged.neoforge.common.NeoForge;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.OptionalInt;
 
 public abstract class SBMerchant extends SBLivingEntity implements Merchant {
+    private static final EntityDataAccessor<Boolean> RIDDLES = SynchedEntityData.defineId(SBMerchant.class, EntityDataSerializers.BOOLEAN);
     @Nullable
     private Player tradingPlayer;
     public MerchantOffers trades = new MerchantOffers();
+    public MerchantOffers riddles = new MerchantOffers();
 
     protected SBMerchant(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        //TODO:Serialize
+        builder.define(RIDDLES, false);
     }
 
     //Just initiate trading
@@ -82,19 +97,28 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
      */
     @Override
     public MerchantOffers getOffers() {
-        if (this.trades == null || this.trades.isEmpty()) {
-            this.trades = new MerchantOffers();
-            addTrades(numberOfTrades());
-        }
+        if (this.entityData.get(RIDDLES)) {
+            if (this.riddles == null || this.riddles.isEmpty()) {
+                this.riddles = new MerchantOffers();
+                addRiddleTrades(numberOfTrades());
+            }
 
-        return this.trades;
+            return this.riddles;
+        } else {
+            if (this.trades == null || this.trades.isEmpty()) {
+                this.trades = new MerchantOffers();
+                addSpellTrades(numberOfTrades());
+            }
+
+            return this.trades;
+        }
     }
 
     /**
      * Adds more trades to the current MerchantOffers for this entity randomly based on traders level
      * @param numberOfTrades the number of trades to add
      */
-    private void addTrades(int numberOfTrades) {
+    private void addSpellTrades(int numberOfTrades) {
         Int2ObjectMap<MerchantOffer[]> map = SBTrades.TRADES.get(getMerchantType());
         if (map != null && !map.isEmpty()) {
             MerchantOffer[] offers = map.get(getMerchantLevel());
@@ -105,6 +129,23 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
                     MerchantOffer newTrade = availableOffers.remove(this.random.nextInt(availableOffers.size()));
                     if (newTrade != null) {
                         this.trades.add(newTrade);
+                    }
+                }
+            }
+        }
+    }
+    private void addRiddleTrades(int numberOfTrades) {
+        Int2ObjectMap<MerchantOffer[]> map = SBTrades.RIDDLES.get(getMerchantType());
+        if (map != null && !map.isEmpty()) {
+            int level = this.getMerchantLevel();
+            MerchantOffer[] offers = map.get(level);
+            if (offers != null) {
+                List<MerchantOffer> availableOffers = Lists.newArrayList(offers);
+                int maxTrades = Math.min(numberOfTrades, availableOffers.size());
+                for (int i = 0; i < maxTrades; i++) {
+                    MerchantOffer newTrade = availableOffers.remove(this.random.nextInt(availableOffers.size()));
+                    if (newTrade != null) {
+                        this.riddles.add(newTrade);
                     }
                 }
             }
@@ -137,6 +178,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
                 compound.put("Offers", (Tag)MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
             }
         }
+        compound.putBoolean("TradeType", this.getTradeType());
     }
 
     /**
@@ -168,6 +210,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
                 this.trades = (MerchantOffers) p_323775_;
             });
         }
+        this.setTradeType(compound.getBoolean("TradeType"));
     }
 
     /**
@@ -182,7 +225,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
      * Opens the trading menu for a given player and sets them as the current user trading with the merchant
      * @param player the player to trade with
      */
-    private void startTrading(Player player) {
+    public void startTrading(Player player) {
         this.setTradingPlayer(player);
         this.openTradingScreen(player, this.getDisplayName(), 1);
     }
@@ -208,6 +251,20 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
         return this.tradingPlayer;
     }
 
+    @Override
+    public void openTradingScreen(Player player, Component displayName, int level) {
+        OptionalInt optionalint = player.openMenu(
+                new SimpleMenuProvider((p_45298_, p_45299_, p_45300_) -> new MerchantMenu(p_45298_, p_45299_, this), displayName)
+        );
+        if (optionalint.isPresent()) {
+            MerchantOffers merchantoffers = this.getOffers();
+            if (!merchantoffers.isEmpty()) {
+                PayloadHandler.setupBrokerMenu((ServerPlayer) player, optionalint.getAsInt(), this.getId());
+                player.sendMerchantOffers(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock());
+            }
+        }
+    }
+
     /**
      * Used for syncing serverside offers to clientside
      * @param merchantOffers serverside offers
@@ -228,7 +285,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
 
     @Override
     public void notifyTrade(MerchantOffer merchantOffer) {
-        merchantOffer.increaseUses();
+//        merchantOffer.increaseUses();
         this.ambientSoundTime = -this.getAmbientSoundInterval();
         this.rewardTradeXp(merchantOffer);
     }
@@ -243,5 +300,13 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     @Override
     public boolean isClientSide() {
         return this.level().isClientSide;
+    }
+
+    public void setTradeType(boolean isRiddle) {
+        this.entityData.set(RIDDLES, isRiddle);
+    }
+
+    public boolean getTradeType() {
+        return this.entityData.get(RIDDLES);
     }
 }

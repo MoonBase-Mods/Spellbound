@@ -2,10 +2,14 @@ package com.ombremoon.spellbound.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 
 import java.util.function.Function;
 
@@ -25,5 +29,9 @@ public class SerializationUtil {
                                 ? DataResult.success(p_274865_)
                                 : DataResult.error(() -> errorMessage.apply(p_274865_))
                 );
+    }
+
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, TagKey<T>> tagKeyStreamCodec(ResourceKey<? extends Registry<T>> registryKey) {
+        return REGISTRY_RESOURCE_STREAM_CODEC.map(p_319559_ -> TagKey.create(registryKey, p_319559_), TagKey::location);
     }
 }

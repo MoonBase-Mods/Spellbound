@@ -24,13 +24,6 @@ import java.util.function.Supplier;
 public class SBBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Constants.MOD_ID);
 
-    public static final Supplier<Block> RESONANCE_STONE = registerBlock(
-            "resonance_stone", () -> new ResonanceStoneBlock(
-                    blockProperties()
-                            .noOcclusion()
-            )
-    );
-
     public static final Supplier<Block> MAGI_WORKBENCH = registerBlock(
             "magis_workbench", () -> new UnnamedWorkbenchBlock(
                     blockProperties()
@@ -230,6 +223,12 @@ public class SBBlocks {
                         .pushReaction(PushReaction.BLOCK)
             ), false
     );
+    public static final Supplier<Block> RESONANCE_STONE = registerBlock(
+            "resonance_stone", () -> new ResonanceStoneBlock(
+                    blockProperties()
+                            .noOcclusion()
+            )
+    );
     public static final Supplier<Block> SANDSTONE_DIVINE_SHRINE = registerBlock("sandstone_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
     public static final Supplier<Block> PLAINS_DIVINE_SHRINE = registerBlock("plains_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
     public static final Supplier<Block> JUNGLE_DIVINE_SHRINE = registerBlock("jungle_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
@@ -272,6 +271,7 @@ public class SBBlocks {
     public static final Supplier<Block> WILD_MUSHROOM_SUMMON_STONE = registerSummonStone("wild_mushroom", BossFights.WILD_MUSHROOM);
 
     public static final Supplier<Block> DECEPTION_TEST_BLOCK = registerBlock("deception_test_block", () -> new DeceptionTestBlock(blockProperties().noLootTable()));
+    public static final Supplier<Block> DARK_ALTAR = registerBlock("dark_altar", () -> new DarkAltarBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));
 

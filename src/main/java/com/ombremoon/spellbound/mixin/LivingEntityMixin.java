@@ -63,7 +63,7 @@ public class LivingEntityMixin {
     @Inject(method = "updateInvisibilityStatus", at = @At("HEAD"))
     private void updateInvisibilityStatus(CallbackInfo info) {
         if (spellbound$self().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
-            spellbound$self().setInvisible(true);
+//            spellbound$self().setInvisible(true);
         }
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 public class EntityEffectType extends EffectType<EffectData.Entity> {
-    public static final ResourceLocation LOCATION = CommonClass.customLocation("static_entity");
+    public static final ResourceLocation LOCATION = CommonClass.customLocation("entity");
     public static final StreamCodec<RegistryFriendlyByteBuf, EffectData.Entity> STREAM_CODEC = StreamCodec.ofMember(
                 EffectData.Entity::toNetwork, EffectData.Entity::fromNetwork
     );
@@ -29,7 +29,7 @@ public class EntityEffectType extends EffectType<EffectData.Entity> {
             return null;
         }
 
-        EffectBuilder.StaticEntity builder = EffectBuilder.StaticEntity.of(entityData.location, entityData.entityId, entityData.rotate);
+        EffectBuilder.Entity builder = EffectBuilder.Entity.of(entityData.location, entityData.entityId, entityData.rotate);
         builder.setOffset(entityData.offset.x, entityData.offset.y, entityData.offset.z);
         builder.setRotation(entityData.rotation.x, entityData.rotation.y, entityData.rotation.z);
         builder.setScale(entityData.scale.x, entityData.scale.y, entityData.scale.z);

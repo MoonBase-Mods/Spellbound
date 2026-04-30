@@ -35,7 +35,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Predicate;
 
-public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, GeoEntity, FXEmitter, Loggable, SBSummonable {
+public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, IVFXEntity, Loggable, SBSummonable {
     protected static final String MOVEMENT = "Movement";
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> BOSS_PHASE = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);

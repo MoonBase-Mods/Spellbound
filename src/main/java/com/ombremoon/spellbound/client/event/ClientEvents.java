@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
-import com.ombremoon.spellbound.client.gui.SpellSelectScreen;
+import com.ombremoon.spellbound.client.gui.screens.SpellSelectScreen;
 import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.*;
@@ -125,10 +125,12 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
+        event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
         event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
 
         event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_MIST.get(), VFXEntityRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
         event.registerEntityRenderer(SBEntities.CAT.get(), CatRenderer::new);
@@ -234,7 +236,7 @@ public class ClientEvents {
         for (SpellPath spellPath : SpellPath.values()) {
             if (!spellPath.isSubPath()) {
                 ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
-                    SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
+                    SpellType<?> spellType = stack.get(SBData.SPELL_TYPE_COMPONENT);
                     if (spellType != null) {
                         SpellPath spellPath1 = spellType.getPath();
                         return spellPath == spellPath1 ? 1.0F : 0.0F;

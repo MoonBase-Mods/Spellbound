@@ -1,14 +1,7 @@
-package com.ombremoon.spellbound.client.gui;
+package com.ombremoon.spellbound.client.gui.screens;
 
-import com.lowdragmc.lowdraglib2.test.TestJava;
-import com.mojang.datafixers.util.Pair;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.List;
 
 public class BasicGuideScreen extends GuideBookScreen {
 

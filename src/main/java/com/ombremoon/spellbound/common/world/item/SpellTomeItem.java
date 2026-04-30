@@ -29,7 +29,7 @@ public class SpellTomeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        SpellType<?> spell = itemStack.get(SBData.SPELL_TOME);
+        SpellType<?> spell = itemStack.get(SBData.SPELL_TYPE_COMPONENT);
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(player);
             if (handler.getSpellList().contains(spell)) {
@@ -53,7 +53,7 @@ public class SpellTomeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
+        SpellType<?> spellType = stack.get(SBData.SPELL_TYPE_COMPONENT);
         if (spellType == null) {
             tooltipComponents.add(Component.translatable("chat.spelltome.nospell").withStyle(ChatFormatting.GRAY));
             return;
@@ -76,7 +76,7 @@ public class SpellTomeItem extends Item {
 
     public static ItemStack createWithSpell(SpellType<?> spellType) {
         ItemStack tome = new ItemStack(SBItems.SPELL_TOME.get());
-        tome.set(SBData.SPELL_TOME, spellType);
+        tome.set(SBData.SPELL_TYPE_COMPONENT, spellType);
 
         return tome;
     }

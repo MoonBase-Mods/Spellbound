@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.gui;
+package com.ombremoon.spellbound.client.gui.screens;
 
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;

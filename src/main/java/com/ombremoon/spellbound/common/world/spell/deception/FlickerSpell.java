@@ -138,6 +138,10 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                             80
                     );
                 }
+
+                this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("shadow_teleport"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setPos(Vec3.atBottomCenterOf(context.getBlockPos()))
+                );
             } else {
                 Vec3 vec3 = this.teleportLocation;
                 if (context.hasSkill(SBSkills.CONFUSION)) {

@@ -135,10 +135,6 @@ public class ModTagProvider {
 
             this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
                     .addTags(Tags.DamageTypes.IS_MAGIC);
-
-            this.tag(DamageTypeTags.IS_FIRE)
-                    .add(SBDamageTypes.RUIN_FIRE);
-
         }
     }
 

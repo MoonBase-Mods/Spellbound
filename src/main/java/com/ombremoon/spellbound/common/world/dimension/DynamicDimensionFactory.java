@@ -66,10 +66,13 @@ public class DynamicDimensionFactory {
         BlockPos center = structure.getStructureCenter();
         if (center != null) {
             level.getChunkAt(center);
-            Vec3 spawnOffset = puzzle.spawnData().playerOffset();
+            var spawnData = puzzle.spawnData();
+            Vec3 spawnOffset = spawnData.playerOffset();
             BlockPos offsetPos = center.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
             Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
-            player.setData(SBData.PUZZLE_RULES, puzzle.rules());
+            player.setData(SBData.CLIENT_PUZZLE, puzzle);
+            player.setYRot(spawnData.playerRotation());
+            player.setXRot(0);
             sendToDimension(player, level, targetVec);
         }
     }
@@ -155,6 +158,9 @@ public class DynamicDimensionFactory {
     }
 
     private static void sendToDimension(Entity entity, ServerLevel level, Vec3 targetVec) {
+//        if (entity.level().dimension() == level.dimension())
+//            return;
+
         level.getChunk(new BlockPos(Mth.floor(targetVec.x), Mth.floor(targetVec.y), Mth.floor(targetVec.z)));
         float f = entity.getYRot();
         var transition = new DimensionTransition(level, targetVec, entity.getDeltaMovement(), f, entity.getXRot(), DimensionTransition.PLAY_PORTAL_SOUND.then(DimensionTransition.PLACE_PORTAL_TICKET));

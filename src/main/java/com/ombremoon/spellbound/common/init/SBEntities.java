@@ -5,6 +5,8 @@ import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
+import com.ombremoon.spellbound.common.world.entity.misc.ShadowMist;
+import com.ombremoon.spellbound.common.world.entity.misc.WatchfulEye;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.entity.spell.*;
@@ -59,11 +61,13 @@ public class SBEntities {
     public static final Supplier<EntityType<Valkyr>> VALKYR = registerMob("valkyr", Valkyr::new, MobCategory.CREATURE,0.6F, 1.95F, 8, Valkyr::createValkyrAttributes, false);
 
     //Deception Entities
-    public static final Supplier<EntityType<LivingShadow>> LIVING_SHADOW = registerMob("living_shadow", LivingShadow::new, MobCategory.CREATURE,0.6F, 1.95F, 8, LivingShadow::createLivingShadowAttributes, false);
+    public static final Supplier<EntityType<ShadowMist>> SHADOW_MIST = registerEntity("shadow_mist", ShadowMist::new,1.4F, 3.4F);
+    public static final Supplier<EntityType<WatchfulEye>> WATCHFUL_EYE = registerMob("watchful_eye", WatchfulEye::new, MobCategory.MONSTER, 0.9F, 0.9F, 8, WatchfulEye::createWatchfulEyeAttributes, false);
+    public static final Supplier<EntityType<LivingShadow>> LIVING_SHADOW = registerMob("living_shadow", LivingShadow::new, MobCategory.CREATURE, false, 0.6F, 1.95F, 8, LivingShadow::createLivingShadowAttributes, false);
     public static final Supplier<EntityType<DungeonShadow>> DUNGEON_SHADOW = registerMob("dungeon_shadow", DungeonShadow::new, MobCategory.CREATURE,0.6F, 1.95F, 8, DungeonShadow::createDungeonShadowAttributes, false);
 
     protected static <T extends Mob> Supplier<EntityType<T>> registerMob(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int clientTrackingRange, Supplier<AttributeSupplier.Builder> attributeSupplier) {
-        return registerMob(name, factory, category, width, height, clientTrackingRange, attributeSupplier, true);
+        return registerMob(name, factory, category, false, width, height, clientTrackingRange, attributeSupplier, true);
     }
 
     protected static <T extends Mob> Supplier<EntityType<T>> registerMob(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int clientTrackingRange, Supplier<AttributeSupplier.Builder> attributeSupplier, boolean hasLoot) {
@@ -72,6 +76,10 @@ public class SBEntities {
 
     protected static <T extends Mob> Supplier<EntityType<T>> registerMob(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, float eyeHeight, int clientTrackingRange, Supplier<AttributeSupplier.Builder> attributeSupplier, boolean hasLoot) {
         return registerMob(name, factory, category, true, width, height, eyeHeight, clientTrackingRange, attributeSupplier, hasLoot);
+    }
+
+    protected static <T extends Mob> Supplier<EntityType<T>> registerMob(String name, EntityType.EntityFactory<T> factory, MobCategory category, boolean fireImmune, float width, float height, int clientTrackingRange, Supplier<AttributeSupplier.Builder> attributeSupplier, boolean hasLoot) {
+        return registerMob(name, factory, category, true, width, height, height * 0.85F, clientTrackingRange, attributeSupplier, hasLoot);
     }
 
     protected static <T extends Mob> Supplier<EntityType<T>> registerMob(String name, EntityType.EntityFactory<T> factory, MobCategory mobCategory, boolean fireImmune, float width, float height, float eyeHeight, int clientTrackingRange, Supplier<AttributeSupplier.Builder> attributeSupplier, boolean hasLoot) {

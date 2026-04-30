@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "spellbound:block/dark_altar_bottom",
+    "east": "spellbound:block/dark_altar_side",
+    "north": "spellbound:block/dark_altar_side",
+    "particle": "spellbound:block/dark_altar_side",
+    "south": "spellbound:block/dark_altar_side",
+    "up": "spellbound:block/dark_altar_top",
+    "west": "spellbound:block/dark_altar_side"
+  }
+}

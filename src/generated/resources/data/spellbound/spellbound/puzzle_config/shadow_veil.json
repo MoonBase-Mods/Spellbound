@@ -1,0 +1,85 @@
+{
+  "puzzles": [
+    {
+      "flags": [],
+      "max_reset_count": 3,
+      "objectives": [
+        {
+          "criteria": {
+            "interact_with_altar": {
+              "conditions": {
+                "block": {
+                  "blocks": "spellbound:dark_altar"
+                }
+              },
+              "trigger": "spellbound:interact_with_block"
+            }
+          },
+          "requirements": [
+            [
+              "interact_with_altar"
+            ]
+          ]
+        }
+      ],
+      "puzzle_id": "spellbound:shadow_veil",
+      "reset_conditions": [
+        {
+          "cooldown": 5,
+          "criteria": {
+            "hurt_by_fall": {
+              "conditions": {
+                "damage": {
+                  "type": {
+                    "tags": [
+                      {
+                        "expected": true,
+                        "id": "minecraft:is_fall"
+                      }
+                    ]
+                  }
+                }
+              },
+              "trigger": "spellbound:player_hurt"
+            }
+          },
+          "requirements": [
+            [
+              "hurt_by_fall"
+            ]
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "spellbound:no_interact": []
+        },
+        {
+          "spellbound:no_building": []
+        },
+        {
+          "spellbound:no_flying": []
+        },
+        {
+          "spellbound:no_pve_or_pvp": []
+        },
+        {
+          "spellbound:no_spell_casting": []
+        }
+      ],
+      "spawn_data": {
+        "player_offset": [
+          18.0,
+          1.0,
+          0.0
+        ],
+        "player_rotation": 90.0,
+        "spell_offset": [
+          -18.0,
+          2.0,
+          0.0
+        ]
+      }
+    }
+  ]
+}

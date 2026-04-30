@@ -35,7 +35,7 @@ public class SetSpellFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack itemStack, LootContext lootContext) {
-        itemStack.set(SBData.SPELL_TOME, this.spellType);
+        itemStack.set(SBData.SPELL_TYPE_COMPONENT, this.spellType);
         return itemStack;
     }
 
