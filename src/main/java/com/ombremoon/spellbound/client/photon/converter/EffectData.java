@@ -200,7 +200,7 @@ public abstract class EffectData {
 
         @Override
         public EffectType<?> getType() {
-            return EffectTypes.STATIC_ENTITY;
+            return EffectTypes.ENTITY;
         }
 
         public static Entity fromNetwork(RegistryFriendlyByteBuf buffer) {

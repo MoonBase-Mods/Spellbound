@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -9,7 +8,6 @@ import com.ombremoon.spellbound.common.magic.tree.SkillNode;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;

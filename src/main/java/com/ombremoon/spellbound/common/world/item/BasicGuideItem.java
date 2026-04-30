@@ -1,11 +1,6 @@
 package com.ombremoon.spellbound.common.world.item;
 
-import com.ombremoon.spellbound.client.gui.BasicGuideScreen;
-import com.ombremoon.spellbound.client.gui.GuideBookScreen;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.util.RenderUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;

@@ -32,11 +32,12 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimatableManager;
 
 import java.util.List;
 
 public class SpellBroker extends SBMerchant {
-    private int merchantLevel;
+    private int merchantLevel = 1;
 
     public SpellBroker(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -133,7 +134,7 @@ public class SpellBroker extends SBMerchant {
 
     @Override
     public void notifyTrade(@NotNull MerchantOffer merchantOffer) {
-
+        super.notifyTrade(merchantOffer);
     }
 
     @Override
@@ -150,5 +151,14 @@ public class SpellBroker extends SBMerchant {
             this.ambientSoundTime = -this.getAmbientSoundInterval();
             this.makeSound(this.getTradeUpdatedSound(!itemStack.isEmpty()));
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    public enum TradeType {
+        SPELL, KEY
     }
 }

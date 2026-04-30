@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.networking;
 
+import com.mojang.datafixers.util.Either;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -118,6 +119,10 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new UnlockSkillPayload(skill));
     }
 
+    public static void setBrokerTrades(int containerId, int merchantId, boolean isRiddle) {
+        PacketDistributor.sendToServer(new SetBrokerTradesPayload(merchantId, containerId, isRiddle));
+    }
+
     public static void updateMovement(float forwardImpulse, float leftImpulse) {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.MOVE, forwardImpulse, leftImpulse, 0));
     }
@@ -196,8 +201,16 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
-    public static void triggerFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
+    public static void triggerSpellFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), builder));
+    }
+
+    public static void triggerEntityFx(Entity entity, EffectData builder) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerEntityFXPayload(entity.getId(), Either.left(builder)));
+    }
+
+    public static void removeEntityFX(Entity entity, ResourceLocation effect) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerEntityFXPayload(entity.getId(), Either.right(effect)));
     }
 
     public static void updateAbilities(ServerPlayer player) {
@@ -218,6 +231,10 @@ public class PayloadHandler {
 
     public static void updateMultiblocks(MinecraftServer server, List<MultiblockHolder<?>> multiblocks) {
         sendToAll(server, new UpdateMultiblocksPayload(multiblocks));
+    }
+
+    public static void setupBrokerMenu(ServerPlayer player, int containerId, int merchantId) {
+        PacketDistributor.sendToPlayer(player, new SetupBrokerMenuPayload(containerId, merchantId));
     }
 
     public static void sendScrapToast(ServerPlayer player, ResourceLocation scrap) {
@@ -327,7 +344,12 @@ public class PayloadHandler {
         registrar.playToClient(
                 TriggerSpellFXPayload.TYPE,
                 TriggerSpellFXPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleTriggerFX
+                ClientPayloadHandler::handleTriggerSpellFX
+        );
+        registrar.playToClient(
+                TriggerEntityFXPayload.TYPE,
+                TriggerEntityFXPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleTriggerEntityFX
         );
         registrar.playToClient(
                 UpdateAbilitiesPayload.TYPE,
@@ -358,6 +380,11 @@ public class PayloadHandler {
                 UpdateMultiblocksPayload.TYPE,
                 UpdateMultiblocksPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleUpdateMultiblocks
+        );
+        registrar.playToClient(
+                SetupBrokerMenuPayload.TYPE,
+                SetupBrokerMenuPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleSetupBrokerMenu
         );
 
         registrar.playToServer(
@@ -409,6 +436,11 @@ public class PayloadHandler {
                 UnlockSkillPayload.TYPE,
                 UnlockSkillPayload.STREAM_CODEC,
                 ServerPayloadHandler::handleNetworkUnlockSkill
+        );
+        registrar.playToServer(
+                SetBrokerTradesPayload.TYPE,
+                SetBrokerTradesPayload.STREAM_CODEC,
+                ServerPayloadHandler::handleSetBrokerTrades
         );
         registrar.playToServer(
                 PlayerMovementPayload.TYPE,

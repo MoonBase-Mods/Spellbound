@@ -1,6 +1,7 @@
 {
   "puzzles": [
     {
+      "flags": [],
       "max_reset_count": 3,
       "objectives": [
         {
@@ -8,7 +9,7 @@
             "interact_with_altar": {
               "conditions": {
                 "block": {
-                  "blocks": "minecraft:chest"
+                  "blocks": "spellbound:dark_altar"
                 }
               },
               "trigger": "spellbound:interact_with_block"
@@ -26,14 +27,14 @@
         {
           "cooldown": 5,
           "criteria": {
-            "hurt_by_magic": {
+            "hurt_by_fall": {
               "conditions": {
                 "damage": {
                   "type": {
                     "tags": [
                       {
                         "expected": true,
-                        "id": "minecraft:is_fire"
+                        "id": "minecraft:is_fall"
                       }
                     ]
                   }
@@ -44,17 +45,27 @@
           },
           "requirements": [
             [
-              "hurt_by_magic"
+              "hurt_by_fall"
             ]
           ]
         }
       ],
       "rules": [
-        "spellbound:no_interact",
-        "spellbound:no_building",
-        "spellbound:no_flying",
-        "spellbound:no_pve_or_pvp",
-        "spellbound:no_spell_casting"
+        {
+          "spellbound:no_interact": []
+        },
+        {
+          "spellbound:no_building": []
+        },
+        {
+          "spellbound:no_flying": []
+        },
+        {
+          "spellbound:no_pve_or_pvp": []
+        },
+        {
+          "spellbound:no_spell_casting": []
+        }
       ],
       "spawn_data": {
         "player_offset": [
@@ -62,7 +73,7 @@
           -5.0,
           0.0
         ],
-        "player_rotation": 0.0,
+        "player_rotation": -90.0,
         "spell_offset": [
           14.0,
           -4.0,

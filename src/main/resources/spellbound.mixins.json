@@ -8,9 +8,12 @@
     "BlockItemMixin",
     "ConnectionAccessor",
     "DuckRangedAttribute",
+    "EntityMixin",
     "HealOrHarmMobEffectMixin",
     "HurtByTargetGoalMixin",
     "LivingEntityMixin",
+    "MerchantMenuMixin",
+    "MerchantResultSlotMixin",
     "MobMixin",
     "PlayerMixin",
     "ServerboundSetStructureBlockPacketMixin",
@@ -22,17 +25,20 @@
   ],
   "client": [
     "EffectRenderingInventoryScreenMixin",
+    "EntityRenderDispatcherMixin",
     "GameRendererMixin",
     "HumanoidModelMixin",
     "ItemInHandLayerMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
+    "MerchantScreenMixin",
     "MinecraftMixin",
     "ParticleEngineMixin",
     "PlayerModelMixin",
     "PlayerRendererMixin",
-    "StructureBlockRendererMixin"
+    "StructureBlockRendererMixin",
+    "TradeOfferButtonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,11 +2,13 @@ package com.ombremoon.spellbound.networking.serverbound;
 
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.world.entity.SBMerchant;
 import com.ombremoon.spellbound.util.SpellUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ServerPayloadHandler {
@@ -83,6 +85,16 @@ public class ServerPayloadHandler {
         var holder = SpellUtil.getSkills(context.player());
         holder.unlockSkill(payload.skill(), true);
         context.player().sendSystemMessage(Component.literal("You have unlocked the " + payload.skill().getName().getString() + " skill"));
+    }
+
+    public static void handleSetBrokerTrades(final SetBrokerTradesPayload payload, final IPayloadContext context) {
+        Player player = context.player();
+        AbstractContainerMenu menu = player.containerMenu;
+        Entity entity = player.level().getEntity(payload.merchantId());
+        if (payload.containerId() == menu.containerId && menu instanceof MerchantMenu && entity instanceof SBMerchant merchant) {
+            merchant.setTradeType(payload.isRiddle());
+            player.sendMerchantOffers(menu.containerId, merchant.getOffers(), merchant.getMerchantLevel(), merchant.getVillagerXp(), false, false);
+        }
     }
 
     public static void handleNetworkPlayerMovement(final PlayerMovementPayload payload, final IPayloadContext context) {

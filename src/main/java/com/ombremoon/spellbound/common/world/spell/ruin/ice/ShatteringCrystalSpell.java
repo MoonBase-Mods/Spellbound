@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -17,7 +18,6 @@ import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -317,6 +317,12 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             } else {
                 endSpell();
             }
+
+            this.triggerSpellFX(
+                    EffectData.Block.of(CommonClass.customLocation("shattering_crystal_explosion"), crystal.blockPosition())
+                            .setOffset(0, 1, 0)
+            );
+
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.CRYSTAL_SHATTER.get(),
                     SoundSource.PLAYERS,  0.25F + level.random.nextFloat() * 0.3F, 0.5F + level.random.nextFloat() * 0.3F);
         }

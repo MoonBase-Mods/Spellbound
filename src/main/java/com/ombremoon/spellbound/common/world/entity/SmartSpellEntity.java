@@ -155,7 +155,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return source.is(Tags.DamageTypes.IS_PHYSICAL) && this.getBossLevel().ordinal() > 2 || super.isInvulnerableTo(source);
+        return /*source.is(Tags.DamageTypes.IS_PHYSICAL) && this.getBossLevel().ordinal() > 2 || */super.isInvulnerableTo(source);
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.ombremoon.spellbound.client.model.types;
 
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.entity.IVFXEntity;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class VFXSpellModel<T extends ISpellEntity<?>> extends GeoModel<T> {
+public class VFXSpellModel<T extends IVFXEntity> extends GeoModel<T> {
     @Override
     public ResourceLocation getModelResource(T animatable) {
         return CommonClass.customLocation("geo/entity/mushroom_projectile/mushroom_projectile.geo.json");

@@ -1,14 +1,13 @@
-package com.ombremoon.spellbound.client.gui;
+package com.ombremoon.spellbound.client.gui.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.radial.RadialMenu;
 import com.ombremoon.spellbound.client.gui.radial.RadialMenuItem;
-import com.ombremoon.spellbound.client.gui.radial.SpellRadialMenuItem;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.client.gui.radial.SkillRadialMenuItem;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -24,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class SpellSelectScreen extends Screen {
+public class SkillSelectScreen extends Screen {
     private static final int RADIAL_WIDTH = 80;
     private static final int RADIAL_HEIGHT = RADIAL_WIDTH;
     private static final int RADIAL_ITEM_WIDTH = 40;
@@ -32,17 +31,21 @@ public class SpellSelectScreen extends Screen {
     private static final int BACKGROUND_COLOR = 0x3F000000;
     private static final int BACKGROUND_HOVER_COLOR = 0x3FFFFFFF;
     private final Player player;
-    private final SpellHandler handler;
+    private final SpellType<?> spellType;
+    private final List<Skill> radialSkills;
+    private final SkillHolder skills;
     private final RadialMenu radialMenu;
-    private SpellRadialMenuItem[] spellItems = new SpellRadialMenuItem[10];
+    private SkillRadialMenuItem[] skillItems = new SkillRadialMenuItem[11];
     private final List<RadialMenuItem> items;
     private float x;
     private float y;
 
-    public SpellSelectScreen() {
-        super(Component.literal("TEMP RADIAL SELECTION"));
+    protected SkillSelectScreen(SpellType<?> spellType, List<Skill> radialSkills) {
+        super(Component.literal("TEMP SKILL RADIAL SELECTION"));
         this.player = Minecraft.getInstance().player;
-        this.handler = SpellUtil.getSpellHandler(this.player);
+        this.spellType = spellType;
+        this.radialSkills = radialSkills;
+        this.skills = SpellUtil.getSkills(this.player);
         this.items = new ObjectArrayList<>();
         this.radialMenu = new RadialMenu(this, this.items, RADIAL_WIDTH - RADIAL_ITEM_WIDTH, RADIAL_WIDTH, BACKGROUND_COLOR, BACKGROUND_HOVER_COLOR) {
             @Override
@@ -51,21 +54,17 @@ public class SpellSelectScreen extends Screen {
             }
         };
 
-        for (int i = 0; i < handler.getEquippedSpells().size(); i++) {
-            spellItems[i] = new SpellRadialMenuItem(radialMenu, handler.getEquippedSpells().stream().toList().get(i)) {
+        for (int i = 0; i < radialSkills.size(); i++) {
+            skillItems[i] = new SkillRadialMenuItem(radialMenu, this.spellType, radialSkills.get(i)) {
                 @Override
                 public boolean onClick() {
-                    if (handler.getSelectedSpell() == this.getSpellType() && !(this.getSpellType().getRootSkill().isRadial()))
+                    Skill choice = this.getSkill();
+                    if (skills.getChoice(spellType) == choice)
                         return false;
 
-                    SpellType<?> spellType = this.getSpellType();
-                    AbstractSpell spell = spellType.createSpell();
-                    handler.setSelectedSpell(spellType);
-                    PayloadHandler.setSpell(spellType);
+                    skills.setChoice(spellType, choice);
+                    PayloadHandler.updateChoice(spellType, choice);
                     radialMenu.close();
-                    var radialSkills = spellType.getSkills().stream().filter(skill -> skill.isRadial() && handler.getSkillHolder().hasSkill(skill)).toList();
-                    if (spell instanceof RadialSpell && radialSkills.size() > 1)
-                        Minecraft.getInstance().setScreen(new SkillSelectScreen(spellType, radialSkills));
 
                     return true;
                 }
@@ -79,13 +78,8 @@ public class SpellSelectScreen extends Screen {
         this.x = (float) this.width / 2;
         this.y = (float) this.height / 2;
         if (this.items.isEmpty()) {
-            this.items.addAll(Arrays.asList(spellItems).subList(0, handler.getEquippedSpells().size()));
+            this.items.addAll(Arrays.asList(skillItems).subList(0, this.radialSkills.size()));
         }
-    }
-
-    @Override
-    public void resize(Minecraft minecraft, int width, int height) {
-        super.resize(minecraft, width, height);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.block;
 
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
@@ -48,17 +49,15 @@ public class DeceptionTestBlock extends Block {
         int dungeonId = data.incrementId();
         ResourceKey<Level> levelKey = data.getOrCreateKey(server, dungeonId);
         ServerLevel dungeon = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
-//        SpellType<?> spell = stack.get(SBData.DUNGEON_SPELL);
-        SpellType<?> spell = SBSpells.FLICKER.get();
-        if (dungeon != null/* && spell != null*/) {
+        ResourceKey<PuzzleConfiguration> configKey = stack.get(SBData.PUZZLE);
+        if (dungeon != null && configKey != null) {
+            if (!player.getAbilities().instabuild)
+                stack.shrink(1);
+
             PuzzleDungeonData dungeonData = PuzzleDungeonData.get(dungeon);
-            ResourceKey<PuzzleConfiguration> configKey = ResourceKey.create(Keys.PUZZLE_CONFIG, spell.location());
             PuzzleConfiguration config = level.registryAccess().registryOrThrow(Keys.PUZZLE_CONFIG).getOrThrow(configKey);
             dungeonData.initializeDungeon(player, configKey, config);
             dungeonData.spawnInDungeon(dungeon, player);
         }
-
-        if (!player.getAbilities().instabuild)
-            stack.shrink(1);
     }
 }

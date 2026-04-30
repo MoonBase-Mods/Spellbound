@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.FXEmitter;
 import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
@@ -15,16 +16,20 @@ import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.serverbound.ChargeOrChannelPayload;
+import com.ombremoon.spellbound.util.MerchantAccessor;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -197,7 +202,7 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleTriggerFX(TriggerSpellFXPayload payload, IPayloadContext context) {
+    public static void handleTriggerSpellFX(TriggerSpellFXPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             Entity entity = level.getEntity(payload.entityId());
@@ -207,6 +212,22 @@ public class ClientPayloadHandler {
                 if (spell != null) {
                     EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(payload.effectData());
                     spell.addFX(effectBuilder);
+                }
+            }
+        });
+    }
+
+    public static void handleTriggerEntityFX(TriggerEntityFXPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof FXEmitter emitter) {
+                var either = payload.effect();
+                if (either.left().isPresent()) {
+                    EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(either.left().get());
+                    emitter.addFX(effectBuilder);
+                } else if (either.right().isPresent()) {
+                    emitter.removeFX(either.right().get(), true);
                 }
             }
         });
@@ -294,6 +315,20 @@ public class ClientPayloadHandler {
                 final Set<ResourceKey<Level>> dimensionList = localPlayer.connection.levels();
                 Consumer<ResourceKey<Level>> keyConsumer = payload.add() ? dimensionList::add : dimensionList::remove;
                 payload.keys().forEach(keyConsumer);
+            }
+        });
+    }
+
+    public static void handleSetupBrokerMenu(SetupBrokerMenuPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            AbstractContainerMenu containerMenu = player.containerMenu;
+            if (payload.containerId() == containerMenu.containerId) {
+                if (containerMenu instanceof MerchantMenu menu) {
+                    MerchantAccessor access = (MerchantAccessor) menu;
+                    access.spellbound$setBroker(true);
+                    access.spellbound$setMerchantId(payload.merchantId());
+                }
             }
         });
     }

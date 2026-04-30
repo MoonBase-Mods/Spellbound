@@ -2,6 +2,9 @@ package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.client.MovementData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRule;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -11,9 +14,11 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
+import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
@@ -90,10 +95,10 @@ public class SBData {
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Boolean>> INVISIBILITY_DIRTY = ATTACHMENT_TYPES.register(
             "invisibility_dirty", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
-    public static final Supplier<AttachmentType<List<ResourceLocation>>> PUZZLE_RULES = ATTACHMENT_TYPES.register(
-            "puzzle_rules", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
-                    .serialize(ResourceLocation.CODEC.listOf())
-                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+    public static final Supplier<AttachmentType<PuzzleDefinition>> CLIENT_PUZZLE = ATTACHMENT_TYPES.register(
+            "client_puzzle", () -> AttachmentType.builder(() -> PuzzleDefinition.DEFAULT)
+                    .serialize(PuzzleDefinition.CODEC)
+                    .sync(PuzzleDefinition.STREAM_CODEC)
                     .build()
     );
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
@@ -114,7 +119,7 @@ public class SBData {
     );
 
     //Components
-    public static final Supplier<DataComponentType<SpellType<?>>> SPELL_TOME = COMPONENT_TYPES.registerComponentType("spells",
+    public static final Supplier<DataComponentType<SpellType<?>>> SPELL_TYPE_COMPONENT = COMPONENT_TYPES.registerComponentType("spells",
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
     public static final Supplier<DataComponentType<Integer>> RUNE_INDEX = COMPONENT_TYPES.registerComponentType("rune_type",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
@@ -130,6 +135,10 @@ public class SBData {
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
     public static final Supplier<DataComponentType<ResourceLocation>> IMBUEMENT_FX_OVERRIDE = COMPONENT_TYPES.registerComponentType("imbuement_fx_override",
             builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
+    public static final Supplier<DataComponentType<ResourceKey<PuzzleConfiguration>>> PUZZLE = COMPONENT_TYPES.registerComponentType("puzzle",
+            builder -> builder.persistent(ResourceKey.codec(Keys.PUZZLE_CONFIG)).networkSynchronized(ResourceKey.streamCodec(Keys.PUZZLE_CONFIG)));
+    public static final Supplier<DataComponentType<Boolean>> ENCRYPTED_KEY = COMPONENT_TYPES.registerComponentType("encrypted_key",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

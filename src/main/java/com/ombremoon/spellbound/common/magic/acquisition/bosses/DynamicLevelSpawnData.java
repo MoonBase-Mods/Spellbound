@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Optional;
 
 public record DynamicLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3 spellOffset, Optional<ResourceLocation> spellFX) {
+    public static final DynamicLevelSpawnData DEFAULT = new DynamicLevelSpawnData(Vec3.ZERO, 0f, Vec3.ZERO);
     public static final Codec<DynamicLevelSpawnData> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Vec3.CODEC.fieldOf("player_offset").forGetter(DynamicLevelSpawnData::playerOffset),
