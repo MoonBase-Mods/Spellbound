@@ -1,0 +1,29 @@
+{
+  "values": [
+    "spellbound:storm_crystal_block",
+    "spellbound:storm_crystal_cluster",
+    "spellbound:budding_storm_crystal",
+    "spellbound:medium_storm_crystal_bud",
+    "spellbound:small_storm_crystal_bud",
+    "spellbound:large_storm_crystal_bud",
+    "spellbound:frozen_crystal_cluster",
+    "spellbound:frozen_crystal_block",
+    "spellbound:budding_frozen_crystal",
+    "spellbound:small_frozen_crystal_bud",
+    "spellbound:medium_frozen_crystal_bud",
+    "spellbound:large_frozen_crystal_bud",
+    "spellbound:smoldering_crystal_block",
+    "spellbound:smoldering_crystal_cluster",
+    "spellbound:budding_smoldering_crystal",
+    "spellbound:medium_smoldering_crystal_bud",
+    "spellbound:small_smoldering_crystal_bud",
+    "spellbound:large_smoldering_crystal_bud",
+    "spellbound:summon_stone",
+    "spellbound:resonance_stone",
+    "spellbound:cracked_summon_stone",
+    "spellbound:wild_mushroom_summon_stone",
+    "spellbound:jungle_divine_shrine",
+    "spellbound:sandstone_divine_shrine",
+    "spellbound:plains_divine_shrine"
+  ]
+}

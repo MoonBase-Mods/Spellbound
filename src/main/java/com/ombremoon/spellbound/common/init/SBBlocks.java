@@ -243,7 +243,8 @@ public class SBBlocks {
     );
     public static final Supplier<Block> RESONANCE_STONE = registerBlock(
             "resonance_stone", () -> new ResonanceStoneBlock(
-                    blockProperties()
+                    BlockBehaviour.Properties
+                            .ofFullCopy(Blocks.STONE_BRICKS)
                             .noOcclusion()
             )
     );

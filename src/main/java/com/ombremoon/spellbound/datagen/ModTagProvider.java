@@ -66,6 +66,16 @@ public class ModTagProvider {
 
         public BlockTags(PackOutput pGenerator, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pGenerator, Registries.BLOCK, provider, Constants.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider pProvider) {
+            for (Block block : TransfigurationMultiblock.EXCLUDED_BLOCKS) {
+                this.populateTag(SBTags.Blocks.RITUAL_COMPATIBLE, block);
+            }
+            this.populateTag(net.minecraft.tags.BlockTags.FLOWERS, SBBlocks.ARCANTHUS.get());
+            this.populateTag(SBTags.Blocks.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE.get(), SBBlocks.PLAINS_DIVINE_SHRINE.get(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
+
             populateTag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE,
                     SBBlocks.STORM_CRYSTAL_BLOCK.get(),
                     SBBlocks.STORM_CRYSTAL_CLUSTER.get(),
@@ -92,15 +102,6 @@ public class ModTagProvider {
                     SBBlocks.JUNGLE_DIVINE_SHRINE.get(),
                     SBBlocks.SANDSTONE_DIVINE_SHRINE.get(),
                     SBBlocks.PLAINS_DIVINE_SHRINE.get());
-        }
-
-        @Override
-        protected void addTags(HolderLookup.Provider pProvider) {
-            for (Block block : TransfigurationMultiblock.EXCLUDED_BLOCKS) {
-                this.populateTag(SBTags.Blocks.RITUAL_COMPATIBLE, block);
-            }
-            this.populateTag(net.minecraft.tags.BlockTags.FLOWERS, SBBlocks.ARCANTHUS.get());
-            this.populateTag(SBTags.Blocks.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE.get(), SBBlocks.PLAINS_DIVINE_SHRINE.get(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
         }
 
         public void populateTag(TagKey<Block> tag, Block... blocks){
