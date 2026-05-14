@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -67,6 +69,10 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                         AbstractSpell spell1 = handler.getCurrentlyCastSpell();
                         if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && spell1 instanceof SummonUndeadSpell summonUndeadSpell && summonUndeadSpell.canExplode()) {
                             spell.heal(caster, livingEntity.getHealth() * spell.potency(0.1F));
+
+                            //VFX MARK
+                            livingEntity.getPersistentData().putBoolean("CorpseExplode", true);
+
                             livingEntity.kill();
 
                             List<LivingEntity> list = spell1.getAttackableEntities(livingEntity, 2);
@@ -155,6 +161,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     public void onCastStart(SpellContext context) {
         if (shouldExplodeCorpse(context)) {
             this.setExploding(true);
+
         }
 
         super.onCastStart(context);
@@ -183,8 +190,19 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
             float yaw = caster.getYRot();
             for (int i = 0; i < charges; i++) {
                 Vec3 spawnOffset = this.getSurroundingSpawnPosition(origin, yaw, radius, i, charges);
-                this.summonEntity(context, undead, spawnOffset);
+                Entity spawnedEntity = this.summonEntity(context, undead, spawnOffset);
+
+                //VFX
+                this.triggerSpellFX(EffectData.Entity.of(
+                        CommonClass.customLocation("summon_general"),
+                        spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
+
+                this.triggerSpellFX(EffectData.Entity.of(
+                        CommonClass.customLocation("summon_undead_ground"),
+                        spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -1, 0));
             }
+
+            //SOUND
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
                     SoundSource.PLAYERS, 1F, 0.8F);
         }
@@ -251,6 +269,12 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED) {
             //Spawn pile of bones
+
+
+            if (entity.getPersistentData().getBoolean("CorpseExplode")) {
+                this.triggerSpellFX(EffectData.Block.of(CommonClass.customLocation("summon_undead_corpse_explosion"),
+                        entity.blockPosition()));
+            }
         }
     }
 

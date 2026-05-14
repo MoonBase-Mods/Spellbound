@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
@@ -15,6 +17,7 @@ import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -228,9 +231,16 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                         );
                     }
                 }
+
+                // VFX
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_villager"),
+                                villager.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
+
+                level.playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES,
+                        SoundSource.NEUTRAL, 0.4F, 1F);
             });
-            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.VILLAGER_YES,
-                    SoundSource.PLAYERS, 0.4F, 1F);
+
+
         }
     }
 

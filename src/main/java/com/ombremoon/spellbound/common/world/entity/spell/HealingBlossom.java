@@ -1,12 +1,18 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
+import com.ombremoon.spellbound.common.world.entity.VFXSpellEntity;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -19,43 +25,33 @@ import software.bernie.geckolib.animation.*;
 public class HealingBlossom extends SpellEntity<HealingBlossomSpell> {
     private static final EntityDataAccessor<Boolean> FAST_BLOOMING = SynchedEntityData.defineId(HealingBlossom.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> EMPOWERED = SynchedEntityData.defineId(HealingBlossom.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> FULLY_BLOOMED = SynchedEntityData.defineId(HealingBlossom.class, EntityDataSerializers.BOOLEAN);
 
     public HealingBlossom(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 
-    @Override
+
     public void tick() {
         super.tick();
-        if (level().isClientSide) animateTick(level(), blockPosition(), getRandom());
         this.move(MoverType.SELF, this.getDeltaMovement());
-    }
 
-    public void animateTick(Level p_222504_, BlockPos p_222505_, RandomSource p_222506_) {
-        int i = p_222505_.getX();
-        int j = p_222505_.getY();
-        int k = p_222505_.getZ();
-        double d0 = (double)i + p_222506_.nextDouble();
-        double d1 = (double)j + 0.7;
-        double d2 = (double)k + p_222506_.nextDouble();
-        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-
-        for (int l = 0; l < 2; l++) {
-            blockpos$mutableblockpos.set(i + Mth.nextInt(p_222506_, -5, 5), j - p_222506_.nextInt(5), k + Mth.nextInt(p_222506_, -5, 5));
-            BlockState blockstate = p_222504_.getBlockState(blockpos$mutableblockpos);
-            if (!blockstate.isCollisionShapeFullBlock(p_222504_, blockpos$mutableblockpos)) {
-                p_222504_.addParticle(
-                        ParticleTypes.CHERRY_LEAVES,
-                        (double)blockpos$mutableblockpos.getX() + p_222506_.nextDouble(),
-                        (double)blockpos$mutableblockpos.getY() + p_222506_.nextDouble(),
-                        (double)blockpos$mutableblockpos.getZ() + p_222506_.nextDouble(),
-                        0.0,
-                        0.0,
-                        0.0
-                );
-            }
+        //Bloom completed
+        if (!this.isFullyBloomed() && !this.isSlowBlooming() && !this.isFastBlooming()) {
+            this.setFullyBloomed(true);
+            this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_cast"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                    .setOffset(0, 0.1, 0));
         }
     }
+
+    public boolean isFullyBloomed() {
+        return this.entityData.get(FULLY_BLOOMED);
+    }
+
+    public void setFullyBloomed(boolean bloomed) {
+        this.entityData.set(FULLY_BLOOMED, bloomed);
+    }
+
 
     public void teleportToAroundBlockPos(BlockPos pos) {
         for(int i = 0; i < 10; ++i) {
@@ -142,6 +138,7 @@ public class HealingBlossom extends SpellEntity<HealingBlossomSpell> {
         super.defineSynchedData(builder);
         builder.define(FAST_BLOOMING, false);
         builder.define(EMPOWERED, false);
+        builder.define(FULLY_BLOOMED, false);
     }
 
     public boolean isEmpowered() {

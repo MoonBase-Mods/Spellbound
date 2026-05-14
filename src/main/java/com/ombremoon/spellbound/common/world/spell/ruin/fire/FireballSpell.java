@@ -15,10 +15,12 @@ import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
@@ -189,23 +191,37 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                 fireball.setStickTime(fireball.tickCount + 60);
             } else {
                 this.explode(context, fireball, !context.hasSkill(SBSkills.MOLTEN_CORE) || this.getCharges() < this.maxCharges(context));
+
+                //SOUND
+                level.playSound(null, result.getEntity().blockPosition(), SoundEvents.GENERIC_EXPLODE.value(),
+                        result.getEntity().getSoundSource(), 0.6F + level.random.nextFloat() * 0.3F, 0.7F + level.random.nextFloat() * 0.3F);
+
             }
+
         }
     }
 
     @Override
     public void onProjectileHitBlock(ISpellEntity<?> spellEntity, SpellContext context, BlockHitResult result) {
-        if (!context.getLevel().isClientSide && spellEntity instanceof Fireball fireball) {
+        Level level = context.getLevel();
+
+        if (!level.isClientSide && spellEntity instanceof Fireball fireball) {
             if (fireball.isSticky()) {
                 fireball.setStickTime(fireball.tickCount + 60);
             } else {
                 this.explode(context, fireball);
             }
+
+            //SOUND
+            level.playSound(null, result.getBlockPos(), SoundEvents.GENERIC_EXPLODE.value(),
+                    SoundSource.PLAYERS, 0.7F, 0.8F);
         }
     }
 
     public void explode(Fireball fireball) {
         this.explode(this.getContext(), fireball, true);
+
+
     }
 
     public void explode(SpellContext context, Fireball fireball) {

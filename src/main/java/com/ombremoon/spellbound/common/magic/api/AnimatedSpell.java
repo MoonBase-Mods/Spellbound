@@ -43,7 +43,6 @@ public abstract class AnimatedSpell extends AbstractSpell {
             this.playAnimation(player, animation);
         }
     }
-
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
