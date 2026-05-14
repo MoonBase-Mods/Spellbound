@@ -1,6 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.events.DeathEvent;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -105,6 +108,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
         this.spellData.set(BLOSSOM_ID, blossom.getId());
     }
 
+
     private HealingBlossom getBlossom(SpellContext context) {
         Entity entity = context.getLevel().getEntity(this.spellData.get(BLOSSOM_ID));
         return (entity instanceof HealingBlossom blossom) ? blossom : null;
@@ -127,8 +131,10 @@ public class HealingBlossomSpell extends AnimatedSpell {
                 }
 
                 this.setBlossom(healingBlossom);
-                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.CHORUS_FLOWER_GROW,
-                        SoundSource.PLAYERS, 0.9F, 0.7F);
+
+                //Sound
+                level.playSound(null, healingBlossom.blockPosition(), SoundEvents.CHORUS_FLOWER_GROW,
+                        healingBlossom.getSoundSource(), 0.9F, 0.7F);
             });
 
             if (context.hasSkill(SBSkills.REBIRTH)) {
@@ -166,6 +172,9 @@ public class HealingBlossomSpell extends AnimatedSpell {
                         }
                 );
             }
+            //VFX
+            this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_area"),
+                    blossom.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
     }
 
@@ -230,6 +239,8 @@ public class HealingBlossomSpell extends AnimatedSpell {
                     this.heal(entity, healingAmount / 2.0F);
                 }
             }
+            this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_area"),
+                            this.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, 0.1, 0));
         }
     }
 
@@ -249,6 +260,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
             if (blossom != null)
                 blossom.setEndTick(20);
         }
+        removeSpellFX(CommonClass.customLocation("healing_blossom_area"));
     }
 
     private void onPlayerDeath(DeathEvent event) {
@@ -256,6 +268,12 @@ public class HealingBlossomSpell extends AnimatedSpell {
         HealingBlossom blossom = getBlossom(getCastContext());
         if (blossom == null || !blossom.isEmpowered())
             return;
+
+        //VFX
+        this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_rebirth_flower"), blossom.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                .setOffset(0, 0.1, 0));
+        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("healing_blossom_rebirth_player"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                .setOffset(0, 1, 0));
 
         caster.setHealth(caster.getMaxHealth() * 0.5F);
         blossom.setEmpowered(false);

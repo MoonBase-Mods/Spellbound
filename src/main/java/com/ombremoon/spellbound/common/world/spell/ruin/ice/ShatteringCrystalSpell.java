@@ -130,7 +130,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         if (!level.isClientSide) {
-            ShatteringCrystal crystal = this.summonEntity(context, SBEntities.SHATTERING_CRYSTAL.get(), shatteringCrystal -> shatteringCrystal.setStartTick(100));
+            ShatteringCrystal crystal = this.summonEntity(context, SBEntities.SHATTERING_CRYSTAL.get(),
+                    shatteringCrystal -> shatteringCrystal.setStartTick(100));
             this.setCrystal(crystal.getId());
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
                     SoundSource.PLAYERS, 0.4F, 0.8F);
@@ -318,13 +319,14 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 endSpell();
             }
 
+            //VFX
             this.triggerSpellFX(
                     EffectData.Block.of(CommonClass.customLocation("shattering_crystal_explosion"), crystal.blockPosition())
                             .setOffset(0, 1, 0)
             );
 
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.CRYSTAL_SHATTER.get(),
-                    SoundSource.PLAYERS,  0.25F + level.random.nextFloat() * 0.3F, 0.5F + level.random.nextFloat() * 0.3F);
+                    crystal.getSoundSource(),  0.25F + level.random.nextFloat() * 0.3F, 0.5F + level.random.nextFloat() * 0.3F);
         }
 
         this.primed = false;

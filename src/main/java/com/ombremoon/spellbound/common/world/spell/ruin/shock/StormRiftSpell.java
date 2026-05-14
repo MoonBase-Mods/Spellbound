@@ -128,7 +128,11 @@ public class StormRiftSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         if (!level.isClientSide) {
+
+            float volume = 0.5F + level.random.nextFloat() * 0.3F;
+            float pitch = 0.5F + level.random.nextFloat() * 0.3F;
             Entity entity = context.getTarget();
+
             if (entity instanceof StormRift stormRift && stormRift.tickCount >= 100 && context.hasCatalyst(SBItems.STORM_SHARD.get()) && this.portalMap.containsKey(stormRift.getId())) {
                 if (context.hasSkill(SBSkills.IMPLOSION)) {
                     stormRift.implode();
@@ -136,10 +140,20 @@ public class StormRiftSpell extends AnimatedSpell {
                     this.portalMap.remove(stormRift.getId());
                     if (portalMap.isEmpty())
                         endSpell();
+
+                    //sound
+                    level.playSound(null, entity.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER, entity.getSoundSource(),
+                            volume, pitch);
+
                 } else if (context.hasSkill(SBSkills.ORBITAL_SHELL)) {
                     context.useCatalyst(SBItems.STORM_SHARD.get());
                     stormRift.setCenter(stormRift.getOnPos());
                     stormRift.allowRotation();
+
+                    //sound
+                    level.playSound(null, entity.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER, entity.getSoundSource(),
+                            volume, pitch);
+
                 }
             } else {
                 StormRift stormRift = this.summonEntity(context, SBEntities.STORM_RIFT.get(), rift -> {
@@ -160,7 +174,8 @@ public class StormRiftSpell extends AnimatedSpell {
                         stormRift.setCloudId(stormCloud.getId());
                     });
                 }
-
+                //sound
+                if(stormRift != null) stormRift.playSound(SoundEvents.BREEZE_INHALE);
             }
         }
     }

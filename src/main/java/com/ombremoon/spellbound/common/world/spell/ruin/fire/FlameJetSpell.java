@@ -285,10 +285,9 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                                 .setScale(1, size, size);
             }
             this.triggerSpellFX(effectData);
+            //sound
+            playCastSound(context.getLevel(), context);
         }
-
-        //sound
-        playCastSound(context.getLevel(), context);
     }
 
     public void playCastSound(Level level, SpellContext context){

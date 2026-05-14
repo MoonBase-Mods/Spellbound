@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -13,6 +15,7 @@ import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -144,6 +147,10 @@ public class HealingTouchSpell extends AnimatedSpell {
                         }
                 );
             }
+            //VFX
+            this.triggerSpellFX(EffectData.Entity.of( CommonClass.customLocation("healing_touch_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.8,0));
+
             playCastSound(context.getLevel(), context);
         }
 
@@ -158,6 +165,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 SoundSource.PLAYERS, volume, pitch);
 
     }
+
     @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
@@ -171,6 +179,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 heal += (float) (maxMana - handler.getMana()) * potency(0.02F);
 
             this.heal(caster, heal);
+
 
             if (context.hasSkill(SBSkills.OVERGROWTH) && this.overgrowthStacks <= 5 && caster.getHealth() >= caster.getMaxHealth()) {
                 this.addSkillBuff(
@@ -198,16 +207,13 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addCooldown(SBSkills.OAK_BLESSING, 6000);
             }
         }
-
-        for (int j = 0; j < 5; j++) {
-            this.createSurroundingParticles(caster, SBParticles.GOLD_HEART.get(), 1);
-        }
     }
 
     @Override
     protected void onSpellStop(SpellContext context) {
         LivingEntity caster = context.getCaster();
         this.removeSkillBuff(caster, SBSkills.TRANQUILITY_OF_WATER);
+        this.removeSpellFX(CommonClass.customLocation("healing_touch_cast"));
     }
 
     @Override

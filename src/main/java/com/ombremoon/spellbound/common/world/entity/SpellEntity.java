@@ -1,11 +1,13 @@
 package com.ombremoon.spellbound.common.world.entity;
 
 import com.ombremoon.spellbound.client.photon.EffectCache;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -236,5 +238,11 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     @Override
     public void setSummoner(int id) {
         this.entityData.set(OWNER_ID, id);
+    }
+
+    protected void triggerSpellFX(EffectData builder) {
+        if (!this.level().isClientSide) {
+            PayloadHandler.triggerEntityFx(this, builder);
+        }
     }
 }

@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -171,7 +173,10 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.WATER_MOVEMENT_EFFICIENCY, new AttributeModifier(DOLPHINS_FIN_MOVEMENT, 0.5F, AttributeModifier.Operation.ADD_VALUE))
             );
+            //VFX
             playCastSound(level, context);
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("dolphin_fin_trail"), caster.getId(),
+                    EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
 
         }
 
