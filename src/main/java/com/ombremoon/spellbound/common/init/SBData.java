@@ -87,6 +87,8 @@ public class SBData {
             "force_warp", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
     public static final Supplier<AttachmentType<Integer>> STORMSTRIKE_OWNER = ATTACHMENT_TYPES.register(
             "stormstrike_owner", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<Integer>> SHADOW_DOMAIN_VEIL = ATTACHMENT_TYPES.register(
+            "shadow_domain_veil", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Misc
     public static final Supplier<AttachmentType<Integer>> RUNE_COLOR = ATTACHMENT_TYPES.register(

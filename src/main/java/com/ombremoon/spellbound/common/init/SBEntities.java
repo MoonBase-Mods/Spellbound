@@ -66,6 +66,7 @@ public class SBEntities {
     public static final Supplier<EntityType<Valkyr>> VALKYR = registerMob("valkyr", Valkyr::new, MobCategory.CREATURE,0.6F, 1.95F, 8, Valkyr::createValkyrAttributes, false);
 
     //Deception Entities
+    public static final Supplier<EntityType<ShadowVeil>> SHADOW_VEIL = registerEntity("shadow_veil", ShadowVeil::new, 5f, 3.5F);
     public static final Supplier<EntityType<ShadowMist>> SHADOW_MIST = registerEntity("shadow_mist", ShadowMist::new,1.4F, 3.4F);
     public static final Supplier<EntityType<WatchfulEye>> WATCHFUL_EYE = registerMob("watchful_eye", WatchfulEye::new, MobCategory.MONSTER, 0.9F, 0.9F, 8, WatchfulEye::createWatchfulEyeAttributes, false);
     public static final Supplier<EntityType<LivingShadow>> LIVING_SHADOW = registerMob("living_shadow", LivingShadow::new, MobCategory.CREATURE, false, 0.6F, 1.95F, 8, LivingShadow::createLivingShadowAttributes, false);

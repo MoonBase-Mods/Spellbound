@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -23,8 +24,10 @@ import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
 import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.world.spell.deception.ShadowVeilSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
@@ -39,6 +42,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -46,6 +50,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -213,6 +218,14 @@ public class NeoForgeEvents {
                 if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     mob.setTarget(null);
                 }
+            }
+
+            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
+            ShadowVeil veil = veilId == 0 ? null : (ShadowVeil) entity.level().getEntity(veilId);
+            if (veil != null && !entity.getBoundingBox().intersects(veil.getBoundingBox())) {
+                entity.knockback(0.5F, entity.getX() - veil.getX(), entity.getZ() - veil.getZ());
+                entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6, (double)1.0F, 0.6));
+                entity.hurtMarked = true;
             }
         }
     }
@@ -593,8 +606,26 @@ public class NeoForgeEvents {
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));
         }
 
+        if (entity instanceof LivingEntity attacker) veilBlocksAttack(serverLevel, attacker, event);
+        else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) veilBlocksAttack(serverLevel, projOwner, event);
+
         effects.doPreDamageEffects(event);
         rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));
+    }
+
+    private static void veilBlocksAttack(Level level, LivingEntity attacker, LivingDamageEvent.Pre event) {
+        List<ShadowVeil> shadowVeils = level.getEntitiesOfClass(ShadowVeil.class, attacker.getBoundingBox());
+
+        for (ShadowVeil veil : shadowVeils) {
+            LivingEntity caster = veil.getCaster();
+            SkillHolder skills = SpellUtil.getSkills(caster);
+            boolean canAttack = SpellUtil.CAN_ATTACK_ENTITY.test(caster, attacker);
+
+            if (skills.hasSkill(SBSkills.CLOUDED_SENSES)) return;
+            if (canAttack && level.getRandom().nextInt(4) == 0) {
+                event.setNewDamage(0);
+            }
+        }
     }
 
     @SubscribeEvent
