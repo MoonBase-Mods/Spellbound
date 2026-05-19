@@ -408,6 +408,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
         this.removeSkillBuff(caster, SBSkills.DOLPHINS_FIN);
         this.removeSkillBuff(caster, SBSkills.HAMMERHEAD);
         this.removeSkillBuff(caster, SBSkills.OCEAN_DWELLER);
+        this.removeSpellFX(CommonClass.customLocation("dolphin_fin_trail"));
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
@@ -192,7 +193,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 Vec3 spawnOffset = this.getSurroundingSpawnPosition(origin, yaw, radius, i, charges);
                 Entity spawnedEntity = this.summonEntity(context, undead, spawnOffset);
 
-                //VFX
                 this.triggerSpellFX(EffectData.Entity.of(
                         CommonClass.customLocation("summon_general"),
                         spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
@@ -200,9 +200,9 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 this.triggerSpellFX(EffectData.Entity.of(
                         CommonClass.customLocation("summon_undead_ground"),
                         spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -1, 0));
+
             }
 
-            //SOUND
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
                     SoundSource.PLAYERS, 1F, 0.8F);
         }
@@ -274,6 +274,8 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
             if (entity.getPersistentData().getBoolean("CorpseExplode")) {
                 this.triggerSpellFX(EffectData.Block.of(CommonClass.customLocation("summon_undead_corpse_explosion"),
                         entity.blockPosition()));
+                context.getLevel().playSound(null, context.getCaster().blockPosition(), SpellboundSounds.CORPSE_EXPLOSION.get(),
+                        SoundSource.PLAYERS, 0.5F, 0.8F);
             }
         }
     }

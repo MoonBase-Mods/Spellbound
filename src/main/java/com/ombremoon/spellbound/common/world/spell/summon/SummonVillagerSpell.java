@@ -156,13 +156,13 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
 
                 villager.setVillagerData(data.setProfession(profession).setLevel(this.getCharges()));
                 villager.setVillagerXp(1000);
-                villager.refreshBrain((ServerLevel)level);
+                villager.refreshBrain((ServerLevel) level);
 
                 MerchantOffers offers = villager.getOffers();
                 if (context.hasSkill(SBSkills.WHOLESALE)) {
                     for (MerchantOffer offer : offers) {
-                        double d0 = 0.3 + 0.0625 ;
-                        int j = (int)Math.floor(d0 * (double)offer.getBaseCostA().getCount());
+                        double d0 = 0.3 + 0.0625;
+                        int j = (int) Math.floor(d0 * (double) offer.getBaseCostA().getCount());
                         offer.addToSpecialPriceDiff(-Math.max(j, 1));
                     }
                 }
@@ -172,7 +172,7 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                     this.summonEntity(context, EntityType.IRON_GOLEM, pos);
                 }
 
-                if (context.hasSkill(SBSkills.SHOW_ME_THE_ROPES) && context.hasCatalyst(SBItems.SOUL_SHARD.get())){
+                if (context.hasSkill(SBSkills.SHOW_ME_THE_ROPES) && context.hasCatalyst(SBItems.SOUL_SHARD.get())) {
                     if (profession == VillagerProfession.FARMER) {
                         this.addEventBuff(
                                 caster,
@@ -231,16 +231,15 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                         );
                     }
                 }
-
-                // VFX
-                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_villager"),
-                                villager.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
-
-                level.playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES,
-                        SoundSource.NEUTRAL, 0.4F, 1F);
             });
 
-
+            LivingEntity villager = level.getEntity(this.spellData.get(VILLAGER_ID)) instanceof LivingEntity living ? living : null;
+            if (villager != null) {
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_villager"),
+                        villager.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
+                level.playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES,
+                        SoundSource.NEUTRAL, 0.4F, 1F);
+            }
         }
     }
 

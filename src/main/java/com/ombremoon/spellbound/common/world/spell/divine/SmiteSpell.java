@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +48,8 @@ public class SmiteSpell extends ImbuementSpell {
         super.onSpellStart(context);
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        boolean black_blade = this.isChoice(SBSkills.BLACK_BLADE);
+        SoundEvent sound = SpellboundSounds.SMITE.get();
+        String vfx = "smite_cast";
         float volume = 0.5F + level.random.nextFloat() * 0.3F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
 
@@ -64,6 +66,9 @@ public class SmiteSpell extends ImbuementSpell {
                             if (source instanceof LivingEntity living && Math.abs(this.parryTick - living.getData(SBData.ATTACK_START)) < 20) {
                                 log(living.getData(SBData.ATTACK_START));
                                 incomingDamage.cancelEvent();
+
+                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("smite_parry"), caster.getId(),
+                                                EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
                                 level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SMITE_PARRY.get(),
                                         SoundSource.PLAYERS, volume, pitch);
                             }
@@ -71,20 +76,14 @@ public class SmiteSpell extends ImbuementSpell {
                 );
             }
 
-
-            if(black_blade){
-                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("smite_black_blade_cast"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                        .setOffset(0, 0.1, 0));
-                level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SMITE_DARK_BLADE.get(),
-                        SoundSource.PLAYERS, volume, pitch);
-            }
-            else {
-                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("smite_cast"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                        .setOffset(0, 0.1, 0));
-                level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SMITE.get(),
-                        SoundSource.PLAYERS, volume, pitch);
+            if(this.isChoice(SBSkills.BLACK_BLADE)) {
+                vfx = "smite_dark_blade_cast";
+                sound = SpellboundSounds.SMITE_DARK_BLADE.get();
             }
 
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(vfx), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                    .setOffset(0, -0.5, 0));
+            level.playSound(null, context.getCaster().blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);
         }
     }
 

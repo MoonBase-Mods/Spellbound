@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.events.DeathEvent;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
 import com.ombremoon.spellbound.common.init.*;
@@ -266,14 +267,18 @@ public class HealingBlossomSpell extends AnimatedSpell {
     private void onPlayerDeath(DeathEvent event) {
         LivingEntity caster = event.getCaster();
         HealingBlossom blossom = getBlossom(getCastContext());
+
         if (blossom == null || !blossom.isEmpowered())
             return;
 
+        Level level = blossom.level();
+
         //VFX
-        this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_rebirth_flower"), blossom.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                .setOffset(0, 0.1, 0));
-        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("healing_blossom_rebirth_player"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                .setOffset(0, 1, 0));
+        this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_blossom_rebirth_flower"),
+                        blossom.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, 0.1, 0));
+        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("healing_blossom_rebirth_player"),
+                        caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, 1, 0));
+        level.playSound(null, blossom.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 0.8F, 1.2F);
 
         caster.setHealth(caster.getMaxHealth() * 0.5F);
         blossom.setEmpowered(false);

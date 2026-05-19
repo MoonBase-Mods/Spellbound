@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -65,6 +67,8 @@ public class StrideSpell extends AnimatedSpell {
                     this.currentPos = caster.position();
             }
             playCastSound(level, context);
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stride_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
         }
     }
     public void playCastSound(Level level, SpellContext context) {

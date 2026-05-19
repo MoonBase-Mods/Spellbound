@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
@@ -135,6 +136,10 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             this.setCrystal(crystal.getId());
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
                     SoundSource.PLAYERS, 0.4F, 0.8F);
+
+            if (context.hasSkill(SBSkills.CHILL))
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("shattering_crystal_aura"), crystal.getId(),
+                        EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -1.9, 0));
         }
     }
 
@@ -177,6 +182,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             ShatteringCrystal crystal = this.getCrystal(context);
             if (crystal != null)
                 crystal.discard();
+            this.removeSpellFX(CommonClass.customLocation("shattering_crystal_aura"));
         }
     }
 
@@ -319,7 +325,6 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 endSpell();
             }
 
-            //VFX
             this.triggerSpellFX(
                     EffectData.Block.of(CommonClass.customLocation("shattering_crystal_explosion"), crystal.blockPosition())
                             .setOffset(0, 1, 0)

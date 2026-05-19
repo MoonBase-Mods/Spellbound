@@ -346,8 +346,8 @@ public class SBSkills {
     public static Holder<Skill> IN_THE_SHADOWS = registerSkill("in_the_shadows", 0, 150, preReqs(EXPANDING_SHADOWS));
     //Ombre cant count to 4 so 4th skill needed.
     public static Holder<Skill> DECEPTIVE_ECHOES = registerSkill("deceptive_echoes", 0, 200, preReqs(IN_THE_SHADOWS));
-    public static Holder<Skill> WEIGHTED_VEILS = registerSkill("weighted_veils", 0, 250, preReqs(DECEPTIVE_ECHOES));
-    public static Holder<Skill> SAPPING_FEAR = registerSkill("sapping_fear", 0, 300, preReqs(WEIGHTED_VEILS));
+    public static Holder<Skill> WEIGHTED_VEIL = registerSkill("weighted_veil", 0, 250, preReqs(DECEPTIVE_ECHOES));
+    public static Holder<Skill> SAPPING_FEAR = registerSkill("sapping_fear", 0, 300, preReqs(WEIGHTED_VEIL));
     public static Holder<Skill> CLOUDED_SENSES = registerSkill("clouded_senses", 0, 350, preReqs(SAPPING_FEAR));
     public static Holder<Skill> DEEP_NIGHT = registerSkill("deep_night", 0, 400, preReqs(CLOUDED_SENSES));
     public static Holder<Skill> SHADOW_DOMAIN = registerSkill("shadow_domain", 0, 450, preReqs(DEEP_NIGHT));

@@ -24,6 +24,7 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> ELECTRIC_CHARGE_RECAST = registerSoundEvent("electric_charge_recast");
     public static final Supplier<SoundEvent> STORMSTRIKE_USE = registerSoundEvent("stormstrike_use");
     public static final Supplier<SoundEvent> INTERFERENCE_ZAP = registerSoundEvent("interference_zap");
+
     //MISC
     public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");
     public static final Supplier<SoundEvent> SHADOW_PLACE = registerSoundEvent("shadow_place");
@@ -33,14 +34,14 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> COOLING_ARMOR = registerSoundEvent("cooling_armor");
     public static final Supplier<SoundEvent> MAGIC_SPARKLES = registerSoundEvent("magic_sparks");
     public static final Supplier<SoundEvent> CRYSTAL_SHATTER = registerSoundEvent("crystal_shatter");
-
+    public static final Supplier<SoundEvent> CORPSE_EXPLOSION = registerSoundEvent("corpse_explosion");
     public static final Supplier<SoundEvent> SMITE_DARK_BLADE = registerSoundEvent("smite_dark_blade_imbuement");
     public static final Supplier<SoundEvent> SMITE = registerSoundEvent("smite_imbuement");
     public static final Supplier<SoundEvent> SMITE_PARRY = registerSoundEvent("smite_parry");
 
     //NEED IMPLEMENTATION
     public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
-    public static final Supplier<SoundEvent> CORPSE_EXPLOSION = registerSoundEvent("corpse_explosion");
+
 
 
 

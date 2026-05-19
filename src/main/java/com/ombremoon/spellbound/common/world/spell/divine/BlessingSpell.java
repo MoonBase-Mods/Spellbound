@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -117,6 +119,7 @@ public class BlessingSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
+        String vfx = "blessing_cast_heal";
         if (!level.isClientSide) {
             EntityResource resource = null;
             float amount = 1.0F;
@@ -145,6 +148,7 @@ public class BlessingSpell extends AnimatedSpell {
                             new ModifierData(Attributes.ARMOR, new AttributeModifier(COURAGE, 5.0F, AttributeModifier.Operation.ADD_VALUE)),
                             this.getDuration(context)
                     );
+
                 }
 
                 this.endSpell();
@@ -152,14 +156,21 @@ public class BlessingSpell extends AnimatedSpell {
             } else if (this.isChoice(SBSkills.ARCANE_RESTORATION)) {
                 resource = EntityResource.MANA;
                 amount = 5.0F;
+                vfx = "blessing_cast_mana"; //MISSING
+
             } else if (this.isChoice(SBSkills.SATIATING_BLESSING)) {
                 resource = EntityResource.HUNGER;
+                vfx = "blessing_cast_hunger";
             } else if (this.isChoice(SBSkills.AIR_BUBBLE)) {
                 resource = EntityResource.AIR;
                 amount = 20.0F;
+                vfx = "blessing_cast_bubbles";
             } else if (this.isChoice(SBSkills.PURIFYING_WARD)) {
+                vfx = "blessing_cast_purify";
                 for (LivingEntity entity : this.targets) {
                     this.cleanse(entity, 1, MobEffectCategory.HARMFUL);
+                    this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(vfx),
+                            entity.getId(), EntityEffectExecutor.AutoRotate.NONE));
                 }
 
                 this.endSpell();
@@ -192,7 +203,12 @@ public class BlessingSpell extends AnimatedSpell {
                     );
                 }
             }
+
             playCastSound(level, context);
+            for(LivingEntity entity : this.targets) {
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(vfx),
+                        entity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -1.3, 0));
+            }
         }
     }
 
@@ -258,6 +274,11 @@ public class BlessingSpell extends AnimatedSpell {
             for (LivingEntity entity : this.targets) {
                 if (entity != null && entity.isAlive()) {
                     this.removeSkillBuffs(entity, SBSkills.COURAGE, SBSkills.OVERFLOWING_AID, SBSkills.UPLIFTING_CHORUS);
+                    this.removeSpellFX(CommonClass.customLocation("blessing_cast_hunger"));
+                    this.removeSpellFX(CommonClass.customLocation("blessing_cast_heal"));
+                    this.removeSpellFX(CommonClass.customLocation("blessing_cast_mana"));
+                    this.removeSpellFX(CommonClass.customLocation("blessing_cast_purify"));
+                    this.removeSpellFX(CommonClass.customLocation("blessing_cast_bubbles"));
                 }
             }
         }

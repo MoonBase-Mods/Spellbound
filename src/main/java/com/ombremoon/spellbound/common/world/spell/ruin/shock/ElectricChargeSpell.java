@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -120,7 +122,8 @@ public class ElectricChargeSpell extends AnimatedSpell {
         Entity target = context.getTarget();
         if (target != null && this.entityIds.size() < context.getSpellLevel() + 1) {
             this.entityIds.add(target.getId());
-
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("charged_status"),
+                    target.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
         Level level = context.getLevel();
         if(!level.isClientSide()) playCastSound(level, context, null);
@@ -143,6 +146,8 @@ public class ElectricChargeSpell extends AnimatedSpell {
             if (context.getTarget() == null || this.discharged) {
                 for (Integer entityId : this.entityIds) {
                     Entity entity = level.getEntity(entityId);
+                    this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("charged_status"),
+                            entity.getId(), EntityEffectExecutor.AutoRotate.NONE));
                     if (entity instanceof LivingEntity livingEntity)
                         discharge(context, livingEntity, hasShard);
                 }
@@ -182,13 +187,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
             }
         }
 
-        for (Integer entityId : this.entityIds) {
-            Entity entity = level.getEntity(entityId);
-            if (entity instanceof LivingEntity && entity.tickCount % 3 == 0) {
-                this.createSurroundingServerParticles(entity, SBParticles.SPARK.get(), 1);
-            }
-        }
-
         if (this.entityIds.isEmpty())
             this.endSpell();
     }
@@ -203,6 +201,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     discharge(context, livingEntity, hasShard);
             }
         }
+        this.removeSpellFX(CommonClass.customLocation("charged_status"));
     }
 
     private void discharge(SpellContext context, LivingEntity target, boolean hasShard) {
