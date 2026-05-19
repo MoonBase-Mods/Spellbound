@@ -112,6 +112,8 @@ public class ModLangProvider extends LanguageProvider {
         guideContents();
         affinityDescriptions();
 
+        add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
+        add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
         add("spellbound.item.chalk", "Chalk");
 
         add("spellbound.familiars.equipped", "Familiar Equipped: %1$s");

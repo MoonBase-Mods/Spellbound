@@ -131,6 +131,7 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SHADOW_MIST.get(), VFXEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_VEIL.get(), VFXEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.SEEKING_PROJECTILE.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);

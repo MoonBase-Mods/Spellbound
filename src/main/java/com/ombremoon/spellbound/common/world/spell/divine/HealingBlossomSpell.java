@@ -282,6 +282,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
         caster.setHealth(caster.getMaxHealth() * 0.5F);
         blossom.setEmpowered(false);
+        event.cancelEvent();
         if (caster instanceof Player player)
             shakeScreen(player);
     }

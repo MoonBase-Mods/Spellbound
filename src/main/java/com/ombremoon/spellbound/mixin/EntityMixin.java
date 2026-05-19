@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+
+    @Shadow
+    protected abstract BlockPos getOnPos(float offset);
+
+    @Shadow
+    private Level level;
 
     @Shadow
     public abstract BlockPos getOnPos();
@@ -36,6 +43,17 @@ public abstract class EntityMixin {
             cir.setReturnValue(blockPos);
         }
 
+    }
+
+    @Inject(method = "getOnPosLegacy", at = @At("RETURN"), cancellable = true)
+    private void getLowerPosWhenSkating(CallbackInfoReturnable<BlockPos> cir) {
+        BlockPos pos = this.getOnPos(0.2F);
+        BlockState blockState = this.level.getBlockState(this.getOnPos());
+        if (blockState.is(SBBlocks.ICE_SHEET.get())) {
+            pos = this.getOnPos();
+        }
+
+        cir.setReturnValue(pos);
     }
 
     private Entity self() {

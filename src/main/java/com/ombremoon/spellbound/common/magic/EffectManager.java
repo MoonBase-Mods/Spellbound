@@ -96,6 +96,9 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
      * @param amount amount to increase the build up by
      */
     public void incrementBuildEffects(Effect effect, float amount) {
+        if (this.livingEntity.hasEffect(effect.getEffect()))
+            return;
+
         Float progress = this.buildUp.get(effect);
         float buildUpAmount = this.calculateBuildUp(effect, amount);
         if (progress != null) {

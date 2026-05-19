@@ -5,9 +5,11 @@ import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -25,14 +27,16 @@ public class SBItems {
     public static final List<Supplier<? extends Item>> BLOCK_ITEM_LIST = new ArrayList<>();
 
     public static final Supplier<Item> DEBUG_ITEM = registerItem("debug_item", () -> new DebugItem(getItemProperties()));
-    public static final Supplier<Item> SMOLDERING_SHARD = registerSimpleItem("smoldering_shard");
-    public static final Supplier<Item> FROZEN_SHARD = registerSimpleItem("frozen_shard");
-    public static final Supplier<Item> STORM_SHARD = registerSimpleItem("storm_shard");
-    public static final Supplier<Item> FLUX_SHARD = registerSimpleItem("flux_shard");
-    public static final Supplier<Item> SOUL_SHARD = registerSimpleItem("soul_shard");
-    public static final Supplier<Item> HOLY_SHARD = registerSimpleItem("holy_shard");
-    public static final Supplier<Item> CORRUPTED_SHARD = registerSimpleItem("corrupted_shard");
-    public static final Supplier<Item> FOOL_SHARD = registerSimpleItem("fool_shard");
+
+    public static final Supplier<Item> SHARD_SATCHEL = registerItem("shard_satchel", () -> new ShardSatchel(getItemProperties()));
+    public static final Supplier<Item> SMOLDERING_SHARD = registerShardItem("smoldering_shard");
+    public static final Supplier<Item> FROZEN_SHARD = registerShardItem("frozen_shard");
+    public static final Supplier<Item> STORM_SHARD = registerShardItem("storm_shard");
+    public static final Supplier<Item> FLUX_SHARD = registerShardItem("flux_shard");
+    public static final Supplier<Item> SOUL_SHARD = registerShardItem("soul_shard");
+    public static final Supplier<Item> HOLY_SHARD = registerShardItem("holy_shard");
+    public static final Supplier<Item> CORRUPTED_SHARD = registerShardItem("corrupted_shard");
+    public static final Supplier<Item> FOOL_SHARD = registerShardItem("fool_shard");
 
     public static final Supplier<Item> CREATIONIST_STAFF = registerItem("creationist_staff", () -> new CatalystItem(SpellPath.TRANSFIGURATION, getItemProperties().stacksTo(1).attributes(CatalystItem.createTransfigurationAttributes())), true);
     public static final Supplier<Item> FIRE_STAFF = registerCatalystItem("fire_staff", SpellPath.FIRE);
@@ -98,6 +102,10 @@ public class SBItems {
 
     public static Supplier<Item> registerCatalystItem(String name, SpellPath path) {
         return registerItem(name, () -> new CatalystItem(path, getItemProperties().stacksTo(1)), true);
+    }
+
+    public static Supplier<Item> registerShardItem(String name) {
+        return registerItem(name, () -> new Item(getItemProperties().stacksTo(1)));
     }
 
     public static Supplier<Item> registerSimpleItem(String name) {

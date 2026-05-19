@@ -1,13 +1,17 @@
 package com.ombremoon.spellbound.common.magic;
 
+import com.ombremoon.spellbound.common.init.SBItems;
+import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
+import com.ombremoon.spellbound.common.world.item.ShardSatchel;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -99,7 +103,17 @@ public class SpellContext {
     }
 
     public boolean hasCatalyst(Item catalyst) {
-        return this.caster.isHolding(catalyst);
+        if (this.caster.isHolding(catalyst)) return true;
+
+        boolean flag = false;
+        ItemStack mainHand = this.caster.getMainHandItem();
+        if (mainHand.is(SBItems.SHARD_SATCHEL.get())) flag = ((ShardSatchel) mainHand.getItem()).containsCatalyst(mainHand, catalyst);
+
+        if (flag) return true;
+        ItemStack offHand = this.caster.getOffhandItem();
+        if (offHand.is(SBItems.SHARD_SATCHEL.get())) flag = ((ShardSatchel) offHand.getItem()).containsCatalyst(mainHand, catalyst);
+
+        return flag;
     }
 
     public ItemStack getCatalyst(Item catalyst) {
@@ -107,7 +121,22 @@ public class SpellContext {
     }
 
     public void useCatalyst(Item catalyst) {
-        this.getCatalyst(catalyst).shrink(1);
+        ItemStack catalystStack = getCatalyst(catalyst);
+        if (!catalystStack.isEmpty()) {
+            catalystStack.shrink(1);
+            return;
+        }
+
+        ItemStack mainHand = this.caster.getMainHandItem();
+        if (mainHand.is(SBItems.SHARD_SATCHEL.get())) {
+            ((ShardSatchel) mainHand.getItem()).useCatalyst(mainHand, catalyst);
+            return;
+        }
+
+        ItemStack offHand = this.caster.getOffhandItem();
+        if (offHand.is(SBItems.SHARD_SATCHEL.get())) {
+            ((ShardSatchel) offHand.getItem()).useCatalyst(mainHand, catalyst);
+        }
     }
 
     public int getActiveSpells() {
