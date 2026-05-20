@@ -108,4 +108,12 @@ public class SmiteSpell extends ImbuementSpell {
     public boolean isMainChoice(SpellContext context) {
         return super.isMainChoice(context) || context.isChoice(SBSkills.BLACK_BLADE);
     }
+
+    @Override
+    protected void onSpellStop(SpellContext context) {
+        super.onSpellStop(context);
+        this.removeSpellFX(CommonClass.customLocation("smite_cast"));
+        this.removeSpellFX(CommonClass.customLocation("smite_dark_blade_cast"));
+    }
 }
+
