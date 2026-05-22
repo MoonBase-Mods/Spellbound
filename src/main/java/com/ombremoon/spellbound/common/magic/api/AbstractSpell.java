@@ -1122,6 +1122,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (value <= threshold) {
             return value;
         }
+
         float excess = value - threshold;
         return threshold + (excess / (1.0F + excess / softCapRange));
     }

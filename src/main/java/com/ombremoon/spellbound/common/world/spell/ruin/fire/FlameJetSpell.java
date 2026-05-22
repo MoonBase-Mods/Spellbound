@@ -320,6 +320,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 if (this.tickCount % 5 == 0) {
                     this.triggerSpellFX(
                             EffectData.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
+                                    .setAllowMulti(true)
                                     .setOffset(0, -0.5, 2)
                                     .setRotation(0, 180, 0)
                     );

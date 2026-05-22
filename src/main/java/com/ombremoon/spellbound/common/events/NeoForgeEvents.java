@@ -606,8 +606,11 @@ public class NeoForgeEvents {
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));
         }
 
-        if (entity instanceof LivingEntity attacker) veilBlocksAttack(serverLevel, attacker, event);
-        else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) veilBlocksAttack(serverLevel, projOwner, event);
+        if (entity instanceof LivingEntity attacker) {
+            veilBlocksAttack(serverLevel, attacker, event);
+        } else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) {
+            veilBlocksAttack(serverLevel, projOwner, event);
+        }
 
         effects.doPreDamageEffects(event);
         rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));

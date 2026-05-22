@@ -235,10 +235,9 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
 
             LivingEntity villager = level.getEntity(this.spellData.get(VILLAGER_ID)) instanceof LivingEntity living ? living : null;
             if (villager != null) {
-                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_villager"),
-                        villager.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
-                level.playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES,
-                        SoundSource.NEUTRAL, 0.4F, 1F);
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_villager"), villager.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, -0.5, 0));
+                level.playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_YES, SoundSource.NEUTRAL, 0.4F, 1F);
             }
         }
     }

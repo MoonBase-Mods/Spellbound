@@ -66,11 +66,12 @@ public interface SBDivineActions {
 
     ResourceKey<SpellAction> HEAL_MOB_TO_FULL = key("healing_touch/heal_mob_to_full");
     ResourceKey<SpellAction> USE_BLESSED_BANDAGES = key("healing_touch/use_blessed_bandages");
-    ResourceKey<SpellAction> BLESS_SHRINE = key("healing_touch/bless_shrine");
+    ResourceKey<SpellAction> USE_PHIAL = key("healing_touch/use_phial");
+    ResourceKey<SpellAction> CURE_ZOMBIE_VILLAGER = key("blessing/cure_zombie_villager");
+    ResourceKey<SpellAction> BLESS_SHRINE = key("blessing/bless_shrine");
     ResourceKey<SpellAction> DECORATE_SHRINE = key("healing_blossom/decorate_shrine");
     ResourceKey<SpellAction> PURIFY_WITHER_ROSE = key("healing_blossom/purify_wither_rose");
     ResourceKey<SpellAction> GROW_AMBROSIA_BUSH = key("healing_blossom/grow_ambrosia_bush");
-    ResourceKey<SpellAction> CURE_ZOMBIE_VILLAGER = key("blessing/cure_zombie_villager");
     ResourceKey<SpellAction> KILL_VILLAGER = key("siphon/kill_villager");
 
     static void bootstrap(BootstrapContext<SpellAction> context) {

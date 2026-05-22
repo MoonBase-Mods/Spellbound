@@ -17,7 +17,7 @@ public class SBPageScraps {
     public static final ResourceLocation USE_BLESSED_BANDAGES = scrap("use_blessed_bandages", SpellboundToasts.DIVINE);
     public static final ResourceLocation USE_BLESSED_BANDAGES_LORE = scrap("use_blessed_bandages_lore", SpellboundToasts.DIVINE);
     public static final ResourceLocation BLESS_SHRINE = scrap("bless_shrine", SpellboundToasts.DIVINE);
-    public static final ResourceLocation BLESS_SHRINE_LORE = scrap("bless_shrine", SpellboundToasts.DIVINE);
+    public static final ResourceLocation BLESS_SHRINE_LORE = scrap("bless_shrine_lore", SpellboundToasts.DIVINE);
     public static final ResourceLocation DECORATE_SHRINE = scrap("decorate_shrine", SpellboundToasts.DIVINE);
     public static final ResourceLocation DECORATE_SHRINE_LORE = scrap("decorate_shrine_lore", SpellboundToasts.DIVINE);
     public static final ResourceLocation CURE_VILLAGER = scrap("cure_villager", SpellboundToasts.DIVINE);

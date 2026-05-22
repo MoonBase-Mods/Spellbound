@@ -34,7 +34,7 @@ public class ModTagProvider {
         @Override
         protected void addTags(HolderLookup.Provider pProvider) {
             populateTag(net.minecraft.tags.ItemTags.DYEABLE, SBItems.CHALK);
-            populateTag(SBTags.Items.MAGIC_SHARD, SBItems.SMOLDERING_SHARD, SBItems.FROZEN_SHARD, SBItems.STORM_SHARD, SBItems.HOLY_SHARD, SBItems.FOOL_SHARD, SBItems.SOUL_SHARD);
+            populateTag(SBTags.Items.MAGIC_SHARD, SBItems.SMOLDERING_SHARD, SBItems.FROZEN_SHARD, SBItems.STORM_SHARD, SBItems.FLUX_SHARD, SBItems.HOLY_SHARD, SBItems.CORRUPTED_SHARD, SBItems.FOOL_SHARD, SBItems.SOUL_SHARD);
             populateTag(SBTags.Items.STAFF, SBItems.FIRE_STAFF, SBItems.ICE_STAFF, SBItems.SHOCK_STAFF, SBItems.CREATIONIST_STAFF);
             populateTagFromBlocks(SBTags.Items.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE, SBBlocks.PLAINS_DIVINE_SHRINE, SBBlocks.SANDSTONE_DIVINE_SHRINE);
             populateTagFromBlocks(Tags.Items.MUSHROOMS, SBBlocks.WILD_MUSHROOM);

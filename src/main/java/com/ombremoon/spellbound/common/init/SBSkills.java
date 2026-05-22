@@ -272,12 +272,12 @@ public class SBSkills {
     public static final Holder<Skill> OAK_BLESSING = registerSkill("oak_blessing", 50, 200, preReqs(TRANQUILITY_OF_WATER, CLEANSING_TOUCH));
 
     //Blessing
-    public static final Holder<Skill> BLESSING = registerSkill("blessing");
-    public static final Holder<Skill> ARCANE_RESTORATION = registerSkill("arcane_restoration", -100, 50, preReqs(BLESSING));
-    public static final Holder<Skill> SATIATING_BLESSING = registerSkill("satiating_blessing", -50, 50, preReqs(BLESSING));
-    public static final Holder<Skill> AIR_BUBBLE = registerSkill("air_bubble", 0, 50, preReqs(BLESSING));
-    public static final Holder<Skill> COURAGE = registerSkill("courage", -75, 100, preReqs(ARCANE_RESTORATION, SATIATING_BLESSING, AIR_BUBBLE));
-    public static final Holder<Skill> PURIFYING_WARD = registerSkill("purifying_ward", -25, 100, preReqs(ARCANE_RESTORATION, SATIATING_BLESSING, AIR_BUBBLE));
+    public static final Holder<Skill> BLESSING = registerRadialSkill("blessing");
+    public static final Holder<Skill> ARCANE_RESTORATION = registerRadialSkill("arcane_restoration", -100, 50, preReqs(BLESSING));
+    public static final Holder<Skill> SATIATING_BLESSING = registerRadialSkill("satiating_blessing", -50, 50, preReqs(BLESSING));
+    public static final Holder<Skill> AIR_BUBBLE = registerRadialSkill("air_bubble", 0, 50, preReqs(BLESSING));
+    public static final Holder<Skill> COURAGE = registerRadialSkill("courage", -75, 100, preReqs(ARCANE_RESTORATION, SATIATING_BLESSING, AIR_BUBBLE));
+    public static final Holder<Skill> PURIFYING_WARD = registerRadialSkill("purifying_ward", -25, 100, preReqs(ARCANE_RESTORATION, SATIATING_BLESSING, AIR_BUBBLE));
     public static final Holder<Skill> EXTENDED_GRACE = registerSkill("extended_grace", 50, 50, preReqs(BLESSING));
     public static final Holder<Skill> SHARED_BOON = registerSkill("shared_boon", 25, 100, preReqs(EXTENDED_GRACE));
     public static final Holder<Skill> CONSECRATED_PRESENCE = registerSkill("consecrated_presence", 75, 100, preReqs(EXTENDED_GRACE));
