@@ -1,0 +1,27 @@
+ {
+  "vertex":   "photon:particle",
+  "fragment": "spellbound:magic_shield",
+  "samplers": [
+    { "name": "Sampler2" },
+    { "name": "ParticleTexture" },
+    { "name": "GlintTexture" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0,  0.0, 1.0, 0.0, 0.0,  0.0, 0.0, 1.0, 0.0,  0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat",          "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0,  0.0, 1.0, 0.0, 0.0,  0.0, 0.0, 1.0, 0.0,  0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ColorModulator",   "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+    { "name": "FogStart",         "type": "float",     "count": 1,  "values": [ 0.0 ] },
+    { "name": "FogEnd",           "type": "float",     "count": 1,  "values": [ 1.0 ] },
+    { "name": "FogColor",         "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 0.0, 0.0 ] },
+    { "name": "FogShape",         "type": "int",       "count": 1,  "values": [ 0 ] },
+    { "name": "GameTime",         "type": "float",     "count": 1,  "values": [ 0.0 ] },
+
+    { "name": "HDR",              "type": "float",     "count": 4,  "values": [ 0.4, 0.6, 1.0, 2.0 ] },
+
+    { "name": "GlintSpeed",       "type": "float",     "count": 1,  "values": [ 0.5 ] },
+    { "name": "GlintScale",       "type": "float",     "count": 1,  "values": [ 8.0 ] },
+    { "name": "GlintStrength",    "type": "float",     "count": 1,  "values": [ 1.2 ] },
+    { "name": "GlintAngle",       "type": "float",     "count": 1,  "values": [ 0.785 ] },
+    { "name": "DiscardThreshold", "type": "float",     "count": 1,  "values": [ 0.05 ] }
+  ]
+}

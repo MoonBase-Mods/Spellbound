@@ -32,7 +32,7 @@ import java.util.OptionalInt;
 
 public class ShadowVeil extends VFXEntity {
     private static final EntityDataAccessor<OptionalInt> OWNER_ID = SynchedEntityData.defineId(ShadowVeil.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);;
-    public static final ResourceLocation VFX = CommonClass.customLocation("shadow_mist");
+    public static final ResourceLocation VFX = CommonClass.customLocation("shadow_veil");
     private EntityDimensions dimensions;
 
     public ShadowVeil(EntityType<?> entityType, Level level) {

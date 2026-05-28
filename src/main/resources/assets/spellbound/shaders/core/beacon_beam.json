@@ -1,0 +1,17 @@
+{
+    "vertex": "photon:particle",
+    "fragment": "spellbound:beacon_beam",
+    "samplers": [
+        { "name": "BeamTexture" },
+        { "name": "Sampler2" }
+    ],
+    "uniforms": [
+        { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "FogShape", "type": "int", "count": 1, "values": [ 0 ] },
+        { "name": "GameTime", "type": "float", "count": 1, "values": [ 1.0 ] },
+        { "name": "BeamSpeed", "type": "float", "count": 1, "values": [ 1.0 ] },
+        { "name": "NoiseAmount", "type": "float", "count": 1, "values": [ 0.05 ] },
+		{ "name": "ColorHDR", "type": "float", "count": 4, "values": [ 0.3, 0.4, 0.8, 1.0 ] }
+    ]
+}

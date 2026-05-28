@@ -157,7 +157,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
     }
 
     public void playCastSound(Level level, SpellContext context, String flag){
-        float volume = 0.2F + level.random.nextFloat() * 0.2F;
+        float volume = 0.4F + level.random.nextFloat() * 0.2F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
         if("recast".equals(flag)){
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_RECAST.get(),
