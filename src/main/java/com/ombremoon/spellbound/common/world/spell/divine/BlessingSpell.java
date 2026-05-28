@@ -199,6 +199,13 @@ public class BlessingSpell extends AnimatedSpell implements RadialSpell {
                                 caster.hurt(SpellUtil.spellDamageSource(caster.level(), SBDamageTypes.SB_GENERIC, this, caster, caster), health * 0.5F);
                                 this.removeSkillBuff(killedEntity, SBSkills.UPLIFTING_CHORUS);
                                 deathEvent.cancelEvent();
+
+                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("blessing_uplifting_chorus"),
+                                        entity.getId(), EntityEffectExecutor.AutoRotate.NONE));
+
+                                level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.UPLIFTING_CHORUS.get(), SoundSource.PLAYERS,
+                                        0.5F + level.random.nextFloat() * 0.1F, 0.8F + level.random.nextFloat() * 0.1F);
+
                             },
                             this.getDuration(context)
                     );

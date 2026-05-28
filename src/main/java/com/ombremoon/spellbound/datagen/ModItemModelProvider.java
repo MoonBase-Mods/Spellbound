@@ -73,6 +73,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.TRANSFIG_BOOK);
         simpleGeneratedModel(SBItems.SUMMON_BOOK);
         simpleGeneratedModel(SBItems.STARTER_BOOK);
+        simpleGeneratedModel(SBItems.SHARD_SATCHEL);
+        simpleGeneratedModel(SBItems.ARCANE_EYE);
 
 
     }

@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.StormstrikeBolt;
@@ -9,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -72,7 +75,13 @@ public class StormstrikeSpell extends AnimatedSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             playCastSound(level, context);
-            this.shootProjectile(context, SBEntities.STORMSTRIKE_BOLT.get(), 2.5F, 1.0F);
+            var projectile = this.shootProjectile(context, SBEntities.STORMSTRIKE_BOLT.get(), 2.5F, 1.0F);
+
+
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_cast"),
+                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_trail"),
+                    projectile.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
     }
 
@@ -108,12 +117,20 @@ public class StormstrikeSpell extends AnimatedSpell {
         if (spellEntity instanceof StormstrikeBolt bolt) {
             LivingEntity caster = context.getCaster();
             Entity entity = result.getEntity();
+            Level level = context.getLevel();
 
             if (entity.is(caster)) return;
 
             if (entity instanceof LivingEntity livingEntity) {
                 context.getSpellHandler().applyStormStrike(livingEntity, 60);
                 bolt.discard();
+
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_impact"),
+                        entity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0.5));
+
+                level.playSound(null, entity.blockPosition(), SpellboundSounds.STORMSTRIKE_IMPACT.get(), SoundSource.PLAYERS,
+                        0.5F + level.random.nextFloat() * 0.1F, 0.8F + level.random.nextFloat() * 0.1F);
+
             }
         }
     }
