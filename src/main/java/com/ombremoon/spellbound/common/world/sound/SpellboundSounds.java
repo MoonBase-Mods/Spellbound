@@ -47,7 +47,7 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> CRYSTAL_SHATTER = registerSoundEvent("crystal_shatter");
     public static final Supplier<SoundEvent> CORPSE_EXPLOSION = registerSoundEvent("corpse_explosion");
 
-
+    public static final Supplier<SoundEvent> SHATTER_SKIN = registerSoundEvent("shatter_skin");
 
     //NEED IMPLEMENTATION
     public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
@@ -55,9 +55,7 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> SMITE_SWOOSH = registerSoundEvent("smite_swoosh");
 
 
-
-
-
+    public static final Supplier<SoundEvent> ROCK_BUILD_UP = registerSoundEvent("rock_build_up");
     //MENU
     public static final  Supplier<SoundEvent> RES_STONE_OPEN = registerSoundEvent("res_stone_open");
 

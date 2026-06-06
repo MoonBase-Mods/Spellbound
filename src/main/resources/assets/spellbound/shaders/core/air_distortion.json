@@ -1,0 +1,24 @@
+{
+  "vertex":   "photon:particle",
+  "fragment": "spellbound:air_distortion",
+  "samplers": [
+    { "name": "Sampler2" },
+    { "name": "MaskTexture" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat",      "type": "matrix4x4", "count": 16, "values": [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ] },
+    { "name": "ProjMat",           "type": "matrix4x4", "count": 16, "values": [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ] },
+    { "name": "ColorModulator",    "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+    { "name": "FogStart",          "type": "float",     "count": 1,  "values": [ 0.0 ] },
+    { "name": "FogEnd",            "type": "float",     "count": 1,  "values": [ 1.0 ] },
+    { "name": "FogColor",          "type": "float",     "count": 4,  "values": [ 0.0, 0.0, 0.0, 0.0 ] },
+    { "name": "FogShape",          "type": "int",       "count": 1,  "values": [ 0 ] },
+    { "name": "GameTime",          "type": "float",     "count": 1,  "values": [ 0.0 ] },
+    { "name": "Color1",            "type": "float",     "count": 4,  "values": [ 0.82, 0.93, 1.0, 0.15 ] },
+    { "name": "Color2",            "type": "float",     "count": 4,  "values": [ 0.95, 0.98, 1.0, 0.60 ] },
+    { "name": "RingSpeed",         "type": "float",     "count": 1,  "values": [ 4.5 ] },
+    { "name": "RingScale",         "type": "float",     "count": 1,  "values": [ 28.0 ] },
+    { "name": "NoiseScrollSpeed",  "type": "float",     "count": 1,  "values": [ 0.018 ] },
+    { "name": "DiscardThreshold",  "type": "float",     "count": 1,  "values": [ 0.05 ] }
+  ]
+}

@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -257,6 +259,8 @@ public class CobbledHideSpell extends AnimatedSpell {
                 );
             }
             playCastSound(level, context);
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("cobbled_hide_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
     }
 
@@ -274,8 +278,11 @@ public class CobbledHideSpell extends AnimatedSpell {
 
         if (!level.isClientSide && context.hasSkill(SBSkills.SHATTER_SKIN)) {
             var list = this.getAttackableEntities(4.0D);
-            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.STONE_BREAK,
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SHATTER_SKIN.get(),
                     SoundSource.PLAYERS, 1F + level.random.nextFloat() * 0.2F,0.8F+ level.random.nextFloat() * 0.2F);
+
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("shatter_skin"),
+                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
 
             for (LivingEntity entity : list) {
                 this.hurt(entity, this.armorBonus * potency(0.5F));

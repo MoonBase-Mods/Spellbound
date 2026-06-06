@@ -172,5 +172,17 @@
       "spellbound:risata5",
       "spellbound:risata6"
     ]
+  },
+  "rock_build_up": {
+    "subtitle": "rock_build_up",
+    "sounds": [
+      "spellbound:rock_build_up"
+    ]
+  },
+  "shatter_skin": {
+    "subtitle": "sounds.spellbound.shatter_skin",
+    "sounds": [
+      "spellbound:shatter_skin"
+    ]
   }
 }
