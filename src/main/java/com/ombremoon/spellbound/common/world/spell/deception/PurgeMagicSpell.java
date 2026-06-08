@@ -29,6 +29,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +46,6 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
 
     static ResourceLocation caster_vfx = CommonClass.customLocation("purge_magic_cast");
     static ResourceLocation target_vfx = CommonClass.customLocation("purge_magic_target");
-    // normal, radio waves, magic_shield
-    //nromal, expunge, silence (loop)
 
     private static Builder<PurgeMagicSpell> createPurgeMagicBuilder() {
         return createSimpleSpellBuilder(PurgeMagicSpell.class)
@@ -111,10 +110,13 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         boolean expunge = false;
+
         if (!level.isClientSide) {
             if (this.isChoice(SBSkills.COUNTER_MAGIC)) {
                 caster.addEffect(new MobEffectInstance(SBEffects.COUNTER_MAGIC, 200, 0, false, false));
                 caster_vfx = CommonClass.customLocation("purge_magic_shield");
+                this.triggerSpellFX(EffectData.Entity.of(caster_vfx, caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        .setOffset(0, -0.5, 0));
 
                 if (context.hasSkill(SBSkills.CLEANSE)) {
                     this.cleanseCaster();
@@ -146,14 +148,15 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                 if (context.hasSkill(SBSkills.RADIO_WAVES)) {
                     targets.addAll(this.getAttackableEntities(potency(3)));
                     caster_vfx = CommonClass.customLocation("purge_magic_waves");
+                    this.triggerSpellFX(EffectData.Entity.of(caster_vfx, caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                            .setOffset(0, -0.5, 0));
 
                 } else {
                     targets.add((LivingEntity) context.getTarget());
+                    this.triggerSpellFX(EffectData.Entity.of(caster_vfx, caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                            .setOffset(1, -0.3, -1F));
                 }
 
-                //VFX
-                this.triggerSpellFX(EffectData.Entity.of(caster_vfx, caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                        .setOffset(0, -0.3, 0));
                 playCastSound(level, context);
 
                 for (LivingEntity target : targets) {
@@ -231,9 +234,9 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                     }
 
                     this.triggerSpellFX(EffectData.Entity.of(target_vfx, target.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setOffset(0, -0.3, 0).setDelay(5));
+                            .setOffset(0, -0.3, 0).setDelay(3));
                     if(expunge)
-                        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.PURGE_MAGIC.get(),
+                        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.PURGE_MAGIC_EXPUNGE.get(),
                             SoundSource.PLAYERS, 0.6F + level.random.nextFloat() * 0.2F,1.0F);
 
                 }
@@ -241,6 +244,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
 
         }
     }
+
 
     public void playCastSound(Level level, SpellContext context) {
         float volume = 0.7F + level.random.nextFloat() * 0.3F;

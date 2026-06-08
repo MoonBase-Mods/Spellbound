@@ -217,6 +217,7 @@ public class StrideSpell extends AnimatedSpell {
         LivingEntity caster = context.getCaster();
         removeMovementBenefits(caster);
         removeSkillBuff(caster, SBSkills.MOMENTUM);
+        removeSpellFX(CommonClass.customLocation("stride_cast"));
 
         if (this.mount != null)
             removeMovementBenefits(this.mount);

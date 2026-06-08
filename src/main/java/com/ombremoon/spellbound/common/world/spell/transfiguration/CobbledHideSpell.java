@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -14,15 +16,19 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,6 +36,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -251,6 +259,8 @@ public class CobbledHideSpell extends AnimatedSpell {
                 );
             }
             playCastSound(level, context);
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("cobbled_hide_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
     }
 
@@ -265,12 +275,18 @@ public class CobbledHideSpell extends AnimatedSpell {
     @Override
     protected void onSpellRecast(SpellContext context) {
         Level level = context.getLevel();
+
         if (!level.isClientSide && context.hasSkill(SBSkills.SHATTER_SKIN)) {
             var list = this.getAttackableEntities(4.0D);
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SHATTER_SKIN.get(),
+                    SoundSource.PLAYERS, 1F + level.random.nextFloat() * 0.2F,0.8F+ level.random.nextFloat() * 0.2F);
+
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("shatter_skin"),
+                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+
             for (LivingEntity entity : list) {
                 this.hurt(entity, this.armorBonus * potency(0.5F));
             }
-
             this.endSpell();
         }
     }
@@ -307,6 +323,43 @@ public class CobbledHideSpell extends AnimatedSpell {
                 this.addCooldown(SBSkills.BEDROCK_BASTION, 12000);
             }
         }
+        if (level.isClientSide) {
+            spawnParticles(level, caster, context);
+        }
+    }
+
+    private void spawnParticles(Level level, LivingEntity caster, SpellContext context) {
+        RandomSource rand = level.random;
+        long gameTime = level.getGameTime();
+
+        BlockState particleBlock = getArmorParticleBlock(context);
+
+        for (int i = 0; i < 2; i++) {
+            double angle = (gameTime * 0.1 + i * Math.PI) % (2 * Math.PI);
+            double radius = 0.6;
+            double x = caster.getX() + Math.cos(angle) * radius;
+            double y = caster.getY() + 1.0 + rand.nextDouble() * 0.5;
+            double z = caster.getZ() + Math.sin(angle) * radius;
+
+            level.addParticle(
+                    new BlockParticleOption(ParticleTypes.BLOCK, particleBlock), x, y, z, 0, 0.02, 0);
+        }
+        //random burst
+        if (rand.nextInt(10) == 0) {
+            double ox = caster.getX() + (rand.nextDouble() - 0.5) * 1.2;
+            double oz = caster.getZ() + (rand.nextDouble() - 0.5) * 1.2;
+            level.addParticle(
+                    new BlockParticleOption(ParticleTypes.BLOCK, particleBlock), ox, caster.getY() + 2.0, oz,
+                    0, -0.05, 0
+            );
+        }
+    }
+
+    private BlockState getArmorParticleBlock(SpellContext context) {
+        if (context.hasSkill(SBSkills.DRAGON_HIDE))  return Blocks.DEEPSLATE.defaultBlockState();
+        if (context.hasSkill(SBSkills.DIAMOND_HIDE)) return Blocks.CALCITE.defaultBlockState();
+        if (context.hasSkill(SBSkills.IRON_HIDE))    return Blocks.ANDESITE.defaultBlockState();
+        return Blocks.COBBLESTONE.defaultBlockState();
     }
 
     @Override
