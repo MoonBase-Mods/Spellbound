@@ -6,6 +6,7 @@ import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class EffectCache {
 
     protected void removeFX(FXEffectExecutor effect, boolean removeObjects) {
         var runtime = effect.getRuntime();
-        if (runtime != null && runtime.isAlive()) {
+//        if (runtime != null && runtime.isAlive()) {
             List<? extends FXEffectExecutor> currentEffects = null;
             switch (effect) {
                 case EntityEffectExecutor entityEffect -> currentEffects = EntityEffectExecutor.CACHE.get(entityEffect.entity);
@@ -69,27 +70,26 @@ public class EffectCache {
             }
 
             if (currentEffects == null) return;
-            var iter = currentEffects.iterator();
-            while (iter.hasNext()) {
-                var fx = iter.next();
+            List<FXEffectExecutor> snapshot = new ArrayList<>(currentEffects);
+            for (FXEffectExecutor fx : snapshot) {
                 ResourceLocation location = effect.getFx().getFxLocation();
                 if (location == null || location.equals(fx.getFx().getFxLocation())) {
-                    iter.remove();
+                    currentEffects.remove(fx);
                     this.removeFX(effect);
-                    if (removeObjects)
+                    if (removeObjects && runtime != null)
                         runtime.destroy(false);
                 }
             }
 
-            if (currentEffects.isEmpty()) {
+//            if (currentEffects.isEmpty()) {
                 switch (effect) {
-                    case EntityEffectExecutor entityEffect -> EntityEffectExecutor.CACHE.remove(entityEffect.entity);
-                    case BlockEffectExecutor blockEffect -> BlockEffectExecutor.CACHE.remove(blockEffect.pos);
+                    case EntityEffectExecutor entityEffect -> EntityEffectExecutor.CACHE.put(entityEffect.entity, (List<EntityEffectExecutor>) currentEffects);
+                    case BlockEffectExecutor blockEffect -> BlockEffectExecutor.CACHE.put(blockEffect.pos, (List<BlockEffectExecutor>) currentEffects);
                     case CustomEffectExecutor<?> customEffect -> customEffect.removeEffect();
                     default -> {
                     }
                 }
-            }
-        }
+//            }
+//        }
     }
 }

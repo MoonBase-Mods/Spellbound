@@ -36,7 +36,9 @@ public class ModLangProvider extends LanguageProvider {
             "architects", "Architect's",
             "swindlers", "Swindler's",
             "dolphins", "Dolphin's",
-            "mermaids", "Mermaids's"
+            "mermaids", "Mermaids's",
+            "artisans", "Artisan's",
+            "assassins", "Assassin's"
     );
 
     public ModLangProvider(PackOutput gen) {

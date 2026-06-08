@@ -62,7 +62,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .isSpecialChoice()
                 .additionalCondition((context, summonUndeadSpell) -> !summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
                 .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
-                .skipEndOnRecast(context -> {
+                .skipEndOnRecast((context, summonSpell) -> {
                     LivingEntity caster = context.getCaster();
                     var handler = context.getSpellHandler();
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {

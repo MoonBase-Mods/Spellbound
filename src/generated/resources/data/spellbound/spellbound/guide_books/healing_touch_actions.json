@@ -159,7 +159,7 @@
         "yOffset": 150
       },
       "translation": {
-        "translate": "divine_action.healing_touch.bless_shrine"
+        "translate": "divine_action.blessing.bless_shrine"
       }
     },
     {
@@ -172,7 +172,7 @@
         {
           "bold": true,
           "color": "yellow",
-          "translate": "healing_touch.bless_shrine.name",
+          "translate": "blessing.bless_shrine.name",
           "underlined": true
         },
         "",
@@ -237,10 +237,10 @@
         },
         {
           "component": {
-            "translate": "healing_touch.bless_shrine.lore"
+            "translate": "blessing.bless_shrine.lore"
           },
           "extraOffset": 10,
-          "scrap": "spellbound:bless_shrine",
+          "scrap": "spellbound:bless_shrine_lore",
           "target_page": "spellbound:default"
         }
       ],

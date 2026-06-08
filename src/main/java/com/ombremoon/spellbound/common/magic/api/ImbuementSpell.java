@@ -108,10 +108,12 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                 this.removeSpellFX(effect.getLocation());
             }
 
-            this.stack.set(SBData.IMBUEMENT, null);
+//            this.stack.set(SBData.IMBUEMENT, null);
             if (caster instanceof Player player) {
                 ItemStack stack = player.getInventory().getItem(this.imbuedSlot);
                 stack.set(SBData.IMBUEMENT, null);
+            } else {
+                caster.getMainHandItem().set(SBData.IMBUEMENT, null);
             }
 
             var handler = context.getSpellHandler();
@@ -122,7 +124,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
-        return new Imbuement(this.spellType(), this.location());
+        return new Imbuement(this.spellType(), -1, this.location());
     }
 
     protected EffectData getImbuementEffect(SpellContext context) {
@@ -192,13 +194,13 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
             return this;
         }
 
-        public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
+        public Builder<T> skipEndOnRecast(BiPredicate<SpellContext, T> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;
         }
 
         public Builder<T> skipEndOnRecast() {
-            this.skipEndOnRecast = context -> true;
+            this.skipEndOnRecast = (context, spell) -> true;
             return this;
         }
 

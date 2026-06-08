@@ -4,8 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +38,19 @@ public record PseudoSkillProvider(Optional<ResourceLocation> spellType, Resource
     @Override
     public ResourceLocation location() {
         return this.location;
+    }
+
+    @Override
+    public Component getName() {
+        ResourceLocation skill = this.location();
+        return Component.translatable("skill." + skill.getNamespace() + "." + skill.getPath());
+    }
+
+    @Override
+    public ResourceLocation getTexture() {
+        String spell = this.getSpell().location().getPath();
+        ResourceLocation skill = this.location();
+        return ResourceLocation.fromNamespaceAndPath(skill.getNamespace(), "textures/gui/skills/" + spell + "/" + skill.getPath() + ".png");
     }
 
     @Override

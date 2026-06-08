@@ -290,13 +290,13 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
+        public Builder<T> skipEndOnRecast(BiPredicate<SpellContext, T> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;
         }
 
         public Builder<T> skipEndOnRecast() {
-            this.skipEndOnRecast = context -> true;
+            this.skipEndOnRecast = (context, spell) -> true;
             return this;
         }
 

@@ -84,8 +84,9 @@ public class Skill implements SkillProvider {
 
     @Override
     public ResourceLocation getTexture() {
-        String root = getSpell().location().getPath();
-        return CommonClass.customLocation("textures/gui/skills/" + root + "/" + location().getPath() + ".png");
+        String spell = this.getSpell().location().getPath();
+        ResourceLocation skill = this.location();
+        return ResourceLocation.fromNamespaceAndPath(skill.getNamespace(), "textures/gui/skills/" + spell + "/" + skill.getPath() + ".png");
     }
 
     public void onSkillUnlock(Player player) {}

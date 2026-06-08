@@ -25,13 +25,21 @@ public class SmiteSpell extends ImbuementSpell {
 
     public static Builder<SmiteSpell> createSmiteBuilder() {
         return createImbuementSpellBuilder(SmiteSpell.class)
-                .duration(1200)
+                .duration(200)
+//                .skipEndOnRecast((context, spell) -> !spell.isMainChoice(context))
+                .skipEndOnRecast()
                 .negativeScaling((context, smiteSpell) -> smiteSpell.isChoice(SBSkills.BLACK_BLADE))
-                /*.imbuementEffect((context, smiteSpell) -> EffectData.Entity.of(
-                                CommonClass.customLocation("shadow_mist"),
-                                context.getCaster().getId(),
-                                EntityEffectExecutor.AutoRotate.NONE)
-                        .setOffset(0, -1.5, 0))*/;
+                .imbuementEffect((context, smiteSpell) -> {
+                    LivingEntity caster = context.getCaster();
+                    ResourceLocation effect = CommonClass.customLocation("smite_cast");
+                    if (smiteSpell.isChoice(SBSkills.BLACK_BLADE)) {
+                        effect = CommonClass.customLocation("smite_dark_blade_cast");
+                    }
+
+                    return EffectData.Entity.of(effect, caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                            .setOffset(0, -caster.getEyeHeight(), 0);
+                    }
+                );
     }
 
     public SmiteSpell() {
@@ -49,7 +57,6 @@ public class SmiteSpell extends ImbuementSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         SoundEvent sound = SpellboundSounds.SMITE.get();
-        String vfx = "smite_cast";
         float volume = 0.5F + level.random.nextFloat() * 0.3F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
 
@@ -63,12 +70,11 @@ public class SmiteSpell extends ImbuementSpell {
                         GOLDEN_PARRY,
                         incomingDamage -> {
                             Entity source = incomingDamage.getSource().getEntity();
-                            if (source instanceof LivingEntity living && Math.abs(this.parryTick - living.getData(SBData.ATTACK_START)) < 20) {
-                                log(living.getData(SBData.ATTACK_START));
+                            if (source instanceof LivingEntity living && Math.abs(this.parryTick - living.getData(SBData.ATTACK_START)) < 8) {
                                 incomingDamage.cancelEvent();
 
-                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("smite_parry"), caster.getId(),
-                                                EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
+                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("smite_parry"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                        .setOffset(0, -0.5, 0));
                                 level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SMITE_PARRY.get(),
                                         SoundSource.PLAYERS, volume, pitch);
                             }
@@ -77,16 +83,32 @@ public class SmiteSpell extends ImbuementSpell {
             }
 
             if(this.isChoice(SBSkills.BLACK_BLADE)) {
-                vfx = "smite_dark_blade_cast";
                 sound = SpellboundSounds.SMITE_DARK_BLADE.get();
             }
 
-            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(vfx), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                    .setOffset(0, -0.5, 0));
             level.playSound(null, context.getCaster().blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);
         }
     }
 
+    @Override
+    protected void onSpellRecast(SpellContext context) {
+        super.onSpellRecast(context);
+//        if (this.isChoice(SBSkills.BLACK_BLADE)) {
+//            this.removeSpellFX(CommonClass.customLocation("smite_cast"));
+//        } else {
+//            this.removeSpellFX(CommonClass.customLocation("smite_dark_blade_cast"));
+//        }
+    }
+
+    @Override
+    protected void onSpellStop(SpellContext context) {
+        super.onSpellStop(context);
+        LivingEntity caster = context.getCaster();
+        Level level = context.getLevel();
+        if (!level.isClientSide) {
+            this.removeSkillBuff(caster, SBSkills.GOLDEN_PARRY);
+        }
+    }
 
     @Override
     protected void onUseImbuement(SpellContext context) {
@@ -94,26 +116,23 @@ public class SmiteSpell extends ImbuementSpell {
         if (!level.isClientSide) {
             if (context.isChoice(SBSkills.GOLDEN_PARRY)) {
                 this.parryTick = level.getGameTime();
-//                log(this.parryTick);
             }
         }
     }
 
     @Override
     protected Imbuement createImbuement(SpellContext context) {
-        return context.isChoice(SBSkills.BLACK_BLADE) ? new Imbuement(this.spellType(), CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
+        return context.isChoice(SBSkills.BLACK_BLADE) ? new Imbuement(this.spellType(), -1, CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
     }
 
     @Override
     public boolean isMainChoice(SpellContext context) {
-        return super.isMainChoice(context) || context.isChoice(SBSkills.BLACK_BLADE);
+        return this.isChoice(SBSkills.BLACK_BLADE) || super.isMainChoice(context);
     }
 
     @Override
-    protected void onSpellStop(SpellContext context) {
-        super.onSpellStop(context);
-        this.removeSpellFX(CommonClass.customLocation("smite_cast"));
-        this.removeSpellFX(CommonClass.customLocation("smite_dark_blade_cast"));
+    protected void displayImbuementEffect(LivingEntity caster, EffectData effect) {
+        super.displayImbuementEffect(caster, effect);
     }
 }
 

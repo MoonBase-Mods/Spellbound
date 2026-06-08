@@ -12,8 +12,10 @@ import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.FXEmitter;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -221,5 +223,9 @@ public class RenderUtil {
         if (Minecraft.getInstance().player == entity) {
             emitter.addFX(builder);
         }
+    }
+
+    public static void triggerEntityEffect(Entity entity, EffectData builder) {
+        PayloadHandler.triggerEntityFx(entity, builder);
     }
 }

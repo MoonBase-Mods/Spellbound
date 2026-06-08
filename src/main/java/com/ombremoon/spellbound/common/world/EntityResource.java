@@ -19,7 +19,10 @@ public enum EntityResource implements StringRepresentable {
                 Double mana = entity.getData(SBData.MANA);
                 entity.setData(SBData.MANA, Math.clamp(operation.apply(mana, amount), 0, entity.getAttributeValue(SBAttributes.MAX_MANA)));
             },
-            entity -> entity.getData(SBData.MANA) >= entity.getAttributeValue(SBAttributes.MAX_MANA)
+            entity -> {
+                double maxMana = entity.getAttribute(SBAttributes.MAX_MANA) != null ? entity.getAttributeValue(SBAttributes.MAX_MANA) : 100;
+                return entity.getData(SBData.MANA) >= maxMana;
+            }
     ),
     EXPERIENCE("experience",
             (entity, amount, operation) -> {
