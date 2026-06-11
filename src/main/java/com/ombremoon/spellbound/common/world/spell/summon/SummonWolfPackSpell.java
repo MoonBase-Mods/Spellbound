@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -19,3 +20,4 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell {
 
     }
 }
+*/

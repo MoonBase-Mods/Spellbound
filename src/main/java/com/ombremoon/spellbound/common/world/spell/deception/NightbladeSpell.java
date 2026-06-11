@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.deception;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -24,3 +25,4 @@ public class NightbladeSpell extends ImbuementSpell {
 
     }
 }
+*/

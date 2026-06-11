@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
 import com.ombremoon.spellbound.common.init.SBBlocks;
@@ -191,3 +192,4 @@ public class IceSkateSpell extends ChanneledSpell {
         }
     }
 }
+*/

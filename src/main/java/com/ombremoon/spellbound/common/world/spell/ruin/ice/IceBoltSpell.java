@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -29,3 +30,4 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell {
 
     }
 }
+*/

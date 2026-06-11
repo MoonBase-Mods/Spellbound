@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.divine;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
@@ -140,3 +141,4 @@ public class SmiteSpell extends ImbuementSpell {
     }
 }
 
+*/

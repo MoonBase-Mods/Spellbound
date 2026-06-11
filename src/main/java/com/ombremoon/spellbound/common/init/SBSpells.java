@@ -1,22 +1,28 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.world.spell.deception.*;
-import com.ombremoon.spellbound.common.world.spell.divine.*;
+import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
+import com.ombremoon.spellbound.common.world.spell.deception.FlickerSpell;
+import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
+import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.SiphonSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
-import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceBoltSpell;
-import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceSkateSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
-import com.ombremoon.spellbound.common.world.spell.summon.*;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonVillagerSpell;
+import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.*;
-import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Registry;
@@ -49,14 +55,14 @@ public class SBSpells {
 //            .skills(SBSkills.VOLCANO, SBSkills.INFERNO_CORE, SBSkills.LAVA_FLOW, SBSkills.EXPLOSIVE_BARRAGE,
 //                    SBSkills.SHRAPNEL, SBSkills.HEATWAVE, SBSkills.SCORCHED_EARTH, SBSkills.SEISMIC_SHOCK,
 //                    SBSkills.MOLTEN_SHIELD, SBSkills.PYROCLASTIC_CLOUD, SBSkills.APOCALYPSE));
-    public static final Supplier<SpellType<IceBoltSpell>> ICE_BOLT = registerSpell("ice_bolt", iceRuinBuilder(SpellMastery.NOVICE, IceBoltSpell::new)
-            .skills(SBSkills.ICE_BOLT, SBSkills.FROST_PIERCER, SBSkills.GLACIAL_VOLLEY, SBSkills.ICY_JAVELIN,
-                    SBSkills.PERMAFROST_LANCE, SBSkills.HAIL_STRIKE, SBSkills.CHILLING_AFTERMATH, SBSkills.SHATTERING_IMPACT,
-                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.GLACIAL_RESONANCE));
-    public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
-            .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
-                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.POLAR_PIROUETTE, SBSkills.FROST_SPRINT,
-                    SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
+//    public static final Supplier<SpellType<IceBoltSpell>> ICE_BOLT = registerSpell("ice_bolt", iceRuinBuilder(SpellMastery.NOVICE, IceBoltSpell::new)
+//            .skills(SBSkills.ICE_BOLT, SBSkills.FROST_PIERCER, SBSkills.GLACIAL_VOLLEY, SBSkills.ICY_JAVELIN,
+//                    SBSkills.PERMAFROST_LANCE, SBSkills.HAIL_STRIKE, SBSkills.CHILLING_AFTERMATH, SBSkills.SHATTERING_IMPACT,
+//                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.GLACIAL_RESONANCE));
+//    public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
+//            .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
+//                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.POLAR_PIROUETTE, SBSkills.FROST_SPRINT,
+//                    SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
     public static final Supplier<SpellType<ShatteringCrystalSpell>> SHATTERING_CRYSTAL = registerSpell("shattering_crystal", iceRuinBuilder(SpellMastery.EXPERT, ShatteringCrystalSpell::new)
             .skills(SBSkills.SHATTERING_CRYSTAL, SBSkills.ICE_SHARD, SBSkills.FRIGID_BLAST, SBSkills.CHILL,
                     SBSkills.FROZEN_SHRAPNEL, SBSkills.HYPOTHERMIA, SBSkills.THIN_ICE, SBSkills.CHAOTIC_SHATTER,
@@ -91,10 +97,10 @@ public class SBSpells {
             .skills(SBSkills.COBBLED_HIDE, SBSkills.IRON_HIDE, SBSkills.DIAMOND_HIDE, SBSkills.DRAGON_HIDE,
                     SBSkills.BEDROCK_BASTION, SBSkills.SHATTER_SKIN, SBSkills.STONE_WALL, SBSkills.GRANITE_GRIP,
                     SBSkills.MASONRY_WARD, SBSkills.BOULDERBACK, SBSkills.INFUSED_STONE));
-    public static final Supplier<SpellType<CreateObjectSpell>> CREATE_OBJECT = registerSpell("create_object", trasnfigurationBuilder(SpellMastery.NOVICE, CreateObjectSpell::new)
-            .skills(SBSkills.CREATE_OBJECT, SBSkills.LUMBERJACK, SBSkills.EXCAVATOR, SBSkills.HARVESTER,
-                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.EMERGENCY_RATIONS, SBSkills.LASTING_PROVISIONS,
-                    SBSkills.ARTISANS_TOUCH, SBSkills.MASTERWORK_GEAR, SBSkills.MYSTIC_TOOLSMITH));
+//    public static final Supplier<SpellType<CreateObjectSpell>> CREATE_OBJECT = registerSpell("create_object", trasnfigurationBuilder(SpellMastery.NOVICE, CreateObjectSpell::new)
+//            .skills(SBSkills.CREATE_OBJECT, SBSkills.LUMBERJACK, SBSkills.EXCAVATOR, SBSkills.HARVESTER,
+//                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.EMERGENCY_RATIONS, SBSkills.LASTING_PROVISIONS,
+//                    SBSkills.ARTISANS_TOUCH, SBSkills.MASTERWORK_GEAR, SBSkills.MYSTIC_TOOLSMITH));
     public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder(SpellMastery.ADEPT, ShadowGateSpell::new)
             .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,
                     SBSkills.OPEN_INVITATION, SBSkills.QUICK_RECHARGE, SBSkills.UNWANTED_GUESTS, SBSkills.BAIT_AND_SWITCH,
@@ -109,18 +115,18 @@ public class SBSpells {
             .skills(SBSkills.SUMMON_UNDEAD, SBSkills.SUMMON_ZOMBIFIED_PIGLIN, SBSkills.SUMMON_SKELETON, SBSkills.SUMMON_PHANTOM,
                     SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.CRIMSON_PACT, SBSkills.CORPSE_EXPLOSION,
                     SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
-    public static final Supplier<SpellType<SummonWolfPackSpell>> SUMMON_WOLF_PACK = registerSpell("summon_wolf_pack", summonBuilder(SpellMastery.NOVICE, SummonWolfPackSpell::new)
-            .skills(SBSkills.SUMMON_WOLF_PACK, SBSkills.HELLHOUND, SBSkills.SHADOW_WOLF, SBSkills.FULL_MOON,
-                    SBSkills.BLOOD_SCENT, SBSkills.THICK_FUR, SBSkills.PACK_LEADER, SBSkills.BRIMSTONE,
-                    SBSkills.ASSASSINATE, SBSkills.LONE_WOLF, SBSkills.FENRIR));
+//    public static final Supplier<SpellType<SummonWolfPackSpell>> SUMMON_WOLF_PACK = registerSpell("summon_wolf_pack", summonBuilder(SpellMastery.NOVICE, SummonWolfPackSpell::new)
+//            .skills(SBSkills.SUMMON_WOLF_PACK, SBSkills.HELLHOUND, SBSkills.SHADOW_WOLF, SBSkills.FULL_MOON,
+//                    SBSkills.BLOOD_SCENT, SBSkills.THICK_FUR, SBSkills.PACK_LEADER, SBSkills.BRIMSTONE,
+//                    SBSkills.ASSASSINATE, SBSkills.LONE_WOLF, SBSkills.FENRIR));
     public static final Supplier<SpellType<SummonVillagerSpell>> SUMMON_VILLAGER = registerSpell("summon_villager", summonBuilder(SpellMastery.NOVICE, SummonVillagerSpell::new)
             .skills(SBSkills.SUMMON_VILLAGER, SBSkills.FARMER_VILLAGER, SBSkills.TOOLSMITH_VILLAGER,
                     SBSkills.LIBRARIAN_VILLAGER, SBSkills.CARTOGRAPHER_VILLAGER, SBSkills.CLERIC_VILLAGER,
                     SBSkills.EXTENDED_SERVICE, SBSkills.WHOLESALE, SBSkills.BOUNTIFUL, SBSkills.LOYAL_PROTECTOR, SBSkills.SHOW_ME_THE_ROPES));
-    public static final Supplier<SpellType<BoundBowSpell>> BOUND_BOW = registerSpell("bound_bow", summonBuilder(SpellMastery.NOVICE, BoundBowSpell::new)
-            .skills(SBSkills.BOUND_BOW, SBSkills.QUICKDRAW, SBSkills.SPECTRAL_VOLLEY, SBSkills.PIERCING_SHOT,
-                    SBSkills.INFUSED_SHOT, SBSkills.MYSTIC_MARKSMAN, SBSkills.BOUND_ARROW, SBSkills.ARCHERY_PROWESS,
-                    SBSkills.WRAITH_SHOT, SBSkills.HEATSEEKER, SBSkills.BOUND_MARKSMAN));
+//    public static final Supplier<SpellType<BoundBowSpell>> BOUND_BOW = registerSpell("bound_bow", summonBuilder(SpellMastery.NOVICE, BoundBowSpell::new)
+//            .skills(SBSkills.BOUND_BOW, SBSkills.QUICKDRAW, SBSkills.SPECTRAL_VOLLEY, SBSkills.PIERCING_SHOT,
+//                    SBSkills.INFUSED_SHOT, SBSkills.MYSTIC_MARKSMAN, SBSkills.BOUND_ARROW, SBSkills.ARCHERY_PROWESS,
+//                    SBSkills.WRAITH_SHOT, SBSkills.HEATSEEKER, SBSkills.BOUND_MARKSMAN));
     public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder(SpellMastery.ADEPT, WildMushroomSpell::new)
             .skills(SBSkills.WILD_MUSHROOM, SBSkills.VILE_INFLUENCE, SBSkills.HASTENED_GROWTH, SBSkills.ENVENOM,
                     SBSkills.PARASITIC_FUNGUS, SBSkills.NATURES_DOMINANCE, SBSkills.POISON_ESSENCE,
@@ -139,10 +145,10 @@ public class SBSpells {
             .skills(SBSkills.BLESSING, SBSkills.COURAGE, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
                     SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
                     SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
-    public static final Supplier<SpellType<SmiteSpell>> SMITE = registerSpell("smite", divineBuilder(SpellMastery.NOVICE, SmiteSpell::new)
-            .skills(SBSkills.SMITE, SBSkills.PRAYERFUL_STRIKE, SBSkills.SACRED_BLADE, SBSkills.GOLDEN_PARRY,
-                    SBSkills.OATHSWORN, SBSkills.GOLDEN_LAND, SBSkills.SHARDS_OF_PURITY, SBSkills.BLESSED_ARC,
-                    SBSkills.REFLECTIVE_JUDGEMENT, SBSkills.SACRED_PARRY, SBSkills.BLACK_BLADE));
+//    public static final Supplier<SpellType<SmiteSpell>> SMITE = registerSpell("smite", divineBuilder(SpellMastery.NOVICE, SmiteSpell::new)
+//            .skills(SBSkills.SMITE, SBSkills.PRAYERFUL_STRIKE, SBSkills.SACRED_BLADE, SBSkills.GOLDEN_PARRY,
+//                    SBSkills.OATHSWORN, SBSkills.GOLDEN_LAND, SBSkills.SHARDS_OF_PURITY, SBSkills.BLESSED_ARC,
+//                    SBSkills.REFLECTIVE_JUDGEMENT, SBSkills.SACRED_PARRY, SBSkills.BLACK_BLADE));
     public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
             .skills(SBSkills.SIPHON, SBSkills.GRIM_REACH, SBSkills.GLUTTONY, SBSkills.WITHERING,
                     SBSkills.SOUL_TAP, SBSkills.PARASITIC_LINK, SBSkills.UNRELENTING, SBSkills.OVERHEAL,
@@ -157,18 +163,18 @@ public class SBSpells {
             .skills(SBSkills.FLICKER, SBSkills.DISTANT_FLICKER, SBSkills.SWIFT_SHADOWS, SBSkills.STEP_INTO_SHADOW,
                     SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
                     SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
-    public static final Supplier<SpellType<ShadowVeilSpell>> SHADOW_VEIL = registerSpell("shadow_veil", deceptionBuilder(SpellMastery.NOVICE, ShadowVeilSpell::new)
-            .skills(SBSkills.SHADOW_VEIL, SBSkills.DARK_SHROUD, SBSkills.EXPANDING_SHADOWS, SBSkills.IN_THE_SHADOWS,
-                    SBSkills.DECEPTIVE_ECHOES, SBSkills.WEIGHTED_VEIL, SBSkills.SAPPING_FEAR, SBSkills.CLOUDED_SENSES,
-                    SBSkills.DEEP_NIGHT, SBSkills.SHADOW_DOMAIN));
+//    public static final Supplier<SpellType<ShadowVeilSpell>> SHADOW_VEIL = registerSpell("shadow_veil", deceptionBuilder(SpellMastery.NOVICE, ShadowVeilSpell::new)
+//            .skills(SBSkills.SHADOW_VEIL, SBSkills.DARK_SHROUD, SBSkills.EXPANDING_SHADOWS, SBSkills.IN_THE_SHADOWS,
+//                    SBSkills.DECEPTIVE_ECHOES, SBSkills.WEIGHTED_VEIL, SBSkills.SAPPING_FEAR, SBSkills.CLOUDED_SENSES,
+//                    SBSkills.DEEP_NIGHT, SBSkills.SHADOW_DOMAIN));
     public static final Supplier<SpellType<CursedRuneSpell>> CURSED_RUNE = registerSpell("cursed_rune", deceptionBuilder(SpellMastery.NOVICE, CursedRuneSpell::new)
             .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE, SBSkills.MIRROR_CURSE,
                     SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_SILENCE, SBSkills.CURSE_OF_WEAKNESS, SBSkills.VANISHING_CURSE,
                     SBSkills.CURSE_OF_SUSCEPTIBILITY, SBSkills.TANGLEFOOT_CURSE, SBSkills.HIDDEN_RUNE));
-    public static final Supplier<SpellType<NightbladeSpell>> NIGHTBLADE = registerSpell("nightblade", deceptionBuilder(SpellMastery.NOVICE, NightbladeSpell::new)
-            .skills(SBSkills.NIGHTBLADE, SBSkills.LINGERING_EDGE, SBSkills.UNEXPECTED, SBSkills.NUMBING_POISON,
-                    SBSkills.VAMPIRIC_BLADE, SBSkills.EVASIVE_STANCE, SBSkills.MUFFLE, SBSkills.UMBRAL_SIGHT,
-                    SBSkills.ASSASSINS_BOUNTY, SBSkills.SMOKE_BOMB, SBSkills.THROAT_SLIT));
+//    public static final Supplier<SpellType<NightbladeSpell>> NIGHTBLADE = registerSpell("nightblade", deceptionBuilder(SpellMastery.NOVICE, NightbladeSpell::new)
+//            .skills(SBSkills.NIGHTBLADE, SBSkills.LINGERING_EDGE, SBSkills.UNEXPECTED, SBSkills.NUMBING_POISON,
+//                    SBSkills.VAMPIRIC_BLADE, SBSkills.EVASIVE_STANCE, SBSkills.MUFFLE, SBSkills.UMBRAL_SIGHT,
+//                    SBSkills.ASSASSINS_BOUNTY, SBSkills.SMOKE_BOMB, SBSkills.THROAT_SLIT));
     public static final Supplier<SpellType<ShadowbondSpell>> SHADOWBOND = registerSpell("shadowbond", deceptionBuilder(SpellMastery.ADEPT, ShadowbondSpell::new)
             .skills(SBSkills.SHADOWBOND, SBSkills.EVERLASTING_BOND, SBSkills.SHADOW_STEP, SBSkills.SNEAK_ATTACK,
                     SBSkills.SILENT_EXCHANGE, SBSkills.SNARE, SBSkills.DISORIENTED,

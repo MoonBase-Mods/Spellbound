@@ -72,8 +72,8 @@ public class ImbuementRenderers extends RenderType {
     }
 
     public static void registerImbuements() {
-        put(SBSpells.SMITE.get().location(), getSmiteGlint());
-        put(CommonClass.customLocation("smite_black_blade"), getNightbladeGlint());
+//        put(SBSpells.SMITE.get().location(), getSmiteGlint());
+//        put(CommonClass.customLocation("smite_black_blade"), getNightbladeGlint());
     }
 
     public static RenderType getGlint(ResourceLocation location) {

@@ -71,7 +71,7 @@
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 1.5
       },
       "item": [
         {
@@ -79,15 +79,15 @@
         }
       ],
       "position": {
-        "xOffset": -32,
-        "yOffset": 120
+        "xOffset": -17,
+        "yOffset": 130
       }
     },
     {
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 1.5
       },
       "item": [
         {
@@ -95,15 +95,15 @@
         }
       ],
       "position": {
-        "xOffset": 22,
-        "yOffset": 120
+        "xOffset": 37,
+        "yOffset": 130
       }
     },
     {
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 1.5
       },
       "item": [
         {
@@ -111,8 +111,8 @@
         }
       ],
       "position": {
-        "xOffset": 67,
-        "yOffset": 120
+        "xOffset": 82,
+        "yOffset": 130
       }
     },
     {

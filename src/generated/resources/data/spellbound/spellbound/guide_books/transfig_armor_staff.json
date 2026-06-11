@@ -43,7 +43,7 @@
       "type": "spellbound:item",
       "extras": {
         "disableBackground": true,
-        "scale": 2.0
+        "scale": 1.5
       },
       "item": [
         {
@@ -51,8 +51,8 @@
         }
       ],
       "position": {
-        "xOffset": 22,
-        "yOffset": 115
+        "xOffset": 37,
+        "yOffset": 125
       }
     },
     {

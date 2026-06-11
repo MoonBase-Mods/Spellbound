@@ -61,7 +61,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
     public static final SpellModifier SYNTHESIS = registerModifier("synthesis", ModifierType.MANA, (spell, target) -> spell == SBSpells.WILD_MUSHROOM.get(), -1.0F);
     public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, (spell, target) -> true, -0.1F);
     public static final SpellModifier UNWANTED_GUESTS = registerModifier("unwanted_guests", ModifierType.POTENCY, (spellType, target) -> true, -0.1F);
-    public static final SpellModifier DARK_SHADOW = registerModifier("dark_shadow", ModifierType.DURATION, (spellType, livingEntity) -> spellType == SBSpells.SHADOW_VEIL, 5.0F);
+    public static final SpellModifier DARK_SHADOW = registerModifier("dark_shadow", ModifierType.DURATION, (spellType, livingEntity) -> false, 5.0F);
 
     //Set bonus
     public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getIdentifiablePath() == SpellPath.FIRE, 0.2F);

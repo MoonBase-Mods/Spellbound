@@ -1,3 +1,4 @@
+/*
 package com.ombremoon.spellbound.common.world.spell.deception;
 
 import com.ombremoon.spellbound.common.init.*;
@@ -147,3 +148,4 @@ public class ShadowVeilSpell extends AnimatedSpell {
         builder.define(VEIL_ID, 0);
     }
 }
+*/

@@ -2,10 +2,6 @@ package com.ombremoon.spellbound.mixin;
 
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceSkateSpell;
-import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

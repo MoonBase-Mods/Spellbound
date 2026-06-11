@@ -462,9 +462,9 @@ public interface SBGuidePages {
                                 -22.5f, 45f, 0f)
                 ),
                 List.of(
-                        new ItemEntry(Ingredient.of(SBItems.FIRE_STAFF.get()), -32, 120, false),
-                        new ItemEntry(Ingredient.of(SBItems.SHOCK_STAFF.get()), PAGE_START_CENTER_X - 50, 120, false),
-                        new ItemEntry(Ingredient.of(SBItems.ICE_STAFF.get()), PAGE_TWO_START_X - 105, 120, false)
+                        new ItemEntry(Ingredient.of(SBItems.FIRE_STAFF.get()), -17, 130, false),
+                        new ItemEntry(Ingredient.of(SBItems.SHOCK_STAFF.get()), PAGE_START_CENTER_X - 35, 130, false),
+                        new ItemEntry(Ingredient.of(SBItems.ICE_STAFF.get()), PAGE_TWO_START_X - 90, 130, false)
                 ),
                 new TextEntry(translatable("guide.ruin.path_items"),35),
                 new TextEntry(translatable("guide.ruin.stormweaver_robes"), PAGE_TWO_START_X + 40, 0, 120),
@@ -590,7 +590,7 @@ public interface SBGuidePages {
                                 -22.5f, 45f, 0f)
                 ),
                 List.of(
-                        new ItemEntry(Ingredient.of(SBItems.CREATIONIST_STAFF.get()), 22, 115, false)
+                        new ItemEntry(Ingredient.of(SBItems.CREATIONIST_STAFF.get()), 37, 125, false)
                 ),
                 new TextEntry(translatable("guide.transfiguration.stave"), 35),
                 new TextEntry(translatable("guide.transfiguration.robes"), PAGE_TWO_START_X, 90));
@@ -1034,7 +1034,7 @@ public interface SBGuidePages {
             var staticItem = PageBuilder.StaticItem
                     .of()
                     .addItem(item.item())
-                    .scale(2)
+                    .scale(1.5F)
                     .position(item.xPos(), item.yPos());
             if (!item.withBackground) staticItem.disableBackground();
             builder.addElements(staticItem.build());
