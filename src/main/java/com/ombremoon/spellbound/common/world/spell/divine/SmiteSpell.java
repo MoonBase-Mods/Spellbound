@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -26,8 +27,6 @@ public class SmiteSpell extends ImbuementSpell {
     public static Builder<SmiteSpell> createSmiteBuilder() {
         return createImbuementSpellBuilder(SmiteSpell.class)
                 .duration(200)
-//                .skipEndOnRecast((context, spell) -> !spell.isMainChoice(context))
-                .skipEndOnRecast()
                 .negativeScaling((context, smiteSpell) -> smiteSpell.isChoice(SBSkills.BLACK_BLADE))
                 .imbuementEffect((context, smiteSpell) -> {
                     LivingEntity caster = context.getCaster();
@@ -37,8 +36,7 @@ public class SmiteSpell extends ImbuementSpell {
                     }
 
                     return EffectData.Entity.of(effect, caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setOffset(0, -caster.getEyeHeight(), 0)
-                            .setAllowMulti(true);
+                            .setOffset(0, -caster.getEyeHeight(), 0);
                     }
                 );
     }
@@ -94,11 +92,10 @@ public class SmiteSpell extends ImbuementSpell {
     @Override
     protected void onSpellRecast(SpellContext context) {
         super.onSpellRecast(context);
-//        if (this.isChoice(SBSkills.BLACK_BLADE)) {
-//            this.removeSpellFX(CommonClass.customLocation("smite_cast"));
-//        } else {
-//            this.removeSpellFX(CommonClass.customLocation("smite_dark_blade_cast"));
-//        }
+        Level level = context.getLevel();
+        if (!level.isClientSide) {
+            this.swapImbuementEffect(context);
+        }
     }
 
     @Override
@@ -134,9 +131,15 @@ public class SmiteSpell extends ImbuementSpell {
         return this.isChoice(SBSkills.BLACK_BLADE) || super.isMainChoice(context);
     }
 
-    @Override
-    protected void displayImbuementEffect(LivingEntity caster, EffectData effect) {
-        super.displayImbuementEffect(caster, effect);
+    private void swapImbuementEffect(SpellContext context) {
+        LivingEntity caster = context.getCaster();
+        if (this.isChoice(SBSkills.BLACK_BLADE)) {
+            this.removeImbuementEffect(caster, CommonClass.customLocation("smite_cast"));
+        } else {
+            this.removeImbuementEffect(caster, CommonClass.customLocation("smite_dark_blade_cast"));
+        }
+
+        this.triggerImbuementEffect(caster, this.getImbuementEffect(context));
     }
 }
 

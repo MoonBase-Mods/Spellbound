@@ -5,12 +5,15 @@ import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -32,12 +35,12 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                     LivingEntity caster = context.getCaster();
                     ItemStack itemStack = context.getMainHandItem();
                     var handler = context.getSpellHandler();
-                    Imbuement imbuement = imbuementSpell.createImbuement(context);
+                    imbuementSpell.imbuement = imbuementSpell.createImbuement(context);
                     if (itemStack.isEmpty()) {
                         return false;
-                    } else if (!imbuement.canImbueStack(itemStack)) {
+                    } else if (!imbuementSpell.imbuement.canImbueStack(itemStack)) {
                         return false;
-                    } else if (context.isRecast() && !imbuementSpell.isMainChoice(context)) {
+                    } else if (context.isRecast() && !imbuementSpell.isMainChoice(context) && imbuementSpell.isHoldingImbuement(caster)) {
                         ImbuementSpell spell = (ImbuementSpell) handler.getSpell(imbuementSpell.spellType());
                         if (spell != null)
                             spell.onUseImbuement(context);
@@ -45,7 +48,6 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                         return false;
                     } else if (imbuementSpell.isMainChoice(context)) {
                         imbuementSpell.stack = itemStack;
-                        imbuementSpell.imbuement = imbuement;
                         if (caster instanceof Player player) {
                             imbuementSpell.imbuedSlot = player.getInventory().findSlotMatchingItem(itemStack);
                         }
@@ -90,10 +92,11 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected void displayImbuementEffect(LivingEntity caster, EffectData effect) {
         ItemStack stack = caster.getMainHandItem();
         if (ItemStack.isSameItemSameComponents(stack, this.stack) && !this.effectTriggered) {
-            this.triggerSpellFX(effect);
+            this.triggerImbuementEffect(caster, effect);
+            log("Effect Triggered");
             this.effectTriggered = true;
         } else if (!ItemStack.isSameItemSameComponents(stack, this.stack) && this.effectTriggered) {
-            this.removeSpellFX(effect.getLocation());
+            this.removeImbuementEffect(caster, effect.getLocation());
             this.effectTriggered = false;
         }
     }
@@ -105,10 +108,9 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
         if (!level.isClientSide) {
             EffectData effect = this.getImbuementEffect(context);
             if (effect != null) {
-                this.removeSpellFX(effect.getLocation());
+                this.removeImbuementEffect(caster, effect.getLocation());
             }
 
-//            this.stack.set(SBData.IMBUEMENT, null);
             if (caster instanceof Player player) {
                 ItemStack stack = player.getInventory().getItem(this.imbuedSlot);
                 stack.set(SBData.IMBUEMENT, null);
@@ -121,14 +123,44 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
         }
     }
 
+    @Override
+    public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
+        CompoundTag tag = super.saveData(compoundTag);
+        tag.putBoolean("EffectTriggered", this.effectTriggered);
+        return tag;
+    }
+
+    @Override
+    public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
+        this.effectTriggered = nbt.getBoolean("EffectTriggered");
+    }
+
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
         return new Imbuement(this.spellType(), -1, this.location());
     }
 
+    protected boolean isHoldingImbuement(LivingEntity entity) {
+        return this.isHoldingImbuement(entity.getMainHandItem());
+    }
+
+    protected boolean isHoldingImbuement(ItemStack stack) {
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        return this.imbuement.equals(imbuement);
+    }
+
     protected EffectData getImbuementEffect(SpellContext context) {
         return this.effect.apply(context, this);
+    }
+
+    protected void triggerImbuementEffect(LivingEntity caster, EffectData effect) {
+        RenderUtil.triggerEntityEffect(caster, effect);
+    }
+
+    protected void removeImbuementEffect(LivingEntity caster, ResourceLocation effect) {
+        RenderUtil.removeEntityEffect(caster, effect);
     }
 
     public static class Builder<T extends ImbuementSpell> extends AnimatedSpell.Builder<T> {

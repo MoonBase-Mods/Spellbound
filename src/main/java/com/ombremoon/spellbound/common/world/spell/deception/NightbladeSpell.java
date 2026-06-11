@@ -3,11 +3,11 @@ package com.ombremoon.spellbound.common.world.spell.deception;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ImbuementSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 
 public class NightbladeSpell extends ImbuementSpell {
-    public static Builder<NightbladeSpell> createNightbladeBuilder() {
-        return createImbuementSpellBuilder(NightbladeSpell.class)
-                .duration(1200);
+    public static final Builder<NightbladeSpell> createNightbladeBuilder() {
+        return createImbuementSpellBuilder(NightbladeSpell.class);
     }
 
     public NightbladeSpell() {
@@ -15,12 +15,12 @@ public class NightbladeSpell extends ImbuementSpell {
     }
 
     @Override
-    public void registerSkillTooltips() {
+    protected void onUseImbuement(SpellContext context) {
 
     }
 
     @Override
-    protected void onUseImbuement(SpellContext context) {
+    public void registerSkillTooltips() {
 
     }
 }

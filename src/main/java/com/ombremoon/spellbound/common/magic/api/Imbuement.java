@@ -35,7 +35,7 @@ public record Imbuement(SpellType<?> spellType, int charges, ResourceLocation gl
         return imbuement == null || imbuement.spellType == this.spellType;
     }
 
-    public static boolean isSimilarImbuement(Imbuement imbuement, ItemStack stack) {
+    public static boolean hasImbuement(Imbuement imbuement, ItemStack stack) {
         Imbuement other = stack.get(SBData.IMBUEMENT);
         return other != null && imbuement.spellType == other.spellType;
     }

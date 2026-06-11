@@ -228,4 +228,8 @@ public class RenderUtil {
     public static void triggerEntityEffect(Entity entity, EffectData builder) {
         PayloadHandler.triggerEntityFx(entity, builder);
     }
+
+    public static void removeEntityEffect(Entity entity, ResourceLocation effect) {
+        PayloadHandler.removeEntityFX(entity, effect);
+    }
 }

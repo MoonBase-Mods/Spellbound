@@ -419,16 +419,17 @@ public class SBSkills {
 
     //Nightblade
     public static Holder<Skill> NIGHTBLADE = registerSkill("nightblade");
-    public static Holder<Skill> LINGERING_EDGE = registerSkill("lingering_edge", -50 , 50 , preReqs(NIGHTBLADE));
-    public static Holder<Skill> UNEXPECTED = registerSkill("unexpected", -50 , 100 , preReqs(LINGERING_EDGE));
-    public static Holder<Skill> NUMBING_POISON = registerSkill("numbing_poison", 50 , 50 , preReqs(NIGHTBLADE));
-    public static Holder<Skill> VAMPIRIC_BLADE = registerSkill("vampiric_blade", 50 , 100 , preReqs(NUMBING_POISON));
-    public static Holder<Skill> EVASIVE_STANCE = registerSkill("evasive_stance", 0 , 50 , preReqs(NIGHTBLADE));
-    public static Holder<Skill> MUFFLE = registerSkill("muffle", 0 , 100 , preReqs(EVASIVE_STANCE));
-    public static Holder<Skill> UMBRAL_SIGHT = registerSkill("umbral_sight", 0 , 150 , preReqs(MUFFLE));
-    public static Holder<Skill> ASSASSINS_BOUNTY = registerSkill("assassins_bounty", 50 , 150 , preReqs(UMBRAL_SIGHT));
-    public static Holder<Skill> SMOKE_BOMB = registerSkill("smoke_bomb", 50 , 200 , preReqs(UMBRAL_SIGHT));
-    public static Holder<Skill> THROAT_SLIT = registerSkill("throat_slit", -50 , 150 , preReqs(UMBRAL_SIGHT));
+    public static Holder<Skill> LINGERING_EDGE = registerSkill("lingering_edge", 0, 50, preReqs(NIGHTBLADE));
+    public static Holder<Skill> UNEXPECTED = registerSkill("unexpected", 0, 100, preReqs(NIGHTBLADE));
+    public static Holder<Skill> NUMBING_POISON = registerSkill("numbing_poison", 0, 150, preReqs(NIGHTBLADE));
+    public static Holder<Skill> VAMPIRIC_BLADE = registerSkill("vampiric_blade", 0, 200, preReqs(NIGHTBLADE));
+    public static Holder<Skill> EVASIVE_STANCE = registerSkill("evasive_stance", 0, 250, preReqs(NIGHTBLADE));
+    public static Holder<Skill> MUFFLE = registerSkill("muffle", 0, 50, preReqs(NIGHTBLADE));
+    public static Holder<Skill> UMBRAL_SIGHT = registerSkill("umbral_sight", 0, 300, preReqs(NIGHTBLADE));
+    public static Holder<Skill> ASSASSINS_BOUNTY = registerSkill("assassins_bounty", 0, 350, preReqs(NIGHTBLADE));
+    public static Holder<Skill> SMOKE_BOMB = registerSkill("smoke_bomb", 0, 400, preReqs(NIGHTBLADE));
+    public static Holder<Skill> THROAT_SLIT = registerSkill("throat_slit", 0, 450, preReqs(NIGHTBLADE));
+
 
     //Shadowbond
     public static Holder<Skill> SHADOWBOND = registerSkill("shadowbond");
