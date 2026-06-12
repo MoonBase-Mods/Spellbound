@@ -121,7 +121,7 @@ public class NeoForgeEvents {
                     data.closeCachedArenas(player);
 
                     if (player instanceof ServerPlayer serverPlayer) {
-                        PayloadHandler.sendGuideBooks(serverPlayer);
+                        PayloadHandler.syncSBDataToClient(serverPlayer);
 
                         if (!PuzzleDungeonData.isDungeon(level) && serverPlayer.getData(SBData.NO_FLY_DUNGEON)) {
                             serverPlayer.setData(SBData.NO_FLY_DUNGEON, false);

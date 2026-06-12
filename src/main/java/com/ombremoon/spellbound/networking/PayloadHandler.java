@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
@@ -49,8 +50,8 @@ import java.util.Set;
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class PayloadHandler {
 
-    public static void sendGuideBooks(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
+    public static void syncSBDataToClient(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SyncSBDataToClient(GuideBookManager.getBooks(), GuideBookManager.getPageIndex(), RitualHelper.getRitualsForPacket()));
     }
 
     public static void equipFamiliar(FamiliarHolder<?, ?> familiar) {
@@ -481,9 +482,9 @@ public class PayloadHandler {
         );
 
         registrar.playToClient(
-                SendGuideBooksPayload.TYPE,
-                SendGuideBooksPayload.STREAM_CODEC,
-                ClientPayloadHandler::handGuideBooks
+                SyncSBDataToClient.TYPE,
+                SyncSBDataToClient.STREAM_CODEC,
+                ClientPayloadHandler::handleInboundSBData
         );
         registrar.playToClient(
                 SpellDimensionDebugPayload.TYPE,

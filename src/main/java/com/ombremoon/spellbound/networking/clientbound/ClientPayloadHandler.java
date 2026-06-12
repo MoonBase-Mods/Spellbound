@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
@@ -23,7 +24,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -338,9 +338,10 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handGuideBooks(SendGuideBooksPayload payload, IPayloadContext context) {
+    public static void handleInboundSBData(SyncSBDataToClient payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             GuideBookManager.registerGuideBooks(payload.pages(), payload.pageIndex());
+            RitualHelper.registerRituals(payload.rituals());
         });
     }
 

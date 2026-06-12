@@ -14,6 +14,7 @@ import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMult
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -35,10 +36,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.slf4j.Logger;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class RitualHelper extends SimpleJsonResourceReloadListener {
@@ -60,6 +59,14 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
     public RitualHelper(HolderLookup.Provider registries) {
         super(GSON, Registries.elementsDirPath(Keys.RITUAL));
         this.registries = registries;
+    }
+
+    public static Map<ResourceLocation, TransfigurationRitual> getRitualsForPacket() {
+        return RITUALS;
+    }
+
+    public static void registerRituals(Map<ResourceLocation, TransfigurationRitual> rituals) {
+        RITUALS = rituals;
     }
 
     @Override
