@@ -91,11 +91,12 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
 
     protected void displayImbuementEffect(LivingEntity caster, EffectData effect) {
         ItemStack stack = caster.getMainHandItem();
-        if (ItemStack.isSameItemSameComponents(stack, this.stack) && !this.effectTriggered) {
+        boolean flag = !(caster instanceof Player player) || ItemStack.isSameItemSameComponents(player.getInventory().getItem(this.imbuedSlot), stack);
+        if (flag && !this.effectTriggered) {
             this.triggerImbuementEffect(caster, effect);
             log("Effect Triggered");
             this.effectTriggered = true;
-        } else if (!ItemStack.isSameItemSameComponents(stack, this.stack) && this.effectTriggered) {
+        } else if (!flag && this.effectTriggered) {
             this.removeImbuementEffect(caster, effect.getLocation());
             this.effectTriggered = false;
         }
