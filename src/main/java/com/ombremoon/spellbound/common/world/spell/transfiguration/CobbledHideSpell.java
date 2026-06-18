@@ -260,7 +260,7 @@ public class CobbledHideSpell extends AnimatedSpell {
             }
             playCastSound(level, context);
             this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("cobbled_hide_cast"),
-                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE));
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.68, 0));
         }
     }
 
@@ -282,7 +282,7 @@ public class CobbledHideSpell extends AnimatedSpell {
                     SoundSource.PLAYERS, 1F + level.random.nextFloat() * 0.2F,0.8F+ level.random.nextFloat() * 0.2F);
 
             this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("shatter_skin"),
-                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.6, 0));
 
             for (LivingEntity entity : list) {
                 this.hurt(entity, this.armorBonus * potency(0.5F));
