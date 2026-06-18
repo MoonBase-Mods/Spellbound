@@ -42,6 +42,7 @@ public class ShadowVeilSpell extends AnimatedSpell {
 
     private static Builder<ShadowVeilSpell> createShadowVeilSpell() {
         return createSimpleSpellBuilder(ShadowVeilSpell.class)
+                .castCondition((context, shadowVeilSpell) -> shadowVeilSpell.hasValidSpawnPos())
                 .manaCost(15)
                 .duration(200);
     }

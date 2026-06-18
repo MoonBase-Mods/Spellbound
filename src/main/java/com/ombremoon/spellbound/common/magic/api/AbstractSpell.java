@@ -119,7 +119,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private final SoundEvent castSound;
     private final boolean fullRecast;
     private final boolean resetDuration;
-    private final Predicate<SpellContext> skipEndOnRecast;
+    private final BiPredicate<SpellContext, AbstractSpell> skipEndOnRecast;
     private final boolean hasLayer;
     private final BiPredicate<SpellContext, AbstractSpell> negativeScaling;
     private final int updateInterval;
@@ -168,7 +168,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.castSound = builder.castSound;
         this.fullRecast = builder.fullRecast;
         this.resetDuration = builder.resetDuration;
-        this.skipEndOnRecast = builder.skipEndOnRecast;
+        this.skipEndOnRecast = (BiPredicate<SpellContext, AbstractSpell>) builder.skipEndOnRecast;
         this.hasLayer = builder.hasLayer;
         this.negativeScaling = (BiPredicate<SpellContext, AbstractSpell>) builder.negativeScaling;
         this.updateInterval = builder.updateInterval;
@@ -1122,6 +1122,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (value <= threshold) {
             return value;
         }
+
         float excess = value - threshold;
         return threshold + (excess / (1.0F + excess / softCapRange));
     }
@@ -1568,7 +1569,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return Whether the spells should skip the end methods on recast.
      */
     public boolean skipEndOnRecast(SpellContext context) {
-        return this.skipEndOnRecast.test(context);
+        return this.skipEndOnRecast.test(context, this);
     }
 
     /**
@@ -1810,7 +1811,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected SoundEvent castSound;
         protected boolean fullRecast;
         protected boolean resetDuration;
-        protected Predicate<SpellContext> skipEndOnRecast = context -> false;
+        protected BiPredicate<SpellContext, T> skipEndOnRecast = (context, spell) -> false;
         protected boolean hasLayer;
         protected BiPredicate<SpellContext, T> negativeScaling = (context, spell) -> false;
         protected int updateInterval = 3;
@@ -1919,13 +1920,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
          * Allows the spells to skip the endSpell method. Mainly used for recasting.
          * @return The spells builder
          */
-        public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
+        public Builder<T> skipEndOnRecast(BiPredicate<SpellContext, T> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;
         }
 
         public Builder<T> skipEndOnRecast() {
-            this.skipEndOnRecast = context -> true;
+            this.skipEndOnRecast = (context, spell) -> true;
             return this;
         }
 

@@ -5,7 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -30,7 +32,7 @@ public class DivineActionManager extends SimpleJsonResourceReloadListener {
     private final HolderLookup.Provider registries;
 
     public DivineActionManager(HolderLookup.Provider registries) {
-        super(GSON, "divine_action");
+        super(GSON, Registries.elementsDirPath(Keys.DIVINE_ACTION));
         this.registries = registries;
     }
 

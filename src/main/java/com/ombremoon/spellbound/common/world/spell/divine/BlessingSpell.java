@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -41,7 +42,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BlessingSpell extends AnimatedSpell {
+public class BlessingSpell extends AnimatedSpell implements RadialSpell {
     private static final ResourceLocation COURAGE = CommonClass.customLocation("courage");
     private static final ResourceLocation OVERFLOWING_AID = CommonClass.customLocation("overflowing_aid");
     private static final ResourceLocation UPLIFTING_CHORUS = CommonClass.customLocation("uplifting_chorus");

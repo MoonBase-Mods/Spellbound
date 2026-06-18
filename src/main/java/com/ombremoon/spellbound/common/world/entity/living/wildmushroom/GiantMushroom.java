@@ -236,7 +236,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
     public boolean hurt(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
-        } else {
+        } else if (!this.wasSummoned()) {
             boolean flag = this.getPhase() == 2;
             Entity entity = source.getDirectEntity();
             if (entity instanceof MiniMushroom mushroom) {
@@ -249,9 +249,9 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
             } else if (flag && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 return false;
             }
-
-            return super.hurt(source, amount);
         }
+
+        return super.hurt(source, amount);
     }
 
     @Override

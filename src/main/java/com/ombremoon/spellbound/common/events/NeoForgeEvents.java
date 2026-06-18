@@ -27,7 +27,6 @@ import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
 import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
-import com.ombremoon.spellbound.common.world.spell.deception.ShadowVeilSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
@@ -42,7 +41,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -110,10 +108,8 @@ public class NeoForgeEvents {
             if (livingEntity instanceof Player player) {
                 if (!level.isClientSide) {
                     ServerLevel serverLevel = (ServerLevel) level;
-                    handler.sync();
-                    handler.giveBook();
-
-                    //PayloadHandler.setScraps((ServerPlayer) player, player.getData(SBData.BOOK_SCRAPS));
+//                    handler.sync();
+                    handler.onPlayerSpawn(player);
 
                     var holder = SpellUtil.getSkills(player);
                     holder.sync();
@@ -121,7 +117,7 @@ public class NeoForgeEvents {
                     var tree = player.getData(SBData.UPGRADE_TREE);
                     tree.refreshTree(player);
 
-                    ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
+                    ArenaSavedData data = ArenaSavedData.get(serverLevel);
                     data.closeCachedArenas(player);
 
                     if (player instanceof ServerPlayer serverPlayer) {
@@ -606,8 +602,11 @@ public class NeoForgeEvents {
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));
         }
 
-        if (entity instanceof LivingEntity attacker) veilBlocksAttack(serverLevel, attacker, event);
-        else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) veilBlocksAttack(serverLevel, projOwner, event);
+        if (entity instanceof LivingEntity attacker) {
+            veilBlocksAttack(serverLevel, attacker, event);
+        } else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) {
+            veilBlocksAttack(serverLevel, projOwner, event);
+        }
 
         effects.doPreDamageEffects(event);
         rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));
@@ -638,7 +637,13 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide)
+            return;
+
+        /*LivingEntity entity = event.getEntity();
+        if (entity instanceof Player player) {
+            player.hurt(player.level().damageSources().cactus(), 4.0F);
+        }*/
 
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.JUMP, new JumpEvent(event.getEntity(), event));
 

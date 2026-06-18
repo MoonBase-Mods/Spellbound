@@ -24,7 +24,7 @@ public class SatchelContents implements TooltipComponent {
     public static final SatchelContents EMPTY = new SatchelContents(List.of());
     public static final Codec<SatchelContents> CODEC = ItemStack.CODEC.listOf().xmap(SatchelContents::new, (p_331551_) -> p_331551_.items);;
     public static final StreamCodec<RegistryFriendlyByteBuf, SatchelContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(SatchelContents::new, (p_331649_) -> p_331649_.items);;
-    public static final int TOTAL_MAX_ITEMS = 16;
+    public static final int TOTAL_MAX_ITEMS = 32;
     public static final int MAX_PER_STACK = 4;
     private final List<ItemStack> items;
     private int itemCount = 0;

@@ -3,9 +3,11 @@ package com.ombremoon.spellbound.client.photon;
 import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
+import com.lowdragmc.photon.client.fx.FXRuntime;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,38 +59,33 @@ public class EffectCache {
     }
 
     protected void removeFX(FXEffectExecutor effect, boolean removeObjects) {
-        var runtime = effect.getRuntime();
-        if (runtime != null && runtime.isAlive()) {
-            List<? extends FXEffectExecutor> currentEffects = null;
-            switch (effect) {
-                case EntityEffectExecutor entityEffect -> currentEffects = EntityEffectExecutor.CACHE.get(entityEffect.entity);
-                case BlockEffectExecutor blockEffect -> currentEffects = BlockEffectExecutor.CACHE.get(blockEffect.pos);
-                case CustomEffectExecutor<?> customEffect -> currentEffects = customEffect.getEffects();
-                default -> {
-                }
+        List<? extends FXEffectExecutor> currentEffects = null;
+        switch (effect) {
+            case EntityEffectExecutor entityEffect -> currentEffects = EntityEffectExecutor.CACHE.get(entityEffect.entity);
+            case BlockEffectExecutor blockEffect -> currentEffects = BlockEffectExecutor.CACHE.get(blockEffect.pos);
+            case CustomEffectExecutor<?> customEffect -> currentEffects = customEffect.getEffects();
+            default -> {
             }
+        }
 
-            if (currentEffects == null) return;
-            var iter = currentEffects.iterator();
-            while (iter.hasNext()) {
-                var fx = iter.next();
-                ResourceLocation location = effect.getFx().getFxLocation();
-                if (location == null || location.equals(fx.getFx().getFxLocation())) {
-                    iter.remove();
-                    this.removeFX(effect);
-                    if (removeObjects)
-                        runtime.destroy(false);
-                }
+        if (currentEffects == null) return;
+        List<FXEffectExecutor> snapshot = new ArrayList<>(currentEffects);
+        for (FXEffectExecutor fx : snapshot) {
+            FXRuntime runtime = fx.getRuntime();
+            ResourceLocation location = effect.getFx().getFxLocation();
+            if (location == null || location.equals(fx.getFx().getFxLocation())) {
+                currentEffects.remove(fx);
+                this.removeFX(effect);
+                if (removeObjects && runtime != null)
+                    runtime.destroy(false);
             }
+        }
 
-            if (currentEffects.isEmpty()) {
-                switch (effect) {
-                    case EntityEffectExecutor entityEffect -> EntityEffectExecutor.CACHE.remove(entityEffect.entity);
-                    case BlockEffectExecutor blockEffect -> BlockEffectExecutor.CACHE.remove(blockEffect.pos);
-                    case CustomEffectExecutor<?> customEffect -> customEffect.removeEffect();
-                    default -> {
-                    }
-                }
+        switch (effect) {
+            case EntityEffectExecutor entityEffect -> EntityEffectExecutor.CACHE.put(entityEffect.entity, (List<EntityEffectExecutor>) currentEffects);
+            case BlockEffectExecutor blockEffect -> BlockEffectExecutor.CACHE.put(blockEffect.pos, (List<BlockEffectExecutor>) currentEffects);
+            case CustomEffectExecutor<?> customEffect -> customEffect.removeEffect();
+            default -> {
             }
         }
     }

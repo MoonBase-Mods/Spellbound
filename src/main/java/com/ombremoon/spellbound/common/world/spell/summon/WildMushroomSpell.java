@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
@@ -198,17 +199,16 @@ public class WildMushroomSpell extends SummonSpell {
                             }
                         }
                     }
+
+                    this.triggerSpellFX(
+                            EffectData.Block.of(CommonClass.customLocation("mushroom_explosion"), BlockPos.containing(mushroom.getX(), mushroom.getY(), mushroom.getZ()))
+                                    .setOffset(0, 0.08, 0)
+                                    .setAllowMulti(true)
+                    );
                 }
 
                 if (level.random.nextFloat() < 0.15F && EventHooks.canEntityGrief(level, mushroom))
                     this.spreadSpores(level, caster, mushroom.blockPosition(), context.hasSkill(SBSkills.VILE_INFLUENCE) ? 6 : 4);
-            } else {
-                if (this.tickCount % (interval - 2) == 0) {
-                    this.addFX(
-                            EffectBuilder.Block.of(CommonClass.customLocation("mushroom_explosion"), BlockPos.containing(mushroom.getX(), mushroom.getY(), mushroom.getZ()))
-                                    .setOffset(0, 0.08, 0)
-                    );
-                }
             }
         }
     }

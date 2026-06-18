@@ -78,8 +78,9 @@ public class StormstrikeSpell extends AnimatedSpell {
             var projectile = this.shootProjectile(context, SBEntities.STORMSTRIKE_BOLT.get(), 2.5F, 1.0F);
 
 
-            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_cast"),
-                    context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
+            this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("stormstrike_cast"), context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE)
+                    .setOffset(0, 1.5, 1)
+                    .setScale(0.75, 0.75, 0.75));
             this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_trail"),
                     projectile.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
@@ -125,8 +126,9 @@ public class StormstrikeSpell extends AnimatedSpell {
                 context.getSpellHandler().applyStormStrike(livingEntity, 60);
                 bolt.discard();
 
-                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_impact"),
-                        entity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0.5));
+                log(result.getLocation().y);
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_impact"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, entity.getBbHeight() / 2 - entity.getEyeHeight(), 0));
 
                 level.playSound(null, entity.blockPosition(), SpellboundSounds.STORMSTRIKE_IMPACT.get(), SoundSource.PLAYERS,
                         0.5F + level.random.nextFloat() * 0.1F, 0.8F + level.random.nextFloat() * 0.1F);

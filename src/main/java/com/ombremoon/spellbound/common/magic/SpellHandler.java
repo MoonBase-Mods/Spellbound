@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
@@ -9,7 +10,6 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataCom
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
@@ -28,7 +28,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,8 +37,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -52,7 +53,6 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -98,19 +98,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public float forwardImpulse;
     public float leftImpulse;
     public boolean movementDirty;
-
-    public void giveBook() {
-        if (receivedBook) return;
-        if (!(this.caster instanceof Player player)) {
-            this.receivedBook = true;
-            return;
-        }
-
-        if (!player.getInventory().add(SBItems.STARTER_BOOK.get().getDefaultInstance()))
-            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
-
-        this.receivedBook = true;
-    }
 
     /**
      * Syncs spells handler data from the server to the client.
@@ -190,6 +177,28 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
+
+        if (this.isClientSide()) {
+//            log(EntityEffectExecutor.CACHE);
+        }
+    }
+
+    public void onPlayerSpawn(Player player) {
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
+            Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+            if (imbuement != null && imbuement.charges() <= 0) {
+                stack.set(SBData.IMBUEMENT, null);
+            }
+        }
+
+        if (!this.receivedBook && !inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance())) {
+            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
+            this.receivedBook = true;
+        }
+
+        this.sync();
     }
 
     public double getMana() {

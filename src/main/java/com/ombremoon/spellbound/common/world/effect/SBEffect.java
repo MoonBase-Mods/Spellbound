@@ -1,7 +1,12 @@
 package com.ombremoon.spellbound.common.world.effect;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,6 +23,18 @@ public class SBEffect extends MobEffect {
     public SBEffect(MobEffectCategory category, int color) {
         super(category, color);
         spellModifiers = new ArrayList<>();
+    }
+
+    @Override
+    public void onEffectAdded(LivingEntity livingEntity, int amplifier) {
+        super.onEffectAdded(livingEntity, amplifier);
+        if (!livingEntity.level().isClientSide) {
+            if (this == SBEffects.SILENCED.value()) {
+                RenderUtil.triggerEntityEffect(livingEntity, EffectData.Entity.of(CommonClass.customLocation("purge_magic_dominant"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, -0.3, 0)
+                        .setDelay(5));
+            }
+        }
     }
 
     public void onEffectRemoved(LivingEntity livingEntity, int amplifier) {
