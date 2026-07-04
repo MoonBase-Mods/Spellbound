@@ -17,12 +17,12 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unchecked")
 public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpell {
     private final BiFunction<SpellContext, ImbuementSpell, EffectData> effect;
-    protected ItemStack stack;
     protected Imbuement imbuement;
     private int imbuedSlot;
     private boolean effectTriggered;
@@ -40,16 +40,28 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                         return false;
                     } else if (!imbuementSpell.imbuement.canImbueStack(itemStack)) {
                         return false;
-                    } else if (context.isRecast() && !imbuementSpell.isMainChoice(context) && imbuementSpell.isHoldingImbuement(caster)) {
+                    } else if (context.isRecast()) {
                         ImbuementSpell spell = (ImbuementSpell) handler.getSpell(imbuementSpell.spellType());
-                        if (spell != null)
-                            spell.onUseImbuement(context);
+                        if (!imbuementSpell.isMainChoice(context) && imbuementSpell.isHoldingImbuement(caster)) {
+                            if (spell != null) {
+                                spell.onUseImbuement(context);
+                            }
+
+                            return false;
+                        } else if (imbuementSpell.isMainChoice(context)) {
+                            ItemStack imbuedStack = spell.getImbuementStack(caster);
+                            imbuedStack.set(SBData.IMBUEMENT, null);
+                            if (caster instanceof Player player) {
+                                imbuementSpell.imbuedSlot = player.getInventory().selected;
+                            }
+
+                            return true;
+                        }
 
                         return false;
                     } else if (imbuementSpell.isMainChoice(context)) {
-                        imbuementSpell.stack = itemStack;
                         if (caster instanceof Player player) {
-                            imbuementSpell.imbuedSlot = player.getInventory().findSlotMatchingItem(itemStack);
+                            imbuementSpell.imbuedSlot = player.getInventory().selected;
                         }
 
                         return true;
@@ -66,9 +78,12 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
 
     @Override
     protected void onSpellStart(SpellContext context) {
+        LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide && this.isMainChoice(context)) {
-            this.stack.set(SBData.IMBUEMENT, this.imbuement);
+            ItemStack stack = this.getImbuementStack(caster);
+            stack.set(SBData.IMBUEMENT, this.imbuement);
+
             var handler = context.getSpellHandler();
             handler.getListener().addListener(
                     SpellEventListener.Events.USE_ITEM,
@@ -94,7 +109,6 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
         boolean flag = !(caster instanceof Player player) || ItemStack.isSameItemSameComponents(player.getInventory().getItem(this.imbuedSlot), stack);
         if (flag && !this.effectTriggered) {
             this.triggerImbuementEffect(caster, effect);
-            log("Effect Triggered");
             this.effectTriggered = true;
         } else if (!flag && this.effectTriggered) {
             this.removeImbuementEffect(caster, effect.getLocation());
@@ -112,12 +126,8 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                 this.removeImbuementEffect(caster, effect.getLocation());
             }
 
-            if (caster instanceof Player player) {
-                ItemStack stack = player.getInventory().getItem(this.imbuedSlot);
-                stack.set(SBData.IMBUEMENT, null);
-            } else {
-                caster.getMainHandItem().set(SBData.IMBUEMENT, null);
-            }
+            ItemStack stack = this.getImbuementStack(caster);
+            stack.set(SBData.IMBUEMENT, null);
 
             var handler = context.getSpellHandler();
             handler.getListener().removeListener(SpellEventListener.Events.USE_ITEM, this.location());
@@ -141,6 +151,14 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
 
     protected Imbuement createImbuement(SpellContext context) {
         return new Imbuement(this.spellType(), -1, this.location());
+    }
+
+    protected ItemStack getImbuementStack(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            return player.getInventory().getItem(this.imbuedSlot);
+        } else {
+            return entity.getMainHandItem();
+        }
     }
 
     protected boolean isHoldingImbuement(LivingEntity entity) {

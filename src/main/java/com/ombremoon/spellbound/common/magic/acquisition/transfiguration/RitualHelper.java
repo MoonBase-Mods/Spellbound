@@ -106,19 +106,19 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
         return byTier.get(tier);
     }
 
-    public static void createItem(Level level, BlockPos pos, ItemStack item) {
-        createItem(level, pos.getCenter(), item);
+    public static ItemEntity createItem(Level level, BlockPos pos, ItemStack item) {
+        return createItem(level, pos.getCenter(), item);
     }
 
-    public static void createItem(Level level, Vec3 pos, ItemStack item) {
-        createItem(level, pos, item, Optional.empty());
+    public static ItemEntity createItem(Level level, Vec3 pos, ItemStack item) {
+        return createItem(level, pos, item, Optional.empty());
     }
 
-    public static <T> void createItem(Level level, BlockPos pos, ItemStack item, Optional<DataComponentStorage> storage) {
-        createItem(level, pos.getBottomCenter(), item, storage);
+    public static <T> ItemEntity createItem(Level level, BlockPos pos, ItemStack item, Optional<DataComponentStorage> storage) {
+        return createItem(level, pos.getBottomCenter(), item, storage);
     }
 
-    public static <T> void createItem(Level level, Vec3 pos, ItemStack item, Optional<DataComponentStorage> storage) {
+    public static <T> ItemEntity createItem(Level level, Vec3 pos, ItemStack item, Optional<DataComponentStorage> storage) {
         if (!level.isClientSide) {
             storage.ifPresent(dataStorage -> {
                 for (var typeComponent : dataStorage.dataComponents()) {
@@ -129,7 +129,10 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
             ItemEntity entity = new ItemEntity(level, pos.x(), pos.y() + 1.5F, pos.z(), item);
             entity.setDeltaMovement(Vec3.ZERO);
             level.addFreshEntity(entity);
+            return entity;
         }
+
+        return null;
     }
 
     @SubscribeEvent

@@ -15,65 +15,22 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class ImbuementRenderers extends RenderType {
-    public static final ResourceLocation SMITE_GLINT_ID = CommonClass.customLocation("textures/imbuement/smite_glint.png");
-    public static final ResourceLocation NIGHTBLADE_GLINT_ID = CommonClass.customLocation("textures/imbuement/nightblade_glint.png");
+    public static final ResourceLocation BLACK_BLADE = CommonClass.customLocation("smite_black_blade");
     private static final Map<ResourceLocation, RenderType> IMBUEMENTS = new Object2ObjectArrayMap<>();
-    private static final RenderType SMITE_GLINT = create(
-            "smite_glint",
-            DefaultVertexFormat.POSITION_TEX,
-            VertexFormat.Mode.QUADS,
-            1536,
-            false,
-            false,
-            RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_GLINT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(SMITE_GLINT_ID, true, false))
-                    .setWriteMaskState(COLOR_WRITE)
-                    .setCullState(NO_CULL)
-                    .setDepthTestState(EQUAL_DEPTH_TEST)
-                    .setTransparencyState(GLINT_TRANSPARENCY)
-                    .setTexturingState(GLINT_TEXTURING)
-                    .createCompositeState(false));
-    private static final RenderType NIGHTBLADE_GLINT = create(
-            "nightblade_glint",
-            DefaultVertexFormat.POSITION_TEX,
-            VertexFormat.Mode.QUADS,
-            1536,
-            false,
-            false,
-            RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_GLINT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(NIGHTBLADE_GLINT_ID, true, false))
-                    .setWriteMaskState(COLOR_WRITE)
-                    .setCullState(NO_CULL)
-                    .setDepthTestState(EQUAL_DEPTH_TEST)
-                    .setTransparencyState(GLINT_TRANSPARENCY)
-                    .setTexturingState(GLINT_TEXTURING)
-                    .createCompositeState(false));
-    private static final RenderType SMITE_ENTITY_GLINT_DIRECT = create(
-            "smite_entity_glint_direct",
-            DefaultVertexFormat.POSITION_TEX,
-            VertexFormat.Mode.QUADS,
-            1536,
-            false,
-            false,
-            RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(SMITE_GLINT_ID, true, false))
-                    .setWriteMaskState(COLOR_WRITE)
-                    .setCullState(NO_CULL)
-                    .setDepthTestState(EQUAL_DEPTH_TEST)
-                    .setTransparencyState(GLINT_TRANSPARENCY)
-                    .setTexturingState(ENTITY_GLINT_TEXTURING)
-                    .createCompositeState(false));
+
+    private static final RenderType SMITE_GLINT = create("smite_glint");
+    private static final RenderType BLACK_BLADE_GLINT = create("black_blade_glint");
+    private static final RenderType NIGHTBLADE_GLINT = create("nightblade_glint");
+    private static final RenderType SMITE_ENTITY_GLINT_DIRECT = create("smite_entity_glint_direct");
 
     public ImbuementRenderers(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize, boolean affectsCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
         super(name, format, mode, bufferSize, affectsCrumbling, sortOnUpload, setupState, clearState);
     }
 
     public static void registerImbuements() {
-        put(SBSpells.SMITE.get().location(), getSmiteGlint());
-        put(CommonClass.customLocation("smite_black_blade"), getNightbladeGlint());
+        put(SBSpells.SMITE, getSmiteGlint());
+        put(BLACK_BLADE, getBlackBladeGlint());
+        put(SBSpells.NIGHTBLADE, getNightbladeGlint());
     }
 
     public static RenderType getGlint(ResourceLocation location) {
@@ -84,8 +41,16 @@ public class ImbuementRenderers extends RenderType {
         IMBUEMENTS.put(location, renderType);
     }
 
+    private static <T extends AbstractSpell> void put(Supplier<SpellType<T>> spell, RenderType renderType) {
+        IMBUEMENTS.put(spell.get().location(), renderType);
+    }
+
     public static RenderType getSmiteGlint() {
         return SMITE_GLINT;
+    }
+
+    public static RenderType getBlackBladeGlint() {
+        return BLACK_BLADE_GLINT;
     }
 
     public static RenderType getNightbladeGlint() {
@@ -94,5 +59,25 @@ public class ImbuementRenderers extends RenderType {
 
     public static RenderType getSmiteEntityGlintDirect() {
         return SMITE_ENTITY_GLINT_DIRECT;
+    }
+
+    protected static RenderType create(String glintName) {
+        ResourceLocation texture = CommonClass.customLocation("textures/imbuement/" + glintName + ".png");
+        return create(
+                glintName,
+                DefaultVertexFormat.POSITION_TEX,
+                VertexFormat.Mode.QUADS,
+                1536,
+                false,
+                false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(RENDERTYPE_GLINT_SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
+                        .setWriteMaskState(COLOR_WRITE)
+                        .setCullState(NO_CULL)
+                        .setDepthTestState(EQUAL_DEPTH_TEST)
+                        .setTransparencyState(GLINT_TRANSPARENCY)
+                        .setTexturingState(GLINT_TEXTURING)
+                        .createCompositeState(false));
     }
 }

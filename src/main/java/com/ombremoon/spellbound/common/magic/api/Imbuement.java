@@ -27,11 +27,11 @@ public record Imbuement(SpellType<?> spellType, int charges, ResourceLocation gl
     );
 
     public boolean canImbueStack(ItemStack stack) {
-        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
         if (!stack.is(SBTags.Items.IMBUEABLE)) {
             return false;
         }
 
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
         return imbuement == null || imbuement.spellType == this.spellType;
     }
 

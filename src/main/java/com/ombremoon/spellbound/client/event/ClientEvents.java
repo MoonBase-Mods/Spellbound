@@ -194,6 +194,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterRenderBuffers(RegisterRenderBuffersEvent event) {
         event.registerRenderBuffer(ImbuementRenderers.getSmiteGlint());
+        event.registerRenderBuffer(ImbuementRenderers.getBlackBladeGlint());
         event.registerRenderBuffer(ImbuementRenderers.getNightbladeGlint());
         event.registerRenderBuffer(ImbuementRenderers.getSmiteEntityGlintDirect());
     }

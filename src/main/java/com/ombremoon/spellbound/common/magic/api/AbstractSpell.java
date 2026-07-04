@@ -50,6 +50,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
@@ -931,6 +932,20 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public boolean consumeMana(LivingEntity targetEntity, float amount) {
         return SpellUtil.getSpellHandler(targetEntity).consumeMana(amount);
+    }
+
+    protected boolean giveSpellItem(ItemStack stack, Imbuement imbuement) {
+        if (this.caster.getMainHandItem().isEmpty()) {
+            stack.set(SBData.IMBUEMENT, imbuement);
+            this.caster.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean giveSpellItem(ItemStack stack) {
+        return this.giveSpellItem(stack, null);
     }
 
     protected boolean isBuffable(SpellContext context) {

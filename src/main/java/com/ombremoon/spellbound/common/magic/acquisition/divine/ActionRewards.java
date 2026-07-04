@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,13 +53,14 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         boolean flag = false;
         var effects = SpellUtil.getSpellEffects(player);
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
+        Entity scroll = null;
         if (blockState != null) {
             if (effects.getJudgement() >= this.judgementRequired) {
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
                         ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
-                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                        scroll = RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
                     }
                 }
             }

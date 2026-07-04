@@ -6,8 +6,9 @@ import com.ombremoon.spellbound.common.magic.api.ImbuementSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 
 public class NightbladeSpell extends ImbuementSpell {
-    public static final Builder<NightbladeSpell> createNightbladeBuilder() {
-        return createImbuementSpellBuilder(NightbladeSpell.class);
+    public static Builder<NightbladeSpell> createNightbladeBuilder() {
+        return createImbuementSpellBuilder(NightbladeSpell.class)
+                .duration(200);
     }
 
     public NightbladeSpell() {
