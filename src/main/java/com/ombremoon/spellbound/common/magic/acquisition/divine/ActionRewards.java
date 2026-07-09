@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -70,7 +71,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
 
         ServerLevel level = player.serverLevel();
 
-        if(this.judgementGranted < 0){
+        if (this.judgementGranted < 0){
             action_vfx = CommonClass.customLocation("dark_divine_action");
             sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
         }
@@ -84,7 +85,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
 
             level.playSound(null, player.blockPosition(),sound, SoundSource.PLAYERS, volume, pitch);
 
-            if (effects.getJudgement() >= this.judgementRequired) {
+            if (this.hasSufficientJudgement(effects)) {
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
@@ -110,6 +111,16 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         for (ResourceLocation location : this.bookScraps) {
             SpellUtil.grantScrap(player, location);
         }
+    }
+
+    private boolean hasSufficientJudgement(EffectManager effects) {
+        if (this.judgementGranted > 0) {
+            return effects.getJudgement() >= this.judgementRequired;
+        } else if (this.judgementGranted < 0) {
+            return effects.getJudgement() <= this.judgementRequired;
+        }
+
+        return true;
     }
 
     private boolean addOrDropItem(Player player, ItemStack stack) {

@@ -21,6 +21,7 @@
   ],
   "rewards": {
     "experience": 20,
+    "judgement_granted": -5,
     "spells": [
       "spellbound:siphon"
     ]

@@ -69,7 +69,7 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
 
     @Nullable
     public static Pair<BlockPos, BlockState> getNearestShrine(Level level, BlockPos blockPos) {
-        for (BlockPos pos : BlockPos.betweenClosed(blockPos.subtract(new Vec3i(7, 7, 7)), blockPos.offset(new Vec3i(7, 7, 7)))) {
+        for (BlockPos pos : BlockPos.betweenClosed(blockPos.subtract(new Vec3i(10, 10, 10)), blockPos.offset(new Vec3i(7, 7, 7)))) {
             BlockState state = level.getBlockState(pos);
 
             if (state.is(SBTags.Blocks.DIVINE_SHRINE))

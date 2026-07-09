@@ -91,7 +91,10 @@ public interface SBDivineActions {
                         .addCriterion("kill_villager", PlayerKillEntityTrigger.Instance.playerKilledVillager(
                                 EntityPredicate.Builder.entity(),
                                 MinMaxBounds.Ints.exactly(5)))
-                        .rewards(ActionRewards.Builder.spell(SBSpells.SIPHON.get()).addExperience(20)));
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.SIPHON.get())
+                                .addExperience(20)
+                                .addJudgement(-5)));
         register(context,
                 DECORATE_SHRINE,
                 SpellAction.Builder.action()
