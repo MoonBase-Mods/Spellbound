@@ -33,9 +33,12 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> SMITE_PARRY = registerSoundEvent("smite_parry");
     public static final Supplier<SoundEvent> UPLIFTING_CHORUS = registerSoundEvent("uplifting_chorus");
     public static final Supplier<SoundEvent> MAGIC_SPARKLES = registerSoundEvent("magic_sparks");
+    public static final Supplier<SoundEvent> DIVINE_ACTION = registerSoundEvent("divine_action");
+    public static final Supplier<SoundEvent> DARK_DIVINE_ACTION = registerSoundEvent("dark_divine_action");
 
 
-    //MISC
+
+            //MISC
     public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");
     public static final Supplier<SoundEvent> SHADOW_PLACE = registerSoundEvent("shadow_place");
     public static final Supplier<SoundEvent> SPEED = registerSoundEvent("speed");
@@ -52,7 +55,8 @@ public class SpellboundSounds {
     //NEED IMPLEMENTATION
     public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
     public static final Supplier<SoundEvent> SMITE_STRIKE = registerSoundEvent("smite_strike");
-    public static final Supplier<SoundEvent> SMITE_SWOOSH = registerSoundEvent("smite_swoosh");
+    public static final Supplier<SoundEvent> SMITE_SWOOSH = registerSoundEvent("smite_swoosh"); //this is for the projectile
+
 
 
     public static final Supplier<SoundEvent> ROCK_BUILD_UP = registerSoundEvent("rock_build_up");

@@ -146,8 +146,12 @@ public class ElectricChargeSpell extends AnimatedSpell {
             if (context.getTarget() == null || this.discharged) {
                 for (Integer entityId : this.entityIds) {
                     Entity entity = level.getEntity(entityId);
-                    this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("charged_status"),
-                            entity.getId(), EntityEffectExecutor.AutoRotate.NONE));
+
+                    if (entity != null) {
+                        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("charged_status"),
+                                entity.getId(), EntityEffectExecutor.AutoRotate.NONE));
+                    }
+
                     if (entity instanceof LivingEntity livingEntity)
                         discharge(context, livingEntity, hasShard);
                 }

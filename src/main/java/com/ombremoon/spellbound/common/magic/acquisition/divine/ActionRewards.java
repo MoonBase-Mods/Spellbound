@@ -1,33 +1,43 @@
 package com.ombremoon.spellbound.common.magic.acquisition.divine;
 
 import com.google.common.collect.ImmutableList;
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
+import javax.naming.Context;
 import java.util.List;
 
 public record ActionRewards(int experience, int judgementGranted, int judgementRequired, List<ResourceLocation> spells, List<ResourceKey<LootTable>> loot, List<ResourceLocation> bookScraps) {
@@ -53,14 +63,33 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         boolean flag = false;
         var effects = SpellUtil.getSpellEffects(player);
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
-        Entity scroll = null;
+
+        ResourceLocation action_vfx = CommonClass.customLocation("divine_action");
+        SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
+
+
+        ServerLevel level = player.serverLevel();
+
+        if(this.judgementGranted < 0){
+            action_vfx = CommonClass.customLocation("dark_divine_action");
+            sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
+        }
+
         if (blockState != null) {
+            BlockPos pos = blockState.getFirst();
+            float volume = 0.4F + level.random.nextFloat() * 0.3F;
+            float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+            RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(action_vfx, pos)
+                            .setOffset(0, -0.49, 0));
+
+            level.playSound(null, player.blockPosition(),sound, SoundSource.PLAYERS, volume, pitch);
+
             if (effects.getJudgement() >= this.judgementRequired) {
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
                         ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
-                        scroll = RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
                     }
                 }
             }

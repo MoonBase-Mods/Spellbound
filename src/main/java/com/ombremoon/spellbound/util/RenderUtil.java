@@ -28,9 +28,11 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -231,5 +233,13 @@ public class RenderUtil {
 
     public static void removeEntityEffect(Entity entity, ResourceLocation effect) {
         PayloadHandler.removeEntityFX(entity, effect);
+    }
+
+    public static void triggerBlockEffect(ServerLevel level, BlockPos pos, EffectData builder) {
+        PayloadHandler.triggerBlockFx(level, pos, builder);
+    }
+
+    public static void removeBlockEffect(ServerLevel level, BlockPos pos, ResourceLocation effect) {
+        PayloadHandler.removeBlockFX(level, pos, effect);
     }
 }

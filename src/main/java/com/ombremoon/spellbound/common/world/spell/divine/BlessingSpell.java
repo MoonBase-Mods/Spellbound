@@ -157,7 +157,7 @@ public class BlessingSpell extends AnimatedSpell implements RadialSpell {
             } else if (this.isChoice(SBSkills.ARCANE_RESTORATION)) {
                 resource = EntityResource.MANA;
                 amount = 5.0F;
-                vfx = "blessing_cast_mana"; //MISSING
+                vfx = "blessing_cast_mana";
 
             } else if (this.isChoice(SBSkills.SATIATING_BLESSING)) {
                 resource = EntityResource.HUNGER;

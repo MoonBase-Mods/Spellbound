@@ -27,11 +27,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -218,6 +220,14 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerEntityFXPayload(entity.getId(), Either.right(effect)));
     }
 
+    public static void triggerBlockFx(ServerLevel level, BlockPos pos, EffectData builder) {
+        PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(pos), new TriggerBlockFXPayload(pos, Either.left(builder)));
+    }
+
+    public static void removeBlockFX(ServerLevel level, BlockPos pos, ResourceLocation effect) {
+        PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(pos), new TriggerBlockFXPayload(pos, Either.right(effect)));
+    }
+
     public static void updateAbilities(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, new UpdateAbilitiesPayload());
     }
@@ -355,6 +365,11 @@ public class PayloadHandler {
                 TriggerEntityFXPayload.TYPE,
                 TriggerEntityFXPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleTriggerEntityFX
+        );
+        registrar.playToClient(
+                TriggerBlockFXPayload.TYPE,
+                TriggerBlockFXPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleTriggerBlockFX
         );
         registrar.playToClient(
                 UpdateAbilitiesPayload.TYPE,

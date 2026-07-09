@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
+import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.FXEmitter;
@@ -21,6 +22,7 @@ import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -233,6 +235,32 @@ public class ClientPayloadHandler {
                     emitter.addFX(effectBuilder);
                 } else if (either.right().isPresent()) {
                     emitter.removeFX(either.right().get(), true);
+                }
+            }
+        });
+    }
+
+    public static void handleTriggerBlockFX(TriggerBlockFXPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var either = payload.effect();
+            BlockPos pos = payload.blockPos();
+            if (either.left().isPresent()) {
+                EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(either.left().get());
+                effectBuilder.buildAndStart();
+            } else if (either.right().isPresent()) {
+                ResourceLocation location = either.right().get();
+                var effects = BlockEffectExecutor.CACHE.get(pos);
+                if (effects == null) return;
+                var iter = effects.iterator();
+                while (iter.hasNext()) {
+                    var effect = iter.next();
+                    if (location.equals(effect.getFx().getFxLocation())) {
+                        iter.remove();
+                        var runtime = effect.getRuntime();
+                        if (runtime != null && runtime.isAlive()) {
+                            runtime.destroy(false);
+                        }
+                    }
                 }
             }
         });

@@ -184,5 +184,17 @@
     "sounds": [
       "spellbound:shatter_skin"
     ]
+  },
+  "divine_action": {
+    "subtitle": "sounds.spellbound.divine_action",
+    "sounds": [
+      "spellbound:divine_action"
+    ]
+  },
+  "dark_divine_action": {
+    "subtitle": "sounds.spellbound.dark_divine_action",
+    "sounds": [
+      "spellbound:dark_divine_action"
+    ]
   }
 }
