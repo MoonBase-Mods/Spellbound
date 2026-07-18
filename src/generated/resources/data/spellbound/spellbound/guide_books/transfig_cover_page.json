@@ -72,38 +72,25 @@
             "translate": "guide.transfiguration.description"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_description"
-        },
-        {
-          "component": {
-            "translate": "guide.transfiguration.rituals_cont"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_rituals"
         },
         {
           "component": {
             "translate": "guide.transfiguration.blocks"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_display_pedestal"
-        },
-        {
-          "component": {
-            "translate": "guide.transfiguration.items"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_talisman_chalk"
         },
         {
           "component": {
             "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_armor_staff"
         },
@@ -112,6 +99,7 @@
             "translate": "guide.transfiguration.armor_recipe"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_helmet_ritual"
         },
@@ -120,40 +108,63 @@
             "translate": "guide.transfiguration.staff_recipe"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_staff_ritual"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.stride"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:stride"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.shadow_gate"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:shadow_gate"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.mystic_armor"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:mystic_armor"
         },
         {
           "component": {
             "translate": "guide.transfigurations.mana_tear"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:mana_tear_ritual"
+        },
+        {
+          "component": {
+            "translate": "guide.general.novice_spells"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:stride"
+        },
+        {
+          "component": {
+            "translate": "guide.general.apprentice_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.adept_spells"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:shadow_gate"
+        },
+        {
+          "component": {
+            "translate": "guide.general.expert_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.master_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
         }
       ],
       "position": {

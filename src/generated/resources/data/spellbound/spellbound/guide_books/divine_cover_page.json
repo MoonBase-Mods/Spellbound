@@ -72,6 +72,7 @@
             "translate": "guide.divine.divine_judgement"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:divine_description"
         },
@@ -80,6 +81,7 @@
             "translate": "guide.divine.judgement_cont"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:divine_judgement"
         },
@@ -88,6 +90,7 @@
             "translate": "guide.divine.divine_temple"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:temple_and_valkyr"
         },
@@ -96,24 +99,54 @@
             "translate": "guide.divine.divine_shrine"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:divine_shrine"
         },
         {
           "component": {
-            "translate": "spells.spellbound.healing_touch"
+            "translate": "guide.general.novice_spells"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:healing_touch"
         },
         {
           "component": {
-            "translate": "spells.spellbound.healing_blossom"
+            "translate": "guide.general.apprentice_spells"
           },
           "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.adept_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.expert_spells"
+          },
+          "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:healing_blossom"
+        },
+        {
+          "component": {
+            "translate": "guide.general.master_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
         }
       ],
       "position": {

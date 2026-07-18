@@ -43,6 +43,7 @@
             "translate": "guide.basic.spellbound"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:spellbound_description"
         },
@@ -51,6 +52,7 @@
             "translate": "guide.basic.spell_paths"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:spellbound_paths"
         },
@@ -59,6 +61,7 @@
             "translate": "guide.basic.general_items"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:general_items"
         },
@@ -67,6 +70,7 @@
             "translate": "block.spellbound.magis_workbench"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:magis_workbench"
         },
@@ -75,6 +79,7 @@
             "translate": "guide.basic.book_recipes"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:book_recipes"
         },
@@ -83,6 +88,7 @@
             "translate": "guide.basic.book_recipes_cont"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:book_recipes_cont"
         },
@@ -91,6 +97,7 @@
             "translate": "guide.basic.spell_research"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:spell_research"
         },
@@ -99,6 +106,7 @@
             "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:path_items"
         },
@@ -107,6 +115,7 @@
             "translate": "guide.basic.spells"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:spells"
         },
@@ -115,6 +124,7 @@
             "translate": "guide.basic.skills"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:skills"
         }
@@ -171,42 +181,49 @@
         {
           "component": "Ombremoon",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "DuckXYZ",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "piedilerci",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "SvenYorhavich",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "PierceTH",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "Nikdo53",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "LanTao",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         }
@@ -241,12 +258,14 @@
         {
           "component": "BuMa",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
         {
           "component": "MADZter",
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         }

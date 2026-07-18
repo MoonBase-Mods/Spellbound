@@ -72,6 +72,7 @@
             "translate": "guide.ruin.contents.description"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:ruin_description"
         },
@@ -80,6 +81,7 @@
             "translate": "guide.ruin.subpaths_cnt"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:ruin_sub_paths"
         },
@@ -88,6 +90,7 @@
             "translate": "guide.ruin.build_up"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:ruin_build_up"
         },
@@ -96,6 +99,7 @@
             "translate": "guide.ruin.portals"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:ruin_portals"
         },
@@ -104,46 +108,52 @@
             "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:ruin_armor_staff"
         },
         {
           "component": {
-            "translate": "spells.spellbound.stormstrike"
+            "translate": "guide.general.novice_spells"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:storm_strike"
+          "target_page": "spellbound:fireball"
         },
         {
           "component": {
-            "translate": "spells.spellbound.electric_charge"
+            "translate": "guide.general.apprentice_spells"
           },
           "extraOffset": 0,
+          "not_added": true,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:electric_charge"
+          "target_page": "spellbound:default"
         },
         {
           "component": {
-            "translate": "spells.spellbound.shattering_crystal"
+            "translate": "guide.general.adept_spells"
           },
           "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.expert_spells"
+          },
+          "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:shattering_crystal"
         },
         {
           "component": {
-            "translate": "spells.spellbound.solar_ray"
+            "translate": "guide.general.master_spells"
           },
           "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:solar_ray"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.storm_rift"
-          },
-          "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:storm_rift"
         }

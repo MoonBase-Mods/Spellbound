@@ -39,9 +39,15 @@ public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList
 
             Style style = Style.EMPTY;
             style = style.applyFormat(isVisible(scrapComponent.scrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED);
+
             if (!scrapComponent.targetPage().equals(CommonClass.customLocation("default"))
-                    && isHoveringItem(xPos, yPos, element, comp.copy().append(scrapComponent.component()), mouseX, mouseY))
+                    && isHoveringItem(xPos, yPos, element, comp.copy().append(scrapComponent.component()), mouseX, mouseY)) {
                 style = style.applyFormat(ChatFormatting.UNDERLINE);
+            }
+
+            if (scrapComponent.notAdded()) {
+                style = style.applyFormat(ChatFormatting.DARK_GRAY);
+            }
 
             comp.append(scrapComponent.component()).withStyle(style);
 

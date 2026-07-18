@@ -72,6 +72,7 @@
             "translate": "guide.summon.description"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:summon_description"
         },
@@ -80,6 +81,7 @@
             "translate": "guide.summon.summoning_stone"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:summon_portals"
         },
@@ -88,32 +90,54 @@
             "translate": "guide.summon.portal_activation"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:summon_portal_activation"
         },
         {
           "component": {
-            "translate": "spells.spellbound.summon_undead"
+            "translate": "guide.general.novice_spells"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:summon_undead"
         },
         {
           "component": {
-            "translate": "spells.spellbound.summon_villager"
+            "translate": "guide.general.apprentice_spells"
           },
           "extraOffset": 0,
+          "not_added": true,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:summon_villager"
+          "target_page": "spellbound:default"
         },
         {
           "component": {
-            "translate": "spells.spellbound.wild_mushroom"
+            "translate": "guide.general.adept_spells"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:wild_mushroom"
+        },
+        {
+          "component": {
+            "translate": "guide.general.expert_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.master_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
         }
       ],
       "position": {

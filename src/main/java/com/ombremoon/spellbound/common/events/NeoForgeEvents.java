@@ -602,29 +602,8 @@ public class NeoForgeEvents {
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));
         }
 
-        if (entity instanceof LivingEntity attacker) {
-            veilBlocksAttack(serverLevel, attacker, event);
-        } else if (entity instanceof Projectile proj && proj.getOwner() instanceof LivingEntity projOwner) {
-            veilBlocksAttack(serverLevel, projOwner, event);
-        }
-
         effects.doPreDamageEffects(event);
         rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));
-    }
-
-    private static void veilBlocksAttack(Level level, LivingEntity attacker, LivingDamageEvent.Pre event) {
-        List<ShadowVeil> shadowVeils = level.getEntitiesOfClass(ShadowVeil.class, attacker.getBoundingBox());
-
-        for (ShadowVeil veil : shadowVeils) {
-            LivingEntity caster = veil.getCaster();
-            SkillHolder skills = SpellUtil.getSkills(caster);
-            boolean canAttack = SpellUtil.CAN_ATTACK_ENTITY.test(caster, attacker);
-
-            if (skills.hasSkill(SBSkills.CLOUDED_SENSES)) return;
-            if (canAttack && level.getRandom().nextInt(4) == 0) {
-                event.setNewDamage(0);
-            }
-        }
     }
 
     @SubscribeEvent

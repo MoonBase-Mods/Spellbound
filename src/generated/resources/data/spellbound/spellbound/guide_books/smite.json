@@ -11,15 +11,24 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.stride"
+        "translate": "spells.spellbound.smite"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
+      "bottomText": {
+        "extra": [
+          {
+            "color": "dark_green",
+            "text": "0"
+          }
+        ],
+        "translate": "divine_action.judgement_required"
+      },
+      "colour": -3510773,
       "mastery": "novice",
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +36,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/stride.png",
+      "image": "spellbound:textures/gui/books/images/spells/smite.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +49,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.stride"
+        "translate": "skill.description.spellbound.smite"
       }
     },
     {
@@ -50,7 +59,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.lore"
+        "translate": "guide.DIVINE.smite.lore"
       }
     },
     {
@@ -60,7 +69,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.boss_lore"
+        "translate": "guide.DIVINE.smite.boss_lore"
       }
     },
     {
@@ -68,13 +77,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:stride",
+      "path": "spellbound:smite",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:mana_tear_ritual"
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:blessing_actions"
 }

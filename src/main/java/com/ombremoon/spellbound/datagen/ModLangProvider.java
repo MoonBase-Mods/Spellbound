@@ -182,6 +182,13 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void guideContents() {
+        add("guide.general.novice_spells", "Novice Spells");
+        add("guide.general.apprentice_spells", "Apprentice Spells");
+        add("guide.general.adept_spells", "Adept Spells");
+        add("guide.general.expert_spells", "Expert Spells");
+        add("guide.general.master_spells", "Master Spells");
+
+        add("guide.contents.title", "Table of Spells:");
         add("guide.general.table_contents", "Table of Contents:");
         add("guide.element.spell_info", "Spell Info");
         add("guide.element.spell_info.spell_mastery", "Spell Mastery: %1$s");
@@ -330,6 +337,7 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void transfigContents() {
+        add("guide.transfig.spell_list", "Transfiguration Spells");
         add("guide.transfiguration.description", "Transfiguration & Rituals");
         add("guide.transfiguration.blocks", "Ritual Blocks");
         add("guide.transfiguration.items", "Ritual Items");

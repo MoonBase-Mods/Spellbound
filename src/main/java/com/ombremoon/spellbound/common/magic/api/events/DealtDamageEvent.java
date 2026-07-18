@@ -22,6 +22,10 @@ public class DealtDamageEvent extends SpellEvent {
             this.container = this.event.getContainer();
         }
 
+        public LivingEntity getTarget() {
+            return this.event.getEntity();
+        }
+
         public DamageContainer getContainer() {
             return this.container;
         }

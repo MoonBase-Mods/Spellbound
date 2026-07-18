@@ -2,13 +2,10 @@ package com.ombremoon.spellbound.common.world.entity.spell;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.VFXEntity;
-import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -16,18 +13,14 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
-import java.util.List;
 import java.util.OptionalInt;
 
 public class ShadowVeil extends VFXEntity {
@@ -45,7 +38,7 @@ public class ShadowVeil extends VFXEntity {
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected @NotNull AABB makeBoundingBox() {
         if (this.dimensions != null) return this.dimensions.makeBoundingBox(this.position());
 
         LivingEntity caster = getCaster();
@@ -54,7 +47,7 @@ public class ShadowVeil extends VFXEntity {
         SkillHolder skillHolder = SpellUtil.getSkills(caster);
         if (skillHolder.hasSkill(SBSkills.EXPANDING_SHADOWS)) {
             if (dimensions == null) {
-                this.dimensions = EntityDimensions.scalable(10f, 3.5f);
+                this.dimensions = EntityDimensions.scalable(10f, 4f);
             }
             return this.dimensions.makeBoundingBox(this.position());
         }

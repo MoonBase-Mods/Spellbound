@@ -5,8 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "spellbound.refmap.json",
   "mixins": [
-    "BlockItemMixin",
+    "GuiMixin",
     "BundleItemMixin",
+    "BlockItemMixin",
     "ConnectionAccessor",
     "DuckLivingEntityFXEmitter",
     "DuckRangedAttribute",

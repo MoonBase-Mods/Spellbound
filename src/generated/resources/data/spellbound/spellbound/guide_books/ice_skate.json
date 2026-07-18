@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.stride"
+        "translate": "spells.spellbound.ice_skate"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
+      "colour": -10678496,
       "mastery": "novice",
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/stride.png",
+      "image": "spellbound:textures/gui/books/images/spells/ice_skate.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.stride"
+        "translate": "skill.description.spellbound.ice_skate"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.lore"
+        "translate": "guide.RUIN.ice_skate.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.boss_lore"
+        "translate": "guide.RUIN.ice_skate.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:stride",
+      "path": "spellbound:ice_skate",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:mana_tear_ritual"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:fireball"
 }
