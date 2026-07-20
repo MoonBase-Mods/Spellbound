@@ -67,6 +67,8 @@ public class SpellDimensionDebugRenderer {
 
         if (structureBounds != null) {
             LevelRenderer.renderLineBox(poseStack, lineConsumer, structureBounds, 1.0f, 0.0f, 0.0f, 1.0f);
+            AABB centerBox = new AABB(BlockPos.containing(structureBounds.getCenter())).inflate(0.25);
+            LevelRenderer.renderLineBox(poseStack, lineConsumer, centerBox, 1.0f, 0.0f, 1.0f, 1.0f);
         }
 
         if (spawnPos != null) {

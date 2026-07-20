@@ -126,7 +126,8 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     target.getId(), EntityEffectExecutor.AutoRotate.NONE));
         }
         Level level = context.getLevel();
-        if(!level.isClientSide()) playCastSound(level, context, null);
+        if(!level.isClientSide())
+            playCastSound(level, context, null);
     }
 
     @Override
@@ -163,13 +164,12 @@ public class ElectricChargeSpell extends AnimatedSpell {
     public void playCastSound(Level level, SpellContext context, String flag){
         float volume = 0.4F + level.random.nextFloat() * 0.2F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
-        if("recast".equals(flag)){
+        if("recast".equals(flag)) {
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_RECAST.get(),
                 SoundSource.PLAYERS, volume, pitch);
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.INTERFERENCE_ZAP.get(),
                     SoundSource.PLAYERS, volume, pitch);
-        }
-        else{
+        } else{
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.ELECTRIC_CHARGE_USE.get(),
                     SoundSource.PLAYERS, volume, pitch);
         }
@@ -314,15 +314,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     }
                 }
             }
-        }
-    }
-
-    private void spawnDischargeParticles(Entity entity) {
-        for (int i = 0; i < 25; i++) {
-            double d0 = entity.getRandom().nextFloat() * 0.4;
-            double d1 = entity.getRandom().nextFloat() * 0.4;
-            double d2 = entity.getRandom().nextFloat() * 0.4;
-            this.createServerParticles(SBParticles.SPARK.get(), entity.xo, entity.getY(), entity.zo, d0, d1, d2);
         }
     }
 

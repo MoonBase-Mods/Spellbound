@@ -23,6 +23,7 @@ import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -61,7 +62,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     if (spell.isChoice(SBSkills.FLAME_GEYSER)) {
                         double range = spell.getCastRange();
                         Entity target = spell.getTargetEntity(context.getCaster(), range);
-                        if (target != null) {
+                        if (target instanceof LivingEntity livingTarget && SpellUtil.CAN_ATTACK_ENTITY.test(context.getCaster(), livingTarget)) {
                             spell.setGeyserPosition(target.position());
                             return true;
                         }
@@ -444,7 +445,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                                 damage *= spell.damageMultiplier;
                             }
 
-                            damage *= 0.15F * charges;
+                            damage += 0.5F * charges;
                             if (spell.hurt(livingEntity, damage) && context.hasSkill(SBSkills.EXPULSION_BLAST)) {
                                 double strength = 1.0F + (Math.min(spell.getTurbulenceCharges() + spell.getCharges(), 6) * 0.25F);
                                 livingEntity.knockback(strength, caster.getX() - livingEntity.getX(), caster.getZ() - livingEntity.getZ());
@@ -489,7 +490,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                                 damage *= spell.damageMultiplier;
                             }
 
-                            damage *= 0.15F * charges;
+                            damage += 0.5F * charges;
                             if (spell.hurt(livingEntity, damage) && context.hasSkill(SBSkills.EXPULSION_BLAST)) {
                                 double strength = 0.5F + (Math.min(spell.getTurbulenceCharges(), 3) * 0.25F);
                                 Vec3 upwardMotion = new Vec3(0, strength, 0);

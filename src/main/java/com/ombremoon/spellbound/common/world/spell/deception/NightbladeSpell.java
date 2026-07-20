@@ -24,4 +24,9 @@ public class NightbladeSpell extends ImbuementSpell {
     public void registerSkillTooltips() {
 
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }

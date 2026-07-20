@@ -62,7 +62,8 @@ public class PageBuilder {
      * @return this
      * @implNote This does not guarantee it goes straight after this page, just that it will be somewhere after it
      */
-    public PageBuilder setPreviousPage(ResourceKey<GuideBookPage> page) {
+    public PageBuilder setPreviousPage(@Nullable ResourceKey<GuideBookPage> page) {
+        if (page == null) return this;
         this.insertAfter = page.location();
         return this;
     }
@@ -1345,7 +1346,12 @@ public class PageBuilder {
             return this;
         }
 
-        public TextList addEntry(Component text,ResourceLocation scrap, ResourceLocation targetPage) {
+        public TextList addUnreleasedEntry(Component text,ResourceLocation scrap) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap, CommonClass.customLocation("default"), true));
+            return this;
+        }
+
+        public TextList addEntry(Component text, ResourceLocation scrap, ResourceLocation targetPage) {
             this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap, targetPage));
             return this;
         }

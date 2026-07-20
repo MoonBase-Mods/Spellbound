@@ -125,7 +125,7 @@ public class IceSkateSpell extends ChanneledSpell {
             horizontalDirection = horizontalDirection.normalize();
         }
 
-        double speedMod = context.hasSkill(SBSkills.FRICTIONLESS) ? 1.65 : 1.45;
+        double speedMod = context.hasSkill(SBSkills.FRICTIONLESS) ? 1.5 : 1.25;
         double strength = 0.98F * speedMod;
         Vec3 motion = horizontalDirection.scale(strength).add(0, -0.75, 0);
         caster.setDeltaMovement(motion);
@@ -189,5 +189,10 @@ public class IceSkateSpell extends ChanneledSpell {
         if (!level.isClientSide) {
             this.removeSkillBuff(context.getCaster(), SBSkills.ICE_SKATE);
         }
+    }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
     }
 }

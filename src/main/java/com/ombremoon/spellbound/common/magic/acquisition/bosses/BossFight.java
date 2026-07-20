@@ -10,12 +10,12 @@ import org.slf4j.Logger;
 public abstract class BossFight {
     protected static final Logger LOGGER = Constants.LOG;
     protected final SpellType<?> spell;
-    protected final Vec3 playerSpawnOffset;
+    protected final DynamicLevelSpawnData spawnData;
     protected final DimensionData dimensionData;
 
-    public BossFight(SpellType<?> spell, Vec3 playerSpawnOffset, DimensionData dimensionData) {
+    public BossFight(SpellType<?> spell, DynamicLevelSpawnData spawnData, DimensionData dimensionData) {
         this.spell = spell;
-        this.playerSpawnOffset = playerSpawnOffset;
+        this.spawnData = spawnData;
         this.dimensionData = dimensionData;
     }
 
@@ -25,8 +25,8 @@ public abstract class BossFight {
         return this.spell;
     }
 
-    public Vec3 getPlayerSpawnOffset() {
-        return this.playerSpawnOffset;
+    public DynamicLevelSpawnData getSpawnData() {
+        return this.spawnData;
     }
 
     public DimensionData getDimensionData() {

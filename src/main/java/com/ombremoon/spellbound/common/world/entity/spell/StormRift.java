@@ -1,14 +1,20 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.sentinellib.api.Easing;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.world.entity.PortalEntity;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.init.SBParticles;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -23,6 +29,7 @@ import software.bernie.geckolib.animation.*;
 import java.util.List;
 
 public class StormRift extends PortalEntity<StormRiftSpell> {
+    private static final ResourceLocation CHARGED = CommonClass.customLocation("charged_status");
     private static final EntityDataAccessor<Boolean> GROW = SynchedEntityData.defineId(StormRift.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IMPLODE = SynchedEntityData.defineId(StormRift.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ROTATE = SynchedEntityData.defineId(StormRift.class, EntityDataSerializers.BOOLEAN);
@@ -57,8 +64,21 @@ public class StormRift extends PortalEntity<StormRiftSpell> {
     @Override
     public void tick() {
         super.tick();
-        if (this.tickCount <= 100)
+        if (this.tickCount <= 100) {
             this.refreshDimensions();
+
+            if (this.level().isClientSide && this.tickCount == 100) {
+                double offset = this.canGrow() ? -1.75 : -1.0;
+                double scale = this.canGrow() ? 2.0 : 1.25;
+                this.addFX(
+                        EffectBuilder.Entity.of(CHARGED,
+                                        this.getId(),
+                                        EntityEffectExecutor.AutoRotate.NONE)
+                                .setOffset(0, offset, 0)
+                                .setScale(scale, scale, scale)
+                );
+            }
+        }
 
         if (this.tickCount > 60) {
             if (this.canRotate()) {
@@ -76,15 +96,6 @@ public class StormRift extends PortalEntity<StormRiftSpell> {
                 this.angle += 0.1F;
                 this.setPos(newX, this.getY(), newZ);
             }
-
-            this.level().addParticle(
-                    SBParticles.SPARK.get(),
-                    this.getRandomX(0.5),
-                    this.getRandomY() - 0.15,
-                    this.getRandomZ(0.5),
-                    (this.random.nextDouble() - 0.5) * 0.02,
-                    (this.random.nextDouble() - 0.5) * 0.02,
-                    (this.random.nextDouble() - 0.5) * 0.02);
         }
 
         if (this.entityData.get(IMPLODE) && !this.level().isClientSide) {
@@ -103,10 +114,7 @@ public class StormRift extends PortalEntity<StormRiftSpell> {
                         this.getZ(),
                         6.0F,
                         false,
-                        Level.ExplosionInteraction.BLOCK,
-                        SBParticles.SPARK.get(),
-                        ParticleTypes.EXPLOSION_EMITTER,
-                        SoundEvents.GENERIC_EXPLODE
+                        Level.ExplosionInteraction.BLOCK
                 );
                 if (this.handler != null) {
                     List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.getX() - 6.0, this.getY() - 6.0, this.getZ() - 6.0, this.getX() + 6.0, this.getY() + 6.0, this.getZ() + 6.0), livingEntity -> !livingEntity.is(this.handler.caster));
@@ -162,6 +170,12 @@ public class StormRift extends PortalEntity<StormRiftSpell> {
     public boolean canGrow() {
         return this.entityData.get(GROW);
     }
+
+    @Override
+    public void onClientRemoval() {
+        this.removeFX(CHARGED);
+    }
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

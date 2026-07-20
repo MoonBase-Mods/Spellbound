@@ -110,6 +110,9 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
         this.addSkillDetails(SBSkills.EXTENDED_SERVICE,
                 SkillTooltip.MODIFY_DURATION.tooltip(50F)
         );
+        this.addSkillDetails(SBSkills.LOYAL_PROTECTOR,
+                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get())
+        );
         this.addSkillDetails(SBSkills.SHOW_ME_THE_ROPES,
                 SkillTooltip.CONDITION.tooltip(
                         new SkillTooltip.UnlockedTooltip(SBSkills.FARMER_VILLAGER, INCREASE_CROP_YIELD.tooltip())
@@ -127,8 +130,9 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                         new SkillTooltip.UnlockedTooltip(SBSkills.CARTOGRAPHER_VILLAGER, SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TARGET_AURA))
                 ),
                 SkillTooltip.CONDITION.tooltip(
-                        new SkillTooltip.UnlockedTooltip(SBSkills.FARMER_VILLAGER, SkillTooltip.MOB_EFFECT.tooltip(MobEffects.REGENERATION))
-                )
+                        new SkillTooltip.UnlockedTooltip(SBSkills.CLERIC_VILLAGER, SkillTooltip.MOB_EFFECT.tooltip(MobEffects.REGENERATION))
+                ),
+                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get())
         );
     }
 
@@ -169,6 +173,10 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
 
                 if (context.hasSkill(SBSkills.LOYAL_PROTECTOR) && context.hasCatalyst(SBItems.SOUL_SHARD.get())) {
                     Vec3 pos = LandRandomPos.getPos(villager, 3, 3);
+                    if (pos == null) {
+                        pos = villager.position();
+                    }
+
                     this.summonEntity(context, EntityType.IRON_GOLEM, pos);
                 }
 

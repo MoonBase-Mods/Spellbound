@@ -202,12 +202,17 @@ public class ArenaDevCommand {
         }
 
         var bossFight = data.getCurrentBossFight();
-        Vec3 spawnOffset = bossFight != null ? bossFight.getBossFight().getPlayerSpawnOffset() : Vec3.ZERO;
+        Vec3 spawnOffset = Vec3.ZERO;
+        if (bossFight != null) {
+            var spawnData = bossFight.getBossFight().getSpawnData();
+            spawnOffset = spawnData.playerOffset();
+        }
+
         BlockPos origin = DynamicDimensionFactory.ORIGIN;
         BlockPos spawnPos = origin.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
 
         PayloadHandler.sendDimensionDebug(player, true, bounds, spawnPos, origin);
-        source.sendSuccess(() -> Component.literal("Arena bounds rendering enabled. Red=bounds, Green=spawn, Blue=origin"), true);
+        source.sendSuccess(() -> Component.literal("Arena bounds rendering enabled. Red=bounds, Green=spawn, Blue=origin, Purple=center"), true);
         return 1;
     }
 

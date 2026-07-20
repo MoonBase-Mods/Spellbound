@@ -13,8 +13,8 @@ public class WaveBasedBossFight extends BossFight {
     private final List<List<Pair<EntityType<?>, Integer>>> waves;
     private final int waveInterval;
 
-    public WaveBasedBossFight(List<List<Pair<EntityType<?>, Integer>>> waves, int waveInterval, SpellType<?> spell, Vec3 playerSpawnOffset, DimensionData dimensionData) {
-        super(spell, playerSpawnOffset, dimensionData);
+    public WaveBasedBossFight(List<List<Pair<EntityType<?>, Integer>>> waves, int waveInterval, SpellType<?> spell, DynamicLevelSpawnData spawnData, DimensionData dimensionData) {
+        super(spell, spawnData, dimensionData);
         this.waves = waves;
         this.waveInterval = waveInterval;
     }

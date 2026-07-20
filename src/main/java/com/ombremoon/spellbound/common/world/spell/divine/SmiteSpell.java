@@ -141,5 +141,10 @@ public class SmiteSpell extends ImbuementSpell {
 
         this.triggerImbuementEffect(caster, this.getImbuementEffect(context));
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }
 

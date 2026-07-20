@@ -18,4 +18,9 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell {
     public void registerSkillTooltips() {
 
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }

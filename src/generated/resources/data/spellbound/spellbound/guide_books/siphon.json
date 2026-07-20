@@ -85,5 +85,5 @@
     }
   ],
   "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:blessing_actions"
+  "insertAfter": "spellbound:smite"
 }

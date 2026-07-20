@@ -28,4 +28,9 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell {
     protected void onSpellStop(SpellContext context) {
 
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }

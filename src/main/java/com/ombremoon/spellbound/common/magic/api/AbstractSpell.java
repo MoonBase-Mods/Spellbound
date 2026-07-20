@@ -1773,6 +1773,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
     }
 
+    public boolean inTestingPhase() {
+        return false;
+    }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
@@ -1817,7 +1821,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public static class Builder<T extends AbstractSpell> {
         protected int duration = 10;
-        protected int manaCost;
+        protected int manaCost = 10;
         protected float baseDamage;
         protected int castTime = 10;
         protected float xpModifier = 0.2F;

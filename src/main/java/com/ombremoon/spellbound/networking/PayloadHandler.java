@@ -19,6 +19,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
 import com.ombremoon.spellbound.networking.serverbound.*;
 import com.ombremoon.spellbound.util.SpellUtil;
+import com.ombremoon.spellbound.util.StructureInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -29,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -50,6 +53,14 @@ import java.util.Set;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class PayloadHandler {
+
+    public static void requestStructureData(ResourceLocation structure) {
+        PacketDistributor.sendToServer(new RequestStructurePayload(structure));
+    }
+
+    public static void sendStructureDataToClient(ServerPlayer player, StructureInfo info) {
+        PacketDistributor.sendToPlayer(player, new ImportStructurePayload(info));
+    }
 
     public static void sendGuideBooks(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
@@ -520,6 +531,16 @@ public class PayloadHandler {
                 RebirthFamiliarPayload.TYPE,
                 RebirthFamiliarPayload.STREAM_CODEC,
                 RebirthFamiliarPayload::handle
+        );
+        registrar.playToServer(
+                RequestStructurePayload.TYPE,
+                RequestStructurePayload.STREAM_CODEC,
+                RequestStructurePayload::handle
+        );
+        registrar.playToClient(
+                ImportStructurePayload.TYPE,
+                ImportStructurePayload.STREAM_CODEC,
+                ImportStructurePayload::handle
         );
     }
 }

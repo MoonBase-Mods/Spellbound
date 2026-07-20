@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.stride"
+        "translate": "spells.spellbound.shadow_veil"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
+      "colour": -13357984,
       "mastery": "novice",
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/stride.png",
+      "image": "spellbound:textures/gui/books/images/spells/shadow_veil.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.stride"
+        "translate": "skill.description.spellbound.shadow_veil"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.lore"
+        "translate": "guide.DECEPTION.shadow_veil.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.stride.boss_lore"
+        "translate": "guide.DECEPTION.shadow_veil.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:stride",
+      "path": "spellbound:shadow_veil",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:mana_tear_ritual"
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:flicker"
 }

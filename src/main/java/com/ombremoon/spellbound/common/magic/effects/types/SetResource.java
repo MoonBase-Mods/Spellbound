@@ -3,11 +3,13 @@ package com.ombremoon.spellbound.common.magic.effects.types;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBMagicEffects;
 import com.ombremoon.spellbound.common.magic.effects.EffectContextParamSets;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.EntityResource;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -28,6 +30,7 @@ public record SetResource(EntityResource resource, double amount, EntityResource
     @Override
     public void onActivated(ServerLevel level, int tier, @Nullable Entity source, LivingEntity target, BlockPos centerPos, Multiblock.MultiblockPattern pattern) {
         this.resource.consume(target, this.amount, this.operation);
+        Constants.LOG.info("{}", target.getData(SBData.MANA));
     }
 
     @Override

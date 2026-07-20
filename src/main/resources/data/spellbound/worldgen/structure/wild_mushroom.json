@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "spellbound:non_rotating_jigsaw",
   "biomes": "#minecraft:has_structure/pillager_outpost",
   "step": "surface_structures",
   "spawn_overrides": {},

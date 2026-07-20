@@ -12,7 +12,6 @@ import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDis
 import com.ombremoon.spellbound.client.gui.screens.SpellSelectScreen;
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
-import com.ombremoon.spellbound.client.particle.SparkParticle;
 import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
@@ -96,7 +95,6 @@ public class ClientEvents {
     public static void onRegisterParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(SBParticles.SLUDGE.get(), GenericParticle.SludgeProvider::new);
         event.registerSpriteSet(SBParticles.MUSHROOM_SPORE.get(), GenericParticle.MushroomSpore::new);
-        event.registerSpriteSet(SBParticles.SPARK.get(), SparkParticle.Provider::new);
         event.registerSpriteSet(SBParticles.GOLD_HEART.get(), HeartParticle.Provider::new);
         event.registerSpriteSet(SBParticles.TEST.get(), CircleAroundPositionParticle.Provider::new);
     }
@@ -286,6 +284,7 @@ public class ClientEvents {
         ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
         ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
         ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
+        ElementRenderDispatcher.register(GuideMultiBlockElement.class, new GuideMultiBlockRenderer());
     }
 
     @SubscribeEvent

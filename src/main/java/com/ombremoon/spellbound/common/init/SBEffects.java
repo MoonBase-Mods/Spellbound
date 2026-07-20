@@ -44,6 +44,7 @@ public class SBEffects {
     public static final Holder<MobEffect> STORMSTRIKE = EFFECTS.register("stormstrike", () -> new StormstrikeEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> BATTLE_CRY = EFFECTS.register("battle_cry", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187)); //Increase damage by 15%
     public static final Holder<MobEffect> COUNTER_MAGIC = EFFECTS.register("counter_magic", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187));
+    public static final Holder<MobEffect> OBFUSCATED = EFFECTS.register("obfuscated", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
 
     public static void register(IEventBus eventBus) {
         EFFECTS.register(eventBus);

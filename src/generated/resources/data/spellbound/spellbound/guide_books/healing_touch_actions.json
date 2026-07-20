@@ -153,13 +153,13 @@
       "type": "spellbound:text",
       "extras": {
         "maxLineLength": 100,
-        "pageScrap": "spellbound:bless_shrine"
+        "pageScrap": "spellbound:use_phial"
       },
       "position": {
         "yOffset": 150
       },
       "translation": {
-        "translate": "divine_action.blessing.bless_shrine"
+        "translate": "divine_action.healing_touch.use_phial"
       }
     },
     {
@@ -172,7 +172,7 @@
         {
           "bold": true,
           "color": "yellow",
-          "translate": "blessing.bless_shrine.name",
+          "translate": "healing_touch.use_phial.name",
           "underlined": true
         },
         "",
@@ -224,6 +224,7 @@
             "translate": "healing_touch.heal_mob_to_full.lore"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
@@ -232,15 +233,17 @@
             "translate": "healing_touch.use_blessed_bandages.lore"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:use_blessed_bandages_lore",
           "target_page": "spellbound:default"
         },
         {
           "component": {
-            "translate": "blessing.bless_shrine.lore"
+            "translate": "healing_touch.use_phial.lore"
           },
           "extraOffset": 10,
-          "scrap": "spellbound:bless_shrine_lore",
+          "not_added": false,
+          "scrap": "spellbound:use_phial_lore",
           "target_page": "spellbound:default"
         }
       ],

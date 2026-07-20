@@ -22,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -33,6 +34,7 @@ public class StrideSpell extends AnimatedSpell {
     protected static final ResourceLocation FLEETFOOTED = CommonClass.customLocation("fleetfooted");
     protected static final ResourceLocation MOMENTUM = CommonClass.customLocation("momentum");
     private int initialFoodLevel;
+    private float initialSaturationLevel;
     private Vec3 currentPos;
     private int movementTicks;
     private Entity mount;
@@ -60,8 +62,10 @@ public class StrideSpell extends AnimatedSpell {
             applyMovementBenefits(caster, context);
 
             if (caster instanceof Player player) {
-                if (context.hasSkill(SBSkills.MARATHON))
+                if (context.hasSkill(SBSkills.MARATHON)) {
                     this.initialFoodLevel = player.getFoodData().getFoodLevel();
+                    this.initialSaturationLevel = player.getFoodData().getSaturationLevel();
+                }
 
                 if (context.hasSkill(SBSkills.MOMENTUM))
                     this.currentPos = caster.position();
@@ -207,8 +211,20 @@ public class StrideSpell extends AnimatedSpell {
                 }
             }
 
-            if (context.hasSkill(SBSkills.MARATHON) && caster instanceof Player player && player.getFoodData().getFoodLevel() < this.initialFoodLevel)
-                player.getFoodData().eat(this.initialFoodLevel - player.getFoodData().getFoodLevel(), 0);
+            if (context.hasSkill(SBSkills.MARATHON) && caster instanceof Player player) {
+                FoodData food = player.getFoodData();
+                if (food.getFoodLevel() < this.initialFoodLevel) {
+                    food.setFoodLevel(this.initialFoodLevel);
+                } else if (food.getFoodLevel() > this.initialFoodLevel) {
+                    this.initialFoodLevel = food.getFoodLevel();
+                }
+
+                if (food.getSaturationLevel() < this.initialSaturationLevel) {
+                    food.setSaturation(this.initialSaturationLevel);
+                } else if (food.getSaturationLevel() > this.initialSaturationLevel) {
+                    this.initialSaturationLevel = food.getSaturationLevel();
+                }
+            }
         }
     }
 

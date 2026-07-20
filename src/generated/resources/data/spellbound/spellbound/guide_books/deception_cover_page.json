@@ -1,6 +1,10 @@
 {
   "elements": [
     {
+      "type": "spellbound:structure",
+      "structure": "spellbound:test"
+    },
+    {
       "type": "spellbound:image",
       "extras": {
         "enableCorners": false
@@ -72,24 +76,54 @@
             "translate": "spellbound.path.deception"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:deception_description"
         },
         {
           "component": {
-            "translate": "spells.spellbound.shadowbond"
+            "translate": "guide.general.novice_spells"
           },
           "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:flicker"
+        },
+        {
+          "component": {
+            "translate": "guide.general.apprentice_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.adept_spells"
+          },
+          "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:shadowbond"
         },
         {
           "component": {
-            "translate": "spells.spellbound.purge_magic"
+            "translate": "guide.general.expert_spells"
           },
           "extraOffset": 0,
+          "not_added": true,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:purge_magic"
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.general.master_spells"
+          },
+          "extraOffset": 0,
+          "not_added": true,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
         }
       ],
       "position": {

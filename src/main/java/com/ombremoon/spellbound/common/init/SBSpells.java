@@ -158,9 +158,9 @@ public class SBSpells {
                     SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
                     SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
     public static final Supplier<SpellType<ShadowVeilSpell>> SHADOW_VEIL = registerSpell("shadow_veil", deceptionBuilder(SpellMastery.NOVICE, ShadowVeilSpell::new)
-            .skills(SBSkills.SHADOW_VEIL, SBSkills.DARK_SHROUD, SBSkills.EXPANDING_SHADOWS, SBSkills.IN_THE_SHADOWS,
-                    SBSkills.DECEPTIVE_ECHOES, SBSkills.WEIGHTED_VEIL, SBSkills.SAPPING_FEAR, SBSkills.CLOUDED_SENSES,
-                    SBSkills.DEEP_NIGHT, SBSkills.SHADOW_DOMAIN));
+            .skills(SBSkills.SHADOW_VEIL, SBSkills.DARK_SHROUD, SBSkills.EXPANDING_SHADOWS, SBSkills.DECEPTIVE_ECHOES,
+                    SBSkills.WEIGHTED_VEIL, SBSkills.SAPPING_FEAR, SBSkills.IN_THE_SHADOWS, SBSkills.HIDDEN_WOUNDS,
+                    SBSkills.DEEP_NIGHT, SBSkills.CLOUDED_SENSES, SBSkills.SHADOW_DOMAIN));
     public static final Supplier<SpellType<CursedRuneSpell>> CURSED_RUNE = registerSpell("cursed_rune", deceptionBuilder(SpellMastery.NOVICE, CursedRuneSpell::new)
             .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE, SBSkills.MIRROR_CURSE,
                     SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_SILENCE, SBSkills.CURSE_OF_WEAKNESS, SBSkills.VANISHING_CURSE,

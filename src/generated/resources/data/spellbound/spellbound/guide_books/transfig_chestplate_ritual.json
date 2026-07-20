@@ -57,6 +57,7 @@
             "translate": "spellbound.ritual.tier_one"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
@@ -68,6 +69,7 @@
             ]
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
@@ -76,6 +78,7 @@
             "translate": "spellbound.ritual.duration_not_applicable"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         }

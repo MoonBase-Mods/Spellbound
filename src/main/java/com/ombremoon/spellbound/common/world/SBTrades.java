@@ -37,7 +37,7 @@ public class SBTrades {
                 spellTrade(8, Items.BLAZE_ROD, 4, SBSpells.FLAME_JET.get()),
                 spellTrade(8, Items.ROTTEN_FLESH, 4, SBSpells.SUMMON_UNDEAD.get()),
                 spellTrade(8, Items.EMERALD, 4, SBSpells.SUMMON_VILLAGER.get()),
-                spellTrade(8, SBItems.CHALK.get(), 4, SBSpells.CURSED_RUNE.get()),
+                spellTrade(8, SBItems.CHALK.get(), 1, SBSpells.CURSED_RUNE.get()),
                 spellTrade(8, Items.ENDER_PEARL, 4, SBSpells.FLICKER.get())
         }, 2, new MerchantOffer[]{
                 spellTrade(48, Items.BLUE_ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),

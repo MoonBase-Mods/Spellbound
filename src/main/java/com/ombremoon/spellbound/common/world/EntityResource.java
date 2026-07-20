@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world;
 
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +18,10 @@ public enum EntityResource implements StringRepresentable {
     MANA("mana",
             (entity, amount, operation) -> {
                 Double mana = entity.getData(SBData.MANA);
-                entity.setData(SBData.MANA, Math.clamp(operation.apply(mana, amount), 0, entity.getAttributeValue(SBAttributes.MAX_MANA)));
+                entity.setData(SBData.MANA, Math.clamp(operation.apply(mana, amount), 0, SpellUtil.getMaxMana(entity)));
             },
             entity -> {
-                double maxMana = entity.getAttribute(SBAttributes.MAX_MANA) != null ? entity.getAttributeValue(SBAttributes.MAX_MANA) : 100;
+                double maxMana = SpellUtil.getMaxMana(entity);
                 return entity.getData(SBData.MANA) >= maxMana;
             }
     ),

@@ -53,12 +53,12 @@ public class DynamicDimensionFactory {
         BlockPos blockPos = ORIGIN;
         level.getChunkAt(blockPos);
 
-        Vec3 spawnOffset = bossFight.getPlayerSpawnOffset();
-        int randomOffsetX = level.random.nextInt(3);
-        int randomOffsetZ = level.random.nextInt(3);
-        BlockPos offsetPos = blockPos.offset((int) spawnOffset.x + randomOffsetX, (int) spawnOffset.y, (int) spawnOffset.z + randomOffsetZ);
+        var spawnData = bossFight.getSpawnData();
+        Vec3 spawnOffset = spawnData.playerOffset();
+        BlockPos offsetPos = blockPos.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
         Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
-
+        entity.setYRot(spawnData.playerRotation());
+        entity.setXRot(0);
         sendToDimension(entity, level, targetVec);
     }
 

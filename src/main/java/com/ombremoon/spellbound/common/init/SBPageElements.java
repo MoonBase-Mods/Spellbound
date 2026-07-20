@@ -31,6 +31,7 @@ public class SBPageElements {
     public static final Supplier<MapCodec<? extends IPageElement>> SPELL_BORDER = PAGE_ELEMENTS.register("spell_border", () -> GuideSpellBorderElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> RITUAL = PAGE_ELEMENTS.register("ritual", () -> TransfigurationRitualElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> EQUIPMENT = PAGE_ELEMENTS.register("equipment", () -> GuideEquipmentElement.CODEC);
+    public static final Supplier<MapCodec<? extends IPageElement>> STRUCTURE = PAGE_ELEMENTS.register("structure", () -> GuideMultiBlockElement.CODEC);
 
     public static void register(IEventBus eventBus) {
         PAGE_ELEMENTS.register(eventBus);

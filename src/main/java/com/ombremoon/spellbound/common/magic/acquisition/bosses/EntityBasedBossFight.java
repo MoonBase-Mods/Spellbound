@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBBossFights;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -33,15 +34,15 @@ public class EntityBasedBossFight extends BossFight {
             instance -> instance.group(
                     BossSpawn.CODEC.listOf().fieldOf("bosses").forGetter(bossFight -> bossFight.bosses),
                     SBSpells.REGISTRY.byNameCodec().fieldOf("path").forGetter(bossFight -> bossFight.spell),
-                    Vec3.CODEC.fieldOf("playerSpawnOffset").forGetter(bossFight -> bossFight.playerSpawnOffset),
-                    DimensionData.CODEC.fieldOf("dimensionData").forGetter(bossFight -> bossFight.dimensionData)
+                    DynamicLevelSpawnData.CODEC.fieldOf("spawn_data").forGetter(bossFight -> bossFight.spawnData),
+                    DimensionData.CODEC.fieldOf("dimension_data").forGetter(bossFight -> bossFight.dimensionData)
             ).apply(instance, EntityBasedBossFight::new)
     );
 
     private final List<BossSpawn> bosses;
 
-    public EntityBasedBossFight(List<BossSpawn> bosses, SpellType<?> spell, Vec3 playerSpawnOffset, DimensionData dimensionData) {
-        super(spell, playerSpawnOffset, dimensionData);
+    public EntityBasedBossFight(List<BossSpawn> bosses, SpellType<?> spell, DynamicLevelSpawnData spawnData, DimensionData dimensionData) {
+        super(spell, spawnData, dimensionData);
         this.bosses = bosses;
     }
 
@@ -100,7 +101,7 @@ public class EntityBasedBossFight extends BossFight {
         @Override
         public void endFight(ServerLevel level, EntityBasedBossFight bossFight) {
             if (this.defeatedBoss && bossFight.spell != null) {
-                Vec3 spawnOffset = bossFight.playerSpawnOffset;
+                Vec3 spawnOffset = bossFight.getSpawnData().spellOffset();
                 BlockPos spawnPos = DynamicDimensionFactory.ORIGIN.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
                 RitualHelper.createItem(
                         level,
@@ -140,7 +141,7 @@ public class EntityBasedBossFight extends BossFight {
     public static class Builder implements BossFightBuilder<EntityBasedBossFight> {
         private final List<BossSpawnSupplier> bosses = new ObjectArrayList<>();
         private ResourceLocation spell;
-        private Vec3 playerSpawnOffset = Vec3.ZERO;
+        private DynamicLevelSpawnData spawnData = DynamicLevelSpawnData.DEFAULT;
 
         public Builder spell(ResourceLocation spell) {
             this.spell = spell;
@@ -152,8 +153,8 @@ public class EntityBasedBossFight extends BossFight {
             return this;
         }
 
-        public Builder spawnPlayerAt(int x, int y, int z) {
-            this.playerSpawnOffset = new Vec3(x, y, z);
+        public Builder spawnData(DynamicLevelSpawnData.Builder spawnData) {
+            this.spawnData = spawnData.build();
             return this;
         }
 
@@ -167,7 +168,7 @@ public class EntityBasedBossFight extends BossFight {
             return new EntityBasedBossFight(
                     bosses,
                     spell,
-                    this.playerSpawnOffset,
+                    this.spawnData,
                     new DimensionData(Keys.EMPTY_BIOME, DimensionData.Weather.CLEAR));
         }
     }

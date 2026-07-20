@@ -9,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -393,16 +392,16 @@ public class SBSkills {
 
     //Shadow Veil
     public static Holder<Skill> SHADOW_VEIL = registerSkill("shadow_veil");
-    public static Holder<Skill> DARK_SHROUD = registerModifierSkill("dark_shroud", 0, 50, preReqs(SHADOW_VEIL), SpellModifier.DARK_SHADOW);
-    public static Holder<Skill> EXPANDING_SHADOWS = registerSkill("expanding_shadows", 0, 100, preReqs(DARK_SHROUD));
-    public static Holder<Skill> IN_THE_SHADOWS = registerSkill("in_the_shadows", 0, 150, preReqs(EXPANDING_SHADOWS));
-    //Ombre cant count to 4 so 4th skill needed.
-    public static Holder<Skill> DECEPTIVE_ECHOES = registerSkill("deceptive_echoes", 0, 200, preReqs(IN_THE_SHADOWS));
-    public static Holder<Skill> WEIGHTED_VEIL = registerSkill("weighted_veil", 0, 250, preReqs(DECEPTIVE_ECHOES));
-    public static Holder<Skill> SAPPING_FEAR = registerSkill("sapping_fear", 0, 300, preReqs(WEIGHTED_VEIL));
-    public static Holder<Skill> CLOUDED_SENSES = registerSkill("clouded_senses", 0, 350, preReqs(SAPPING_FEAR));
-    public static Holder<Skill> DEEP_NIGHT = registerSkill("deep_night", 0, 400, preReqs(CLOUDED_SENSES));
-    public static Holder<Skill> SHADOW_DOMAIN = registerSkill("shadow_domain", 0, 450, preReqs(DEEP_NIGHT));
+    public static Holder<Skill> DARK_SHROUD = registerModifierSkill("dark_shroud", -50, 50, preReqs(SHADOW_VEIL), SpellModifier.DARK_SHADOW);
+    public static Holder<Skill> EXPANDING_SHADOWS = registerSkill("expanding_shadows", -50, 100, preReqs(DARK_SHROUD));
+    public static Holder<Skill> DECEPTIVE_ECHOES = registerSkill("deceptive_echoes", 0, 50, preReqs(SHADOW_VEIL));
+    public static Holder<Skill> WEIGHTED_VEIL = registerSkill("weighted_veil", 0, 100, preReqs(DECEPTIVE_ECHOES));
+    public static Holder<Skill> SAPPING_FEAR = registerSkill("sapping_fear", 0, 150, preReqs(WEIGHTED_VEIL));
+    public static Holder<Skill> IN_THE_SHADOWS = registerSkill("in_the_shadows", 50, 50, preReqs(SHADOW_VEIL));
+    public static Holder<Skill> HIDDEN_WOUNDS = registerSkill("hidden_wounds", 50, 100, preReqs(IN_THE_SHADOWS));
+    public static Holder<Skill> DEEP_NIGHT = registerSkill("deep_night", 50, 175, preReqs(HIDDEN_WOUNDS, SAPPING_FEAR));
+    public static Holder<Skill> CLOUDED_SENSES = registerSkill("clouded_senses", 0, 200, preReqs(SAPPING_FEAR, HIDDEN_WOUNDS));
+    public static Holder<Skill> SHADOW_DOMAIN = registerSkill("shadow_domain", 0, 250, preReqs(CLOUDED_SENSES));
 
     //Cursed Rune
     public static Holder<Skill> CURSED_RUNE = registerRadialSkill("cursed_rune");

@@ -222,6 +222,7 @@
             "translate": "healing_blossom.decorate_shrine.lore"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:decorate_shrine_lore",
           "target_page": "spellbound:default"
         },
@@ -230,6 +231,7 @@
             "translate": "healing_blossom.grow_ambrosia_bush.lore"
           },
           "extraOffset": 15,
+          "not_added": false,
           "scrap": "spellbound:grow_ambrosia_bush_lore",
           "target_page": "spellbound:default"
         },
@@ -238,6 +240,7 @@
             "translate": "healing_blossom.purify_wither_rose.lore"
           },
           "extraOffset": 35,
+          "not_added": false,
           "scrap": "spellbound:purify_wither_rose_lore",
           "target_page": "spellbound:default"
         }

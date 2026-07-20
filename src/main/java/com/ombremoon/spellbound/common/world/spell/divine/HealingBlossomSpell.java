@@ -121,12 +121,13 @@ public class HealingBlossomSpell extends AnimatedSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             HealingBlossom blossom = this.summonEntity(context, SBEntities.HEALING_BLOSSOM.get(), healingBlossom -> {
-                if (context.hasSkill(SBSkills.BLOOM)) {
+                if (context.hasSkillReady(SBSkills.BLOOM)) {
                     healingBlossom.fastBloom();
                     this.fastBloomed = true;
                 }
 
-                if (context.hasSkill(SBSkills.REBIRTH) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) {
+                if (context.hasSkillReady(SBSkills.REBIRTH) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) {
+                    addCooldown(SBSkills.REBIRTH, 6000);
                     context.useCatalyst(SBItems.HOLY_SHARD.get());
                     healingBlossom.setEmpowered(true);
                 }

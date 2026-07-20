@@ -64,6 +64,10 @@ public class SpellUtil {
         return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attackEntity, ownerEntity);
     }
 
+    public static double getMaxMana(LivingEntity livingEntity) {
+        return livingEntity.getAttribute(SBAttributes.MAX_MANA) != null ? livingEntity.getAttributeValue(SBAttributes.MAX_MANA) : 100.0D;
+    }
+
     public static SpellHandler getSpellHandler(LivingEntity livingEntity) {
         var handler = livingEntity.getData(SBData.SPELL_HANDLER);
         if (!handler.isInitialized())
