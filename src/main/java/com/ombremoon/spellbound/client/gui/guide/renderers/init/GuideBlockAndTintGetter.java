@@ -1,15 +1,12 @@
 package com.ombremoon.spellbound.client.gui.guide.renderers.init;
 
-import com.mojang.logging.LogUtils;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.StructureInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
@@ -19,19 +16,14 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jline.utils.Log;
 
-import java.sql.Struct;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class GuideBlockAndTintGetter implements BlockAndTintGetter {
     public static Map<ResourceLocation, StructureInfo> loadedStructures = new HashMap<>();
@@ -101,9 +93,17 @@ public class GuideBlockAndTintGetter implements BlockAndTintGetter {
         return 15 - amount;
     }
 
+
     @Override
-    public float getShade(Direction direction, boolean b) {
-        return 1f;
+    public float getShade(@NotNull Direction direction, boolean shade) {
+        if (!shade) return 1.0F;
+
+        return switch (direction) {
+            case DOWN -> 0.5F;
+            case UP -> 1.0F;
+            case NORTH, SOUTH -> 0.8F;
+            case WEST, EAST -> 0.6F;
+        };
     }
 
     @Override
