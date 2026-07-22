@@ -1,0 +1,80 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.create_object"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "mastery": "novice",
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
+      "image": "spellbound:textures/gui/books/images/spells/create_object.png",
+      "position": {
+        "xOffset": 3,
+        "yOffset": 30
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "skill.description.spellbound.create_object"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.TRANSFIGURATION.create_object.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.TRANSFIGURATION.create_object.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:create_object",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:mystic_armor_ritual"
+}

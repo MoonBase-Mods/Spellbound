@@ -611,6 +611,8 @@ public interface SBGuidePages {
                 ),
                 new TextEntry(translatable("guide.transfiguration.stave"), 35),
                 new TextEntry(translatable("guide.transfiguration.robes"), PAGE_TWO_START_X, 90));
+
+        //Rituals and transfiguration spells
         createRitualPage(context, TRANSFIG_HELM_RITUAL, TRANSFIG_ARMOR_STAFF, SBRituals.CREATE_TRANSFIG_HELM, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_CHEST_RITUAL, TRANSFIG_HELM_RITUAL, SBRituals.CREATE_TRANSFIG_CHEST, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_LEGS_RITUAL, TRANSFIG_CHEST_RITUAL, SBRituals.CREATE_TRANSFIG_LEGS, 5, 0, RitualTier.ONE);
@@ -627,6 +629,9 @@ public interface SBGuidePages {
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
+        createSpellPage(context, CREATE_OBJECT, MYSTIC_ARMOR_RITUAL, Book.TRANSFIG, SBSpells.CREATE_OBJECT);
+        //idk the values
+        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 10, 0, RitualTier.TWO);
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
