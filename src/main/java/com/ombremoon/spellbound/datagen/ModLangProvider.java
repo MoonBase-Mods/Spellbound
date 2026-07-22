@@ -221,16 +221,18 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.past_contributors", "Former Contributors");
         add("guide.basic.spell_research", "Spell Research");
 
+        //§§r
+
         add("guide.basic.discord", "Discord");
         add("guide.basic.bugs", "Bug Reports");
-        add("guide.basic.blurb", "Welcome fellow Magi, to the world of Spellbound! I present to you the first in many books documenting the arcane. Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries to be discovered.");
+        add("guide.basic.blurb", "Welcome fellow Magi, to the world of §lSpellbound!§r I present to you the first in many books documenting the arcane. " + "Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries yet to be discovered.⭐");
         add("guide.basic.spellbound", "What is Spellbound?");
-        add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to craft your experience, rather than relying on RNG.");
-        add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or become a peaceful saint. Choose your path.");
+        add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to §ocraft your experience§r , rather than relying on RNG.");
+        add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or " + "become a peaceful saint. §nChoose your path.§");
         add("guide.basic.spell_paths", "Spell Paths");
         add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §4Ruin§r, §2Transfiguration§r, §1Summons§r, §eDivine§r, and §9Deception§r");
         add("guide.basic.spell_paths_cont", "Spell Paths Cont.");
-        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. The Ruin path can be broken down into additional sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
+        add("guide.basic.ruin", "§4Ruin§r is the path of §lelemental energy§r, destruction and chaos. The Ruin path can be broken down into additional sub-paths: §oFire, Frost, and Shock§r (for now). Each sub-path has a unique effect that is applied to targets after taking enough damage.");
         add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Learn how to perform spells on an even grander scale through rituals.");
         add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimensions to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey.");
         add("guide.basic.divine", "Divine is the path of light and darkness. Aid your allies and smite the undead, or curse your enemies and steal their life force. The Divine forces fuel your power, but beware. For every action taken, judgement will be passed.");
@@ -387,6 +389,12 @@ public class ModLangProvider extends LanguageProvider {
         addTransfigSpellContents(SBSpells.MYSTIC_ARMOR.get(),
                 "Uh oh, seems like I have angered a few too many Magi. I'm trying to throw together whatever I can, hoping I can protect my self a little more consistently.",
                 "Well, I was trying to make myself absorb their mana. While that didn't completely work, I have managed to reduce the impact of their spells.");
+        addTransfigSpellContents(SBSpells.CREATE_OBJECT.get(),
+                "Carrying separate tools for every task defies efficiency. The principles of equivalent exchange taught me to temporarily reconfigure matter into a more cohesive and functional form.",
+                "\nAt the end, magic is but science without a proper explanation...");
+
+
+
 
         add("ritual.spellbound.create_transfig_helmet", "Create Item:\nCreationist Helmet");
         add("ritual.spellbound.create_transfig_chestplate", "Create Item:\nCreationist Chestplate");
@@ -443,7 +451,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.familiars", "Familiars");
         add("guide.summon.familiars1", "While travelling through the different dimensions I have been hearing voices, whispers even. It's almost as if the magic is attempting to communicate with me directly.");
         add("guide.summon.familiars2", "I think these sounds are coming from pure arcane energy that I have imbued with life force through my summoning.");
-        add("guide.summon.resonance", "I have created a Resonance Stone that has enabled me to make contact with these creatures that have been calling out.");;
+        add("guide.summon.resonance", "I have created a Resonance Stone that has enabled me to make contact with these creatures that have been calling out.");
 
         add("guide.summon.whistle", "After communing with the creatures I have fabricated a whistle allowing me to summon one of the beings as a familiar to fight by my side.");
         add("guide.summon.familiar_types", "Familiar Types");
@@ -666,6 +674,20 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
 
+        /* TEMPLATE
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        * */
+
         addSkillTooltip(SBSkills.FIREBALL, "Launches a ball of fire that explodes on impact");
         addSkillTooltip(SBSkills.RAPID_FIRE, "Fire a rapid stream of 3 smaller Fireballs.");
         addSkillTooltip(SBSkills.STICKY_BOMB, "Fireballs stick to surfaces or enemies, detonating after a short duration.");
@@ -826,6 +848,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ELDRITCH_INTERVENTION, "Restores caster to half health if below a certain HP threshold.");
         addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
         addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
+
+        addSkillTooltip(SBSkills.CREATE_OBJECT, " Creates a Stone Pickaxe in your inventory for 120 seconds. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
+        addSkillTooltip(SBSkills.LUMBERJACK, "Spell now summons a Stone Axe.");
+        addSkillTooltip(SBSkills.EXCAVATOR, "Spell now summons a Stone Shovel.");
+        addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
+        addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
+        addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
+        addSkillTooltip(SBSkills.EMERGENCY_RATIONS, "Spell now summons a stack of 4 Cooked Steak.");
+        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
+        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
+        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
+        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
         addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
         addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
