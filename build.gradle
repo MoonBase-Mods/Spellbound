@@ -182,8 +182,8 @@ dependencies {
     implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}"
     implementation "curse.maven:sentinellib-1074465:7612154"
 //    implementation ("local:sentinellib:1.1.8")
-    implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.1.3.a") {transitive = false}
-    implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.1.9") {transitive = false}
+    implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.2.0") {transitive = false}
+    implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.29") {transitive = false}
 
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:${tiny_multiblock_lib_version}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-neoforge:0.5.3"))
