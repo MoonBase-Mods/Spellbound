@@ -34,7 +34,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
             .comapFlatMap(
                     location -> {
                         if (!MODIFIER_REGISTRY.containsKey(location)) {
-                            return DataResult.error(() -> "Tried to serialize unregistered path modifier: " + location);
+                            return DataResult.error(() -> "Tried to serialize unregistered spell modifier: " + location);
                         } else  {
                             return DataResult.success(SpellModifier.getTypeFromLocation(location));
                         }
@@ -52,7 +52,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
     public static final SpellModifier FEAR = registerModifier("fear", ModifierType.POTENCY, (spellType, target) -> true, -0.25F);
     public static final SpellModifier FORESIGHT = registerModifier("foresight", ModifierType.MANA, (spell, target) -> spell == SBSpells.MYSTIC_ARMOR.get(), -0.15F);
 //    public static final SpellModifier GALE_FORCE = registerModifier("gale_force", ModifierType.DURATION, path -> path == SBSpells.CYCLONE.get(), 2F);
-    public static final SpellModifier ICE_CHARGE = registerModifier("ice_charge", ModifierType.MANA, (spell, target) -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.FROST, 0.25F);
+    public static final SpellModifier KINETIC_FLOW = registerModifier("kinetic_flow", ModifierType.POTENCY, (spell, target) -> spell.getPath() == SpellPath.RUIN && spell.getSubPath() == SpellPath.FROST, 0.2F);
     public static final SpellModifier LIBRARIAN = registerModifier("librarian", ModifierType.SPELL_XP, (spell, target) -> true, 0.25F);
     public static final SpellModifier POISON_ESSENCE = registerModifier("poison_essence", ModifierType.POTENCY, (spell, target) -> spell == SBSpells.WILD_MUSHROOM.get(), 0.25F);
     public static final SpellModifier REPRISAL = registerModifier("reprisal", ModifierType.POTENCY, (spellType, target) -> spellType.getPath() == SpellPath.DIVINE, 0.5F);

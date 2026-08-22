@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity;
 
+import com.google.common.collect.Lists;
 import com.ombremoon.spellbound.client.photon.EffectCache;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -7,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.util.SpellUtil;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -15,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
@@ -29,6 +32,8 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
+
 @SuppressWarnings("unchecked")
 public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T> {
     private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.STRING);
@@ -36,11 +41,14 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> HOMING_TARGET_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Byte> PIERCE_LEVEL = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BYTE);
     protected static final String CONTROLLER = "controller";
     protected T spell;
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
+    @Nullable
+    private IntOpenHashSet piercingIgnoreEntityIds;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final EffectCache effectCache = new EffectCache();
 
@@ -98,8 +106,27 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     @Override
+    protected boolean canHitEntity(Entity target) {
+        return super.canHitEntity(target) && (this.piercingIgnoreEntityIds == null || !this.piercingIgnoreEntityIds.contains(target.getId()));
+    }
+
+    @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
+        Entity entity = result.getEntity();
+        if (this.getPierceLevel() > 0) {
+            if (this.piercingIgnoreEntityIds == null) {
+                this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
+            }
+
+            if (this.piercingIgnoreEntityIds.size() >= this.getPierceLevel() + 1) {
+                this.discard();
+                return;
+            }
+
+            this.piercingIgnoreEntityIds.add(entity.getId());
+        }
+
         if (!this.level().isClientSide) {
             if (this.spell != null)
                 this.spell.onProjectileHitEntity(this, spell.getContext(), result);
@@ -122,6 +149,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         builder.define(OWNER_ID, 0);
         builder.define(IS_HOMING, false);
         builder.define(HOMING_TARGET_ID, -1);
+        builder.define(PIERCE_LEVEL, (byte) 0);
     }
 
     @Override
@@ -146,8 +174,12 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     public T getSpell() {
         if (this.spell == null) {
             SpellType<T> spellType = this.getSpellType();
-            if (this.handler != null && spellType != null)
+            if (this.handler != null && spellType != null) {
                 this.spell = this.handler.getSpell(spellType, this.getSpellId());
+                if (this.spell == null && this.getSummoner() instanceof LivingEntity caster) {
+                    this.spell = spellType.createSpellWithData(caster);
+                }
+            }
         }
 
         return this.spell;
@@ -199,6 +231,14 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     public void setHomingTarget(LivingEntity entity) {
         this.setHoming(true);
         this.entityData.set(HOMING_TARGET_ID, entity.getId());
+    }
+
+    public void setPierceLevel(byte pierceLevel) {
+        this.entityData.set(PIERCE_LEVEL, pierceLevel);
+    }
+
+    public byte getPierceLevel() {
+        return this.entityData.get(PIERCE_LEVEL);
     }
 
     @Override

@@ -415,8 +415,17 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public List<AbstractSpell> getActiveSpells(SpellType<?> spellType) {
         return this.getActiveSpells(spellType, abstractSpell -> true);
     }
+
     public List<AbstractSpell> getActiveSpells(SpellType<?> spellType, Predicate<AbstractSpell> spellCondition) {
         return this.activeSpells.get(spellType).stream().filter(spellCondition).toList();
+    }
+
+    public <T extends AbstractSpell> List<T> getActiveSpellsFromType(SpellType<T> spellType) {
+        return this.getActiveSpellsFromType(spellType, abstractSpell -> true);
+    }
+
+    public <T extends AbstractSpell> List<T> getActiveSpellsFromType(SpellType<T> spellType, Predicate<T> spellCondition) {
+        return ((List<T>) this.activeSpells.get(spellType)).stream().filter(spellCondition).toList();
     }
 
     /**
@@ -563,6 +572,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
     public Optional<SkillBuff<?>> getSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
+    }
+
+    public Optional<SkillBuff<?>> getSkillBuff(ResourceLocation skill) {
+        return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.id().equals(skill)).findAny();
     }
 
     public boolean hasSkillBuff(Skill skill) {

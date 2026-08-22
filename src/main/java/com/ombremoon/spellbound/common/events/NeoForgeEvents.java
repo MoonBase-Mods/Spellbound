@@ -549,7 +549,7 @@ public class NeoForgeEvents {
             }
 
             var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
-            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, event));
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, livingEntity, event));
 
             EffectManager effects = SpellUtil.getSpellEffects(sourceEntity);
             effects.doPostAttackEffects(event);
@@ -592,10 +592,10 @@ public class NeoForgeEvents {
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPreHurt(spell.getContext(), event);
             }
-        } else if (source.getEntity() instanceof LivingEntity living) {
-            var attackerHandler = SpellUtil.getSpellHandler(living);
-            EffectManager attackerEffects = SpellUtil.getSpellEffects(living);
-            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(living, event));
+        } else if (source.getEntity() instanceof LivingEntity sourceEntity) {
+            var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
+            EffectManager attackerEffects = SpellUtil.getSpellEffects(sourceEntity);
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(sourceEntity, livingEntity, event));
 
             attackerEffects.doPreAttackEffects(event);
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));

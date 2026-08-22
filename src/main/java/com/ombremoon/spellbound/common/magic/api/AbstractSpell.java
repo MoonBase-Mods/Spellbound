@@ -272,7 +272,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public int getCastTime() {
-        return this.getCastTime(this.castContext);
+        return (int) (this.getCastTime(this.castContext) * (1 / SpellUtil.getCastSpeed(this.caster)));
     }
 
     public boolean isCasting() {
@@ -503,8 +503,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public final void tick() {
         tickCount++;
-        if (this.spellType == SBSpells.SHATTERING_CRYSTAL.get())
-            log(this.tickCount);
 //        endSpell();
         if (this.init) {
             this.startSpell();
@@ -784,7 +782,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity. The damage type is determined by the sub-path of the path.
+     * Hurts the target entity. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @param hurtAmount The amount of damage the entity takes
      * @return Whether the entity takes damage or not
@@ -806,7 +804,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity by the pre-defined base damage of the path. The damage type is determined by the sub-path of the path.
+     * Hurts the target entity by the pre-defined base damage of the spell. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @return Whether the entity takes damage or not
      */
@@ -819,7 +817,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates damage based on path level, path level, potency, and judgment (if Divine)
+     * Calculates damage based on spell level, path level, potency, and judgment (if Divine)
      * @param ownerEntity The damage causing entity
      * @param amount The damage amount
      * @return The damage taking all modifiers into account
@@ -842,7 +840,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates the final damage dealt after taking path level, path level, potency, and magic resistance into account
+     * Calculates the final damage dealt after taking spell level, path level, potency, and magic resistance into account
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageAmount The damage amount
@@ -1225,19 +1223,19 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return null;
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), caster.getXRot(), caster.getYRot(), velocity, inaccuracy, projectile -> {});
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), caster.getXRot(), caster.getYRot(), velocity, inaccuracy, extraData);
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), x, y, velocity, inaccuracy, extraData);
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.summonEntity(context, entityType, spawnPos, projectile -> {
             projectile.shootFromRotation(caster, x, y, 0.0F, velocity, inaccuracy);
             extraData.accept(projectile);

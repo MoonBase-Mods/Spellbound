@@ -3,21 +3,23 @@ package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
-import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
-import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.world.block.entity.IceSheetBlockEntity;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowVeilSpell;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -31,6 +33,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
 public class IceSkateSpell extends ChanneledSpell {
+    private static final ResourceLocation ICE_SKATE_BUFF = CommonClass.customLocation("ice_skate_buff");
+    private static final ResourceLocation KINETIC_FLOW = CommonClass.customLocation("kinetic_flow");
+    private static final ResourceLocation CRYSTAL_CLEATS = CommonClass.customLocation("crystal_cleats");
+    private static final ResourceLocation CRYSTAL_CLEATS_SLOW = CommonClass.customLocation("crystal_cleats_slow");
     private static final BlockPredicate BASE_PREDICATE =
             BlockPredicate.anyOf(
                     BlockPredicate.allOf(
@@ -70,7 +76,9 @@ public class IceSkateSpell extends ChanneledSpell {
             );
     private BlockPos position = BlockPos.ZERO;
     private int offGroundTicks;
+    private int movementTicks;
     private int stopMovementTicks;
+    private int bridgeTicks = 60;
 
     public static Builder<IceSkateSpell> createIceSkateBuilder() {
         return createChannelledSpellBuilder(IceSkateSpell.class)
@@ -97,10 +105,10 @@ public class IceSkateSpell extends ChanneledSpell {
             this.addSkillBuff(
                     caster,
                     SBSkills.ICE_SKATE,
-                    CommonClass.customLocation("ice_skate_buff"),
+                    ICE_SKATE_BUFF,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(CommonClass.customLocation("ice_skate_buff"), 0.6, AttributeModifier.Operation.ADD_VALUE))
+                    new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(ICE_SKATE_BUFF, 0.6, AttributeModifier.Operation.ADD_VALUE))
             );
             this.position = caster.blockPosition();
             BlockState state = level.getBlockState(this.position.below());
@@ -111,9 +119,33 @@ public class IceSkateSpell extends ChanneledSpell {
                 }
             }
 
-//            ShadowVeilSpell spell = SBSpells.SHADOW_VEIL.get().createSpell();
-//            spell.setMistPos(caster.position().relative(Direction.DOWN, 0.5));
-//            spell.softCastSpell(caster);
+            if (context.hasSkill(SBSkills.CRYSTAL_CLEATS)) {
+                this.addEventBuff(
+                        caster,
+                        SBSkills.CRYSTAL_CLEATS,
+                        BuffCategory.BENEFICIAL,
+                        SpellEventListener.Events.DEALT_DAMAGE_POST,
+                        CRYSTAL_CLEATS,
+                        post -> {
+                            int cleatCharges = this.movementTicks / 5;
+                            LivingEntity target = post.getTarget();
+                            if (cleatCharges > 0 && target != null) {
+                                this.addSkillBuff(
+                                        target,
+                                        SBSkills.CRYSTAL_CLEATS,
+                                        CRYSTAL_CLEATS_SLOW,
+                                        BuffCategory.HARMFUL,
+                                        SkillBuff.ATTRIBUTE_MODIFIER,
+                                        new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CRYSTAL_CLEATS_SLOW, -0.05 * cleatCharges, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                        40
+                                );
+
+                                var effects = SpellUtil.getSpellEffects(target);
+                                effects.incrementBuildEffects(EffectManager.Effect.FROST, 5 * cleatCharges);
+                            }
+                            this.removeSkillBuff(caster, SBSkills.CRYSTAL_CLEATS);
+                        });
+            }
         }
     }
 
@@ -138,9 +170,7 @@ public class IceSkateSpell extends ChanneledSpell {
             Vec3 origin = caster.position();
             BlockPos blockpos = BlockPos.containing(origin);
             int i = 3;
-
-            log(level.getFluidState(blockpos.below()));
-
+            boolean flag = false;
             if (caster.blockPosition() != this.position) {
                 for (BlockPos blockpos1 : BlockPos.betweenClosed(blockpos.offset(-i, 0, -i), blockpos.offset(i, 0, i))) {
                     if (blockpos1.distToCenterSqr(origin.x(), (double) blockpos1.getY() + 0.5, origin.z()) < (double) Mth.square(i)) {
@@ -148,8 +178,9 @@ public class IceSkateSpell extends ChanneledSpell {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
                         } else if (context.hasSkill(SBSkills.GLACIAL_GLIDE) && LAVA_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.BASALT.defaultBlockState());
-                        } else if (AIR_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
+                        } else if (context.hasSkill(SBSkills.ICE_BRIDGE) && caster.isCrouching() && this.bridgeTicks > 0 && AIR_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
+                            flag = true;
                         } else if (BASE_PREDICATE.test((ServerLevel) level, blockpos1)
                                 && level.setBlockAndUpdate(blockpos1, SBBlocks.ICE_SHEET.get().defaultBlockState())) {
                             BlockEntity blockEntity = level.getBlockEntity(blockpos1);
@@ -160,11 +191,19 @@ public class IceSkateSpell extends ChanneledSpell {
                     }
                 }
 
+                if (flag) {
+                    this.bridgeTicks--;
+                } else if (this.movementTicks % 100 == 0){
+                    this.bridgeTicks = Math.min(this.bridgeTicks + 5, 60);
+                }
+
                 this.position = caster.blockPosition();
+                this.movementTicks++;
                 this.stopMovementTicks = 0;
             } else {
                 this.stopMovementTicks++;
-                if (this.stopMovementTicks > 10) {
+                this.movementTicks = 0;
+                if (this.stopMovementTicks > 5) {
                     this.endSpell();
                     return;
                 }
@@ -187,6 +226,18 @@ public class IceSkateSpell extends ChanneledSpell {
             } else {
                 this.offGroundTicks = 0;
             }
+
+            if (this.movementTicks % 100 == 0 && context.hasSkill(SBSkills.KINETIC_FLOW)) {
+                this.addSkillBuff(
+                        caster,
+                        SBSkills.KINETIC_FLOW,
+                        KINETIC_FLOW,
+                        BuffCategory.BENEFICIAL,
+                        SkillBuff.SPELL_MODIFIER,
+                        SpellModifier.KINETIC_FLOW,
+                        100
+                );
+            }
         }
     }
 
@@ -194,8 +245,14 @@ public class IceSkateSpell extends ChanneledSpell {
     protected void onSpellStop(SpellContext context) {
         super.onSpellStop(context);
         Level level = context.getLevel();
+        LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
             this.removeSkillBuff(context.getCaster(), SBSkills.ICE_SKATE);
+
+            if (context.hasSkill(SBSkills.SHARDS_OF_MOMENTUM)) {
+                IceBoltSpell spell = SBSpells.ICE_BOLT.get().createSpellWithData(caster);
+                //shoot ice bolts in a cone in front of the caster
+            }
         }
     }
 

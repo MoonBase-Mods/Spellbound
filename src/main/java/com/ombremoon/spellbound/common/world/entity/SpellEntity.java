@@ -139,8 +139,12 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     public T getSpell() {
         if (this.spell == null) {
             SpellType<T> spellType = this.getSpellType();
-            if (this.handler != null && spellType != null)
+            if (this.handler != null && spellType != null) {
                 this.spell = this.handler.getSpell(spellType, this.getSpellId());
+                if (this.spell == null && this.getSummoner() instanceof LivingEntity caster) {
+                    this.spell = spellType.createSpellWithData(caster);
+                }
+            }
         }
 
         return this.spell;

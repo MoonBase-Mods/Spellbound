@@ -14,16 +14,22 @@ public class DealtDamageEvent extends SpellEvent {
 
     public static class Pre extends DealtDamageEvent {
         private final LivingDamageEvent.Pre event;
+        private final LivingEntity target;
         private final DamageContainer container;
 
-        public Pre(LivingEntity caster, LivingDamageEvent.Pre event) {
+        public Pre(LivingEntity caster, LivingEntity target, LivingDamageEvent.Pre event) {
             super(caster, event);
             this.event = event;
+            this.target = target;
             this.container = this.event.getContainer();
         }
 
-        public LivingEntity getTarget() {
+        public LivingEntity getEntity() {
             return this.event.getEntity();
+        }
+
+        public LivingEntity getTarget() {
+            return this.target;
         }
 
         public DamageContainer getContainer() {
@@ -49,14 +55,20 @@ public class DealtDamageEvent extends SpellEvent {
 
     public static class Post extends DealtDamageEvent {
         private final LivingDamageEvent.Post event;
+        private final LivingEntity target;
 
-        public Post(LivingEntity caster, LivingDamageEvent.Post event) {
+        public Post(LivingEntity caster, LivingEntity target, LivingDamageEvent.Post event) {
             super(caster, event);
             this.event = event;
+            this.target = target;
         }
 
         public LivingEntity getEntity() {
             return this.event.getEntity();
+        }
+
+        public LivingEntity getTarget() {
+            return this.target;
         }
 
         public float getOriginalDamage() {

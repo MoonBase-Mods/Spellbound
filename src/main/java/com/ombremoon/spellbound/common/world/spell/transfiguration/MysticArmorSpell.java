@@ -101,7 +101,7 @@ public class MysticArmorSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
-        addEventBuff(
+        this.addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
                 BuffCategory.BENEFICIAL,
@@ -126,7 +126,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                         addCooldown(SBSkills.ELDRITCH_INTERVENTION, 2400);
                     }
                 });
-        addEventBuff(
+        this.addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
                 BuffCategory.BENEFICIAL,
@@ -143,7 +143,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                     }
                 });
         if (context.hasSkill(SBSkills.ARCANE_VENGEANCE)) {
-            addEventBuff(
+            this.addEventBuff(
                     caster,
                     SBSkills.ARCANE_VENGEANCE,
                     BuffCategory.BENEFICIAL,
@@ -160,7 +160,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         }
 
         if (context.hasSkill(SBSkills.PURSUIT))
-            addSkillBuff(
+            this.addSkillBuff(
                     caster,
                     SBSkills.PURSUIT,
                     PURSUIT,
@@ -169,7 +169,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                     new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(PURSUIT, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
 
         if (context.hasSkill(SBSkills.CRYSTALLINE_ARMOR))
-            addSkillBuff(
+            this.addSkillBuff(
                     caster,
                     SBSkills.CRYSTALLINE_ARMOR,
                     CRYSTALLINE_ARMOR,

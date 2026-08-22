@@ -77,16 +77,16 @@ public class SBSkills {
 
     //Ice Bolt
     public static final Holder<Skill> ICE_BOLT = registerRadialSkill("ice_bolt");
-    public static final Holder<Skill> FROST_PIERCER = registerRadialSkill("frost_piercer", 0, 50, preReqs(ICE_BOLT));
     public static final Holder<Skill> GLACIAL_VOLLEY = registerRadialSkill("glacial_volley", 50, 50, preReqs(ICE_BOLT));
     public static final Holder<Skill> ICY_JAVELIN = registerRadialSkill("icy_javelin", -50, 50, preReqs(ICE_BOLT));
+    public static final Holder<Skill> ICE_RING = registerRadialSkill("ice_ring", 0, 50, preReqs(ICE_BOLT));
     public static final Holder<Skill> PERMAFROST_LANCE = registerRadialSkill("permafrost_lance", -50, 100, preReqs(ICY_JAVELIN));
     public static final Holder<Skill> HAIL_STRIKE = registerRadialSkill("hail_strike", 50, 100, preReqs(GLACIAL_VOLLEY));
-    public static final Holder<Skill> CHILLING_AFTERMATH = registerSkill("chilling_aftermath", 0, 150, preReqs(FROST_PIERCER, PERMAFROST_LANCE, HAIL_STRIKE));
+    public static final Holder<Skill> CHILLING_AFTERMATH = registerSkill("chilling_aftermath", 0, 150, preReqs(PERMAFROST_LANCE, HAIL_STRIKE));
     public static final Holder<Skill> SHATTERING_IMPACT = registerSkill("shattering_impact", 0, 200, preReqs(CHILLING_AFTERMATH));
     public static final Holder<Skill> FROSTBITE_SYNERGY = registerSkill("frostbite_synergy", -50, 200, preReqs(CHILLING_AFTERMATH));
     public static final Holder<Skill> WINTER_IS_COMING = registerSkill("winter_is_coming", 50, 200, preReqs(CHILLING_AFTERMATH));
-    public static final Holder<Skill> GLACIAL_RESONANCE = registerSkill("glacial_resonance", 0, 250, preReqs(SHATTERING_IMPACT, FROSTBITE_SYNERGY, WINTER_IS_COMING));
+    public static final Holder<Skill> FROST_PIERCER = registerSkill("frost_piercer", 0, 250, preReqs(SHATTERING_IMPACT, FROSTBITE_SYNERGY, WINTER_IS_COMING));
 
     //Ice Skate
     public static final Holder<Skill> ICE_SKATE = registerSkill("ice_skate");

@@ -52,7 +52,7 @@ public class SBSpells {
     public static final Supplier<SpellType<IceBoltSpell>> ICE_BOLT = registerSpell("ice_bolt", iceRuinBuilder(SpellMastery.NOVICE, IceBoltSpell::new)
             .skills(SBSkills.ICE_BOLT, SBSkills.FROST_PIERCER, SBSkills.GLACIAL_VOLLEY, SBSkills.ICY_JAVELIN,
                     SBSkills.PERMAFROST_LANCE, SBSkills.HAIL_STRIKE, SBSkills.CHILLING_AFTERMATH, SBSkills.SHATTERING_IMPACT,
-                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.GLACIAL_RESONANCE));
+                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.ICE_RING));
     public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
             .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
                     SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.ICE_BRIDGE, SBSkills.KINETIC_FLOW,

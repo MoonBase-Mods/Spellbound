@@ -229,7 +229,6 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
         var list = this.getAttackableEntities(fireball, this.fireballRange + fireball.getSize());
         float damage = fireball.getSize() >= 1.0F ? this.getBaseDamage() + (fireball.getSize() - 1.0F) : this.getBaseDamage() / 2;
         damage *= (float) Math.pow(0.75F, this.pierceCount);
-        log(damage);
         for (LivingEntity entity : list) {
             if (this.hurt(entity, damage)) {
                 if (context.hasSkill(SBSkills.BURNING_ADHESIVE) && fireball.isSticky() && fireball.getHomingTarget() == entity) {

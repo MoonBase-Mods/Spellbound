@@ -50,6 +50,7 @@ public class SBTags {
 
     public static class MobEffects {
         public static final TagKey<MobEffect> HEALING = tag("healing");
+        public static final TagKey<MobEffect> FROST = tag("frost");
 
         private static TagKey<MobEffect> tag(String name) {
             return TagKey.create(Registries.MOB_EFFECT, CommonClass.customLocation(name));
