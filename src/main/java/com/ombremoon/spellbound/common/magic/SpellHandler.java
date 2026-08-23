@@ -180,6 +180,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
+
+        if (this.caster instanceof Player) {
+            log(this.isChargingOrChannelling());
+        }
     }
 
     public void onPlayerSpawn(Player player) {
