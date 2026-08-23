@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
