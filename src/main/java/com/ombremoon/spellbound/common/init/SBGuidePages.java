@@ -58,6 +58,7 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> RUIN_ARMOR_STAFF = key("ruin_armor_staff");
     ResourceKey<GuideBookPage> FIREBALL = key("fireball");
     ResourceKey<GuideBookPage> ICE_SKATE = key("ice_skate");
+    ResourceKey<GuideBookPage> ICE_BOLT = key("ice_bolt");
     ResourceKey<GuideBookPage> FLAME_JET = key("flame_jet");
     ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike");
     ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge");
@@ -88,9 +89,9 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SHADOW_GATE = key("shadow_gate");
     ResourceKey<GuideBookPage> SHADOW_GATE_RITUAL = key("shadow_gate_page_ritual");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR = key("mystic_armor");
+    ResourceKey<GuideBookPage> MYSTIC_ARMOR_RITUAL = key("mystic_armor_ritual");
     ResourceKey<GuideBookPage> CREATE_OBJECT = key("create_object");
     ResourceKey<GuideBookPage> CREATE_OBJECT_RITUAL = key("create_object_ritual");
-    ResourceKey<GuideBookPage> MYSTIC_ARMOR_RITUAL = key("mystic_armor_ritual");
 
     //Summon Book
     ResourceKey<GuideBookPage> SUMMON_COVER_PAGE = key("summon_cover_page");
@@ -328,13 +329,13 @@ public interface SBGuidePages {
                 translatable("guide.basic.page_scraps"),
                 true,
                 List.of(
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/spell_broker.png"), 75, 75, 75, 75)
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/spell_broker.png"), 75, 90, 75, 75)
                 ),
                 new TextEntry(translatable("guide.basic.spell_broker"), 35),
                 new TextEntry(translatable("guide.basic.spell_broker1"), 0, 85, 75),
                 new TextEntry(translatable("guide.basic.page_scraps1"), PAGE_TWO_START_X, 30),
                 new TextEntry(translatable("guide.basic.page_scraps2"), PAGE_TWO_START_X + 25, 90, 130),
-                new TextEntry(translatable("guide.basic.page_scraps3"), PAGE_TWO_START_X, 143, 130)
+                new TextEntry(translatable("guide.basic.page_scraps3"), PAGE_TWO_START_X, 135, 130)
         );
         createDescriptionAndItems(
                 context,
@@ -482,9 +483,11 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.ruin.stormweaver_robes"), PAGE_TWO_START_X + 40, 0, 120),
                 new TextEntry(translatable("guide.ruin.pyromancer_robes"), PAGE_TWO_START_X-5, 80, 120),
                 new TextEntry(translatable("guide.ruin.cryomancer_robes"), PAGE_TWO_START_X + 40, 140, 120));
+
         createSpellPage(context, FIREBALL, RUIN_ARMOR_STAFF, Book.RUIN, SBSpells.FIREBALL);
         createSpellPage(context, ICE_SKATE, FIREBALL, Book.RUIN, SBSpells.ICE_SKATE);
-        createSpellPage(context, FLAME_JET, ICE_SKATE, Book.RUIN, SBSpells.FLAME_JET);
+        createSpellPage(context, ICE_BOLT, ICE_SKATE, Book.RUIN, SBSpells.ICE_SKATE);
+        createSpellPage(context, FLAME_JET, ICE_BOLT, Book.RUIN, SBSpells.FLAME_JET);
         createSpellPage(context, STORM_STRIKE, FLAME_JET, Book.RUIN, SBSpells.STORMSTRIKE);
         createSpellPage(context, ELECTRIC_CHARGE, STORM_STRIKE, Book.RUIN, SBSpells.ELECTRIC_CHARGE);
         createSpellPage(context, SHATTERING_CRYSTAL, ELECTRIC_CHARGE, Book.RUIN, SBSpells.SHATTERING_CRYSTAL);
@@ -611,6 +614,8 @@ public interface SBGuidePages {
                 ),
                 new TextEntry(translatable("guide.transfiguration.stave"), 35),
                 new TextEntry(translatable("guide.transfiguration.robes"), PAGE_TWO_START_X, 90));
+
+        //Rituals and transfiguration spells
         createRitualPage(context, TRANSFIG_HELM_RITUAL, TRANSFIG_ARMOR_STAFF, SBRituals.CREATE_TRANSFIG_HELM, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_CHEST_RITUAL, TRANSFIG_HELM_RITUAL, SBRituals.CREATE_TRANSFIG_CHEST, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_LEGS_RITUAL, TRANSFIG_CHEST_RITUAL, SBRituals.CREATE_TRANSFIG_LEGS, 5, 0, RitualTier.ONE);
@@ -627,6 +632,9 @@ public interface SBGuidePages {
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
+        createSpellPage(context, CREATE_OBJECT, MYSTIC_ARMOR_RITUAL, Book.TRANSFIG, SBSpells.CREATE_OBJECT);
+        //idk the values
+        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 10, 0, RitualTier.TWO);
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
@@ -724,7 +732,9 @@ public interface SBGuidePages {
         createSpellPage(context, SUMMON_VILLAGER, SUMMON_UNDEAD, Book.SUMMONS, SBSpells.SUMMON_VILLAGER);
         createSpellPage(context, WILD_MUSHROOM, SUMMON_VILLAGER, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
-        //createSpellPage(context, SUMMON_WOLF, WILD_MUSHROOM, Book.SUMMONS, SBSpells.SUMMON_WOLF);
+
+        createSpellPage(context, SUMMON_WOLF, MUSHROOM_ACQ, Book.SUMMONS, SBSpells.SUMMON_WOLF_PACK);
+        createSpellPage(context, BOUND_BOW, SUMMON_WOLF, Book.SUMMONS, SBSpells.BOUND_BOW);
 
 
         //Divine
@@ -838,7 +848,8 @@ public interface SBGuidePages {
                 new ImageActionEntry(SBDivineActions.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH_LORE, 10, 12000, 15, new ImageEntryWithScale(defaultNameSpace("textures/block/sweet_berry_bush_stage3.png"), -15, 0)),
                 new ItemActionEntry(SBDivineActions.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE_LORE, 15, 6000, 35, Ingredient.of(Items.WITHER_ROSE))
         );
-        //createDivineSpellPage(context, SMITE, HEALING_BLOSSOM_ACTIONS, DIVINE_BOOK, SBSpells.SMITE, 50);
+
+        //NEED ACTIONPAGE
 
         //Deception
         createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
@@ -864,7 +875,7 @@ public interface SBGuidePages {
         createSpellPage(context, CURSED_RUNE, FLICKER, Book.DECEPTION, SBSpells.CURSED_RUNE);
         createSpellPage(context, SHADOWBOND, CURSED_RUNE, Book.DECEPTION, SBSpells.SHADOWBOND);
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
-        //createSpellPage(context, NIGHTBLADE, PURGE_MAGIC, Book.DECEPTION, SBSpells.NIGHBLADE);
+        createSpellPage(context, NIGHTBLADE, PURGE_MAGIC, Book.DECEPTION, SBSpells.NIGHTBLADE);
     }
 
     private static void createCoverPage(

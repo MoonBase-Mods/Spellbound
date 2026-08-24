@@ -41,11 +41,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
+        simpleGeneratedModel(SBItems.CHALK);
+
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
         simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
         simpleGeneratedModel(SBItems.CREATIONIST_LEGGINGS);
         simpleGeneratedModel(SBItems.CREATIONIST_HELMET);
-        simpleGeneratedModel(SBItems.CHALK);
 
         simpleGeneratedModel(SBItems.CRYOMANCER_BOOTS);
         simpleGeneratedModel(SBItems.CRYOMANCER_CHESTPLATE);
@@ -76,6 +77,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.SHARD_SATCHEL);
         simpleGeneratedModel(SBItems.ARCANE_EYE);
 
+        simpleGeneratedModel((SBItems.INTERSTELLARE_DISC));
+        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
 
     }
 

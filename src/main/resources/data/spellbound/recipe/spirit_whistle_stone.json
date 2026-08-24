@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "spellbound:magic_essence"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "B": {
+      "tag": "minecraft:stone_tool_materials"
+    }
+  },
+  "pattern": [
+    "BS",
+    "M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:spirit_whistle",
+    "components": {
+      "spellbound:whistle_material": "stone"
+    }
+  }
+}

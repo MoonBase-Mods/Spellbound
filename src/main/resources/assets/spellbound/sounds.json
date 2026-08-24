@@ -196,5 +196,28 @@
     "sounds": [
       "spellbound:dark_divine_action"
     ]
+  },
+  "interstellare": {
+    "sounds": [
+      {
+       "name": "spellbound:interstellare",
+        "stream": true,
+        "volume": 0.05
+      }
+    ]
+  },
+  "whistle_on": {
+    "subtitle": "sounds.spellbound.whistle_on",
+    "sounds": [
+      "spellbound:whistle_on1",
+      "spellbound:whistle_on2"
+    ]
+  },
+  "whistle_off": {
+    "subtitle": "sounds.spellbound.whistle_off",
+    "sounds": [
+      "spellbound:whistle_off1",
+      "spellbound:whistle_off2"
+    ]
   }
 }

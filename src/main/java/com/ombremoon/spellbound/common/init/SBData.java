@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
+import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.item.components.SatchelContents;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
@@ -23,6 +24,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.phys.Vec3;
@@ -152,6 +154,9 @@ public class SBData {
             builder -> builder.persistent(EffectHolder.CODEC.listOf()).networkSynchronized(EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<SatchelContents>> SATCHEL_CONTENTS = COMPONENT_TYPES.registerComponentType("satchel_contents",
             builder -> builder.persistent(SatchelContents.CODEC).networkSynchronized(SatchelContents.STREAM_CODEC));
+
+    public static final Supplier<DataComponentType<WhistleMaterial>> WHISTLE_MATERIAL = COMPONENT_TYPES.registerComponentType("whistle_material",
+            builder -> builder.persistent(WhistleMaterial.CODEC).networkSynchronized(ByteBufCodecs.idMapper(i -> WhistleMaterial.values()[i], WhistleMaterial::ordinal)));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

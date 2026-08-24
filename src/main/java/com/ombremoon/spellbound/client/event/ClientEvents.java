@@ -40,6 +40,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
+import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -268,6 +269,15 @@ public class ClientEvents {
 
             return 0.0F;
         });
+
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("stone"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.STONE ? 1.0F : 0.0F);
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("bone"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.BONE ? 1.0F : 0.0F);
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("bamboo"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.BAMBOO ? 1.0F : 0.0F);
+
+
     }
 
     private static void registerElementRenderers() {

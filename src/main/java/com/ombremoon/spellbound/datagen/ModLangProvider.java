@@ -156,6 +156,8 @@ public class ModLangProvider extends LanguageProvider {
         
         add("itemGroup.spellbound", "Spellbound🪄");
         add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
+
+        add("item.spellbound.interstellare_music_disc_desc", "piedilerci - Interstellare");
     }
 
     protected void affinityDescriptions() {
@@ -221,91 +223,94 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.past_contributors", "Former Contributors");
         add("guide.basic.spell_research", "Spell Research");
 
-        add("guide.basic.discord", "Discord");
-        add("guide.basic.bugs", "Bug Reports");
-        add("guide.basic.blurb", "Welcome fellow Magi, to the world of Spellbound! I present to you the first in many books documenting the arcane. Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries to be discovered.");
+        //§§r
+
+        add("guide.basic.discord", "§lDiscord§r");
+        add("guide.basic.bugs", "§lBug Reports§r");
+        add("guide.basic.blurb", "Welcome fellow Magi, to the world of §lSpellbound!§r I present to you the first in many books documenting the arcane. " + "Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries yet to be discovered.⭐");
         add("guide.basic.spellbound", "What is Spellbound?");
-        add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to craft your experience, rather than relying on RNG.");
-        add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or become a peaceful saint. Choose your path.");
+        add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to §lcraft your experience.§r");
+        add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades, fight dangerous foes in otherworldly dimensions, explore the dark arts or " + "become a peaceful saint.\n\n§l§nThe path is yours to decide.§r");
         add("guide.basic.spell_paths", "Spell Paths");
-        add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §4Ruin§r, §2Transfiguration§r, §1Summons§r, §eDivine§r, and §9Deception§r");
+        add("guide.basic.spell_paths1", "All spells are broken up into §l5 spell paths§r: §oRuin, Transfiguration, Summons, Divine and Deception§r");
         add("guide.basic.spell_paths_cont", "Spell Paths Cont.");
-        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. The Ruin path can be broken down into additional sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
-        add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Learn how to perform spells on an even grander scale through rituals.");
-        add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimensions to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey.");
-        add("guide.basic.divine", "Divine is the path of light and darkness. Aid your allies and smite the undead, or curse your enemies and steal their life force. The Divine forces fuel your power, but beware. For every action taken, judgement will be passed.");
-        add("guide.basic.deception", "Deception is the path of illusions and trickery. Masters of the art of Deception make their moves from the shadows, striking when you least expect. It is said that there is a place beyond mortal reach, housing secrets for those determined enough to uncover them.");
+        add("guide.basic.ruin", "§4§l§nRuin§r is the path of §4§nelemental energy§r, destruction and chaos. The Ruin path can be broken down into additional §4sub-paths§r: §oFire, Frost,§r §oand Shock (for now).§r" + "§r Each sub-path has a unique effect that is applied to targets after taking enough damage.");
+        add("guide.basic.transfiguration", "§2§l§nTransfiguration§r is the path of §2§nalchemy§r and conversion. Offering §outility§r. Transfiguration spells are essential in almost every arsenal. Learn how to perform spells on an even grander scale through §2rituals.§r");
+        add("guide.basic.summons", "§1§l§nSummons§r is the path §1§nconjuration.§r Bring forth allies from beyond the grave, or other dimensions, to fight in your stead. Befriend §1familiars§r to aid you in your journey.");
+        add("guide.basic.divine", "§e§l§nDivine§r is the path of §e§nlight and darkness.§r" +"§r Aid your allies and smite the undead, or curse your enemies and steal their life force." + "§r Divine forces fuel your power, but beware: for every action taken, §ejudgement§r will be passed.");
+        add("guide.basic.deception", "§5§l§nDeception§r is the path of §5§nillusions and trickery.§r Masters of the art strike from the shadows, during least expect moments. Rumors say that it exists a place beyond mortal reach, §5housing secrets§r for those determined enough to uncover them.");
         add("guide.basic.general_items", "General Items");
-        add("guide.basic.arcanthus", "A magical flower found in small patches in flower fields, Arcanthus is the easiest way for a Magi to introduce oneself to the world of magic. Can be crafted into magic essence.");
-        add("guide.basic.magic_essence", "Magic Essence is the core of all magic items in this world, utilizing the magical properties of Arcanthus to enhance its host object.");
-        add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana needed to cast them is increased. Mana Tears can be used to permanently increase mana reserves.");
-        add("guide.basic.workbench1", "A Magi's Workbench is a Magi's most important tool for spell growth. This is where you can view, swap out, and upgrade your spells as you progress through the world.");
+        add("guide.basic.arcanthus", "A magical flower found in flower fields, §lArcanthus§r is the primal way for a Magi to introduce itself to this world of magic. It is used to craft §omagic essence§r.");
+        add("guide.basic.magic_essence", "§lMagic Essence§r is the core of all magic items in this world, it utilizes the magical properties of §oArcanthus§r to enhance its host object or perform powerful rituals.");
+        add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana required significantly increases. §lMana Tears§r are the way to permanently increase your §omana reserves.§r");
+        add("guide.basic.workbench1", "A §lMagi's Workbench§r it's the most important tool for spell growth. There you can §oview, swap out, and §lupgrade§r your spells as you progress through the world.");
         add("guide.basic.book_recipes", "Book Recipes");
         add("guide.basic.book_recipes_cont", "Book Recipes Cont.");
-        add("guide.basic.guide_books", "Guide Books are essential for any Magi, new or old. Within them contains all information relevant to its corresponding path. Some content includes: ");
+        add("guide.basic.guide_books", "§lGuide Books§r are essential for any Magi, new or old. Within them one can find all relevant information about its corresponding path: ");
         add("guide.basic.guide_books1", "▪ Path Overview");
-        add("guide.basic.guide_books2", "▪ Unique Path Mechanics");
+        add("guide.basic.guide_books2", "▪ Unique Path §oMechanics");
         add("guide.basic.guide_books3", "▪ Path Lore");
         add("guide.basic.guide_books4", "▪ Path Specific Items");
         add("guide.basic.guide_books5", "▪ Spell Info & Acquisition");
-        add("guide.basic.guide_books6", "Note: Not all content has been added yet");
-        add("guide.basic.spell_broker", "Located in a secluded tower in the forest and sometimes seen roaming the lands is a shady fellow, the Spell Broker.");
-        add("guide.basic.spell_broker1", "Carrying spells he could only have obtained through suspicious means, the Broker seeks to trade things of magical value.");
+        add("guide.basic.guide_books6", "§lNote: Content will be added with each update§r");
+        add("guide.basic.spell_broker", "Located in a secluded tower in the forest and sometimes seen roaming the lands is a shady fellow: the §lSpell Broker.§r");
+        add("guide.basic.spell_broker1", "Carrying spells he could only have obtained through suspicious means, the Broker seeks to §ltrade§r object of magical value.");
         add("guide.basic.page_scraps", "Magic Research &\nPage Scraps");
-        add("guide.basic.page_scraps1", "Path books hold key information about spell acquisition and path mechanics, but are encrypted in a magical language and need a cipher to read.");
-        add("guide.basic.page_scraps2", "Page scraps can be obtained around the world through various actions, deciphering certain entries in a book.");
-        add("guide.basic.page_scraps3", "Explore the lands, interact with mobs, and be on the look out for clues to unlock every book entry.");
-        add("guide.basic.path_items", "Every path has a set of specific items that will help Magi's grow stronger: §lShards§r, §lStaves§r, and §lArmor§r");
-        add("guide.basic.shards", "Shards are special magic catalyst items that can be found underground, dropped from certain mobs, or earned from specific tasks.");
-        add("guide.basic.armor", "Enchanted regalia that buffs certain spell stats from the corresponding path.");
-        add("guide.basic.staves", "A Magi's Staff allows its user to better control the flow of magic, bestowing a special buff to spells of the corresponding path.");
+        add("guide.basic.page_scraps1", "Path-specific §lbooks§r hold key information about spell acquisition and path mechanics, but are §lencrypted§r and need a cypher");
+        add("guide.basic.page_scraps2", "§lPage scraps§r can be obtained around the world through various actions, §ldeciphering§r certain entries in a book.");
+        add("guide.basic.page_scraps3", "Explore the lands, interact with mobs and the environment... always look out for clues to unlock §lnew entries.§r");
+        add("guide.basic.path_items", "Every path has a set of specific items that will help one's §lmagical growth§r: §oShards, Staves, and Armor§r");
+        add("guide.basic.shards", "§lShards§r are special catalyst items that can be found underground, dropped by certain mobs, or earned after completing specific tasks.");
+        add("guide.basic.armor", "§lArmor§r, better known as §oEnchanted regalia§r, have the power to buff stats from path-specific spells.");
+        add("guide.basic.staves", "§lStaffs§r allows its user to better control the flow of magic, bestowing a special buff to spells of the corresponding path.");
         add("guide.basic.spells", "Spells");
-        add("guide.basic.spell_tomes", "To learn a spell, you must first obtain its Spell Tome. Spell Tomes cannot be found in dungeons or as common mob loot, but are instead acquired through certain tasks corresponding to its path.");
-        add("guide.basic.spell_mastery", "All spells are locked under a Mastery Level. Path Mastery Level is increased by levelling up spells, which can be done through spell casting and harming/healing entities with your spells.");
-        add("guide.basic.choice_spells", "As spells level up, they can be upgraded to become even stronger and more unique to your playstyle. Certain upgrades changes how spells work entirely—these are called §lChoice Spells§r.");
+        add("guide.basic.spell_tomes", "To learn a spell, you must first obtain its §lSpell Tome.§r Spell Tomes cannot be found in dungeons or as common mob loot, but are instead acquired through certain §ltasks§r corresponding to its path.");
+        add("guide.basic.spell_mastery", "All spells are locked under a Mastery Level. §oPath Mastery Level§r is increased by §llevelling up spells§r, which can be done through essentially spell casting.");
+        add("guide.basic.choice_spells", "As spells level up, they can be upgraded to become even stronger and more unique to your playstyle. Certain upgrades may changes how spells work entirely...");
         add("guide.basic.skills", "Skills");
-        add("guide.basic.skills1", "Skills are upgrades unique to each spell that adds additional functionality to it. All spells have a total of 10 skill upgrades.");
-        add("guide.basic.skills2", "Skills are unlocked via Skill Points, which are earned every time you level up a spell. Spells can level up to a max level of 5, meaning only 5 of the 10 upgrades can be unlocked.");
-        add("guide.basic.skills3", "There are 3 special types of skills: §lModifier§r, §lConditional§r, and §lChoice§r skills.");
-        add("guide.basic.modifier_skills", "▪ Modifier skills give permanent buffs/debuffs to certain spell stats, such as duration, potency, or mana cost.");
-        add("guide.basic.conditional_skills", "▪ Conditional skills require specific conditions to be met to either unlock or use.");
-        add("guide.basic.choice_skills", "▪ Choice skills almost entirely change how a spell functions, giving Magi's the option to swap between different implementations of the same spell.");
+        add("guide.basic.skills1", "Skills are upgrades §ounique§r to each spell that adds additional functionality to it. All spells have a total of 10 §lskill upgrades.§r");
+        add("guide.basic.skills2", "Skills are unlocked via Skill Points, which are earned every time you level up a spell. Spells can level up to a §omax level of 5,§r meaning only 5 of the 10 upgrades can be unlocked.");
+        add("guide.basic.skills3", "There are 3 special types of skills: §oModifier§r, §oConditional§r, and §oChoice§r skills.");
+        add("guide.basic.modifier_skills", "▪ §lModifier§r skills give §opermanent buffs§r to certain spell stats, such as duration, potency, or mana cost.");
+        add("guide.basic.conditional_skills", "▪ §lConditional§r skills require §ospecific conditions§r to be met in order to use them.");
+        add("guide.basic.choice_skills", "▪ §lChoice skills§r change how a §ospell functions§r, giving the option to swap between different implementations of the same spell.");
     }
 
     protected void ruinContents() {
         add("guide.ruin.contents.description", "Ruin & Sub-Paths");
 
-        add("guide.ruin.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can bend it to my will to destroy my enemies by harnessing the powers of ruin.");
-        add("guide.ruin.quote", "Peace is a lie. There is only energy.");
+        add("guide.ruin.cover_page", "This book shall document my discoveries throughout my adventures into the arcane, bending elements to my will to cause destruction upon my enemies by harnessing the powers of ruin.");
+        add("guide.ruin.quote", "§l§o\"Peace is a lie. There is only energy.\"§r");
         add("guide.ruin.subpaths", "Sub-Paths");
         add("guide.ruin.description1", "The destructive Path of Ruin, channelling the forces that hold the world together and twisting them to tear the world apart.");
-        add("guide.ruin.description2", "To use this path to its fullest is to channel all your mana into pure elemental power, ripping through anyone who stands in your path or doubts your strength. Disregarding whatever damage you may do to the world around you.");
-        add("guide.ruin.subpaths1", "Ruin manipulates the power holding the world together, but there isn't just one force doing this.");
+        add("guide.ruin.description2", "To use this path to its fullest potentials, you have to channel your mana into pure §lelemental energy. §r Ripping through anyone who stands your way or doubts your strength. Disregarding whatever damage you may do to your surroundings.");
+        add("guide.ruin.subpaths1", "Ruin manipulates the power holding the world together, composed by many forces and not just one.");
 
-        add("guide.ruin.subpaths2", "I believe there are 3 primordial elements this power consists of: §lFire§r, §lFrost§r and §lShock§r. They all seem to have a different impact on both the world and my magic. If I focus my studies on one Sub-Path, it's possible I could enhance my control over one of these forces exponentially.");
+        add("guide.ruin.subpaths2", "Several primordial elements but only three of them has been documented until now: §lFire§r, §lFrost§r and §lShock§r. They seem to have a different impact on both the environment and the manifestation of magic. Mastering one Sub-Path could exponentially enhance my control over one of these forces.");
         add("guide.ruin.subpaths_cnt", "Sub-Paths Cont.");
-        add("guide.ruin.fire", "§lFire§r\nFire is the first of the elements I have explored. It appears to have the highest damage and destructive output of the three, being able to set targets aflame.");
-        add("guide.ruin.frost", "§lFrost§r\nLike the other side of a coin, Frost is the opposite of Fire. this one seems to affect living creatures ability to perform actions massively slowing any thing affected by it.");
-        add("guide.ruin.shock", "§lShock§r\nThe final element, Shock, possesses the most chaotic and rapid nature of the three, chaining lightning and creating storm clouds at will. From what I've gathered, the shock can disrupt some enemies—hindering their spell casting abilities.");
+        add("guide.ruin.fire", "§4§lFire§r\nThe first element I have ever explored. It appears to be based on §4high damage and destructive output§r of the three, being able to set targets aflame.");
+        add("guide.ruin.frost", "§3§lFrost§r\nLike the other side of a coin, Frost is the opposite of Fire. It seems to §3impair§r one's ability to §3perform actions§r massively, slowing those affected by it.");
+        add("guide.ruin.shock", "§5§lShock§r\nSurely the one possessing the most chaotic and rapid nature, chaining lightning and creating storms at will. During my research, I've gathered information about its power to §5disrupt spell§r §5casting abilities§r §rof entities.");
 
         add("guide.ruin.build_up", "Elemental Overload");
         add("guide.ruin.effects", "Elemental Effects");
-        add("guide.ruin.build_up1", "I've discovered that a single creatures body can only take so much of each element. When a target is unable to absorb more of an element, their body seems to react in a different way depending on the element. I'll keep experimenting and try to understand what exactly is happening.");
-        add("guide.ruin.fire_status", "§lFire§r\nFire energy explodes out the target, dealing massive damage and setting fire to the area around the target.");
-        add("guide.ruin.frost_status", "§lFrost§r\nFreezes foes solid, stopping them from performing any actions temporarily.");
-        add("guide.ruin.shock_status", "§lShock§r\nTargets access to the arcane is disrupted, silencing them temporarily and draining their mana.");
+        add("guide.ruin.build_up1", "Through my discoveries I've found that a single body can't take too much of a single element. When a target is unable to absorb more elemental energy, their body seems to react differently depending on the element. More experiments are needed in order to understand why this happens.");
+        add("guide.ruin.fire_status", "§4§lFire§r\nEnergy explodes out from the target, dealing §4massive damage§r and setting on fire the area around it.");
+        add("guide.ruin.frost_status", "§3§lFrost§r\nFreezes foes solid, §3stopping§r them from performing any §3actions§r for a period of time.");
+        add("guide.ruin.shock_status", "§5§lShock§r\nTargets access to the arcane is disrupted, temporarily §5silencing§r them and draining their mana.");
 
         add("guide.ruin.portals", "Ruin Portals");
         add("guide.ruin.keystones", "Keystones");
-        add("guide.ruin.portals1", "When I draw from this source of magic, I can feel others tug back at it. I believe there are ancient beings residing in their own realms that have learned to bend these elements to their will.");
-        add("guide.ruin.portals2", "I aim to find the gateways to these ancient beings' realms so I can find how they are twisting the elements and create new ways of expressing my own magic.");
-        add("guide.ruin.portals3", "While exploring I have found a few gateways, but they seem to all be locked. Unfortunately, the way to make keystones has been long forgotten. I'l have to buy my ruin spells from Spell Brokers for now.");
+        add("guide.ruin.portals1", "When I draw from this source of magic, I can feel others tug back at it. I believe there are §lancient beings§r residing in their own §lrealms§r that have learned to bend these elements to their will.");
+        add("guide.ruin.portals2", "By finding the gateways to these ancient beings' realms one can find how these beasts are twisting their elements. By observing these creatures I could learn new ways for magic expression.");
+        add("guide.ruin.portals3", "While exploring I have found a few gateways, but they seem to all be locked. Unfortunately, the way to make keystones has been long forgotten. I'l have to §lbuy§r my ruin spells §lfrom Spell Brokers for now.§r"+"\n\nIf you couldn't tell, this feature is \n§lWORK IN PROGRESS§r.");
 
-        add("guide.ruin.path_items", "I have discovered elemental attuned robes and staves throughout the world. As far as I can tell, these staves act as a catalyst for their respective element, causing those who I target to reach Elemental Overload faster. The robes, on the other hand, seems to increase the potency of my spells when I wear the full set.");
+        add("guide.ruin.path_items", "Throughout my journey I have found attuned items all around the world. §lStaves§r act apparently as a catalyst for their respective element, causing targets to reach §oElemental Overload faster§r. §lRobes§r §ron the other hand, increase the §opotency of spells§r with full set.");
         add("guide.ruin.stormweaver_robes", "Within a trial chamber, I have found these robes belonging to a long forgotten Stormweaver. These robes resist Shock damage to a degree.");
         add("guide.ruin.pyromancer_robes", "Exploring the nether, I spotted these robes hot to the touch. With this kind of heat, I imagine Fire spells won't get through very well.");
-        add("guide.ruin.cryomancer_robes", "Finally, some Frost robes to protect me from the cold! They were spread between igloos and abandoned shipwrecks.");
+        add("guide.ruin.cryomancer_robes", "Frost robes were spread between igloos and abandoned shipwrecks. Finally, some clothes to protect me from the cold!");
 
+        //HERE
         addSpellContents(SpellPath.RUIN, SBSpells.FIREBALL.get(),
                 "Every Magi should have this classic spell in their arsenal. But to truly unlock its potential, I need to understand how to control the flow of energy.",
                 "This is outstanding! I can now focus my energy to create a ball of fire that will burn through anything in its path and then some.");
@@ -387,6 +392,12 @@ public class ModLangProvider extends LanguageProvider {
         addTransfigSpellContents(SBSpells.MYSTIC_ARMOR.get(),
                 "Uh oh, seems like I have angered a few too many Magi. I'm trying to throw together whatever I can, hoping I can protect my self a little more consistently.",
                 "Well, I was trying to make myself absorb their mana. While that didn't completely work, I have managed to reduce the impact of their spells.");
+        addTransfigSpellContents(SBSpells.CREATE_OBJECT.get(),
+                "Carrying separate tools for every task defies efficiency. The principles of equivalent exchange taught me to temporarily reconfigure matter into a more cohesive and functional form.",
+                "\nAt the end, magic is but science without a proper explanation...");
+
+
+
 
         add("ritual.spellbound.create_transfig_helmet", "Create Item:\nCreationist Helmet");
         add("ritual.spellbound.create_transfig_chestplate", "Create Item:\nCreationist Chestplate");
@@ -443,7 +454,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.familiars", "Familiars");
         add("guide.summon.familiars1", "While travelling through the different dimensions I have been hearing voices, whispers even. It's almost as if the magic is attempting to communicate with me directly.");
         add("guide.summon.familiars2", "I think these sounds are coming from pure arcane energy that I have imbued with life force through my summoning.");
-        add("guide.summon.resonance", "I have created a Resonance Stone that has enabled me to make contact with these creatures that have been calling out.");;
+        add("guide.summon.resonance", "I have created a Resonance Stone that has enabled me to make contact with these creatures that have been calling out.");
 
         add("guide.summon.whistle", "After communing with the creatures I have fabricated a whistle allowing me to summon one of the beings as a familiar to fight by my side.");
         add("guide.summon.familiar_types", "Familiar Types");
@@ -666,6 +677,20 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
 
+        /* TEMPLATE
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        addSkillTooltip(SBSkills., "");
+        * */
+
         addSkillTooltip(SBSkills.FIREBALL, "Launches a ball of fire that explodes on impact");
         addSkillTooltip(SBSkills.RAPID_FIRE, "Fire a rapid stream of 3 smaller Fireballs.");
         addSkillTooltip(SBSkills.STICKY_BOMB, "Fireballs stick to surfaces or enemies, detonating after a short duration.");
@@ -826,6 +851,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ELDRITCH_INTERVENTION, "Restores caster to half health if below a certain HP threshold.");
         addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
         addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
+
+        addSkillTooltip(SBSkills.CREATE_OBJECT, " Creates a Stone Pickaxe in your inventory for 120 seconds. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
+        addSkillTooltip(SBSkills.LUMBERJACK, "Spell now summons a Stone Axe.");
+        addSkillTooltip(SBSkills.EXCAVATOR, "Spell now summons a Stone Shovel.");
+        addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
+        addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
+        addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
+        addSkillTooltip(SBSkills.EMERGENCY_RATIONS, "Spell now summons a stack of 4 Cooked Steak.");
+        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
+        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
+        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
+        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
         addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
         addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
