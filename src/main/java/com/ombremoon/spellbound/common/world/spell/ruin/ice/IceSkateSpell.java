@@ -85,7 +85,9 @@ public class IceSkateSpell extends ChanneledSpell {
                 .castCondition((context, iceSkateSpell) -> context.getCaster().onGround() && !context.getLevel().dimensionType().ultraWarm())
                 .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, true))
+                .hasLayer()
                 .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
+
     }
     public IceSkateSpell() {
         super(SBSpells.ICE_SKATE.get(), createIceSkateBuilder());
