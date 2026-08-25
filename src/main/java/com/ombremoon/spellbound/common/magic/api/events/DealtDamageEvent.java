@@ -24,8 +24,8 @@ public class DealtDamageEvent extends SpellEvent {
             this.container = this.event.getContainer();
         }
 
-        public LivingEntity getEntity() {
-            return this.event.getEntity();
+        public LivingEntity getAttacker() {
+            return this.caster;
         }
 
         public LivingEntity getTarget() {
@@ -63,8 +63,8 @@ public class DealtDamageEvent extends SpellEvent {
             this.target = target;
         }
 
-        public LivingEntity getEntity() {
-            return this.event.getEntity();
+        public LivingEntity getAttacker() {
+            return this.caster;
         }
 
         public LivingEntity getTarget() {

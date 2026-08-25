@@ -41,7 +41,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     private int judgement;
 
     /**
-     * Initialises the effect handler
+     * Initializes the effect handler
      * @param self the entity to attach the effect handler to
      */
     public void init(LivingEntity self) {
@@ -324,7 +324,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         /**
          * Gets the value of the resistance attribute that an entity has for negating this effect build up
          * @param entity The entity to check resistance for
-         * @return The resistance the entity has to the effect (-100 - 100)
+         * @return The resistance the entity has to the effect (-100 to 100)
          */
         public float getEntityResistance(LivingEntity entity) {
             return entity.getAttribute(resistance) != null ? (float) entity.getAttribute(resistance).getValue() : 0.0F;

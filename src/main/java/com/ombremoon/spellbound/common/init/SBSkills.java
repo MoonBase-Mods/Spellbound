@@ -212,7 +212,7 @@ public class SBSkills {
     public static final Holder<Skill> HARVESTER = registerRadialSkill("harvester", 25, 50, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> SCOUT = registerRadialSkill("scout", 75, 50, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> ADVENTURER = registerRadialSkill("adventurer", -50, 100, preReqs(CREATE_OBJECT));
-    public static final Holder<Skill> EMERGENCY_RATIONS = registerRadialSkill("emergency_rations", 50, 100, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> KNIGHT = registerRadialSkill("emergency_rations", 50, 100, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> LASTING_PROVISIONS = registerSkill("lasting_provisions", 0, 150, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> ARTISANS_TOUCH = registerSkill("artisans_touch", 0, 200, preReqs(LASTING_PROVISIONS));
     public static final Holder<Skill> MASTERWORK_GEAR = registerSkill("masterwork_gear", 0, 250, preReqs(ARTISANS_TOUCH));

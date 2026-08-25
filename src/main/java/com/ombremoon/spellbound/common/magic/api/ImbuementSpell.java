@@ -4,7 +4,6 @@ import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -17,12 +16,11 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 @SuppressWarnings("unchecked")
 public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpell {
     private final BiFunction<SpellContext, ImbuementSpell, EffectData> effect;
+    private final boolean requiresCharges;
     protected Imbuement imbuement;
     private int imbuedSlot;
     private boolean effectTriggered;
@@ -74,6 +72,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     public ImbuementSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
         this.effect = (BiFunction<SpellContext, ImbuementSpell, EffectData>) builder.effect;
+        this.requiresCharges = builder.requiresCharges;
     }
 
     @Override
@@ -98,9 +97,13 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
         super.onSpellTick(context);
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        EffectData effect = this.getImbuementEffect(context);
-        if (!level.isClientSide && effect != null) {
-            this.displayImbuementEffect(caster, effect);
+        if (!level.isClientSide) {
+            EffectData effect = this.getImbuementEffect(context);
+            if (effect != null)
+                this.displayImbuementEffect(caster, effect);
+
+            if (this.imbuementDrained(context))
+                this.endSpell();
         }
     }
 
@@ -150,7 +153,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
-        return new Imbuement(this.spellType(), -1, this.location());
+        return Imbuement.create(this.spellType(), -1, this.location());
     }
 
     protected ItemStack getImbuementStack(LivingEntity entity) {
@@ -170,6 +173,13 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
         return this.imbuement.equals(imbuement);
     }
 
+    protected boolean imbuementDrained(SpellContext context) {
+        LivingEntity caster = context.getCaster();
+        ItemStack stack = this.getImbuementStack(caster);
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        return imbuement == null || (this.requiresCharges && imbuement.charges() <= 0);
+    }
+
     protected EffectData getImbuementEffect(SpellContext context) {
         return this.effect.apply(context, this);
     }
@@ -184,6 +194,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
 
     public static class Builder<T extends ImbuementSpell> extends AnimatedSpell.Builder<T> {
         protected BiFunction<SpellContext, T, EffectData> effect = (context, spell) -> null;
+        protected boolean requiresCharges;
 
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
@@ -271,6 +282,11 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
 
         public Builder<T> negativeScaling() {
             this.negativeScaling = (context, spell) -> true;
+            return this;
+        }
+
+        public Builder<T> requiresCharges() {
+            this.requiresCharges = true;
             return this;
         }
 

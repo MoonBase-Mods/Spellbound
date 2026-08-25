@@ -37,6 +37,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -73,7 +74,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
     private Set<SpellType<?>> equippedSpellSet = new ObjectOpenHashSet<>();
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
-    private List<AbstractSpell> queuedSpells = new ArrayList<>();
+    private final List<AbstractSpell> queuedSpells = new ArrayList<>();
     private boolean spellDirty;
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
@@ -180,10 +181,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
-
-        if (this.caster instanceof Player) {
-            log(this.isChargingOrChannelling());
-        }
     }
 
     public void onPlayerSpawn(Player player) {
@@ -358,25 +355,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void queueSpell(AbstractSpell spell) {
         this.queuedSpells.add(spell);
     }
-
-    /*private void activateQueuedSpells() {
-//        if (!this.isClientSide()) {
-            List<AbstractSpell> spellsToActivate = new ArrayList<>();
-            for (var it = queuedSpells.entrySet().iterator(); it.hasNext(); ) {
-                var entry = it.next();
-                int delayRemaining = entry.getValue() - 1;
-
-                if (delayRemaining <= 0) {
-                    spellsToActivate.add(entry.getKey());
-                    it.remove();
-                } else {
-                    entry.setValue(delayRemaining);
-                }
-            }
-
-            spellsToActivate.forEach(this::activateSpell);
-//        }
-    }*/
 
     /**
      * Clears all spells in the active spells map. This will not call {@link AbstractSpell#endSpell()}.

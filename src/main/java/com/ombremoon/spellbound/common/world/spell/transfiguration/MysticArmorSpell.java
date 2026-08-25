@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Unit;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -133,13 +134,14 @@ public class MysticArmorSpell extends AnimatedSpell {
                 SpellEventListener.Events.POST_DAMAGE,
                 POST_DAMAGE,
                 post -> {
-                    Entity entity = post.getSource().getEntity();
+                    DamageSource source = post.getSource();
+                    Entity entity = source.getEntity();
                     if (entity instanceof LivingEntity living) {
                         if (context.hasSkill(SBSkills.EQUILIBRIUM))
-                            hurt(living, post.getSource(), caster.getMaxHealth() * 0.1F);
+                            hurt(living, source, caster.getMaxHealth() * 0.1F);
 
-                        if (context.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(post.getSource()))
-                            hurt(living, post.getSource(), post.getNewDamage() * 0.3F);
+                        if (context.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(source))
+                            hurt(living, source, post.getNewDamage() * 0.3F);
                     }
                 });
         if (context.hasSkill(SBSkills.ARCANE_VENGEANCE)) {

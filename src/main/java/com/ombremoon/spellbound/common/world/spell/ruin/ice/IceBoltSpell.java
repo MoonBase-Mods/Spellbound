@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -122,6 +124,11 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                             iceBolt.setPierceLevel((byte) 2);
                     });
                 }
+
+                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 1.5, 1.5)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
             }
         }
     }
@@ -129,6 +136,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
+        LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide) {
             if (this.isChoice(SBSkills.GLACIAL_VOLLEY) && this.tickCount % 5 == 1) {
@@ -136,6 +144,12 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
                         iceBolt.setPierceLevel((byte) 2);
                 });
+
+                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 1.5, 1.5)
+                        .setAllowMulti(true)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
             } else if (this.isChoice(SBSkills.HAIL_STRIKE) && this.tickCount % 5 == 0) {
                 Vec3 pos = this.getHailPos().add(RandomUtil.randomValueBetween(0, 2), 5, RandomUtil.randomValueBetween(0, 2));
                 this.shootProjectile(context, SBEntities.ICE_BOLT.get(), pos, 90, 0, 1.25F, 1.0F, iceBolt -> {

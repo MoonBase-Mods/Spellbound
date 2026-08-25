@@ -17,6 +17,7 @@ import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -42,6 +43,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -437,10 +439,24 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingAttack(AttackEntityEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide)
+            return;
 
         Player player = event.getEntity();
         player.setData(SBData.ATTACK_START, player.level().getGameTime());
+
+        ItemStack stack = player.getMainHandItem();
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        if (imbuement != null) {
+            int charges = imbuement.charges();
+            if (charges > 0) {
+                imbuement = imbuement.setCharges(charges - 1);
+                stack.set(SBData.IMBUEMENT, imbuement);
+            } else if (charges == 0) {
+                stack.remove(SBData.IMBUEMENT);
+            }
+        }
+
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(player, event));
     }
 
@@ -569,16 +585,17 @@ public class NeoForgeEvents {
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.getListener().fireEvent(SpellEventListener.Events.PRE_DAMAGE, new DamageEvent.Pre(livingEntity, event));
 
-        if (event.getSource().is(SBDamageTypes.RUIN_FIRE))
+        DamageSource source = event.getSource();
+        if (source instanceof SpellDamageSource spellSource) {
+            spellSource.modifyDamage(event);
+        }
+
+        if (source.is(SBDamageTypes.RUIN_FIRE))
             livingEntity.igniteForSeconds(3.0F);
 
         if (livingEntity.hasEffect(SBEffects.SLEEP))
             livingEntity.removeEffect(SBEffects.SLEEP);
 
-        if (livingEntity.hasEffect(SBEffects.PERMAFROST))
-            event.setNewDamage(event.getOriginalDamage() * 1.15F);
-
-        DamageSource source = event.getSource();
         Entity entity = source.getEntity();
         RitualSavedData rituals = RitualSavedData.get(serverLevel);
         EffectManager effects = SpellUtil.getSpellEffects(livingEntity);

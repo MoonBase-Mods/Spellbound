@@ -21,7 +21,7 @@ public abstract class SlotMixin {
     private void disableImbuementPickup(Player player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getItem();
         Imbuement imbuement = stack.get(SBData.IMBUEMENT);
-        if (imbuement != null) {
+        if (imbuement != null && imbuement.spellType().isPresent()) {
             cir.setReturnValue(false);
         }
     }
