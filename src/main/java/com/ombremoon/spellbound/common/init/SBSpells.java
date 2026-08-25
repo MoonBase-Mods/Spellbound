@@ -93,7 +93,7 @@ public class SBSpells {
                     SBSkills.MASONRY_WARD, SBSkills.BOULDERBACK, SBSkills.INFUSED_STONE));
     public static final Supplier<SpellType<CreateObjectSpell>> CREATE_OBJECT = registerSpell("create_object", trasnfigurationBuilder(SpellMastery.NOVICE, CreateObjectSpell::new)
             .skills(SBSkills.CREATE_OBJECT, SBSkills.LUMBERJACK, SBSkills.EXCAVATOR, SBSkills.HARVESTER,
-                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.EMERGENCY_RATIONS, SBSkills.LASTING_PROVISIONS,
+                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.KNIGHT, SBSkills.LASTING_PROVISIONS,
                     SBSkills.ARTISANS_TOUCH, SBSkills.MASTERWORK_GEAR, SBSkills.MYSTIC_TOOLSMITH));
     public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder(SpellMastery.ADEPT, ShadowGateSpell::new)
             .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,

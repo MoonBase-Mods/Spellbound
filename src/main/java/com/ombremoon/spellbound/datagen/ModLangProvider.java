@@ -858,7 +858,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
         addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
         addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
-        addSkillTooltip(SBSkills.EMERGENCY_RATIONS, "Spell now summons a stack of 4 Cooked Steak.");
+        addSkillTooltip(SBSkills.KNIGHT, "Spell now summons a stack of 4 Cooked Steak.");
         addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
         addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
         addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");

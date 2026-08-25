@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
-import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
@@ -8,8 +7,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.DealtDamageEvent;
-import com.ombremoon.spellbound.common.magic.api.events.PlayerAttackEvent;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
@@ -37,9 +34,9 @@ import java.util.Map;
 
 public class ShadowVeilSpell extends AnimatedSpell {
     private static final ResourceLocation INVISIBILITY_EFFECT = CommonClass.customLocation("shadow_veil_invisibility");
-    private static final ResourceLocation BLINDNESS_EFFECT = CommonClass.customLocation("shadow_veil_blindness");
-    private static final ResourceLocation DAMAGE_EVENT = CommonClass.customLocation("shadow_veil_attack_miss");
-    private static final ResourceLocation HIDDEN_WOUNDS_EFFECT = CommonClass.customLocation("shadow_veil_obfuscated");
+    private static final ResourceLocation SHADOW_VEIL = CommonClass.customLocation("shadow_veil");
+    private static final ResourceLocation CLOUDED_SENSES = CommonClass.customLocation("clouded_senses");
+    private static final ResourceLocation HIDDEN_WOUNDS = CommonClass.customLocation("hidden_wounds");
     private static final List<SoundEvent> MOB_SOUNDS = List.of(
             SoundEvents.CREEPER_PRIMED,
             SoundEvents.SKELETON_AMBIENT,
@@ -70,6 +67,12 @@ public class ShadowVeilSpell extends AnimatedSpell {
     }
 
     @Override
+    protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
+        builder.define(VEIL_ID, 0);
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
@@ -80,119 +83,108 @@ public class ShadowVeilSpell extends AnimatedSpell {
                     this.mistPos = caster.position().relative(Direction.DOWN, 0.5);
             }
 
-            ShadowVeil veil = this.summonEntity(context, SBEntities.SHADOW_VEIL.get(), this.mistPos, shadowVeil -> {
-                shadowVeil.setCaster(caster);
-            });
-
-            setVeil(veil);
+            this.summonEntity(context, SBEntities.SHADOW_VEIL.get(), this.mistPos, this::setVeil);
         } else {
             this.soundRate = level.getRandom().nextInt(1, 4) * 20;
         }
     }
 
     @Override
-    protected void onSpellTick(SpellContext context) {
-        LivingEntity caster = context.getCaster();
-        Level level = context.getLevel();
-        ShadowVeil veil = getVeil(level);
-        if (veil == null) return;
+    protected void onSpellStop(SpellContext context) {
+        ShadowVeil veil = getVeil(context.getLevel());
+        if (veil == null)
+            return;
 
-        List<Entity> list = level.getEntitiesOfClass(Entity.class, veil.getBoundingBox());
-        for (Entity entity : list) {
-            if (entity instanceof LivingEntity livingEntity
-                    && entity.isAlive()
-                    && !entity.isSpectator()) {
-                livingEntityInVeil(context.getSkills(), caster, level, livingEntity, veil);
-            }
-            if (entity instanceof Projectile projectile) {
-                projectile.setDeltaMovement(projectile.getDeltaMovement().scale(0.25D));
+        for (LivingEntity entity : VEIL_ATTENDEES.keySet()) {
+            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
+            if (veil.getId() == veilId) {
+                entity.setData(SBData.SHADOW_DOMAIN_VEIL, 0);
             }
         }
+
+        veil.discard();
     }
 
-    @Override
-    protected boolean shouldTickSpellEffect(SpellContext context) {
-        return tickCount % 20 == 0;
-    }
-
-    private void livingEntityInVeil(SkillHolder skills, LivingEntity caster, Level level, LivingEntity entity, ShadowVeil veil) {
+    public void addVeilEffects(SpellContext context, LivingEntity entity, ShadowVeil veil) {
+        LivingEntity caster = context.getCaster();
+        Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         if (SpellUtil.CAN_ATTACK_ENTITY.test(caster, entity)) {
-            addSkillBuff(
+            this.addSkillBuff(
                     entity,
                     SBSkills.SHADOW_VEIL,
-                    BLINDNESS_EFFECT,
+                    SHADOW_VEIL,
                     BuffCategory.HARMFUL,
                     SkillBuff.MOB_EFFECT,
-                    new MobEffectInstance(MobEffects.BLINDNESS, 40)
+                    new MobEffectInstance(MobEffects.BLINDNESS, -1)
             );
 
-            if (skills.hasSkill(SBSkills.CLOUDED_SENSES)) {
-                addEventBuff(
+            if (context.hasSkill(SBSkills.CLOUDED_SENSES)) {
+                this.addEventBuff(
                         entity,
                         SBSkills.CLOUDED_SENSES,
                         BuffCategory.HARMFUL,
                         SpellEventListener.Events.DEALT_DAMAGE_PRE,
-                        DAMAGE_EVENT,
-                        this::onEntityAttack
+                        CLOUDED_SENSES,
+                        pre -> {
+                            LivingEntity attacker = pre.getAttacker();
+                            if (attacker.level().getRandom().nextInt(4) == 0) {
+                                pre.setNewDamage(0);
+                            }
+                        }
                 );
             }
 
-            if (skills.hasSkill(SBSkills.SHADOW_DOMAIN)) {
+            if (context.hasSkill(SBSkills.SHADOW_DOMAIN)) {
                 entity.setData(SBData.SHADOW_DOMAIN_VEIL, veil.getId());
             }
-            if (skills.hasSkill(SBSkills.HIDDEN_WOUNDS)) {
-                addSkillBuff(
+
+            if (context.hasSkill(SBSkills.HIDDEN_WOUNDS)) {
+                this.addSkillBuff(
                         entity,
                         SBSkills.HIDDEN_WOUNDS,
-                        HIDDEN_WOUNDS_EFFECT,
+                        HIDDEN_WOUNDS,
                         BuffCategory.HARMFUL,
                         SkillBuff.MOB_EFFECT,
-                        new MobEffectInstance(SBEffects.OBFUSCATED, 40)
+                        new MobEffectInstance(SBEffects.OBFUSCATED, -1)
                 );
             }
-            if (level.isClientSide() && skills.hasSkill(SBSkills.DECEPTIVE_ECHOES) && this.tickCount % this.soundRate == 0) {
-                playRandomMobSound(level, entity);
-            }
-
-            int timeInVeil = VEIL_ATTENDEES.getOrDefault(entity, 0);
-            timeInVeil++;
-            if (timeInVeil >= 5 && !BEEN_FEARED.contains(entity) && skills.hasSkill(SBSkills.SAPPING_FEAR)) {
-                SpellUtil.getSpellHandler(caster).applyFearEffect(entity, veil.position(), 40);
-                BEEN_FEARED.add(entity);
-            }
-            VEIL_ATTENDEES.put(entity, timeInVeil);
-
         } else if (SpellUtil.IS_ALLIED.test(caster, entity)) {
-            if (skills.hasSkill(SBSkills.DEEP_NIGHT)) {
+            if (context.hasSkill(SBSkills.DEEP_NIGHT)) {
                 addSkillBuff(
                         entity,
                         SBSkills.DEEP_NIGHT,
                         INVISIBILITY_EFFECT,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.MOB_EFFECT,
-                        new MobEffectInstance(MobEffects.INVISIBILITY, 40)
+                        new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, -1)
                 );
-            } else if (skills.hasSkill(SBSkills.IN_THE_SHADOWS) && tickCount % 60 == 0) {
+            } else if (context.hasSkill(SBSkills.IN_THE_SHADOWS) && tickCount % 60 == 0) {
                 addSkillBuff(
                         entity,
                         SBSkills.IN_THE_SHADOWS,
                         INVISIBILITY_EFFECT,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.MOB_EFFECT,
-                        new MobEffectInstance(MobEffects.INVISIBILITY, 40)
+                        new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, 40)
                 );
             }
         }
     }
 
-    private void onEntityAttack(DealtDamageEvent.Pre pre) {
-        //Caster is the target of the skill in this instance (the one that has a chance to miss)
-        LivingEntity caster = pre.getCaster();
-        ShadowVeil veil = getVeil(caster.level());
-        if (veil.getBoundingBox().intersects(caster.getBoundingBox()) && SpellUtil.CAN_ATTACK_ENTITY.test(caster, pre.getTarget())) {
-            if (caster.level().getRandom().nextInt(4) == 0) {
-                pre.setNewDamage(0);
-            }
+    public void tickVeilEffects(SpellContext context, LivingEntity entity, ShadowVeil veil) {
+
+    }
+
+    public void removeVeilEffects(SpellContext context, LivingEntity entity) {
+        LivingEntity caster = context.getCaster();
+        if (SpellUtil.CAN_ATTACK_ENTITY.test(caster, entity)) {
+            this.removeSkillBuff(entity, SBSkills.SHADOW_VEIL);
+            this.removeSkillBuff(entity, SBSkills.CLOUDED_SENSES);
+            this.removeSkillBuff(entity, SBSkills.HIDDEN_WOUNDS);
+        } else if (SpellUtil.IS_ALLIED.test(caster, entity)) {
+            this.removeSkillBuff(entity, SBSkills.IN_THE_SHADOWS);
+            this.removeSkillBuff(entity, SBSkills.DEEP_NIGHT);
         }
     }
 
@@ -200,20 +192,6 @@ public class ShadowVeilSpell extends AnimatedSpell {
         if (!(target instanceof Player player)) return;
         BlockPos pos = target.getOnPos().relative(target.getDirection().getOpposite());
         level.playSound(player, pos, MOB_SOUNDS.get(level.getRandom().nextInt(MOB_SOUNDS.size())), SoundSource.HOSTILE);
-    }
-
-    @Override
-    protected void onSpellStop(SpellContext context) {
-        ShadowVeil veil = getVeil(context.getLevel());
-        if (veil == null) return;
-        for (LivingEntity entity : VEIL_ATTENDEES.keySet()) {
-            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
-            if (veil.getId() == veilId) {
-                entity.setData(SBData.SHADOW_DOMAIN_VEIL, 0);
-            }
-            removeSkillBuff(entity, SBSkills.CLOUDED_SENSES);
-        }
-        veil.discard();
     }
 
     public void setVeil(ShadowVeil veil) {
@@ -227,12 +205,6 @@ public class ShadowVeilSpell extends AnimatedSpell {
 
     public void setMistPos(Vec3 pos) {
         this.mistPos = pos;
-    }
-
-    @Override
-    protected void defineSpellData(SyncedSpellData.Builder builder) {
-        super.defineSpellData(builder);
-        builder.define(VEIL_ID, 0);
     }
 
     @Override

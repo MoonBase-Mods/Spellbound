@@ -59,6 +59,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -272,7 +273,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public int getCastTime() {
-        return this.getCastTime(this.castContext);
+        return (int) (this.getCastTime(this.castContext) * (1 / SpellUtil.getCastSpeed(this.caster)));
     }
 
     public boolean isCasting() {
@@ -451,6 +452,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public int level() {
         return this.context.getSkills().getSpellLevel(this.spellType);
+    }
+
+    public int getSpellNumberCap(SpellContext context) {
+        return context.getSpellLevel() + 1;
     }
 
     /**
@@ -641,6 +646,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return Whether the skill is the spells choice or not
      */
     public boolean isChoice(Skill skill) {
+        return skill.equals(this.choice);
+    }
+    public boolean isChoice(SkillProvider skill) {
         return skill.equals(this.choice);
     }
 
@@ -948,6 +956,19 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     protected boolean giveSpellItem(ItemStack stack) {
         return this.giveSpellItem(stack, null);
+    }
+
+    protected void removeSpellItem(LivingEntity caster, int index) {
+        if (caster instanceof Player player) {
+            Inventory inventory = player.getInventory();
+            inventory.removeItem(index, 1);
+        } else {
+            this.removeSpellItem(caster, EquipmentSlot.MAINHAND);
+        }
+    }
+
+    protected void removeSpellItem(LivingEntity caster, EquipmentSlot slot) {
+        caster.setItemSlot(slot, ItemStack.EMPTY);
     }
 
     protected boolean isBuffable(SpellContext context) {
@@ -1667,7 +1688,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 return;
             }
 
-            int spellCap = this.context.getSpellLevel() + 1;
+            int spellCap = this.getSpellNumberCap(this.context);
             if (!this.fullRecast && this.hasSummonStaffBuff(this.context))
                 spellCap++;
 

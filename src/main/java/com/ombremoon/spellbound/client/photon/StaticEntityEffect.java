@@ -28,8 +28,7 @@ public class StaticEntityEffect extends EntityEffectExecutor {
     @Override
     public void updateFXObjectFrame(IFXObject fxObject, float partialTicks) {
         if (this.runtime != null && fxObject == this.runtime.root && autoRotate == AutoRotate.LOOK) {
-            double yaw = Math.toRadians(entity.getYRot());
-            Vec3 lookAngle = new Vec3(-Math.sin(yaw), 0, Math.cos(yaw));
+            /*Vec3 lookAngle = entity.getLookAngle();
             Vec3 rightVector = lookAngle.cross(new Vec3(0, 1, 0)).normalize();
             Vec3 upVector = rightVector.cross(lookAngle).normalize();
             Vec3 transformedOffset = rightVector.scale(offset.x)
@@ -39,42 +38,41 @@ public class StaticEntityEffect extends EntityEffectExecutor {
             Vector3f pos = this.effectPos != null && !this.effectPos.equals(Vec3.ZERO)
                     ? this.effectPos.add(transformedOffset).toVector3f()
                     : entity.position().add(transformedOffset).toVector3f();
-            runtime.root.updatePos(pos);
+            runtime.root.updatePos(pos);*/
         }
     }
 
     private void applyRotation(Entity entity, AutoRotate autoRotate, IFXObject fxObject) {
         if (this.runtime != null && fxObject == this.runtime.root) {
+            Quaternionf newRotation = rotation;
             if (autoRotate != AutoRotate.NONE) {
                 switch (autoRotate) {
                     case FORWARD -> {
                         var forward = entity.getForward();
-                        var newRotation = new Quaternionf(rotation).rotateXYZ(
+                        newRotation = new Quaternionf(rotation).rotateXYZ(
                                 0,
                                 (float) org.joml.Math.atan2(-forward.z, forward.x),
                                 0
                         );
-                        runtime.root.updateRotation(newRotation);
                     }
                     case LOOK -> {
-                        var lookAngles = entity.getLookAngle();
-                        var newRotation = new Quaternionf(rotation).rotateXYZ(
-                                0,
-                                (float) org.joml.Math.atan2(-lookAngles.z, lookAngles.x),
-                                (float) lookAngles.y
+                        newRotation = new Quaternionf(rotation).rotateXYZ(
+                                Math.toRadians(-90),
+                                Math.toRadians(-entity.getYRot()),
+                                Math.toRadians(0)
                         );
-                        runtime.root.updateRotation(newRotation);
                     }
                     case XROT -> {
-                        var newRotation = new Quaternionf(rotation).rotateXYZ(
+                        newRotation = new Quaternionf(rotation).rotateXYZ(
                                 0,
                                 Math.toRadians(-90 - entity.getVisualRotationYInDegrees()),
                                 0
                         );
-                        runtime.root.updateRotation(newRotation);
                     }
                 }
             }
+
+            runtime.root.updateRotation(newRotation);
         }
     }
 

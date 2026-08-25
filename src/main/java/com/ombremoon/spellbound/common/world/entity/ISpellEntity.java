@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.entity;
 
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +30,7 @@ public interface ISpellEntity<T extends AbstractSpell> extends IVFXEntity {
         return true;
     }
 
-    default DamageSource spellDamageSource(Level level) {
+    default SpellDamageSource spellDamageSource(Level level) {
         return SpellUtil.damageSource(level, SBDamageTypes.SB_GENERIC, this.getSummoner(), this.getEntity());
     }
 }

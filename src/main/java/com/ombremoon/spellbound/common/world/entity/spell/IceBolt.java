@@ -25,6 +25,11 @@ public class IceBolt extends SpellProjectile<IceBoltSpell> {
         builder.define(SIZE, 1);
     }
 
+    @Override
+    protected double getDefaultGravity() {
+        return 0.02;
+    }
+
     public int getSize() {
         return this.entityData.get(SIZE);
     }

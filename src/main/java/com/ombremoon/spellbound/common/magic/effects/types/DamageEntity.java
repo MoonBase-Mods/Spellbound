@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBMagicEffects;
 import com.ombremoon.spellbound.common.magic.effects.EffectContextParamSets;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
+import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,7 @@ public record DamageEntity(ResourceKey<DamageType> damageType, float damage) imp
 
     @Override
     public void onActivated(ServerLevel level, int tier, @Nullable Entity source, LivingEntity caster, BlockPos centerPos, Multiblock.MultiblockPattern pattern) {
-        DamageSource damageSource = SpellUtil.damageSource(level, this.damageType, source, source);
+        SpellDamageSource damageSource = SpellUtil.damageSource(level, this.damageType, source, source);
         caster.hurt(damageSource, this.damage);
     }
 

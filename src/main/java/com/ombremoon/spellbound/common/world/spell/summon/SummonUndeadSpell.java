@@ -290,7 +290,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     @Override
     public void onClientCastTick(SpellContext context) {
         super.onClientCastTick(context);
-        log(this.getCharges());
     }
 
     @Override

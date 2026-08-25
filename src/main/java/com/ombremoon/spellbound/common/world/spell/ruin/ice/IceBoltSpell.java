@@ -1,50 +1,76 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
-import com.ombremoon.spellbound.common.init.SBEntities;
-import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.init.SBTags;
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
+import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.util.RandomUtil;
+import org.joml.Vector3f;
 
 import java.util.Collection;
 import java.util.List;
 
 public class IceBoltSpell extends AnimatedSpell implements RadialSpell, ChargeableSpell {
+    private static final SpellDataKey<Vector3f> HAIL_POS = SyncedSpellData.registerDataKey(IceBoltSpell.class, SBDataTypes.VECTOR3.get());
+    private static final ResourceLocation CHILLING_AFTERMATH = CommonClass.customLocation("chilling_aftermath");
     public static Builder<IceBoltSpell> createIceBoltBuilder() {
         return createSimpleSpellBuilder(IceBoltSpell.class)
+                .baseDamage(3.0F)
                 .castCondition((context, iceBoltSpell) -> {
-                    var handler = context.getSpellHandler();
-                    List<IceBoltSpell> spells = handler.getActiveSpellsFromType(SBSpells.ICE_BOLT.get());
-                    for (IceBoltSpell spell : spells) {
-                        if (spell.isChoice(SBSkills.ICY_JAVELIN)) {
-                            if (context.isChoice(SBSkills.ICY_JAVELIN)) {
-                                spell.endSpell();
-                            }
-
-                            return false;
+                    if (iceBoltSpell.isChoice(SBSkills.HAIL_STRIKE)) {
+                        double range = iceBoltSpell.getCastRange();
+                        Entity target = iceBoltSpell.getTargetEntity(context.getCaster(), range);
+                        if (target instanceof LivingEntity livingTarget && SpellUtil.CAN_ATTACK_ENTITY.test(context.getCaster(), livingTarget)) {
+                            iceBoltSpell.setHailPos(target.position());
+                            return true;
                         }
-                    }
 
-                    return true;
+                        Vec3 spawnPos = iceBoltSpell.getSpawnVec(range);
+                        if (spawnPos != null) {
+                            iceBoltSpell.setHailPos(spawnPos);
+                            return true;
+                        }
+
+                        return false;
+                    } else {
+                        var handler = context.getSpellHandler();
+                        List<IceBoltSpell> spells = handler.getActiveSpellsFromType(SBSpells.ICE_BOLT.get());
+                        for (IceBoltSpell spell : spells) {
+                            if (spell.isChoice(SBSkills.ICY_JAVELIN)) {
+                                if (context.isChoice(SBSkills.ICY_JAVELIN)) {
+                                    spell.endSpell();
+                                }
+
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
                 });
     }
 
@@ -58,13 +84,29 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     }
 
     @Override
+    protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
+        builder.define(HAIL_POS, new Vector3f());
+    }
+
+    public void setHailPos(Vec3 pos) {
+        this.spellData.set(HAIL_POS, new Vector3f((float)pos.x(), (float)pos.y(), (float)pos.z()));
+    }
+
+    public Vec3 getHailPos() {
+        Vector3f pos = this.spellData.get(HAIL_POS);
+        return new Vec3(pos.x(), pos.y(), pos.z());
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
-            if (this.isChoice(SBSkills.HAIL_STRIKE)) {
+            if (this.isChoice(SBSkills.HAIL_STRIKE))
+                return;
 
-            } else if (this.isChoice(SBSkills.ICY_JAVELIN)) {
+            if (this.isChoice(SBSkills.ICY_JAVELIN)) {
 
             } else {
                 if (context.isChoice(SBSkills.GLACIAL_VOLLEY)) {
@@ -82,6 +124,11 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                             iceBolt.setPierceLevel((byte) 2);
                     });
                 }
+
+                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 1.5, 1.5)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
             }
         }
     }
@@ -89,12 +136,28 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
+        LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        if (!level.isClientSide && this.isChoice(SBSkills.GLACIAL_VOLLEY) && this.tickCount % 5 == 1) {
-            this.shootProjectile(context, SBEntities.ICE_BOLT.get(), 1.5F, 1.0F, iceBolt -> {
-                if (context.hasSkill(SBSkills.FROST_PIERCER))
-                    iceBolt.setPierceLevel((byte) 2);
-            });
+        if (!level.isClientSide) {
+            if (this.isChoice(SBSkills.GLACIAL_VOLLEY) && this.tickCount % 5 == 1) {
+                this.shootProjectile(context, SBEntities.ICE_BOLT.get(), 1.5F, 1.0F, iceBolt -> {
+                    if (context.hasSkill(SBSkills.FROST_PIERCER))
+                        iceBolt.setPierceLevel((byte) 2);
+                });
+
+                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 1.5, 1.5)
+                        .setAllowMulti(true)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
+            } else if (this.isChoice(SBSkills.HAIL_STRIKE) && this.tickCount % 5 == 0) {
+                Vec3 pos = this.getHailPos().add(RandomUtil.randomValueBetween(0, 2), 5, RandomUtil.randomValueBetween(0, 2));
+                this.shootProjectile(context, SBEntities.ICE_BOLT.get(), pos, 90, 0, 1.25F, 1.0F, iceBolt -> {
+                    if (context.hasSkill(SBSkills.FROST_PIERCER))
+                        iceBolt.setPierceLevel((byte) 2);
+                });
+
+            }
         }
     }
 
@@ -105,17 +168,17 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
     @Override
     public void onProjectileHitEntity(ISpellEntity<?> spellEntity, SpellContext context, EntityHitResult result) {
-        if (spellEntity instanceof IceBolt shrapnel) {
+        if (spellEntity instanceof IceBolt bolt) {
             Level level = context.getLevel();
             if (!level.isClientSide) {
                 Entity entity = result.getEntity();
                 if (entity instanceof LivingEntity livingEntity) {
-                    float damage = this.getBaseDamage() * (1.0F + (shrapnel.getSize() - 1) * 0.75F);
-                    if (livingEntity.getAttributeValue(Attributes.MOVEMENT_SPEED) < 0.1 || this.hasFrostEffect(livingEntity)) {
+                    float damage = this.getBaseDamage() * (1.0F + (bolt.getSize() - 1) * 0.75F);
+                    if (context.hasSkill(SBSkills.FROSTBITE_SYNERGY) && (livingEntity.getAttributeValue(Attributes.MOVEMENT_SPEED) < livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) || this.hasFrostEffect(livingEntity))) {
                         damage *= 1.25F;
                     }
 
-                    if (this.hurt(shrapnel, livingEntity, damage)) {
+                    if (this.hurt(bolt, livingEntity, damage)) {
                         var handler = SpellUtil.getSpellHandler(livingEntity);
                         double slowDebuff = -0.05;
                         var optional = handler.getSkillBuff(SBSkills.ICE_BOLT.value());
@@ -133,13 +196,25 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                                 100
                         );
 
+                        if (context.hasSkill(SBSkills.CHILLING_AFTERMATH) && livingEntity instanceof Player) {
+                            this.addSkillBuff(
+                                    livingEntity,
+                                    SBSkills.CHILLING_AFTERMATH,
+                                    CHILLING_AFTERMATH,
+                                    BuffCategory.HARMFUL,
+                                    SkillBuff.ATTRIBUTE_MODIFIER,
+                                    new ModifierData(SBAttributes.CAST_SPEED, new AttributeModifier(CHILLING_AFTERMATH, -0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                    100
+                            );
+                        }
+
                         if (context.hasSkill(SBSkills.SHATTERING_IMPACT)) {
                             var effects = SpellUtil.getSpellEffects(livingEntity);
                             effects.incrementBuildEffects(EffectManager.Effect.FROST, 10);
                         }
 
-                        if (shrapnel.getPierceLevel() <= 0) {
-                            shrapnel.discard();
+                        if (bolt.getPierceLevel() <= 0) {
+                            bolt.discard();
                         }
                     }
                 }
@@ -176,8 +251,11 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
     @Override
     protected int getDuration(SpellContext context) {
-        if (this.isChoice(SBSkills.GLACIAL_VOLLEY))
+        if (this.isChoice(SBSkills.GLACIAL_VOLLEY)) {
             return -1;
+        } else if (this.isChoice(SBSkills.HAIL_STRIKE)) {
+            return 100;
+        }
 
         return this.isChoice(SBSkills.ICY_JAVELIN) ? 1200 : super.getDuration(context);
     }
@@ -198,7 +276,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
     @Override
     protected boolean shouldRender(SpellContext context) {
-        return this.isChoice(SBSkills.GLACIAL_VOLLEY) || this.isChoice(SBSkills.ICY_JAVELIN);
+        return this.isChoice(SBSkills.GLACIAL_VOLLEY) || this.isChoice(SBSkills.ICY_JAVELIN) || this.isChoice(SBSkills.HAIL_STRIKE);
     }
 
     @Override

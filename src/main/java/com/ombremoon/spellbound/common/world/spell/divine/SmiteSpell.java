@@ -20,6 +20,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
+import java.util.Optional;
+
 public class SmiteSpell extends ImbuementSpell {
     private static final ResourceLocation GOLDEN_PARRY = CommonClass.customLocation("golden_parry");
     private long parryTick;
@@ -123,7 +125,7 @@ public class SmiteSpell extends ImbuementSpell {
 
     @Override
     protected Imbuement createImbuement(SpellContext context) {
-        return context.isChoice(SBSkills.BLACK_BLADE) ? new Imbuement(this.spellType(), -1, CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
+        return context.isChoice(SBSkills.BLACK_BLADE) ? Imbuement.create(this.spellType(), -1, CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
     }
 
     @Override
