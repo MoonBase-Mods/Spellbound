@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.function.BiPredicate;
 
 public class SpellUtil {
-    public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
+    public static final BiPredicate<Entity, Entity> IS_ALLIED = (target, attacker) -> target != null
             && (attacker.is(target)
             || attacker.isAlliedTo(target)
             || target instanceof OwnableEntity ownableTarget && ownableTarget.getOwner() == attacker
@@ -158,7 +158,7 @@ public class SpellUtil {
     @Nullable
     public static AbstractSpell getSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
-            return spellEntity.getSpell();
+            return spellEntity.getOrCreateSpell();
         } else {
             return entity.getData(SBData.SPELL);
         }
@@ -166,7 +166,7 @@ public class SpellUtil {
 
     public static AbstractSpell getActiveSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
-            return spellEntity.getSpell();
+            return spellEntity.getOrCreateSpell();
         } else {
             Entity owner = getOwner(entity);
             if (!(owner instanceof LivingEntity livingEntity))

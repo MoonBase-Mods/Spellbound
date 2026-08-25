@@ -108,7 +108,7 @@ public class MiniMushroom extends LivingMushroom {
                     BlockPos blockPos = this.blockPosition();
                     if (!this.level().isClientSide) {
                         if (RandomUtil.percentChance(0.15F)) {
-                            WildMushroomSpell spell = this.getSpell();
+                            WildMushroomSpell spell = this.getOrCreateSpell();
                             GiantMushroom giantMushroom = spell.summonEntity(spell.getContext(), SBEntities.GIANT_MUSHROOM.get(), this.position());
                             spell.setGiantMushroom(giantMushroom.getId());
                             this.discard();

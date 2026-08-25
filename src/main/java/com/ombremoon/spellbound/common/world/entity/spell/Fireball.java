@@ -1,8 +1,5 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
@@ -48,7 +45,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     public void tick() {
         if (this.isSticky()) {
             Entity target = this.level().getEntity(this.entityData.get(STICK_TARGET));
-            FireballSpell spell = this.getSpell();
+            FireballSpell spell = this.getOrCreateSpell();
             if (target instanceof LivingEntity) {
                 this.setPos(target.getX(), target.getY(), target.getZ());
                 this.setDeltaMovement(target.getDeltaMovement());

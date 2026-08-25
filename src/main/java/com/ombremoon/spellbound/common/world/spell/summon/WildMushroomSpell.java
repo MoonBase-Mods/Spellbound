@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -52,7 +51,7 @@ public class WildMushroomSpell extends SummonSpell {
                 .baseDamage(4.0F)
                 .castCondition((context, spell) -> {
                     if (context.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getSummoner()) {
-                        WildMushroomSpell mushroomSpell = mushroom.getSpell();
+                        WildMushroomSpell mushroomSpell = mushroom.getOrCreateSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());
                         mushroomSpell.setRemainingTicks(2400);

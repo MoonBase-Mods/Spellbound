@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -25,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -47,6 +49,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
+    private boolean clientInit;
     @Nullable
     private IntOpenHashSet piercingIgnoreEntityIds;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -90,7 +93,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
             }
         }
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        if (hitresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitresult))
+        if (hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult))
             this.hitTargetOrDeflectSelf(hitresult);
         double d0 = this.getX() + vec3.x;
         double d1 = this.getY() + vec3.y;
@@ -103,6 +106,10 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         this.setDeltaMovement(vec3.scale(f));
         this.applyGravity();
         this.setPos(d0, d1, d2);
+
+        if (this.level().isClientSide && !this.clientInit) {
+            this.initializeClientEntity();
+        }
     }
 
     @Override
@@ -171,7 +178,16 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         super.onAddedToLevel();
     }
 
-    public T getSpell() {
+    private void initializeClientEntity() {
+        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
+            this.handler = SpellUtil.getSpellHandler(player);
+            this.skills = SpellUtil.getSkills(player);
+            this.getOrCreateSpell();
+            this.clientInit = true;
+        }
+    }
+
+    public T getOrCreateSpell() {
         if (this.spell == null) {
             SpellType<T> spellType = this.getSpellType();
             if (this.handler != null && spellType != null) {
