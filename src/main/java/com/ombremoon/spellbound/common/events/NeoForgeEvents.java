@@ -214,14 +214,6 @@ public class NeoForgeEvents {
                     mob.setTarget(null);
                 }
             }
-
-            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
-            ShadowVeil veil = veilId == 0 ? null : (ShadowVeil) entity.level().getEntity(veilId);
-            if (veil != null && !entity.getBoundingBox().intersects(veil.getBoundingBox())) {
-                entity.knockback(0.5F, entity.getX() - veil.getX(), entity.getZ() - veil.getZ());
-                entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6, (double)1.0F, 0.6));
-                entity.hurtMarked = true;
-            }
         }
     }
 

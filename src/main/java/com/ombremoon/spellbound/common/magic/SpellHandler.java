@@ -561,7 +561,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.id().equals(skill)).findAny();
     }
 
-    public boolean hasSkillBuff(Skill skill) {
+    public boolean hasSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().anyMatch(skillBuff -> skillBuff.isSkill(skill));
     }
 

@@ -46,7 +46,8 @@ public class BoundBowItem extends ProjectileWeaponItem {
                 if (!((double) f < 0.1)) {
                     if (level instanceof ServerLevel serverlevel) {
                         int count = context.hasSkill(SBSkills.SPECTRAL_VOLLEY) ? 3 : 1;
-                        boolean isCrit = f == 1.0F || context.hasSkill(SBSkills.ARCHERY_PROWESS) && spell.getShotCount() % 3 == 0;
+                        int shotCount = spell.getShotCount();
+                        boolean isCrit = f == 1.0F || context.hasSkill(SBSkills.ARCHERY_PROWESS) && shotCount != 0 && shotCount % 3 == 0;
                         this.shoot(serverlevel, player, stack, spell, context, count, f * 3.0F, 1.0F, isCrit, null);
                         spell.incrementShotsFired();
                         spell.consumeMana(player, manaCost);

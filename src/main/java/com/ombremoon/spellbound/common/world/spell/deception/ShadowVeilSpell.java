@@ -34,9 +34,7 @@ import java.util.Map;
 
 public class ShadowVeilSpell extends AnimatedSpell {
     private static final ResourceLocation INVISIBILITY_EFFECT = CommonClass.customLocation("shadow_veil_invisibility");
-    private static final ResourceLocation SHADOW_VEIL = CommonClass.customLocation("shadow_veil");
     private static final ResourceLocation CLOUDED_SENSES = CommonClass.customLocation("clouded_senses");
-    private static final ResourceLocation HIDDEN_WOUNDS = CommonClass.customLocation("hidden_wounds");
     private static final SpellDataKey<Integer> VEIL_ID = SyncedSpellData.registerDataKey(ShadowVeilSpell.class, SBDataTypes.INT.get());
     private Vec3 mistPos = null;
     private int soundRate = 0;
@@ -110,7 +108,6 @@ public class ShadowVeilSpell extends AnimatedSpell {
             this.addSkillBuff(
                     entity,
                     SBSkills.SHADOW_VEIL,
-                    SHADOW_VEIL,
                     BuffCategory.HARMFUL,
                     SkillBuff.MOB_EFFECT,
                     new MobEffectInstance(MobEffects.BLINDNESS, -1)
@@ -132,15 +129,10 @@ public class ShadowVeilSpell extends AnimatedSpell {
                 );
             }
 
-            if (context.hasSkill(SBSkills.SHADOW_DOMAIN)) {
-                entity.setData(SBData.SHADOW_DOMAIN_VEIL, veil.getId());
-            }
-
             if (context.hasSkill(SBSkills.HIDDEN_WOUNDS)) {
                 this.addSkillBuff(
                         entity,
                         SBSkills.HIDDEN_WOUNDS,
-                        HIDDEN_WOUNDS,
                         BuffCategory.HARMFUL,
                         SkillBuff.MOB_EFFECT,
                         new MobEffectInstance(SBEffects.OBFUSCATED, -1)

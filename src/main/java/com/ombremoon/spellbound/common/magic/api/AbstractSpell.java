@@ -1049,6 +1049,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.addSkillBuff(livingEntity, skill, id, buffCategory, buffObject, skillObject, -1);
     }
 
+    public <T> void addSkillBuff(LivingEntity livingEntity, Holder<Skill> skill, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject, int duration) {
+        this.addSkillBuff(livingEntity, skill, skill.value().location(), buffCategory, buffObject, skillObject, duration);
+    }
+
+    public <T> void addSkillBuff(LivingEntity livingEntity, Holder<Skill> skill, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject) {
+        this.addSkillBuff(livingEntity, skill, buffCategory, buffObject, skillObject, -1);
+    }
+
 
     /**
      * Adds an {@link SkillBuff#EVENT Event Skill Buff} to a living entity for a specified amount of ticks.
