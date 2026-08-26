@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 public class SetSpellFunction extends LootItemConditionalFunction {
     public static final MapCodec<SetSpellFunction> CODEC = RecordCodecBuilder.mapCodec(
             instance -> commonFields(instance)
-                    .and(SBSpells.REGISTRY.byNameCodec().fieldOf("spellType").forGetter(function -> function.spellType)
+                    .and(SBSpells.REGISTRY.byNameCodec().fieldOf("spellInstance").forGetter(function -> function.spellType)
                     ).apply(instance, SetSpellFunction::new)
     );
     private final SpellType<?> spellType;

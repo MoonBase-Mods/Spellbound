@@ -125,7 +125,7 @@ public class SmiteSpell extends ImbuementSpell {
 
     @Override
     protected Imbuement createImbuement(SpellContext context) {
-        return context.isChoice(SBSkills.BLACK_BLADE) ? Imbuement.create(this.spellType(), -1, CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
+        return context.isChoice(SBSkills.BLACK_BLADE) ? Imbuement.create(this, -1, CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
     }
 
     @Override

@@ -56,14 +56,12 @@ public class SBData {
     public static final Supplier<AttachmentType<FamiliarHandler>> FAMILIAR_HANDLER = ATTACHMENT_TYPES.register(
             "familiar_handler", () -> AttachmentType.serializable(FamiliarHandler::new).copyOnDeath().build()
     );
+    public static final Supplier<AttachmentType<UpgradeTree>> UPGRADE_TREE = ATTACHMENT_TYPES.register(
+            "upgrade_tree", () -> AttachmentType.serializable(UpgradeTree::new).copyOnDeath().build());
 
     //Mana
     public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(
             "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).sync(ByteBufCodecs.DOUBLE).build());
-
-    //Upgrade Tree
-    public static final Supplier<AttachmentType<UpgradeTree>> UPGRADE_TREE = ATTACHMENT_TYPES.register(
-            "upgrade_tree", () -> AttachmentType.serializable(UpgradeTree::new).copyOnDeath().build());
 
     //Summons
     public static final Supplier<AttachmentType<Integer>> OWNER_ID = ATTACHMENT_TYPES.register(
@@ -94,6 +92,8 @@ public class SBData {
             "shadow_domain_veil", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Misc
+    public static final Supplier<AttachmentType<Imbuement>> ENTITY_IMBUEMENT = ATTACHMENT_TYPES.register(
+            "entity_imbuement", () -> AttachmentType.builder(Imbuement::empty).serialize(Imbuement.CODEC).build());
     public static final Supplier<AttachmentType<Integer>> RUNE_COLOR = ATTACHMENT_TYPES.register(
             "rune_color", () -> AttachmentType.builder(Color.WHITE::argbInt).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> INTERACT_HEAL_TARGET = ATTACHMENT_TYPES.register(

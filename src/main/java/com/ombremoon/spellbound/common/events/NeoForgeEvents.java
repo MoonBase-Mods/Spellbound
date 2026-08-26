@@ -29,6 +29,7 @@ import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;

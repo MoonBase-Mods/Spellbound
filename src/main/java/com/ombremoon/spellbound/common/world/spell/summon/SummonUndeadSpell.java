@@ -30,7 +30,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,9 +58,9 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         return createSummonBuilder(SummonUndeadSpell.class)
                 .manaCost(10)
                 .duration(2400)
-                .isSpecialChoice()
+                .isSummonChoice()
                 .additionalCondition((context, summonUndeadSpell) -> !summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
-                .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
+                .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSummonChoice(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast((context, summonSpell) -> {
                     LivingEntity caster = context.getCaster();
                     var handler = context.getSpellHandler();
@@ -155,7 +154,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public int getCastTime(SpellContext context) {
-        return shouldExplodeCorpse(context) || this.hasSpecialChoice(context) ? 1 : this.maxCharges(context) * 20;
+        return shouldExplodeCorpse(context) || this.hasSummonChoice(context) ? 1 : this.maxCharges(context) * 20;
     }
 
     @Override
@@ -301,7 +300,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return !this.hasSpecialChoice(context) && !shouldExplodeCorpse(context);
+        return !this.hasSummonChoice(context) && !shouldExplodeCorpse(context);
     }
 
     private void clientDiggingParticles(Level level, BlockPos pos) {

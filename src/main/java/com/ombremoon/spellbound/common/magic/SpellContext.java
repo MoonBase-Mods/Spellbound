@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.common.world.item.ShardSatchel;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -161,6 +162,10 @@ public class SpellContext {
 
     public boolean canCastWithLevel() {
         return this.getActiveSpells() <= this.getSpellLevel();
+    }
+
+    public boolean isChoice(ResourceLocation skill) {
+        return this.skillHolder.getChoice(this.spellType).location().equals(skill);
     }
 
     public boolean isChoice(Skill skill) {

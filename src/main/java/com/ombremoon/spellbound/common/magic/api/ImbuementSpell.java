@@ -153,7 +153,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
-        return Imbuement.create(this.spellType(), -1, this.location());
+        return Imbuement.create(this);
     }
 
     protected ItemStack getImbuementStack(LivingEntity entity) {

@@ -648,6 +648,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public boolean isChoice(Skill skill) {
         return skill.equals(this.choice);
     }
+
+    public boolean isChoice(ResourceLocation skill) {
+        return skill.equals(this.choice.location());
+    }
+
     public boolean isChoice(SkillProvider skill) {
         return skill.equals(this.choice);
     }
@@ -944,18 +949,22 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return SpellUtil.getSpellHandler(targetEntity).consumeMana(amount);
     }
 
-    protected boolean giveSpellItem(ItemStack stack, Imbuement imbuement) {
-        if (this.caster.getMainHandItem().isEmpty()) {
+    protected boolean giveSpellItem(ItemStack stack, EquipmentSlot slot, Imbuement imbuement) {
+        if (this.caster.getItemBySlot(slot).isEmpty()) {
             stack.set(SBData.IMBUEMENT, imbuement);
-            this.caster.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            this.caster.setItemSlot(slot, stack);
             return true;
         }
 
         return false;
     }
 
+    protected boolean giveSpellItem(ItemStack stack, Imbuement imbuement) {
+        return this.giveSpellItem(stack, EquipmentSlot.MAINHAND, imbuement);
+    }
+
     protected boolean giveSpellItem(ItemStack stack) {
-        return this.giveSpellItem(stack, null);
+        return this.giveSpellItem(stack, Imbuement.create(this));
     }
 
     protected void removeSpellItem(LivingEntity caster, int index) {
@@ -1115,6 +1124,18 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public float potency(float initialAmount) {
         return potency(null, initialAmount);
+    }
+
+    public float potencyWithLevel(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
+        return initialAmount * getModifier(ModifierType.POTENCY, livingEntity, target) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
+    }
+
+    public float potencyWithLevel(LivingEntity target, float initialAmount) {
+        return potencyWithLevel(this.caster, target, initialAmount);
+    }
+
+    public float potencyWithLevel(float initialAmount) {
+        return potencyWithLevel(null, initialAmount);
     }
 
     public float invertedPotency(LivingEntity livingEntity, LivingEntity target, float initialAmount) {

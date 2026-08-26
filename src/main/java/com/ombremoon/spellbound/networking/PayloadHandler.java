@@ -153,11 +153,11 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 
-    /*public static void clientCastSpell(LivingEntity entity, SpellType<?> spellType, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
+    /*public static void clientCastSpell(LivingEntity entity, SpellType<?> spellInstance, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientCastSpellPayload(entity.getId(), spellInstance, castId, initTag, spellData));
         } else {
-            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellInstance, castId, initTag, spellData));
         }
     }*/
 
