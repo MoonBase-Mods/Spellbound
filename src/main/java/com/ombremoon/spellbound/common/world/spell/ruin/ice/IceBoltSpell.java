@@ -111,6 +111,11 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
             if (this.isChoice(SBSkills.HAIL_STRIKE)){
                 level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_FALL,
                         SoundSource.PLAYERS,0.7F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
+                EffectData effectData = EffectData.Block.of(CommonClass.customLocation("hail_strike"), BlockPos.containing(this.getHailPos()))
+                        .setOffset(0, 0, 0)
+                        .setAllowMulti(true)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
                 return;
         }
             if (this.isChoice(SBSkills.ICY_JAVELIN)) {
@@ -170,11 +175,6 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
             } else if (this.isChoice(SBSkills.HAIL_STRIKE) && this.tickCount % 5 == 0) {
                 Vec3 pos = this.getHailPos().add(RandomUtil.randomValueBetween(0, 2), 5, RandomUtil.randomValueBetween(0, 2));
 
-                EffectData effectData = EffectData.Block.of(CommonClass.customLocation("hail_strike"), BlockPos.containing(this.getHailPos()))
-                        .setOffset(0, 0, 0)
-                        .setAllowMulti(true)
-                        .setRotation(0, -caster.getYRot(), 0);
-                this.triggerSpellFX(effectData);
 
                 this.shootProjectile(context, SBEntities.ICE_BOLT.get(), pos, 90, 0, 1.25F, 1.0F, iceBolt -> {
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
