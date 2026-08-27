@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -7,8 +9,11 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -119,6 +124,10 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
                     this.imbuedSlot = player.getInventory().selected;
                 }
             }
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("create_object"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.FIREWORK_ROCKET_BLAST,
+                    SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
         }
     }
 

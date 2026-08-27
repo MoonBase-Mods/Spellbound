@@ -17,7 +17,10 @@ import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -102,10 +105,14 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
-        if (!level.isClientSide) {
-            if (this.isChoice(SBSkills.HAIL_STRIKE))
-                return;
+        String vfx = "ice_bolt";
 
+        if (!level.isClientSide) {
+            if (this.isChoice(SBSkills.HAIL_STRIKE)){
+                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_FALL,
+                        SoundSource.PLAYERS,0.7F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
+                return;
+        }
             if (this.isChoice(SBSkills.ICY_JAVELIN)) {
 
             } else {
@@ -114,7 +121,12 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                     handler.setChargingOrChannelling(true);
                 }
 
-                int count = this.isChoice(SBSkills.ICE_RING) ? 8 : 1;
+                int count = 1;
+                if (this.isChoice(SBSkills.ICE_RING)) {
+                    count = 8;
+                    vfx= "ice_ring";
+            }
+
                 for (int i = 0; i < count; i++) {
                     float yRot = this.getBoltAngle(caster.getYRot(), i, count);
                     float xRot = context.isChoice(SBSkills.ICE_RING) ? 0 : caster.getXRot();
@@ -125,10 +137,12 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                     });
                 }
 
-                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation(vfx), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, 1.5, 1.5)
                         .setRotation(0, -caster.getYRot(), 0);
                 this.triggerSpellFX(effectData);
+                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_FALL,
+                        SoundSource.PLAYERS,0.7F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
             }
         }
     }
@@ -150,8 +164,18 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                         .setAllowMulti(true)
                         .setRotation(0, -caster.getYRot(), 0);
                 this.triggerSpellFX(effectData);
+                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_FALL,
+                        SoundSource.PLAYERS,0.3F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.3F);
+
             } else if (this.isChoice(SBSkills.HAIL_STRIKE) && this.tickCount % 5 == 0) {
                 Vec3 pos = this.getHailPos().add(RandomUtil.randomValueBetween(0, 2), 5, RandomUtil.randomValueBetween(0, 2));
+
+                EffectData effectData = EffectData.Block.of(CommonClass.customLocation("hail_strike"), BlockPos.containing(this.getHailPos()))
+                        .setOffset(0, 0, 0)
+                        .setAllowMulti(true)
+                        .setRotation(0, -caster.getYRot(), 0);
+                this.triggerSpellFX(effectData);
+
                 this.shootProjectile(context, SBEntities.ICE_BOLT.get(), pos, 90, 0, 1.25F, 1.0F, iceBolt -> {
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
                         iceBolt.setPierceLevel((byte) 2);
@@ -163,6 +187,8 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
     @Override
     protected void onSpellStop(SpellContext context) {
+        Level level = context.getLevel();
+        if (!level.isClientSide)  removeSpellFX(CommonClass.customLocation("hail_strike"));
 
     }
 
