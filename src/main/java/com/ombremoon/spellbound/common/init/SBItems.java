@@ -72,6 +72,7 @@ public class SBItems {
     public static final Supplier<Item> SPIRIT_WHISTLE = registerItem("spirit_whistle",  () -> new SpiritWhistleItem(getItemProperties().component(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD)), true);
     public static final Supplier<Item> ARCANE_EYE = registerItem("arcane_eye",  () -> new ArcaneEyeItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> DUNGEON_KEY = registerItem("dungeon_key",  () -> new DungeonKeyItem(getItemProperties().stacksTo(1)));
+    public static final Supplier<Item> BOUND_BOW = registerItem("bound_bow",  () -> new BoundBowItem(getItemProperties().stacksTo(1)));
 
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);

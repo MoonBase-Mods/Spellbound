@@ -16,7 +16,6 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
@@ -30,6 +29,7 @@ import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
@@ -43,14 +43,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -215,14 +213,6 @@ public class NeoForgeEvents {
                 if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     mob.setTarget(null);
                 }
-            }
-
-            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
-            ShadowVeil veil = veilId == 0 ? null : (ShadowVeil) entity.level().getEntity(veilId);
-            if (veil != null && !entity.getBoundingBox().intersects(veil.getBoundingBox())) {
-                entity.knockback(0.5F, entity.getX() - veil.getX(), entity.getZ() - veil.getZ());
-                entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6, (double)1.0F, 0.6));
-                entity.hurtMarked = true;
             }
         }
     }
@@ -392,7 +382,7 @@ public class NeoForgeEvents {
             var handler = SpellUtil.getSpellHandler(owner);
             AbstractSpell spell;
             if (livingEntity instanceof ISpellEntity<?> spellEntity) {
-                spell = spellEntity.getSpell();
+                spell = spellEntity.getOrCreateSpell();
             } else {
                 SpellType<?> spellType = SBSpells.REGISTRY.get(livingEntity.getData(SBData.SPELL_TYPE));
                 int id = livingEntity.getData(SBData.SPELL_ID);

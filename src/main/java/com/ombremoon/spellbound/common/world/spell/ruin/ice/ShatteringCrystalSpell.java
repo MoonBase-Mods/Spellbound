@@ -14,8 +14,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -31,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.List;
@@ -192,7 +189,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     }
 
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {
-        ShatteringCrystalSpell spell = crystal.getSpell();
+        ShatteringCrystalSpell spell = crystal.getOrCreateSpell();
         int count = context.hasSkill(SBSkills.CRYSTAL_ECHO) ? 2 : 1;
         if (spell != null && !spell.isSpawning() && spell.primeCount < count && !spell.primed) {
             spell.primed = true;
@@ -216,7 +213,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             int count = flag ? 2 : 1;
             for (Entity entity : entities) {
                 if (context.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getSummoner()) {
-                    ShatteringCrystalSpell spell = crystal1.getSpell();
+                    ShatteringCrystalSpell spell = crystal1.getOrCreateSpell();
                     if (spell != null && spell.primeCount < count) {
                         primeCrystal(context, crystal1);
                     }

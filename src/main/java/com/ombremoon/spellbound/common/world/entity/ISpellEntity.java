@@ -4,7 +4,6 @@ import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.util.SpellUtil;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -20,7 +19,7 @@ public interface ISpellEntity<T extends AbstractSpell> extends IVFXEntity {
 
     void setSpell(@NotNull AbstractSpell spell);
 
-    T getSpell();
+    T getOrCreateSpell();
 
     Entity getSummoner();
 

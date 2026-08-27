@@ -101,7 +101,7 @@ public class MushroomExplosion<E extends LivingMushroom> extends DelayedBehaviou
         if (this.target == null)
             return;
 
-        AbstractSpell spell = entity.getSpell();
+        AbstractSpell spell = entity.getOrCreateSpell();
         boolean flag = spell != null;
         float radius = this.explosionRadius.apply(entity);
         for (LivingEntity target : EntityRetrievalUtil.getEntities(entity, radius, radius, radius, LivingEntity.class, livingEntity -> !livingEntity.isAlliedTo(entity))) {

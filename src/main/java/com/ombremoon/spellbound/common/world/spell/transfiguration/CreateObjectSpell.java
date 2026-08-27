@@ -37,26 +37,11 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
         return createSimpleSpellBuilder(CreateObjectSpell.class)
                 .castCondition((context, createObjectSpell) -> {
                     LivingEntity caster = context.getCaster();
-                    var handler = context.getSpellHandler();
-                    if (context.isRecast()) {
-                        List<CreateObjectSpell> spells = handler.getActiveSpellsFromType(SBSpells.CREATE_OBJECT.get());
-                        for (CreateObjectSpell spell : spells) {
-                            if (spell.isChoice(createObjectSpell.choice)) {
-                                spell.endSpell();
-                                return false;
-                            }
-                        }
-
-                        return true;
+                    if (createObjectSpell.disableChoiceOnRecast(context, createObjectSpell)) {
+                        return false;
                     } else {
                         if (context.isChoice(SBSkills.ADVENTURER)) {
-                            for (EquipmentSlot slot : ARMOR_SLOTS) {
-                                if (!caster.getItemBySlot(slot).isEmpty()) {
-                                    return false;
-                                }
-                            }
-
-                            return true;
+                            return createObjectSpell.hasEmptyArmorSlots(caster);
                         } else {
                             return caster.getMainHandItem().isEmpty();
                         }
@@ -92,14 +77,13 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
                         if (context.hasSkill(SBSkills.MYSTIC_TOOLSMITH)) {
                             this.enchantItem(level, itemStack);
                         }
-
-                        itemStack.set(SBData.IMBUEMENT, Imbuement.create(this.spellType(), -1, this.location()));
                     });
 
+                Imbuement imbuement = Imbuement.create(this);
                 for (int i = 0; i < ARMOR_SLOTS.length; i++) {
                     EquipmentSlot slot = ARMOR_SLOTS[i];
                     ItemStack stack = armorSet.get(i);
-                    caster.setItemSlot(slot, stack);
+                    this.giveSpellItem(stack, slot, imbuement);
                 }
             } else {
                 ItemStack grantedItem = addTwoTiers ? Items.DIAMOND_PICKAXE.getDefaultInstance() : addOneTier ? Items.IRON_PICKAXE.getDefaultInstance() : Items.STONE_PICKAXE.getDefaultInstance();
@@ -119,8 +103,7 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
                     this.enchantItem(level, grantedItem);
                 }
 
-                Imbuement imbuement = Imbuement.create(this.spellType(), -1, this.location());
-                if (this.giveSpellItem(grantedItem, imbuement) && caster instanceof Player player) {
+                if (this.giveSpellItem(grantedItem) && caster instanceof Player player) {
                     this.imbuedSlot = player.getInventory().selected;
                 }
             }
@@ -128,13 +111,6 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
                     caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.FIREWORK_ROCKET_BLAST,
                     SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
-        }
-    }
-
-    @Override
-    protected void onSpellRecast(SpellContext context) {
-        Level level = context.getLevel();
-        if (!level.isClientSide) {
         }
     }
 

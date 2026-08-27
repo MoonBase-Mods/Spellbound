@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMus
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
 import com.ombremoon.spellbound.common.world.entity.misc.ShadowMist;
 import com.ombremoon.spellbound.common.world.entity.misc.WatchfulEye;
+import com.ombremoon.spellbound.common.world.entity.projectile.BoundArrow;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.common.world.entity.projectile.SeekingMagicProjectile;
 import com.ombremoon.spellbound.main.Constants;
@@ -58,6 +59,7 @@ public class SBEntities {
 
     //Summon Entities
     //public static final Supplier<EntityType<TotemSpiritEntity>> TOTEM_SPIRIT = registerMob("totem_spirit", TotemSpiritEntity::new, MobCategory.CREATURE, 1f, 1f, 8, LivingShadow::createLivingShadowAttributes, false);
+    public static final Supplier<EntityType<BoundArrow>> BOUND_ARROW = registerEntity("bound_arrow", BoundArrow::new, 0.5F, 0.5F, 0.13F, 20);
     public static final Supplier<EntityType<MiniMushroom>> MINI_MUSHROOM = registerMob("mini_mushroom", MiniMushroom::new, MobCategory.MONSTER, 1f, 1f, 8, MiniMushroom::createMiniMushroomAttributes);
     public static final Supplier<EntityType<GiantMushroom>> GIANT_MUSHROOM = registerMob("giant_mushroom", GiantMushroom::new, MobCategory.MONSTER, 4.6F, 6.0F, 3.5F, 8, GiantMushroom::createGiantMushroomAttributes, false);
     public static final Supplier<EntityType<MushroomProjectile>> MUSHROOM_PROJECTILE = registerEntity("mushroom_projectile", MushroomProjectile::new, 0.7F, 0.7F);
@@ -106,6 +108,14 @@ public class SBEntities {
         return entitySupplier;
     }
 
+    protected static <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height, float eyeHeight, int updateInterval) {
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, MobCategory.MISC).sized(width, height).eyeHeight(eyeHeight).fireImmune().clientTrackingRange(4).updateInterval(updateInterval);
+
+        return SBEntities.ENTITIES.register(name, () -> {
+            return builder.build(name);
+        });
+    }
+
     protected static <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height, int updateInterval) {
         EntityType.Builder<T> builder = EntityType.Builder.of(factory, MobCategory.MISC).sized(width, height).fireImmune().clientTrackingRange(4).updateInterval(updateInterval);
 
@@ -115,11 +125,7 @@ public class SBEntities {
     }
 
     protected static <T extends Entity> Supplier<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, float width, float height) {
-        EntityType.Builder<T> builder = EntityType.Builder.of(factory, MobCategory.MISC).sized(width, height).fireImmune().clientTrackingRange(4);
-
-        return SBEntities.ENTITIES.register(name, () -> {
-            return builder.build(name);
-        });
+        return registerEntity(name, factory, width, height, 3);
     }
 
     public static void register(IEventBus eventBus) {

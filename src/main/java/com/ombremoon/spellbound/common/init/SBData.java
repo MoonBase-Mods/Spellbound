@@ -54,34 +54,25 @@ public class SBData {
     public static final Supplier<AttachmentType<EffectManager>> STATUS_EFFECTS = ATTACHMENT_TYPES.register(
             "effect_handler", () -> AttachmentType.serializable(EffectManager::new).build());
     public static final Supplier<AttachmentType<FamiliarHandler>> FAMILIAR_HANDLER = ATTACHMENT_TYPES.register(
-            "familiar_handler", () -> AttachmentType.serializable(FamiliarHandler::new).copyOnDeath().build()
-    );
-
-    //Mana
-    public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(
-            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).sync(ByteBufCodecs.DOUBLE).build());
-
-    //Upgrade Tree
+            "familiar_handler", () -> AttachmentType.serializable(FamiliarHandler::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<UpgradeTree>> UPGRADE_TREE = ATTACHMENT_TYPES.register(
             "upgrade_tree", () -> AttachmentType.serializable(UpgradeTree::new).copyOnDeath().build());
 
-    //Summons
-    public static final Supplier<AttachmentType<Integer>> OWNER_ID = ATTACHMENT_TYPES.register(
-            "owner_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
-    public static final Supplier<AttachmentType<Integer>> TARGET_ID = ATTACHMENT_TYPES.register(
-            "target_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
-
     //Spell Data
+    public static final Supplier<AttachmentType<Double>> MANA = ATTACHMENT_TYPES.register(
+            "mana", () -> AttachmentType.builder(() -> 100.0).serialize(Codec.DOUBLE).sync(ByteBufCodecs.DOUBLE).build());
     public static final Supplier<AttachmentType<ResourceLocation>> SPELL_TYPE = ATTACHMENT_TYPES.register(
             "spell_type", () -> AttachmentType.builder(() -> CommonClass.customLocation("")).serialize(ResourceLocation.CODEC).sync(ResourceLocation.STREAM_CODEC).build());
     public static final Supplier<AttachmentType<Integer>> SPELL_ID = ATTACHMENT_TYPES.register(
             "spell_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
     public static final Supplier<AttachmentType<AbstractSpell>> SPELL = ATTACHMENT_TYPES.register(
             "spell", () -> AttachmentType.builder(() -> (AbstractSpell) null).build());
-    public static final Supplier<AttachmentType<Integer>> MOVEMENT_TICK = ATTACHMENT_TYPES.register(
-            "movement_tick", () -> AttachmentType.builder(() -> 0).build());
     public static final Supplier<AttachmentType<Vec3>> MOVEMENT_SOURCE = ATTACHMENT_TYPES.register(
             "movement_source", () -> AttachmentType.builder(() -> Vec3.ZERO).build());
+    public static final Supplier<AttachmentType<Integer>> OWNER_ID = ATTACHMENT_TYPES.register(
+            "owner_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
+    public static final Supplier<AttachmentType<Integer>> TARGET_ID = ATTACHMENT_TYPES.register(
+            "target_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.VAR_INT).build());
     public static final Supplier<AttachmentType<Vec3>> STICKY_BOMB_LOCATION = ATTACHMENT_TYPES.register(
             "sticky_bomb_location", () -> AttachmentType.builder(() -> Vec3.ZERO).serialize(Vec3.CODEC).sync(ByteBufCodecs.fromCodec(Vec3.CODEC)).build());
     public static final Supplier<AttachmentType<Integer>> HEAT_TICK = ATTACHMENT_TYPES.register(
@@ -90,10 +81,10 @@ public class SBData {
             "force_warp", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
     public static final Supplier<AttachmentType<Integer>> STORMSTRIKE_OWNER = ATTACHMENT_TYPES.register(
             "stormstrike_owner", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
-    public static final Supplier<AttachmentType<Integer>> SHADOW_DOMAIN_VEIL = ATTACHMENT_TYPES.register(
-            "shadow_domain_veil", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Misc
+    public static final Supplier<AttachmentType<Imbuement>> ENTITY_IMBUEMENT = ATTACHMENT_TYPES.register(
+            "entity_imbuement", () -> AttachmentType.builder(Imbuement::empty).serialize(Imbuement.CODEC).build());
     public static final Supplier<AttachmentType<Integer>> RUNE_COLOR = ATTACHMENT_TYPES.register(
             "rune_color", () -> AttachmentType.builder(Color.WHITE::argbInt).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> INTERACT_HEAL_TARGET = ATTACHMENT_TYPES.register(
@@ -106,30 +97,24 @@ public class SBData {
             "client_puzzle", () -> AttachmentType.builder(() -> PuzzleDefinition.DEFAULT)
                     .serialize(PuzzleDefinition.CODEC)
                     .sync(PuzzleDefinition.STREAM_CODEC)
-                    .build()
-    );
+                    .build());
     public static final Supplier<AttachmentType<Long>> ATTACK_START = ATTACHMENT_TYPES.register(
-            "attack_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build()
-    );
+            "attack_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build());
     public static final Supplier<AttachmentType<Long>> BLOCK_START = ATTACHMENT_TYPES.register(
-            "block_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build()
-    );
+            "block_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build());
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
-            "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
-    );
+            "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
     public static final Supplier<AttachmentType<MovementData>> MOVEMENT_DATA = ATTACHMENT_TYPES.register(
             "movement_data", () -> AttachmentType.builder(() -> new MovementData(0, 0, false, false))
                     .serialize(MovementData.CODEC)
                     .sync(MovementData.STREAM_CODEC)
-                    .build()
-    );
+                    .build());
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
             "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
                     .serialize(ResourceLocation.CODEC.listOf())
                     .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .copyOnDeath()
-                    .build()
-    );
+                    .build());
 
     //Components
     public static final Supplier<DataComponentType<SpellType<?>>> SPELL_TYPE_COMPONENT = COMPONENT_TYPES.registerComponentType("spells",
@@ -154,12 +139,11 @@ public class SBData {
             builder -> builder.persistent(EffectHolder.CODEC.listOf()).networkSynchronized(EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<SatchelContents>> SATCHEL_CONTENTS = COMPONENT_TYPES.registerComponentType("satchel_contents",
             builder -> builder.persistent(SatchelContents.CODEC).networkSynchronized(SatchelContents.STREAM_CODEC));
-
     public static final Supplier<DataComponentType<WhistleMaterial>> WHISTLE_MATERIAL = COMPONENT_TYPES.registerComponentType("whistle_material",
             builder -> builder.persistent(WhistleMaterial.CODEC).networkSynchronized(ByteBufCodecs.idMapper(i -> WhistleMaterial.values()[i], WhistleMaterial::ordinal)));
 
     //Spell Components
-    public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));
+    public static final Supplier<DataComponentType<Unit>> BOUND_ARROW_MARK = COMPONENT_TYPES.registerComponentType("bound_arrow_mark", builder -> builder.persistent(Unit.CODEC));
 
     //Effect Components
     public static final Supplier<DataComponentType<EnchantmentTarget>> PRE_DAMAGE = COMPONENT_TYPES.registerComponentType("pre_damage", builder -> builder.persistent(EnchantmentTarget.CODEC));

@@ -1,10 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
@@ -119,7 +115,7 @@ public class MushroomProjectile extends VFXSpellProjectile<WildMushroomSpell> {
                 } else {
                     WildMushroom wildMushroom = new WildMushroom(level, mushroom);
                     wildMushroom.setPos(result.getLocation());
-                    WildMushroomSpell spell = mushroom.getSpell();
+                    WildMushroomSpell spell = mushroom.getOrCreateSpell();
                     if (spell != null)
                         wildMushroom.setSpell(spell);
 

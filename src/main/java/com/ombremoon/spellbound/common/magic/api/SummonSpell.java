@@ -2,7 +2,6 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
@@ -31,20 +30,19 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
     private static final SpellDataKey<BlockPos> SUMMON_POS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.BLOCK_POS.get());
     private boolean summonedEntity;
-    private boolean isSpecialChoice;
+    private boolean isSummonChoice;
 
     @SuppressWarnings("unchecked")
     public static <T extends SummonSpell> Builder<T> createSummonBuilder(Class<T> spellClass) {
         return (Builder<T>) new Builder<>()
                 .castCondition((context, spell) -> {
                     var handler = context.getSpellHandler();
-                    if (spell.isSpecialChoice) {
+                    if (spell.isSummonChoice) {
                         int summonCount = spell.getSummonSize(context);
                         int maxSummons = spell.getMaxSummons(context);
                         var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
@@ -72,7 +70,7 @@ public abstract class SummonSpell extends AnimatedSpell {
 
     public SummonSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
-        this.isSpecialChoice = builder.isSpecialChoice;
+        this.isSummonChoice = builder.isSummonChoice;
     }
 
     @Override
@@ -82,7 +80,7 @@ public abstract class SummonSpell extends AnimatedSpell {
         builder.define(SUMMON_POS, BlockPos.ZERO);
     }
 
-    protected boolean hasSpecialChoice(SpellContext context) {
+    protected boolean hasSummonChoice(SpellContext context) {
         var handler = context.getSpellHandler();
         var skills = context.getSkills();
         var list = handler.getActiveSpells(this.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && skills.getChoice(this.spellType()) == summonSpell.choice);
@@ -228,7 +226,7 @@ public abstract class SummonSpell extends AnimatedSpell {
     }
 
     public static class Builder<T extends SummonSpell> extends AnimatedSpell.Builder<T> {
-        private boolean isSpecialChoice;
+        private boolean isSummonChoice;
 
         public Builder() {
             this.summonCast();
@@ -305,8 +303,8 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> isSpecialChoice() {
-            this.isSpecialChoice = true;
+        public Builder<T> isSummonChoice() {
+            this.isSummonChoice = true;
             return this;
         }
 

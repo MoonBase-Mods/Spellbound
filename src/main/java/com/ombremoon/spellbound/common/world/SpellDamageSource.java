@@ -3,6 +3,8 @@ package com.ombremoon.spellbound.common.world;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -85,10 +87,14 @@ public class SpellDamageSource extends DamageSource {
     }
 
     public static SpellDamageSource fromVanillaSource(DamageSource source) {
+        return fromVanillaSource(null, source);
+    }
+
+    public static SpellDamageSource fromVanillaSource(@Nullable AbstractSpell spell, DamageSource source) {
         if (source instanceof SpellDamageSource spellSource) {
             return spellSource;
         }
 
-        return new SpellDamageSource(source.typeHolder(), null, source.getDirectEntity(), source.getEntity(), source.getSourcePosition());
+        return new SpellDamageSource(source.typeHolder(), spell, source.getDirectEntity(), source.getEntity(), source.getSourcePosition());
     }
 }

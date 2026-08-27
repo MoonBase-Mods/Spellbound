@@ -41,6 +41,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
+    private boolean clientInit;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final EffectCache effectCache = new EffectCache();
 
@@ -98,6 +99,8 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
             if (this.spell != null)
                 this.spell.onEntityTick(this, this.spell.getContext());
+        } else if (!this.clientInit) {
+            this.initializeClientEntity();
         }
     }
 
@@ -131,12 +134,21 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         super.onAddedToLevel();
     }
 
+    private void initializeClientEntity() {
+        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
+            this.handler = SpellUtil.getSpellHandler(player);
+            this.skills = SpellUtil.getSkills(player);
+            this.getOrCreateSpell();
+            this.clientInit = true;
+        }
+    }
+
     @Override
     public void onClientRemoval() {
         this.handleFXRemoval();
     }
 
-    public T getSpell() {
+    public T getOrCreateSpell() {
         if (this.spell == null) {
             SpellType<T> spellType = this.getSpellType();
             if (this.handler != null && spellType != null) {

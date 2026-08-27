@@ -40,6 +40,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
+    private boolean clientInit;
 
     protected SmartSpellEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -85,8 +86,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if ((this.wasSummoned() && !this.hasSummoner()) || (this.isSpellCast() && (this.spell == null ||  this.spell.isInactive)))
+            if ((this.wasSummoned() && !this.hasSummoner()) || (this.isSpellCast() && (this.spell == null ||  this.spell.isInactive))) {
                 discard();
+            }
+        } else if (!this.clientInit) {
+            this.initializeClientEntity();
         }
     }
 
@@ -172,7 +176,16 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         super.onAddedToLevel();
     }
 
-    public T getSpell() {
+    private void initializeClientEntity() {
+        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
+            this.handler = SpellUtil.getSpellHandler(player);
+            this.skills = SpellUtil.getSkills(player);
+            this.getOrCreateSpell();
+            this.clientInit = true;
+        }
+    }
+
+    public T getOrCreateSpell() {
         if (this.spell == null) {
             SpellType<T> spellType = this.getSpellType();
             if (this.handler != null && spellType != null) {

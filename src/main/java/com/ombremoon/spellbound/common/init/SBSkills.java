@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.skills.*;
+import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -9,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -508,6 +510,10 @@ public class SBSkills {
 
     public static PseudoSkillProvider createProvider(String spellType, String provider) {
         return new PseudoSkillProvider(Optional.of(CommonClass.customLocation(spellType)), CommonClass.customLocation(provider));
+    }
+
+    public static PseudoSkillProvider createProvider(String spellType, ResourceLocation provider) {
+        return new PseudoSkillProvider(Optional.of(CommonClass.customLocation(spellType)), provider);
     }
 
     private static Holder<Skill> registerConditionalSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, BiPredicate<Player, SkillHolder> skillCondition) {

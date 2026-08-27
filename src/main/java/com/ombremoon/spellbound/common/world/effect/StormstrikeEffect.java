@@ -56,7 +56,8 @@ public class StormstrikeEffect extends SBEffect {
                         ELECTRIFY,
                         BuffCategory.HARMFUL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
-                        new ModifierData(SBAttributes.SHOCK_SPELL_RESIST, new AttributeModifier(ELECTRIFY, spell.potency(-0.3F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                        new ModifierData(SBAttributes.SHOCK_SPELL_RESIST, new AttributeModifier(ELECTRIFY, spell.potency(-0.3F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                        100
                 );
             }
         }
