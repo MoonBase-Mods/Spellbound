@@ -3,13 +3,14 @@ package com.ombremoon.spellbound.common.world.entity;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
+import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public interface ISpellEntity<T extends AbstractSpell> extends IVFXEntity {
+public interface ISpellEntity<T extends AbstractSpell> extends IVFXEntity, Loggable {
 
     default Entity getEntity() {
         return (Entity) this;

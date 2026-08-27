@@ -10,16 +10,15 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
-import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
-import net.minecraft.client.resources.sounds.Sound;
+import com.ombremoon.spellbound.util.SpellUtil;
+import com.ombremoon.spellbound.util.math.SplineController;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
@@ -31,6 +30,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -125,8 +126,13 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                     if (this.isChoice(SBSkills.HOMING_MISSILE)) {
                         if (context.getTarget() instanceof LivingEntity target) {
                             projectile.setHomingTarget(target);
+//                            projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
+//                                    .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.05, 0.05), RandomUtil.randomValueBetween(0, 0.15), 0)));
+                            projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
+                                    .addControlPoint(0.33, new Vec3(-0.1, 0, 0))
+                                    .addControlPoint(0.7, new Vec3(0.3, 0.3, 0)));
                         } else if (context.hasSkill(SBSkills.AUTO_TARGETING)) {
-                            var list = this.getAttackableEntities(projectile, 10.0D);
+                            var list = this.getAttackableEntities(projectile, SpellUtil.getCastRange(caster));
                             if (!list.isEmpty()) {
                                 LivingEntity target = list.getFirst();
                                 for (LivingEntity entity : list) {
@@ -135,6 +141,8 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                                 }
 
                                 projectile.setHomingTarget(target);
+//                                projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
+//                                        .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.05, 0.05), RandomUtil.randomValueBetween(0, 0.15), 0)));
                             }
                         }
                     }

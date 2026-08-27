@@ -144,6 +144,9 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
                         iceBolt.setPierceLevel((byte) 2);
                 });
+                if (!this.consumeMana(caster, this.getManaCost())) {
+                    this.endSpell();
+                }
 
                 EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, 1.5, 1.5)
