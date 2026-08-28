@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -17,6 +19,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -85,7 +89,9 @@ public class IceSkateSpell extends ChanneledSpell {
                 .castCondition((context, iceSkateSpell) -> context.getCaster().onGround() && !context.getLevel().dimensionType().ultraWarm())
                 .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, true))
+                .hasLayer()
                 .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
+
     }
     public IceSkateSpell() {
         super(SBSpells.ICE_SKATE.get(), createIceSkateBuilder());
@@ -146,6 +152,10 @@ public class IceSkateSpell extends ChanneledSpell {
                             this.removeSkillBuff(caster, SBSkills.CRYSTAL_CLEATS);
                         });
             }
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("ice_skate"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_PLACE,
+                    SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
         }
     }
 
@@ -215,6 +225,10 @@ public class IceSkateSpell extends ChanneledSpell {
                     living.knockback(0.4, caster.getX() - living.getX(), caster.getZ() - living.getZ());
                     living.hurtMarked = true;
                     this.hurt(living, 1.5F);
+                    this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("ice_cleats"),
+                            living.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.1, 0));
+                    level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
+                            SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,1.0F + level.random.nextFloat() * 0.2F );
                 }
             }
 
@@ -248,6 +262,7 @@ public class IceSkateSpell extends ChanneledSpell {
         LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
             this.removeSkillBuff(context.getCaster(), SBSkills.ICE_SKATE);
+            removeSpellFX(CommonClass.customLocation("ice_skate"));
 
             if (context.hasSkill(SBSkills.SHARDS_OF_MOMENTUM)) {
                 IceBoltSpell spell = SBSpells.ICE_BOLT.get().createSpellWithData(caster);

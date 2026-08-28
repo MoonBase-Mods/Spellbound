@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -14,6 +16,8 @@ import com.ombremoon.spellbound.common.world.spell.transfiguration.CreateObjectS
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -67,6 +71,11 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
             } else if (this.giveSpellItem(boundBow, imbuement) && caster instanceof Player player) {
                 this.imbuedSlot = player.getInventory().selected;
             }
+
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("bound_bow_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.CROSSBOW_LOADING_START.value(),
+                    SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
         }
     }
 

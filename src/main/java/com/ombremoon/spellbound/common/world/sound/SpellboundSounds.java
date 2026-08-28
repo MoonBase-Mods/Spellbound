@@ -47,16 +47,14 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> SPEED = registerSoundEvent("speed");
     public static final Supplier<SoundEvent> PURGE_MAGIC = registerSoundEvent("purge_magic");
     public static final Supplier<SoundEvent> PURGE_MAGIC_EXPUNGE = registerSoundEvent("purge_magic_expunge");
-
     public static final Supplier<SoundEvent> COOLING_ARMOR = registerSoundEvent("cooling_armor");
-
     public static final Supplier<SoundEvent> CRYSTAL_SHATTER = registerSoundEvent("crystal_shatter");
     public static final Supplier<SoundEvent> CORPSE_EXPLOSION = registerSoundEvent("corpse_explosion");
-
     public static final Supplier<SoundEvent> SHATTER_SKIN = registerSoundEvent("shatter_skin");
+    public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
 
     //NEED IMPLEMENTATION
-    public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
+
     public static final Supplier<SoundEvent> SMITE_STRIKE = registerSoundEvent("smite_strike");
     public static final Supplier<SoundEvent> SMITE_SWOOSH = registerSoundEvent("smite_swoosh"); //this is for the projectile
 

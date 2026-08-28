@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -19,6 +21,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -102,6 +105,7 @@ public class MysticArmorSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
+        Level level = context.getLevel();
         this.addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
@@ -183,6 +187,11 @@ public class MysticArmorSpell extends AnimatedSpell {
                 .playSeededSound(
                         null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.ARMOR_EQUIP_NETHERITE, caster.getSoundSource(), 1.0F, 1.0F, caster.getRandom().nextLong()
                 );
+
+        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("mystic_armor"),
+                caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.1, 0));
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE,
+                SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
     }
 
     @Override

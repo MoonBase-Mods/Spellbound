@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -12,9 +14,12 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -158,6 +163,10 @@ public class NightbladeSpell extends ImbuementSpell {
                         this.getDuration()
                 );
             }
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+            level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.NIGHTBLADE.get(),
+                    SoundSource.PLAYERS,0.8F + level.random.nextFloat() * 0.2F ,0.9F + level.random.nextFloat() * 0.2F );
         }
     }
 
@@ -167,6 +176,7 @@ public class NightbladeSpell extends ImbuementSpell {
         this.removeSkillBuff(context.getCaster(), SBSkills.NIGHTBLADE);
         this.removeSkillBuff(context.getCaster(), SBSkills.EVASIVE_STANCE);
         this.removeSkillBuff(context.getCaster(), SBSkills.UMBRAL_SIGHT);
+        removeSpellFX(CommonClass.customLocation("nightblade_cast"));
     }
 
     @Override
