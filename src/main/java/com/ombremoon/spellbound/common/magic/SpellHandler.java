@@ -553,6 +553,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet();
     }
 
+    public List<SkillBuff<?>> getSkillBuffs(SkillProvider skill) {
+        return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).toList();
+    }
+
     public Optional<SkillBuff<?>> getSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
@@ -609,18 +613,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void applyStormStrike(LivingEntity target, int ticks) {
         target.setData(SBData.STORMSTRIKE_OWNER.get(), this.caster.getId());
         target.addEffect(new MobEffectInstance(SBEffects.STORMSTRIKE, ticks, 0, true, true));
-    }
-
-    /**
-     * Plays an animation for the player. This is called server-side for all players to see the animation
-     * @param player The player performing the animation
-     * @param animation The animation information
-     */
-    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
-        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
-        if (!isClientSide()) {
-            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
-        }
     }
 
     /**
@@ -714,6 +706,18 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         Vec3 toPos = fromPos.add((double) xComponent * distance, (double) yComponent * distance,
                 (double) zComponent * distance);
         return new ClipContext(fromPos, toPos, ClipContext.Block.OUTLINE, fluidContext, livingEntity);
+    }
+
+    /**
+     * Plays an animation for the player. This is called server-side for all players to see the animation
+     * @param player The player performing the animation
+     * @param animation The animation information
+     */
+    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
+        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
+        if (!isClientSide()) {
+            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
+        }
     }
 
     public void stopAnimation(Player player, SpellAnimation animation) {

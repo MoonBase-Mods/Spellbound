@@ -36,7 +36,7 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T> {
+public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T>, SBSummonable {
     private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
@@ -52,12 +52,9 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     private boolean clientInit;
     @Nullable
     private IntOpenHashSet piercingIgnoreEntityIds;
-    @Nullable
-    private SplineController splineController;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final EffectCache effectCache = new EffectCache();
 
-    //TODO: Add Control Points (peak param + gravity) for multiple splines
     //TODO: Change Homing Target to Homing Position
     protected SpellProjectile(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
@@ -101,16 +98,19 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         Vec3 vec3 = this.getDeltaMovement();
 
         SplineController spline = this.getSplineController();
+        boolean canHome = this.getHomingTarget() != null && this.getHomingTarget().isAlive();
         boolean flag = !spline.isEmptySpline() && spline.isFollowingSpline();
-        if (flag) {
-            Vec3 trajectoryGravity = spline.getGravityAtPosition(this.position());
-            vec3 = vec3.add(trajectoryGravity);
-        } else if (this.isHoming()) {
-            Entity entity = this.getHomingTarget();
-            if (entity instanceof LivingEntity) {
-                Vec3 vec31 = entity.position().add(0.0, entity.getBbHeight() / 2, 0.0).subtract(this.position());
-                vec3 = vec31.normalize();
-                this.setDeltaMovement(vec3);
+        if (canHome) {
+            if (flag) {
+                Vec3 trajectoryGravity = spline.getGravityAtPosition(this.position());
+                vec3 = vec3.add(trajectoryGravity);
+            } else if (this.isHoming()) {
+                Entity entity = this.getHomingTarget();
+                if (entity instanceof LivingEntity) {
+                    Vec3 vec31 = entity.position().add(0.0, entity.getBbHeight() / 2, 0.0).subtract(this.position());
+                    vec3 = vec31.normalize();
+                    this.setDeltaMovement(vec3);
+                }
             }
         }
         
@@ -291,8 +291,26 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         return this.level().getEntity(this.entityData.get(OWNER_ID));
     }
 
-    public boolean hasOwner() {
-        return getSummoner() != null;
+    @Override
+    public void setSummoner(int id) {
+        this.entityData.set(OWNER_ID, id);
+    }
+
+    @Override
+    public boolean isSummoner(LivingEntity entity) {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.is(entity);
+    }
+
+    @Override
+    public boolean hasSummoner() {
+        Entity owner = this.getSummoner();
+        return owner != null && owner.isAlive();
+    }
+
+    @Override
+    public boolean wasSummoned() {
+        return true;
     }
 
     @Override

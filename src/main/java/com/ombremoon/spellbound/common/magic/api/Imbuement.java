@@ -93,4 +93,22 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         Imbuement other = stack.get(SBData.IMBUEMENT);
         return other != null && imbuement.spellInstance == other.spellInstance;
     }*/
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Imbuement imbuement)) {
+            return false;
+        }
+
+        if (this.charges != imbuement.charges()/* || !this.glint.equals(imbuement.glint())*/) {
+            return false;
+        }
+
+        if (this.spellInstance.isPresent() != imbuement.spellInstance.isPresent()) {
+            return false;
+        }
+
+        return this.spellInstance.map(value -> value.isSameSpell(imbuement.spellInstance().get())).orElse(true);
+
+    }
 }

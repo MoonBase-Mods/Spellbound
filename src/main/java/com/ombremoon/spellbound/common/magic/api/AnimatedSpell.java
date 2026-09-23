@@ -60,7 +60,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
 
     protected void playMovementAnimation(Player player, ResourceLocation movementAnimation, @Nullable SpellAnimation fallbackAnimation) {
         var handler = SpellUtil.getSpellHandler(player);
-        SpellAnimation animation = new SpellAnimation(movementAnimation, SpellAnimation.Type.CAST, false);
+        SpellAnimation animation = new SpellAnimation(movementAnimation, SpellAnimation.Type.CAST, false, false);
         if (handler.isMoving() && !handler.movementDirty) {
             handler.movementDirty = true;
             playAnimation(player, animation);
@@ -75,7 +75,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
     }
 
     public static class Builder<T extends AnimatedSpell> extends AbstractSpell.Builder<T> {
-        protected BiFunction<SpellContext, T, SpellAnimation> castAnimation = (context, spell) -> new SpellAnimation(CommonClass.customLocation("simple_cast"), SpellAnimation.Type.CAST, true);
+        protected BiFunction<SpellContext, T, SpellAnimation> castAnimation = (context, spell) -> new SpellAnimation("simple_cast", SpellAnimation.Type.CAST, true);
 
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;

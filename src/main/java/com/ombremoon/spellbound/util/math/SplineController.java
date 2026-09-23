@@ -117,6 +117,13 @@ public class SplineController {
         return Mth.clamp(t, 0, 1.0);
     }
 
+    private double getPerpendicularDistance(Vec3 currentPos) {
+        double t = getProjectionParameter(currentPos);
+        Vec3 projection = this.shooterPos.add(this.targetPos.subtract(this.shooterPos).scale(t));
+        Vec3 perp = currentPos.subtract(projection);
+        return perp.length();
+    }
+
     public boolean isFollowingSpline() {
         return this.completedSplines.size() < this.controlPoints.size();
     }

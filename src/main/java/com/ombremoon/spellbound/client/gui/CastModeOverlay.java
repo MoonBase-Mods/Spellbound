@@ -17,6 +17,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -38,18 +39,19 @@ public class CastModeOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        if (Minecraft.getInstance().options.hideGui)
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.options.hideGui)
             return;
 
-        Player player = Minecraft.getInstance().player;
+        Player player = minecraft.player;
         var handler = SpellUtil.getSpellHandler(player);
         if (handler.inCastMode())
-            renderCastMode(guiGraphics, player, handler);
+            renderCastMode(guiGraphics, minecraft, player, handler);
 
         renderActiveSpells(guiGraphics, handler);
     }
 
-    private void renderCastMode(GuiGraphics guiGraphics, Player player, SpellHandler caster) {
+    private void renderCastMode(GuiGraphics guiGraphics, Minecraft minecraft, Player player, SpellHandler caster) {
         int x = guiGraphics.guiWidth() / 2 - 205;
         int y = guiGraphics.guiHeight() - 57;
         guiGraphics.blit(MANA_BAR, guiGraphics.guiWidth() / 2 - 200, guiGraphics.guiHeight() - 20, 0, 0, 106, 16, 106, 28);
@@ -68,10 +70,29 @@ public class CastModeOverlay implements LayeredDraw.Layer {
         ResourceLocation texture = this.getSpellTexture(player, spell.createSpell());
         guiGraphics.blit(texture, x, y, 0, 0, 24, 24, 24, 24);
         guiGraphics.blit(BACKGROUND, x - 2, y - 2, 0, 0, 28, 28, 28, 28);
+
+        var skills = SpellUtil.getSkills(player);
+        SkillProvider skill = this.getSkillCooldown(player, spell.createSpell());
+        float f = skills.getCooldowns().getCooldownPercent(skill, minecraft.getTimer().getGameTimeDeltaPartialTick(true));
+        if (f > 0.0F) {
+            int i1 = y + Mth.floor(24.0F * (1.0F - f));
+            int j1 = i1 + Mth.ceil(24.0F * f);
+            guiGraphics.fill(RenderType.guiOverlay(), x, i1, x + 24, j1, Integer.MAX_VALUE);
+        }
+
         guiGraphics.drawString(Minecraft.getInstance().font,
                 this.getSpellName(player, spell.createSpell()),
                 guiGraphics.guiWidth() / 2 - 173, guiGraphics.guiHeight() - 57,
                 8889187, false);
+    }
+
+    private SkillProvider getSkillCooldown(Player player, AbstractSpell spell) {
+        if (spell instanceof RadialSpell) {
+            var skills = SpellUtil.getSkills(player);
+            return skills.getChoice(spell.spellType());
+        }
+
+        return spell.spellType().getRootSkill();
     }
 
     private Component getSpellName(Player player, AbstractSpell spell) {

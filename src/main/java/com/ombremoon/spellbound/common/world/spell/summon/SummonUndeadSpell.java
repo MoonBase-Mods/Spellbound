@@ -56,7 +56,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     public static Builder<SummonUndeadSpell> createSummonBuilder() {
         return createSummonBuilder(SummonUndeadSpell.class)
-                .manaCost(10)
                 .duration(2400)
                 .isSummonChoice()
                 .additionalCondition((context, summonUndeadSpell) -> !summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)

@@ -794,6 +794,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return hurt(this.caster, targetEntity, source.typeHolder().getKey(), hurtAmount);
     }
 
+    public boolean hurt(LivingEntity targetEntity, ResourceKey<DamageType> damageType, float hurtAmount) {
+        return hurt(this.caster, targetEntity, damageType, hurtAmount);
+    }
+
     /**
      * Hurts the target entity. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
@@ -862,6 +866,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private float getDamageAfterResistances(LivingEntity ownerEntity, LivingEntity targetEntity, ResourceKey<DamageType> damageType, float damageAmount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
         float f = (float) (this.getModifiedDamage(ownerEntity, targetEntity, damageAmount) * (1.0F - effects.getMagicResistance()));
+        f *= (float) ownerEntity.getAttributeValue(SBAttributes.ATTACK_POWER);
         var effect = effects.getEffectFromDamageType(damageType);
         return effect != null ? f * (1.0F - effect.getEntityResistance(targetEntity)) : f;
     }
@@ -883,16 +888,32 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return livingEntity -> SpellUtil.IS_ALLIED.test(livingEntity, this.caster);
     }
 
+    protected List<LivingEntity> getNearbyEntities(Entity source, double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), exclusiveTo);
+    }
+
+    protected List<LivingEntity> getNearbyEntities(double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.getNearbyEntities(this.caster, range, exclusiveTo);
+    }
+
+    protected List<LivingEntity> getNearbyEntities(double range) {
+        return this.getNearbyEntities(this.caster, range, livingEntity -> true);
+    }
+
     protected List<LivingEntity> getAttackableEntities(double range) {
         return this.getAttackableEntities(this.caster, range);
     }
 
     public List<LivingEntity> getAttackableEntities(Entity source, double range) {
-        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), this.getAttackPredicate());
+        return this.getAttackableEntities(source, range, living -> true);
+    }
+
+    public List<LivingEntity> getAttackableEntities(Entity source, double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.getNearbyEntities(source, range, this.getAttackPredicate().and(exclusiveTo));
     }
 
     protected List<LivingEntity> getAlliedEntities(Entity source, double range) {
-        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), this.getAllyPredicate());
+        return this.getNearbyEntities(source, range, this.getAllyPredicate());
     }
 
     protected List<LivingEntity> getAlliedEntities(double range) {
@@ -1292,6 +1313,15 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         });
     }
 
+    protected Vec3 getSurroundingSpawnPosition(Vec3 origin, float yaw, float radius, int charge, int maxCharges) {
+        double angleStep = 2 * Math.PI / maxCharges;
+        double angle = angleStep * charge;
+        double totalAngle = angle + Math.toRadians(yaw);
+        double xOffset = -Math.sin(totalAngle) * radius;
+        double zOffset = Math.cos(totalAngle) * radius;
+        return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
+    }
+
     public void onEntityTick(ISpellEntity<?> spellEntity, SpellContext context) {
 
     }
@@ -1403,7 +1433,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param skill The skill to go on cooldown
      * @param ticks The amount of ticks the cooldown will last
      */
-    public void addCooldown(Holder<Skill> skill, int ticks) {
+    public void addCooldown(SkillProvider skill, int ticks) {
         if (this.caster instanceof Player player && player.isCreative())
             return;
 
@@ -1411,6 +1441,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         if (!this.caster.level().isClientSide && this.caster instanceof ServerPlayer player)
             PayloadHandler.updateCooldowns(player, skill, ticks);
+    }
+
+    public void addCooldown(Holder<Skill> skill, int ticks) {
+        this.addCooldown(skill.value(), ticks);
     }
 
     protected void shakeScreen(Player player) {
