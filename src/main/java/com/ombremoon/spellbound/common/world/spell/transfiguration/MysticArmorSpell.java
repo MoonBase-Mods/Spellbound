@@ -48,6 +48,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         return createSimpleSpellBuilder(MysticArmorSpell.class)
                 .duration(1200)
                 .manaCost(28)
+                .hasLayer()
                 .fullRecast(true);
     }
 
