@@ -197,15 +197,6 @@ public abstract class SummonSpell extends AnimatedSpell {
         this.spellData.set(SUMMON_POS, pos);
     }
 
-    protected Vec3 getSurroundingSpawnPosition(Vec3 origin, float yaw, float radius, int charge, int maxCharges) {
-        double angleStep = 2 * Math.PI / maxCharges;
-        double angle = angleStep * charge;
-        double totalAngle = angle + Math.toRadians(yaw);
-        double xOffset = -Math.sin(totalAngle) * radius;
-        double zOffset = Math.cos(totalAngle) * radius;
-        return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
-    }
-
     @Override
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, Consumer<T> extraData) {
         T entity = super.summonEntity(context, entityType, spawnPos, extraData);

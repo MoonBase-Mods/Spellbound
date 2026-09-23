@@ -15,7 +15,7 @@ public class BoundArrowRenderer extends ArrowRenderer<BoundArrow> {
     public ResourceLocation getTextureLocation(BoundArrow entity) {
         var variant = entity.getVariant();
         String name = variant.getName();
-        return CommonClass.customLocation("entity/bound_arrow/" + name + "_arrow.png");
+        return CommonClass.customLocation("textures/entity/bound_arrow/" + name + "_arrow.png");
     }
 
 }

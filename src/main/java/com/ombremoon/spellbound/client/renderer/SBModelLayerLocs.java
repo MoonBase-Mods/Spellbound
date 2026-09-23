@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.renderer.entity;
+package com.ombremoon.spellbound.client.renderer;
 
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.model.geom.ModelLayerLocation;

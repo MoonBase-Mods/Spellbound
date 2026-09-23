@@ -118,12 +118,12 @@ public class NightbladeSpell extends ImbuementSpell {
                             }
 
                             BlockPos targetPos = target.blockPosition();
-                            if (context.hasSkillReady(SBSkills.ASSASSINS_BOUNTY)
+                            if (context.hasSkill(SBSkills.ASSASSINS_BOUNTY)
                                     && caster instanceof Player player
                                     && this.isCrit(player, target)
                                     && this.isAttackFromBehind(target, post.getSource())
                                     && this.isDark(level, player.blockPosition())
-                                    && !target.isDeadOrDying()) {
+                                    && target.isDeadOrDying()) {
                                 RitualHelper.createItem(level, targetPos.above(2), new ItemStack(SBItems.FOOL_SHARD.get()));
                                 this.addCooldown(SBSkills.ASSASSINS_BOUNTY, 24000);
                             }

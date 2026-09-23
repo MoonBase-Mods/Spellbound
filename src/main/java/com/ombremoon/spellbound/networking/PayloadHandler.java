@@ -178,7 +178,7 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer(player, new UpdateSkillBuffPayload(player.getId(), skillBuff, duration, removeBuff));
     }
 
-    public static void updateCooldowns(ServerPlayer player, Holder<Skill> skill, int duration) {
+    public static void updateCooldowns(ServerPlayer player, SkillProvider skill, int duration) {
         PacketDistributor.sendToPlayer(player, new UpdateCooldownsPayload(player.getId(), skill, duration));
     }
 

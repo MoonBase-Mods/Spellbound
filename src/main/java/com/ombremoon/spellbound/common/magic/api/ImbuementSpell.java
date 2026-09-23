@@ -87,7 +87,11 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
             handler.getListener().addListener(
                     SpellEventListener.Events.USE_ITEM,
                     this.location(),
-                    useItemEvent -> this.onUseImbuement(context)
+                    useItemEvent -> {
+                        if (this.isHoldingImbuement(stack)) {
+                            this.onUseImbuement(context);
+                        }
+                    }
             );
         }
     }

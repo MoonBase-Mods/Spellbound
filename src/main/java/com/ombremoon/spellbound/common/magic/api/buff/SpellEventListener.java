@@ -136,6 +136,7 @@ public class SpellEventListener {
         public static Events<CastSpellEvent> CAST_SPELL = new Events<>(false);
         public static Events<JumpEvent> JUMP = new Events<>(false);
         public static Events<PlayerAttackEvent> ATTACK = new Events<>(false);
+        public static Events<PlayerAttackEvent> ATTACK_POST = new Events<>(false);
         public static Events<IncomingDamageEvent> INCOMING_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Post> POST_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Pre> PRE_DAMAGE = new Events<>(false);

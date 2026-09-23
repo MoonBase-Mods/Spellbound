@@ -247,11 +247,6 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     }
 
     @Override
-    public void setSummoner(Entity entity) {
-        setSummoner(entity.getId());
-    }
-
-    @Override
     public void setSummoner(int id) {
         this.entityData.set(OWNER_ID, id);
     }

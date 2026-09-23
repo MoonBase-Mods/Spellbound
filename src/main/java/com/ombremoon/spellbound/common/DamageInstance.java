@@ -26,4 +26,8 @@ public record DamageInstance(ResourceKey<DamageType> damageType, float amount, O
     public static DamageInstance of(ResourceKey<DamageType> damageType, float amount) {
         return new DamageInstance(damageType, amount, Optional.empty());
     }
+
+    public static DamageInstance ofType(ResourceKey<DamageType> damageType) {
+        return DamageInstance.of(damageType, 0.0F);
+    }
 }

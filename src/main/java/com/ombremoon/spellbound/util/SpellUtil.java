@@ -28,6 +28,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
@@ -203,6 +204,8 @@ public class SpellUtil {
     public static void setOwner(@NotNull Entity entity, @NotNull LivingEntity owner) {
         if (entity instanceof SBSummonable summonable) {
             summonable.setSummoner(owner);
+        } else if (entity instanceof Projectile projectile) {
+            projectile.setOwner(owner);
         } else {
             entity.setData(SBData.OWNER_ID, owner.getId());
         }

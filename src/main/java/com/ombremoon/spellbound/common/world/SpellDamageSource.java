@@ -60,7 +60,12 @@ public class SpellDamageSource extends DamageSource {
         for (DamageInstance instance : this.extraDamage) {
             var optional = instance.exclusiveTo();
             if (optional.isEmpty() || entity.getType().is(optional.get())) {
-                damage += instance.amount();
+                float amount = instance.amount();
+                if (spell != null) {
+                    amount = spell.potency(amount);
+                }
+
+                damage += amount;
             }
         }
 

@@ -20,6 +20,8 @@ public class SBAttributes {
     public static Holder<Attribute> MANA_REGEN = register("mana_regen", 1d, 0d, 100d);
     public static Holder<Attribute> MAX_MANA = register("max_mana", 100d, 100d, 5000d);
 
+    public static Holder<Attribute> ATTACK_POWER = register("attack_power", 1, 0, 1024);
+
     //Resistances
     public static Holder<Attribute> MAGIC_RESIST = registerResistance("magic_resistance");
     public static Holder<Attribute> FIRE_SPELL_RESIST = registerResistance("fire_spell_resistance");

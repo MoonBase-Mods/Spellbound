@@ -16,8 +16,9 @@ import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
+import com.ombremoon.spellbound.client.renderer.entity.HellhoundRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.SBModelLayerLocs;
+import com.ombremoon.spellbound.client.renderer.SBModelLayerLocs;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatRenderer;
@@ -64,10 +65,8 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -119,6 +118,8 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
         event.registerEntityRenderer(SBEntities.BOUND_ARROW.get(), BoundArrowRenderer::new);
         event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.SACRED_BLADE.get(), VFXProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.GOLDEN_DART.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
         event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), CursedRuneRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
@@ -126,6 +127,7 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.HELLHOUND.get(), HellhoundRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);
