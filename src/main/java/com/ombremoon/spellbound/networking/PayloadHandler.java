@@ -54,8 +54,9 @@ import java.util.Set;
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class PayloadHandler {
 
-    public static void requestStructureData(ResourceLocation structure) {
-        PacketDistributor.sendToServer(new RequestStructurePayload(structure));
+    //Brings data about a structure to the client, if isMultiblock is true it will instead query Spellbound's multiblock registry
+    public static void requestStructureData(ResourceLocation structure, boolean isMultiblock) {
+        PacketDistributor.sendToServer(new RequestStructurePayload(structure, isMultiblock));
     }
 
     public static void sendStructureDataToClient(ServerPlayer player, StructureInfo info) {

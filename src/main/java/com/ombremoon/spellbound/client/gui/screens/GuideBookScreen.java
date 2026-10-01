@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.client.gui.screens;
 
+import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuideBookScreen extends Screen {
@@ -31,6 +33,8 @@ public class GuideBookScreen extends Screen {
     protected int currentPage = 0;
     protected int lastPage;
     protected List<GuideBookPage> pages;
+
+    private Pair<Double, Double> mouseDrag = Pair.of(0d, 0d);
 
     public GuideBookScreen(Component title, ResourceLocation bookId, ResourceLocation bookTexture) {
         super(title);
@@ -73,8 +77,19 @@ public class GuideBookScreen extends Screen {
         ElementRenderDispatcher.tick();
         checkCornerHover(guiGraphics, mouseX, mouseY);
 
+        List<IPageElement> elementsToRender = new ArrayList<>();
+        List<IPageElement> elementsAboveAll = new ArrayList<>();
 
         for (IPageElement element : pages.get(currentPage).elements()) {
+            switch (element.getRenderOrder()) {
+                case BELOW -> elementsToRender.addFirst(element);
+                case ABOVE -> elementsAboveAll.add(element);
+                default -> elementsToRender.addLast(element);
+            }
+        }
+        elementsToRender.addAll(elementsAboveAll);
+
+        for (IPageElement element : elementsToRender) {
             ElementRenderDispatcher.renderElement(element, guiGraphics, renderLeft, renderTop, mouseX, mouseY, partialTick);
 
             if (element instanceof IInteractable interactable
@@ -85,8 +100,8 @@ public class GuideBookScreen extends Screen {
             }
         }
 
-
     }
+
 
     public void checkCornerHover(GuiGraphics graphics, int mouseX, int mouseY) {
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
@@ -110,6 +125,7 @@ public class GuideBookScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) setDragging(true);
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
             while (currentPage > 0) {
                 currentPage--;
@@ -138,7 +154,23 @@ public class GuideBookScreen extends Screen {
                 return true;
             }
         }
-
         return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        boolean flag = super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        this.mouseDrag = Pair.of(dragX, dragY);
+        return flag;
+    }
+
+    public Pair<Double, Double> getMouseDrag() {
+        return mouseDrag;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        ElementRenderDispatcher.resetElements();
     }
 }

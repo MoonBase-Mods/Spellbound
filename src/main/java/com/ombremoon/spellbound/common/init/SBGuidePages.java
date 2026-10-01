@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideMultiBlockElement;
+import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.block.Block;
 import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Struct;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -498,11 +500,6 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.general.path_items"), TRANSFIG_ARMOR_STAFF),
                 new ContentsEntry(translatable("guide.transfiguration.armor_recipe"), TRANSFIG_HELM_RITUAL),
                 new ContentsEntry(translatable("guide.transfiguration.staff_recipe"), TRANSFIG_STAFF_RITUAL),
-                new ContentsEntry(spellName(SBSpells.STRIDE.get()), STRIDE),
-                new ContentsEntry(spellName(SBSpells.SHADOW_GATE.get()), SHADOW_GATE),
-                new ContentsEntry(spellName(SBSpells.MYSTIC_ARMOR.get()), MYSTIC_ARMOR),
-                //new ContentsEntry(spellName(SBSpells.CREATE_OBJECT.get()), CREATE_OBJECT),
-                new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL),
                 new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL),
                 new ContentsEntry(translatable("guide.general.novice_spells"), STRIDE),
                 new ContentsEntry(translatable("guide.general.apprentice_spells"), null),
@@ -522,36 +519,53 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.transfiguration.rituals1"), PAGE_TWO_START_X, 35),
                 new TextEntry(translatable("guide.transfiguration.rituals2"), PAGE_TWO_START_X, 125)
         );
-        createDescriptionAndImages(
+        createStructurePage(
                 context,
+                Book.TRANSFIG,
                 TRANSFIG_RITUALS,
                 TRANSFIG_DESCRIPTION,
-                Book.TRANSFIG,
                 translatable("guide.transfiguration.rituals_cont"),
                 null,
                 false,
                 List.of(
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier1.png"), 9, 37, 70, 70, false),
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier2.png"), 60, 110, 70, 70, false),
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier3.png"), PAGE_TWO_START_X + 9, 9, 100, 100, false),
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/pedestal.png"), PAGE_TWO_START_X + 9, 111, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/display.png"), PAGE_TWO_START_X + 9, 130, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_1.png"), 95, 50, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_5.png"), 124, 64, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_17.png"), 103, 83, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_4.png"), 15, 125, 16, 16, false), //8, 21 -- 14, 19
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_22.png"), 38, 139, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_19.png"), 4, 148, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_13.png"), 284, 25, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_6.png"), 294, 52, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_18.png"), 304, 75, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_15.png"), 284, 75, 16, 16, false),
-                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_26.png"), 304, 25, 16, 16, false)
+                        new StructureEntry(loc("one_ring"), 74, 87),
+                        new StructureEntry(loc("two_ring"), PAGE_TWO_START_X + 74, 59)
                 ),
-                new TextEntry(translatable("guide.transfiguration.pedestal_legend"), PAGE_TWO_START_X + 31, 115),
-                new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
-                new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
+                List.of(
+                        new TextEntry(translatable("guide.transfiguration.rune_circuit"), 0, 125),
+                        new TextEntry(translatable("guide.transfiguration.rune_extended"), PAGE_TWO_START_X, 110)
+                )
         );
+//        createDescriptionAndImages(
+//                context,
+//                TRANSFIG_RITUALS,
+//                TRANSFIG_DESCRIPTION,
+//                Book.TRANSFIG,
+//                translatable("guide.transfiguration.rituals_cont"),
+//                null,
+//                false,
+//                List.of(
+//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier1.png"), 9, 37, 70, 70, false),
+//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier2.png"), 60, 110, 70, 70, false),
+//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier3.png"), PAGE_TWO_START_X + 9, 9, 100, 100, false),
+//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/pedestal.png"), PAGE_TWO_START_X + 9, 111, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/display.png"), PAGE_TWO_START_X + 9, 130, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_1.png"), 95, 50, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_5.png"), 124, 64, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_17.png"), 103, 83, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_4.png"), 15, 125, 16, 16, false), //8, 21 -- 14, 19
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_22.png"), 38, 139, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_19.png"), 4, 148, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_13.png"), 284, 25, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_6.png"), 294, 52, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_18.png"), 304, 75, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_15.png"), 284, 75, 16, 16, false),
+//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_26.png"), 304, 25, 16, 16, false)
+//                ),
+//                new TextEntry(translatable("guide.transfiguration.pedestal_legend"), PAGE_TWO_START_X + 31, 115),
+//                new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
+//                new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
+//        );
         createDescriptionWithRecipeAndItem(
                 context,
                 TRANSFIG_RITUAL_ITEMS_1,
@@ -891,7 +905,6 @@ public interface SBGuidePages {
                 .forBook(forBook)
                 .setPreviousPage(prevPage)
                 .addElements(
-                        new GuideMultiBlockElement(CommonClass.customLocation("test")),
                         PageBuilder.Image
                                 .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
                                 .setDimensions(150, 150)
@@ -1745,6 +1758,72 @@ public interface SBGuidePages {
         );
     }
 
+    private static void createStructurePage(
+            BootstrapContext<GuideBookPage> context,
+            Book book,
+            ResourceKey<GuideBookPage> currentPage,
+            ResourceKey<GuideBookPage> prevPage,
+            @Nullable Component title,
+            @Nullable Component secondTitle,
+            boolean doubleTitle,
+            List<StructureEntry> structures,
+            List<TextEntry> text
+    ) {
+        PageBuilder builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage);
+
+        if (title != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(title)
+                            .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(0, 0)
+                            .build()
+            );
+        }
+
+        if (secondTitle != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(secondTitle)
+                            .position(PAGE_TWO_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(PAGE_TWO_START_X, 0)
+                            .build()
+            );
+        }
+
+        for (var entry : text) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(entry.text)
+                            .position(entry.xPos, entry.yPos)
+                            .maxLineLength(entry.lineLength)
+                            .build()
+            );
+        }
+
+        for (var structure : structures) {
+            builder.addElements(
+                    PageBuilder.Multiblock.of(structure.structure(), structure.isMultiblock())
+                            .setPos(structure.xPos, structure.yPos)
+                            .setDetailedScale(structure.detailedScale)
+                            .setScale(structure.scale)
+                            .build()
+            );
+        }
+
+        register(context, currentPage, builder);
+    }
+
     private static <T extends AbstractSpell> void createDivineActionPage(
             BootstrapContext<GuideBookPage> context,
             ResourceKey<GuideBookPage> currentPage,
@@ -2007,6 +2086,13 @@ public interface SBGuidePages {
 
         ItemEntry(Ingredient item, int xPos, int yPos) {
             this(item, xPos, yPos, true);
+        }
+    }
+
+    record StructureEntry(ResourceLocation structure, int xPos, int yPos, int scale, int detailedScale, boolean isMultiblock) {
+
+        StructureEntry(ResourceLocation multiblock, int xPos, int yPos) {
+            this(multiblock, xPos, yPos, 8, 20, true);
         }
     }
 

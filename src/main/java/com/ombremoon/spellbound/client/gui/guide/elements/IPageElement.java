@@ -23,4 +23,12 @@ public interface IPageElement {
      */
     @NotNull MapCodec<? extends IPageElement> codec();
 
+    default RenderOrder getRenderOrder() {return RenderOrder.STANDARD;}
+
+    enum RenderOrder {
+        BELOW,
+        STANDARD,
+        ABOVE
+    }
+
 }

@@ -76,6 +76,11 @@ public class ModTagProvider {
             this.populateTag(net.minecraft.tags.BlockTags.FLOWERS, SBBlocks.ARCANTHUS.get());
             this.populateTag(SBTags.Blocks.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE.get(), SBBlocks.PLAINS_DIVINE_SHRINE.get(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
 
+            populateTag(SBTags.Blocks.MULTIBLOCK_HIDDEN_BLOCKS,
+                    Blocks.JIGSAW,
+                    Blocks.STRUCTURE_BLOCK,
+                    Blocks.STRUCTURE_VOID);
+
             populateTag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE,
                     SBBlocks.STORM_CRYSTAL_BLOCK.get(),
                     SBBlocks.STORM_CRYSTAL_CLUSTER.get(),

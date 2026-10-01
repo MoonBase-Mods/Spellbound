@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.events;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
@@ -201,8 +202,11 @@ public class NeoForgeEvents {
                     }
                 }
 
-                if (player.level().isClientSide)
+                if (player.level().isClientSide) {
+                    if (player.tickCount % 60 == 0) GuideBlockAndTintGetter.tickStructureCache();
                     SpellCastEvents.chargeOrChannelSpell(event);
+                }
+
             }
 
             if (entity instanceof Mob mob) {
