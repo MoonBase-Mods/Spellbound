@@ -76,6 +76,9 @@ public class NightbladeSpell extends ImbuementSpell {
                                 pre.setNewDamage(pre.getOriginalDamage() * 1.5F);
 
                                 //TODO: ADD BLEED
+
+                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_bleed"),
+                                        pre.getTarget().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
                             }
                         }
                     }
@@ -133,6 +136,8 @@ public class NightbladeSpell extends ImbuementSpell {
                                 spell.setMistPos(caster.position());
                                 spell.softCastSpell(caster);
                             }
+                            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_hit"),
+                                    post.getTarget().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
                         }
                     }
             );
