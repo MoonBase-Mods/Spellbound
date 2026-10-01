@@ -172,7 +172,8 @@ public class ModTagProvider {
                             SBPaintingVariants.VALKYR2,
                             SBPaintingVariants.VILLAGE,
                             SBPaintingVariants.WITCH,
-                            SBPaintingVariants.WITCH2
+                            SBPaintingVariants.WITCH2,
+                            SBPaintingVariants.FENRIR
                     );
         }
     }
