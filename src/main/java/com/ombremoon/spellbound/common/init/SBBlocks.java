@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFights;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -291,6 +292,13 @@ public class SBBlocks {
     public static final Supplier<Block> DARK_ALTAR = registerBlock("dark_altar", () -> new DarkAltarBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));
+
+    public static final Supplier<Block> STAR_MAP = registerSimpleBlock("star_map");
+    public static final Supplier<Block> RUNED_STONE_PILLAR = registerSimpleBlock("runed_stone_pillar");
+    public static final Supplier<Block> RUNED_END_PILLAR = registerSimpleBlock("runed_end_pillar");
+    public static final Supplier<Block> RUNED_COPPER_PILLAR = registerSimpleBlock("runed_copper_pillar");
+    public static final Supplier<Block> ARCANE_CANDLE = registerSimpleBlock("arcane_candle");
+    public static final Supplier<Block> ARCANE_CHALKBOARD = registerSimpleBlock("arcane_chalkboard");
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return true;
