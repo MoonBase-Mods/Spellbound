@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.magic.familiars;
 
-import com.mojang.logging.LogUtils;
 import com.ombremoon.spellbound.common.init.SBFamiliars;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
@@ -17,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
@@ -360,10 +358,6 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
             entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
             entryTag.putInt("rebirths", entry.getValue());
             rebirths.add(entryTag);
-
-            if (this.owner instanceof Player) {
-                LogUtils.getLogger().debug(String.valueOf(entryTag.getInt("rebirths")));
-            }
         }
 
         for (var entry : familiarBond.entrySet()) {

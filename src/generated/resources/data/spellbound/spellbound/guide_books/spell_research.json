@@ -92,7 +92,7 @@
       },
       "position": {
         "xOffset": 172,
-        "yOffset": 143
+        "yOffset": 135
       },
       "translation": {
         "translate": "guide.basic.page_scraps3"
@@ -104,7 +104,7 @@
       "image": "spellbound:textures/gui/books/images/spell_broker.png",
       "position": {
         "xOffset": 75,
-        "yOffset": 75
+        "yOffset": 90
       },
       "width": 75
     }

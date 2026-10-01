@@ -16,13 +16,15 @@ import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
+import com.ombremoon.spellbound.client.renderer.entity.HellhoundRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.SBModelLayerLocs;
+import com.ombremoon.spellbound.client.renderer.SBModelLayerLocs;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.projectile.BoundArrowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
@@ -40,6 +42,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
+import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -113,7 +116,10 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
         event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.BOUND_ARROW.get(), BoundArrowRenderer::new);
         event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.SACRED_BLADE.get(), VFXProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.GOLDEN_DART.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
         event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), CursedRuneRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
@@ -121,6 +127,7 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.HELLHOUND.get(), HellhoundRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);
@@ -129,7 +136,7 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SHADOW_MIST.get(), VFXEntityRenderer::new);
-        event.registerEntityRenderer(SBEntities.SHADOW_VEIL.get(), VFXEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_VEIL.get(), VFXSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.SEEKING_PROJECTILE.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
@@ -268,6 +275,15 @@ public class ClientEvents {
 
             return 0.0F;
         });
+
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("stone"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.STONE ? 1.0F : 0.0F);
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("bone"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.BONE ? 1.0F : 0.0F);
+        ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("bamboo"),
+                (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.BAMBOO ? 1.0F : 0.0F);
+
+
     }
 
     private static void registerElementRenderers() {

@@ -1,6 +1,24 @@
 {
   "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "spellbound:item/spirit_whistle/spirit_whistle_wood"
-  }
+  "textures": { "layer0": "spellbound:item/spirit_whistle/spirit_whistle_wood" },
+  "overrides": [
+    {
+      "predicate": {
+        "spellbound:stone": 1.0
+      },
+      "model": "spellbound:item/spirit_whistle/spirit_whistle_stone"
+    },
+    {
+      "predicate": {
+        "spellbound:bone": 1.0
+      },
+      "model": "spellbound:item/spirit_whistle/spirit_whistle_bone"
+    },
+    {
+      "predicate": {
+        "spellbound:bamboo": 1.0
+      },
+      "model": "spellbound:item/spirit_whistle/spirit_whistle_bamboo"
+    }
+  ]
 }

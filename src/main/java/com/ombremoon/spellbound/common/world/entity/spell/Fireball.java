@@ -1,9 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.effects.FireballEffect;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -27,8 +25,8 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     }
 
     @Override
-    protected EffectBuilder getEffect() {
-        return EffectBuilder.FireballBuilder.of(this.getId());
+    protected EffectBuilder<?> getEffect() {
+        return FireballEffect.FireballBuilder.of(this.getId());
     }
 
     @Override
@@ -39,7 +37,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(SIZE, 0F);
+        builder.define(SIZE, 1F);
         builder.define(STICKY, false);
         builder.define(STICK_TARGET, -1);
     }
@@ -48,7 +46,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     public void tick() {
         if (this.isSticky()) {
             Entity target = this.level().getEntity(this.entityData.get(STICK_TARGET));
-            FireballSpell spell = this.getSpell();
+            FireballSpell spell = this.getOrCreateSpell();
             if (target instanceof LivingEntity) {
                 this.setPos(target.getX(), target.getY(), target.getZ());
                 this.setDeltaMovement(target.getDeltaMovement());

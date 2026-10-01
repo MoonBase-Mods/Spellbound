@@ -3,16 +3,21 @@ package com.ombremoon.spellbound.common.world.sound;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.JukeboxSong;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
+import static com.ombremoon.spellbound.main.Constants.MOD_ID;
+
 public class SpellboundSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, Constants.MOD_ID);
+            DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, MOD_ID);
 
     //FIRE
     public static final Supplier<SoundEvent> FIREBALL_USE = registerSoundEvent("fireball_use");
@@ -36,33 +41,38 @@ public class SpellboundSounds {
     public static final Supplier<SoundEvent> DIVINE_ACTION = registerSoundEvent("divine_action");
     public static final Supplier<SoundEvent> DARK_DIVINE_ACTION = registerSoundEvent("dark_divine_action");
 
-
-
-            //MISC
+    //MISC
     public static final Supplier<SoundEvent> CURSED_RUNE_ACTIVATED = registerSoundEvent("cursed_rune_activated");
     public static final Supplier<SoundEvent> SHADOW_PLACE = registerSoundEvent("shadow_place");
     public static final Supplier<SoundEvent> SPEED = registerSoundEvent("speed");
     public static final Supplier<SoundEvent> PURGE_MAGIC = registerSoundEvent("purge_magic");
     public static final Supplier<SoundEvent> PURGE_MAGIC_EXPUNGE = registerSoundEvent("purge_magic_expunge");
-
     public static final Supplier<SoundEvent> COOLING_ARMOR = registerSoundEvent("cooling_armor");
-
     public static final Supplier<SoundEvent> CRYSTAL_SHATTER = registerSoundEvent("crystal_shatter");
     public static final Supplier<SoundEvent> CORPSE_EXPLOSION = registerSoundEvent("corpse_explosion");
-
     public static final Supplier<SoundEvent> SHATTER_SKIN = registerSoundEvent("shatter_skin");
+    public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
 
     //NEED IMPLEMENTATION
-    public static final Supplier<SoundEvent> NIGHTBLADE = registerSoundEvent("nightblade_imbuement");
+
     public static final Supplier<SoundEvent> SMITE_STRIKE = registerSoundEvent("smite_strike");
     public static final Supplier<SoundEvent> SMITE_SWOOSH = registerSoundEvent("smite_swoosh"); //this is for the projectile
 
-
-
+    //UNUSED
     public static final Supplier<SoundEvent> ROCK_BUILD_UP = registerSoundEvent("rock_build_up");
-    //MENU
-    public static final  Supplier<SoundEvent> RES_STONE_OPEN = registerSoundEvent("res_stone_open");
 
+
+    //MENU
+    public static final Supplier<SoundEvent> RES_STONE_OPEN = registerSoundEvent("res_stone_open");
+    public static final Supplier<SoundEvent> WHISTLE_ON= registerSoundEvent("whistle_on");
+    public static final Supplier<SoundEvent> WHISTLE_OFF = registerSoundEvent("whistle_off");
+
+    public static final Supplier<SoundEvent> INTERSTELLARE = registerSoundEvent("interstellare");
+    public static final ResourceKey<JukeboxSong> INTERSTELLARE_KEY = createSong("interstellare");
+
+    private static ResourceKey<JukeboxSong> createSong (String name){
+        return ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(MOD_ID, name));
+    }
 
     private static Supplier<SoundEvent> registerSoundEvent(String name){
         ResourceLocation id = CommonClass.customLocation(name);

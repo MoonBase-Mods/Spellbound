@@ -26,6 +26,7 @@ import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -58,6 +59,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -134,6 +136,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private SpellContext context;
     private SpellContext castContext;
     private boolean isRecast;
+    protected boolean isSoftCast = false;
     protected SkillProvider choice;
     private int charges;
     public int tickCount = 0;
@@ -270,7 +273,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public int getCastTime() {
-        return this.getCastTime(this.castContext);
+        return (int) (this.getCastTime(this.castContext) * (1 / SpellUtil.getCastSpeed(this.caster)));
     }
 
     public boolean isCasting() {
@@ -449,6 +452,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public int level() {
         return this.context.getSkills().getSpellLevel(this.spellType);
+    }
+
+    public int getSpellNumberCap(SpellContext context) {
+        return context.getSpellLevel() + 1;
     }
 
     /**
@@ -642,6 +649,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return skill.equals(this.choice);
     }
 
+    public boolean isChoice(ResourceLocation skill) {
+        return skill.equals(this.choice.location());
+    }
+
+    public boolean isChoice(SkillProvider skill) {
+        return skill.equals(this.choice);
+    }
+
     public boolean isChoice(Holder<Skill> skill) {
         return this.isChoice(skill.value());
     }
@@ -779,8 +794,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return hurt(this.caster, targetEntity, source.typeHolder().getKey(), hurtAmount);
     }
 
+    public boolean hurt(LivingEntity targetEntity, ResourceKey<DamageType> damageType, float hurtAmount) {
+        return hurt(this.caster, targetEntity, damageType, hurtAmount);
+    }
+
     /**
-     * Hurts the target entity. The damage type is determined by the sub-path of the path.
+     * Hurts the target entity. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @param hurtAmount The amount of damage the entity takes
      * @return Whether the entity takes damage or not
@@ -802,7 +821,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity by the pre-defined base damage of the path. The damage type is determined by the sub-path of the path.
+     * Hurts the target entity by the pre-defined base damage of the spell. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @return Whether the entity takes damage or not
      */
@@ -815,7 +834,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates damage based on path level, path level, potency, and judgment (if Divine)
+     * Calculates damage based on spell level, path level, potency, and judgment (if Divine)
      * @param ownerEntity The damage causing entity
      * @param amount The damage amount
      * @return The damage taking all modifiers into account
@@ -838,7 +857,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates the final damage dealt after taking path level, path level, potency, and magic resistance into account
+     * Calculates the final damage dealt after taking spell level, path level, potency, and magic resistance into account
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageAmount The damage amount
@@ -847,6 +866,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private float getDamageAfterResistances(LivingEntity ownerEntity, LivingEntity targetEntity, ResourceKey<DamageType> damageType, float damageAmount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
         float f = (float) (this.getModifiedDamage(ownerEntity, targetEntity, damageAmount) * (1.0F - effects.getMagicResistance()));
+        f *= (float) ownerEntity.getAttributeValue(SBAttributes.ATTACK_POWER);
         var effect = effects.getEffectFromDamageType(damageType);
         return effect != null ? f * (1.0F - effect.getEntityResistance(targetEntity)) : f;
     }
@@ -868,16 +888,32 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return livingEntity -> SpellUtil.IS_ALLIED.test(livingEntity, this.caster);
     }
 
+    protected List<LivingEntity> getNearbyEntities(Entity source, double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), exclusiveTo);
+    }
+
+    protected List<LivingEntity> getNearbyEntities(double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.getNearbyEntities(this.caster, range, exclusiveTo);
+    }
+
+    protected List<LivingEntity> getNearbyEntities(double range) {
+        return this.getNearbyEntities(this.caster, range, livingEntity -> true);
+    }
+
     protected List<LivingEntity> getAttackableEntities(double range) {
         return this.getAttackableEntities(this.caster, range);
     }
 
     public List<LivingEntity> getAttackableEntities(Entity source, double range) {
-        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), this.getAttackPredicate());
+        return this.getAttackableEntities(source, range, living -> true);
+    }
+
+    public List<LivingEntity> getAttackableEntities(Entity source, double range, Predicate<LivingEntity> exclusiveTo) {
+        return this.getNearbyEntities(source, range, this.getAttackPredicate().and(exclusiveTo));
     }
 
     protected List<LivingEntity> getAlliedEntities(Entity source, double range) {
-        return this.level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(source, range), this.getAllyPredicate());
+        return this.getNearbyEntities(source, range, this.getAllyPredicate());
     }
 
     protected List<LivingEntity> getAlliedEntities(double range) {
@@ -934,18 +970,35 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return SpellUtil.getSpellHandler(targetEntity).consumeMana(amount);
     }
 
-    protected boolean giveSpellItem(ItemStack stack, Imbuement imbuement) {
-        if (this.caster.getMainHandItem().isEmpty()) {
+    protected boolean giveSpellItem(ItemStack stack, EquipmentSlot slot, Imbuement imbuement) {
+        if (this.caster.getItemBySlot(slot).isEmpty()) {
             stack.set(SBData.IMBUEMENT, imbuement);
-            this.caster.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            this.caster.setItemSlot(slot, stack);
             return true;
         }
 
         return false;
     }
 
+    protected boolean giveSpellItem(ItemStack stack, Imbuement imbuement) {
+        return this.giveSpellItem(stack, EquipmentSlot.MAINHAND, imbuement);
+    }
+
     protected boolean giveSpellItem(ItemStack stack) {
-        return this.giveSpellItem(stack, null);
+        return this.giveSpellItem(stack, Imbuement.create(this));
+    }
+
+    protected void removeSpellItem(LivingEntity caster, int index) {
+        if (caster instanceof Player player) {
+            Inventory inventory = player.getInventory();
+            inventory.removeItem(index, 1);
+        } else {
+            this.removeSpellItem(caster, EquipmentSlot.MAINHAND);
+        }
+    }
+
+    protected void removeSpellItem(LivingEntity caster, EquipmentSlot slot) {
+        caster.setItemSlot(slot, ItemStack.EMPTY);
     }
 
     protected boolean isBuffable(SpellContext context) {
@@ -1015,6 +1068,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public <T> void addSkillBuff(LivingEntity livingEntity, Holder<Skill> skill, ResourceLocation id, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject) {
         this.addSkillBuff(livingEntity, skill, id, buffCategory, buffObject, skillObject, -1);
+    }
+
+    public <T> void addSkillBuff(LivingEntity livingEntity, Holder<Skill> skill, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject, int duration) {
+        this.addSkillBuff(livingEntity, skill, skill.value().location(), buffCategory, buffObject, skillObject, duration);
+    }
+
+    public <T> void addSkillBuff(LivingEntity livingEntity, Holder<Skill> skill, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject) {
+        this.addSkillBuff(livingEntity, skill, buffCategory, buffObject, skillObject, -1);
     }
 
 
@@ -1092,6 +1153,18 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public float potency(float initialAmount) {
         return potency(null, initialAmount);
+    }
+
+    public float potencyWithLevel(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
+        return initialAmount * getModifier(ModifierType.POTENCY, livingEntity, target) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
+    }
+
+    public float potencyWithLevel(LivingEntity target, float initialAmount) {
+        return potencyWithLevel(this.caster, target, initialAmount);
+    }
+
+    public float potencyWithLevel(float initialAmount) {
+        return potencyWithLevel(null, initialAmount);
     }
 
     public float invertedPotency(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
@@ -1221,23 +1294,32 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return null;
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), caster.getXRot(), caster.getYRot(), velocity, inaccuracy, projectile -> {});
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), caster.getXRot(), caster.getYRot(), velocity, inaccuracy, extraData);
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.shootProjectile(context, entityType, new Vec3(caster.getX(), caster.getEyeY() - 0.1F, caster.getZ()), x, y, velocity, inaccuracy, extraData);
     }
 
-    protected <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
+    public <T extends Projectile> T shootProjectile(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, float x, float y, float velocity, float inaccuracy, Consumer<T> extraData) {
         return this.summonEntity(context, entityType, spawnPos, projectile -> {
             projectile.shootFromRotation(caster, x, y, 0.0F, velocity, inaccuracy);
             extraData.accept(projectile);
         });
+    }
+
+    protected Vec3 getSurroundingSpawnPosition(Vec3 origin, float yaw, float radius, int charge, int maxCharges) {
+        double angleStep = 2 * Math.PI / maxCharges;
+        double angle = angleStep * charge;
+        double totalAngle = angle + Math.toRadians(yaw);
+        double xOffset = -Math.sin(totalAngle) * radius;
+        double zOffset = Math.cos(totalAngle) * radius;
+        return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
     }
 
     public void onEntityTick(ISpellEntity<?> spellEntity, SpellContext context) {
@@ -1351,7 +1433,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param skill The skill to go on cooldown
      * @param ticks The amount of ticks the cooldown will last
      */
-    public void addCooldown(Holder<Skill> skill, int ticks) {
+    public void addCooldown(SkillProvider skill, int ticks) {
         if (this.caster instanceof Player player && player.isCreative())
             return;
 
@@ -1359,6 +1441,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         if (!this.caster.level().isClientSide && this.caster instanceof ServerPlayer player)
             PayloadHandler.updateCooldowns(player, skill, ticks);
+    }
+
+    public void addCooldown(Holder<Skill> skill, int ticks) {
+        this.addCooldown(skill.value(), ticks);
     }
 
     protected void shakeScreen(Player player) {
@@ -1390,8 +1476,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             CameraEngine.getEngine(player).shakeScreen(player.getRandom().nextInt(), duration, intensity, maxOffset, freq);
     }
 
-    public boolean shouldRender(SpellContext context) {
+    protected boolean shouldRender(SpellContext context) {
         return true;
+    }
+
+    public boolean shouldRender() {
+        return this.shouldRender(this.context) && !this.isSoftCast;
     }
 
     public Vec3 findTeleportLocation(Level level, LivingEntity entity, float maxDistance) {
@@ -1580,8 +1670,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Will allow a spells to be recast without calling the end methods of the previously cast spells.
-     * @return Whether the spells should skip the end methods on recast.
+     * Will allow a spell to be recast without calling the end methods of the previously cast spells.
+     * @return Whether the spell should skip the end methods on recast.
      */
     public boolean skipEndOnRecast(SpellContext context) {
         return this.skipEndOnRecast.test(context, this);
@@ -1589,7 +1679,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     /**
      * Checks if the {@link GenericSpellLayer} should render a vfx layer when the spells is active.
-     * @return Whether the spells has a render layer
+     * @return Whether the spell has a render layer
      */
     public boolean hasLayer() {
         return this.hasLayer;
@@ -1599,8 +1689,29 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         castSpell(caster, caster.level(), caster.getOnPos());
     }
 
+    public void softCastSpell(LivingEntity caster) {
+        this.isSoftCast = true;
+        this.castContext = SpellContext.simple(this.spellType, caster);
+        if (!caster.level().isClientSide) {
+            this.initNoCast(caster, caster.level(), caster.getOnPos());
+            this.castId = SPELL_COUNTER.incrementAndGet();
+
+            CompoundTag initTag = this.initTag(false);
+            PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, new CompoundTag());
+            awardXp(this.manaCost * this.xpModifier);
+            if (caster instanceof Player player) {
+                player.awardStat(SBStats.SPELLS_CAST.get());
+            }
+
+            this.activateSpell();
+            this.sendDirtySpellData();
+            EventFactory.onSpellCast(caster, this, this.context);
+            this.init = true;
+        }
+    }
+
     /**
-     * Initializes spells data before activation. Will only activate the spells upon a successful cast condition.
+     * Initializes spells data before activation. Will only activate the spell upon a successful cast condition.
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
@@ -1633,15 +1744,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             this.castId = SPELL_COUNTER.incrementAndGet();
-
             if (!(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance())) || !SpellUtil.canCastSpell(caster, this)) {
                 onCastReset(this.context);
-                CompoundTag initTag = this.initTag(this.isRecast, true);
+                CompoundTag initTag = this.initTag(true);
                 PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
                 return;
             }
 
-            int spellCap = this.context.getSpellLevel() + 1;
+            int spellCap = this.getSpellNumberCap(this.context);
             if (!this.fullRecast && this.hasSummonStaffBuff(this.context))
                 spellCap++;
 
@@ -1650,7 +1760,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 this.endFirstSpell();
             }
 
-            CompoundTag initTag = this.initTag(this.isRecast, false);
+            CompoundTag initTag = this.initTag(false);
             PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
@@ -1660,7 +1770,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             handler.setCurrentlyCastingSpell(null);
             handler.previouslyCastSpell = this;
             handler.lastCastTick = level.getGameTime();
-            activateSpell();
+            this.activateSpell();
             this.sendDirtySpellData();
             EventFactory.onSpellCast(caster, this, this.context);
 
@@ -1683,6 +1793,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         this.isRecast = initTag.getBoolean("isRecast");
         this.charges = initTag.getInt("charges");
+        this.isSoftCast = initTag.getBoolean("softCast");
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
 
         if (initTag.getBoolean("forceReset")) {
@@ -1697,14 +1808,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         handler.previouslyCastSpell = this;
         handler.lastCastTick = level.getGameTime();
         handler.setCurrentlyCastingSpell(null);
-        activateSpell();
+        this.activateSpell();
         EventFactory.onSpellCast(caster, this, this.context);
 
         this.init = true;
     }
 
     /**
-     * Initializes spells data before activation. Will not activate the path.
+     * Initializes spell data before activation. Will not activate the spell.
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
@@ -1716,7 +1827,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         var handler = SpellUtil.getSpellHandler(caster);
         var list = handler.getActiveSpells(spellType());
-        if (!list.isEmpty())
+        if (!this.isSoftCast && !list.isEmpty())
             this.isRecast = true;
 
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
@@ -1727,7 +1838,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the spells cast prior to this one of the same spells type. Necessary for saving/loading data on recast spells.
+     * Returns the spell cast prior to this one of the same spell type. Necessary for saving/loading data on recast spells.
      * @return The previously cast spells
      */
     protected AbstractSpell getPreviouslyCastSpell() {
@@ -1747,11 +1858,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         firstSpell.ifPresent(AbstractSpell::endSpell);
     }
 
-    public CompoundTag initTag(boolean isRecast, boolean forceReset) {
+    public CompoundTag initTag(boolean forceReset) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("charges", this.charges);
-        nbt.putBoolean("isRecast", isRecast);
+        nbt.putBoolean("isRecast", this.isRecast);
         nbt.putBoolean("forceReset", forceReset);
+        nbt.putBoolean("softCast", this.isSoftCast);
         return nbt;
     }
 
@@ -1760,9 +1872,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     private void activateSpell() {
         var handler = this.context.getSpellHandler();
-        var skills = this.context.getSkills();
         if (this.fullRecast && this.isRecast) {
             handler.recastSpell(this);
+        } else if (this.isSoftCast) {
+            handler.queueSpell(this);
         } else {
             handler.activateSpell(this);
         }

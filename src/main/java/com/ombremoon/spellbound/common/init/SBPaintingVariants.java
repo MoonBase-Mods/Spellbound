@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface SBPaintingVariants {
+    //also in modtagprovider
     List<ResourceKey<PaintingVariant>> PAINTINGS = new ArrayList<>();
     ResourceKey<PaintingVariant> DECEPTION = create("deception");
     ResourceKey<PaintingVariant> DIVINE = create("divine");
@@ -27,6 +28,8 @@ public interface SBPaintingVariants {
     ResourceKey<PaintingVariant> VILLAGE = create("village");
     ResourceKey<PaintingVariant> WITCH = create("witch");
     ResourceKey<PaintingVariant> WITCH2 = create("witch2");
+    ResourceKey<PaintingVariant> FENRIR = create("fenrir");
+
 
     static void bootstrap(BootstrapContext<PaintingVariant> context) {
         register(context, DECEPTION, 1, 1);
@@ -45,6 +48,7 @@ public interface SBPaintingVariants {
         register(context, VILLAGE, 2, 2);
         register(context, WITCH, 1, 2);
         register(context, WITCH2, 1, 1);
+        register(context, FENRIR, 2,2);
     }
 
     private static void register(BootstrapContext<PaintingVariant> context, ResourceKey<PaintingVariant> key, int width, int height) {

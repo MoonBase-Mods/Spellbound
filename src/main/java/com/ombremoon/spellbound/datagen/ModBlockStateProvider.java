@@ -33,6 +33,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(SBBlocks.MIRAGE_BLOCK);
         blockWithItem(SBBlocks.WOVEN_SHADE);
         makeCrop(((CropBlock) SBBlocks.ARCANTHUS.get()), "arcanthus_stage", "arcanthus_stage");
+
+        doorBlockWithRenderType(SBBlocks.DUNGEON_DOOR.get(), modLoc("block/dungeon_door_bottom"), modLoc("block/dungeon_door_top"),"cutout");
     }
 
     private void blockItem(Supplier<Block> blockSupplier) {

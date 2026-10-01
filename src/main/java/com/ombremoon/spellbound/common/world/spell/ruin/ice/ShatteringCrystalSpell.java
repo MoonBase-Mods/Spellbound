@@ -14,8 +14,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -31,7 +29,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.List;
@@ -187,30 +184,12 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     }
 
     @Override
-    public void onProjectileHitEntity(ISpellEntity<?> spellEntity, SpellContext context, EntityHitResult result) {
-        if (spellEntity instanceof IceBolt shrapnel) {
-            Level level = context.getLevel();
-            LivingEntity caster = context.getCaster();
-            if (!level.isClientSide) {
-                Entity entity = result.getEntity();
-
-                if (entity.is(caster)) return;
-
-                if (entity instanceof LivingEntity livingEntity) {
-                    this.hurt(shrapnel, livingEntity, 3.0F + shrapnel.getSize());
-                    shrapnel.discard();
-                }
-            }
-        }
-    }
-
-    @Override
     public int getCastTime(SpellContext context) {
         return context != null && CRYSTAL_PREDICATE.test(context) ? 5 : super.getCastTime(context);
     }
 
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {
-        ShatteringCrystalSpell spell = crystal.getSpell();
+        ShatteringCrystalSpell spell = crystal.getOrCreateSpell();
         int count = context.hasSkill(SBSkills.CRYSTAL_ECHO) ? 2 : 1;
         if (spell != null && !spell.isSpawning() && spell.primeCount < count && !spell.primed) {
             spell.primed = true;
@@ -225,6 +204,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     }
 
     private void explodeCrystal(SpellContext context) {
+        LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         ShatteringCrystal crystal = this.getCrystal(context);
         if (crystal != null) {
@@ -233,7 +213,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             int count = flag ? 2 : 1;
             for (Entity entity : entities) {
                 if (context.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getSummoner()) {
-                    ShatteringCrystalSpell spell = crystal1.getSpell();
+                    ShatteringCrystalSpell spell = crystal1.getOrCreateSpell();
                     if (spell != null && spell.primeCount < count) {
                         primeCrystal(context, crystal1);
                     }
@@ -282,9 +262,10 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             }
 
             if (context.hasSkill(SBSkills.FROZEN_SHRAPNEL)) {
+                IceBoltSpell spell = SBSpells.ICE_BOLT.get().createSpellWithData(caster);
                 int shards = RandomUtil.randomNumberBetween(6, 12);
                 for (int i = 0; i < shards; i++) {
-                    this.shootProjectile(
+                    spell.shootProjectile(
                             context,
                             SBEntities.ICE_BOLT.get(),
                             crystal.position().add(0, 1.5F, 0),
@@ -292,9 +273,9 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                             (float) Math.toDegrees(RandomUtil.randomValueUpTo(Mth.TWO_PI)),
                             1.25F,
                             1.0F,
-                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(0, 2))
+                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(1, 3))
                     );
-                    this.shootProjectile(
+                    spell.shootProjectile(
                             context,
                             SBEntities.ICE_BOLT.get(),
                             crystal.position().add(0, 1.5F, 0),
@@ -302,7 +283,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                             (float) Math.toDegrees(i * Mth.TWO_PI / shards),
                             1.25F,
                             1.0F,
-                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(0, 2))
+                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(1, 3))
                     );
                 }
             }

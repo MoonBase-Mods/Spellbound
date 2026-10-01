@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "spellbound:item/spirit_whistle/spirit_whistle_stone"
+  }
+}

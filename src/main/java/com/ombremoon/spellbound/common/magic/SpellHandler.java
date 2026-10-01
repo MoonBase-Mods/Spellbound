@@ -37,6 +37,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -73,6 +75,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
     private Set<SpellType<?>> equippedSpellSet = new ObjectOpenHashSet<>();
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
+    private final List<AbstractSpell> queuedSpells = new ArrayList<>();
     private boolean spellDirty;
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
@@ -169,6 +172,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void tick() {
         activeSpells.forEach((spellType, spell) -> spell.tick());
         activeSpells.entries().removeIf(entry -> entry.getValue().isInactive);
+        this.queuedSpells.forEach(this::activateSpell);
+        this.queuedSpells.clear();
 
         if (this.stationaryTicks > 0)
             this.stationaryTicks--;
@@ -348,6 +353,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.spellDirty = true;
     }
 
+    public void queueSpell(AbstractSpell spell) {
+        this.queuedSpells.add(spell);
+    }
+
     /**
      * Clears all spells in the active spells map. This will not call {@link AbstractSpell#endSpell()}.
      */
@@ -389,8 +398,17 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public List<AbstractSpell> getActiveSpells(SpellType<?> spellType) {
         return this.getActiveSpells(spellType, abstractSpell -> true);
     }
+
     public List<AbstractSpell> getActiveSpells(SpellType<?> spellType, Predicate<AbstractSpell> spellCondition) {
         return this.activeSpells.get(spellType).stream().filter(spellCondition).toList();
+    }
+
+    public <T extends AbstractSpell> List<T> getActiveSpellsFromType(SpellType<T> spellType) {
+        return this.getActiveSpellsFromType(spellType, abstractSpell -> true);
+    }
+
+    public <T extends AbstractSpell> List<T> getActiveSpellsFromType(SpellType<T> spellType, Predicate<T> spellCondition) {
+        return ((List<T>) this.activeSpells.get(spellType)).stream().filter(spellCondition).toList();
     }
 
     /**
@@ -535,11 +553,19 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet();
     }
 
+    public List<SkillBuff<?>> getSkillBuffs(SkillProvider skill) {
+        return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).toList();
+    }
+
     public Optional<SkillBuff<?>> getSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
 
-    public boolean hasSkillBuff(Skill skill) {
+    public Optional<SkillBuff<?>> getSkillBuff(ResourceLocation skill) {
+        return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.id().equals(skill)).findAny();
+    }
+
+    public boolean hasSkillBuff(SkillProvider skill) {
         return this.skillBuffs.keySet().stream().anyMatch(skillBuff -> skillBuff.isSkill(skill));
     }
 
@@ -587,18 +613,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void applyStormStrike(LivingEntity target, int ticks) {
         target.setData(SBData.STORMSTRIKE_OWNER.get(), this.caster.getId());
         target.addEffect(new MobEffectInstance(SBEffects.STORMSTRIKE, ticks, 0, true, true));
-    }
-
-    /**
-     * Plays an animation for the player. This is called server-side for all players to see the animation
-     * @param player The player performing the animation
-     * @param animation The animation information
-     */
-    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
-        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
-        if (!isClientSide()) {
-            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
-        }
     }
 
     /**
@@ -692,6 +706,18 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         Vec3 toPos = fromPos.add((double) xComponent * distance, (double) yComponent * distance,
                 (double) zComponent * distance);
         return new ClipContext(fromPos, toPos, ClipContext.Block.OUTLINE, fluidContext, livingEntity);
+    }
+
+    /**
+     * Plays an animation for the player. This is called server-side for all players to see the animation
+     * @param player The player performing the animation
+     * @param animation The animation information
+     */
+    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
+        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
+        if (!isClientSide()) {
+            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
+        }
     }
 
     public void stopAnimation(Player player, SpellAnimation animation) {

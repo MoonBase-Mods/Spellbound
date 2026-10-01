@@ -17,8 +17,6 @@ public class FearEffect extends SBEffect {
     @Override
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         var handler = SpellUtil.getSpellHandler(livingEntity);
-        var skills = SpellUtil.getSkills(livingEntity);
-//        skills.addModifierWithExpiry(SpellModifier.FEAR);
         handler.consumeMana((float) (handler.getMaxMana() * 0.07F + 15.0F), true);
         livingEntity.removeEffect(SBEffects.TAUNT);
     }
@@ -44,8 +42,6 @@ public class FearEffect extends SBEffect {
 
     @Override
     public void onEffectRemoved(LivingEntity livingEntity, int amplifier) {
-//        var skills = SpellUtil.getSkills(livingEntity);
-//        skills.removeModifier(SpellModifier.FEAR);
         livingEntity.setData(SBData.MOVEMENT_SOURCE, Vec3.ZERO);
     }
 }

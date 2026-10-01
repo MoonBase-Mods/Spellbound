@@ -19,13 +19,18 @@ public class ModBusEvents {
         player(EntityType.PLAYER, event);
     }
 
-    private static void magicEntity(EntityType<? extends LivingEntity> entityType, EntityAttributeModificationEvent event) {
-        event.add(entityType, SBAttributes.MAX_MANA);
-        event.add(entityType, SBAttributes.MANA_REGEN);
+    private static void defaultEntity(EntityType<? extends LivingEntity> entityType, EntityAttributeModificationEvent event) {
+        event.add(entityType, SBAttributes.ATTACK_POWER);
         event.add(entityType, SBAttributes.MAGIC_RESIST);
         event.add(entityType, SBAttributes.FIRE_SPELL_RESIST);
         event.add(entityType, SBAttributes.FROST_SPELL_RESIST);
         event.add(entityType, SBAttributes.SHOCK_SPELL_RESIST);
+    }
+
+    private static void magicEntity(EntityType<? extends LivingEntity> entityType, EntityAttributeModificationEvent event) {
+        defaultEntity(entityType, event);
+        event.add(entityType, SBAttributes.MAX_MANA);
+        event.add(entityType, SBAttributes.MANA_REGEN);
     }
 
     private static void player(EntityType<? extends LivingEntity> entityType, EntityAttributeModificationEvent event) {

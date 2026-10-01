@@ -8,14 +8,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class SkillCooldowns {
-    private final Map<Skill, Instance> cooldowns = new Object2ObjectOpenHashMap<>();
+    private final Map<SkillProvider, Instance> cooldowns = new Object2ObjectOpenHashMap<>();
     private int tickCount;
 
-    public boolean isOnCooldown(Skill skill) {
+    public boolean isOnCooldown(SkillProvider skill) {
         return this.getCooldownPercent(skill, 0.0F) > 0.0F;
     }
 
-    public float getCooldownPercent(Skill skill, float partialTicks) {
+    public float getCooldownPercent(SkillProvider skill, float partialTicks) {
         Instance instance = this.cooldowns.get(skill);
         if (instance != null) {
             float f = instance.endTime - instance.startTime;
@@ -33,9 +33,9 @@ public class SkillCooldowns {
         }
     }
 
-    public void addCooldown(Holder<Skill> skill, int ticks) {
-        if (!this.isOnCooldown(skill.value()))
-            this.cooldowns.put(skill.value(), new Instance(this.tickCount, this.tickCount + ticks));
+    public void addCooldown(SkillProvider skill, int ticks) {
+        if (!this.isOnCooldown(skill))
+            this.cooldowns.put(skill, new Instance(this.tickCount, this.tickCount + ticks));
     }
 
     record Instance(int startTime, int endTime) {}

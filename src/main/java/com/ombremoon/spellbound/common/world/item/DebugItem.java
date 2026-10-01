@@ -98,8 +98,7 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
-        stack.set(SBData.IMBUEMENT, null);
+        log(player.blockPosition());
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {

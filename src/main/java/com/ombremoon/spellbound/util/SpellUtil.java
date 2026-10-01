@@ -28,6 +28,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ import java.util.*;
 import java.util.function.BiPredicate;
 
 public class SpellUtil {
-    public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
+    public static final BiPredicate<Entity, Entity> IS_ALLIED = (target, attacker) -> target != null
             && (attacker.is(target)
             || attacker.isAlliedTo(target)
             || target instanceof OwnableEntity ownableTarget && ownableTarget.getOwner() == attacker
@@ -52,16 +53,9 @@ public class SpellUtil {
         return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), spell, attackEntity, ownerEntity);
     }
 
-    public static SpellDamageSource magicDamageSource(Level level, AbstractSpell spell, Entity ownerEntity, Entity attackEntity) {
-        return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SBDamageTypes.SB_GENERIC), spell, attackEntity, ownerEntity);
-    }
-
-    public static DamageSource magicDamageSource(Level level, Entity ownerEntity, Entity attackEntity) {
-        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SBDamageTypes.SB_GENERIC), attackEntity, ownerEntity);
-    }
-
-    public static DamageSource damageSource(Level level, ResourceKey<DamageType> damageType, Entity ownerEntity, Entity attackEntity) {
-        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attackEntity, ownerEntity);
+    public static SpellDamageSource damageSource(Level level, ResourceKey<DamageType> damageType, Entity ownerEntity, Entity attackEntity) {
+        DamageSource source = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attackEntity, ownerEntity);
+        return SpellDamageSource.fromVanillaSource(source);
     }
 
     public static double getMaxMana(LivingEntity livingEntity) {
@@ -165,7 +159,7 @@ public class SpellUtil {
     @Nullable
     public static AbstractSpell getSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
-            return spellEntity.getSpell();
+            return spellEntity.getOrCreateSpell();
         } else {
             return entity.getData(SBData.SPELL);
         }
@@ -173,7 +167,7 @@ public class SpellUtil {
 
     public static AbstractSpell getActiveSpell(@NotNull Entity entity) {
         if (entity instanceof ISpellEntity<?> spellEntity) {
-            return spellEntity.getSpell();
+            return spellEntity.getOrCreateSpell();
         } else {
             Entity owner = getOwner(entity);
             if (!(owner instanceof LivingEntity livingEntity))
@@ -210,6 +204,8 @@ public class SpellUtil {
     public static void setOwner(@NotNull Entity entity, @NotNull LivingEntity owner) {
         if (entity instanceof SBSummonable summonable) {
             summonable.setSummoner(owner);
+        } else if (entity instanceof Projectile projectile) {
+            projectile.setOwner(owner);
         } else {
             entity.setData(SBData.OWNER_ID, owner.getId());
         }

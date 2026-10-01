@@ -10,6 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
@@ -18,6 +19,12 @@ public class SerializationUtil {
             ByteBufCodecs.STRING_UTF8, ResourceLocation::getNamespace,
             ByteBufCodecs.STRING_UTF8, ResourceLocation::getPath,
             ResourceLocation::fromNamespaceAndPath
+    );
+    public static final StreamCodec<ByteBuf, Vec3> VEC3_STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.DOUBLE, Vec3::x,
+            ByteBufCodecs.DOUBLE, Vec3::y,
+            ByteBufCodecs.DOUBLE, Vec3::z,
+            Vec3::new
     );
 
     public static final Codec<Float> NON_NEGATIVE_FLOAT = floatRangeWithMessage(0.0F, Float.MAX_VALUE, p_274847_ -> "Value must be non-negative: " + p_274847_);

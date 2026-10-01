@@ -126,11 +126,6 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     }
 
     @Override
-    public void setSummoner(Entity entity) {
-        this.setSummoner(entity.getId());
-    }
-
-    @Override
     public void setSummoner(int id) {
         this.entityData.set(OWNER_ID, id);
     }

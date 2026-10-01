@@ -1,0 +1,6 @@
+{
+  "parent": "spellbound:item/bound_bow",
+  "textures": {
+    "layer0": "spellbound:item/bound_bow_pulling_2"
+  }
+}

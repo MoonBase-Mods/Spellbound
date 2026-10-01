@@ -7,10 +7,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.MushroomBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -289,8 +286,8 @@ public class SBBlocks {
                         .randomTicks()));
     public static final Supplier<Block> WILD_MUSHROOM_SUMMON_STONE = registerSummonStone("wild_mushroom", BossFights.WILD_MUSHROOM);
 
-    public static final Supplier<Block> DUNGEON_DOOR = registerBlock(
-            "dungeon_door", () -> new DungeonDoorBlock(blockProperties().noLootTable()));
+    public static final Supplier<DoorBlock> DUNGEON_DOOR = registerBlock(
+            "dungeon_door", () -> new DungeonDoorBlock(blockProperties().noLootTable().noOcclusion()));
     public static final Supplier<Block> DARK_ALTAR = registerBlock("dark_altar", () -> new DarkAltarBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));

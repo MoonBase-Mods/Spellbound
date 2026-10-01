@@ -7,7 +7,9 @@ import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 
 public class SummonWolfPackSpell extends SummonSpell implements RadialSpell {
     public static Builder<SummonWolfPackSpell> createSummonWolfPackSpellBuilder() {
-        return createSummonBuilder(SummonWolfPackSpell.class);
+        return createSummonBuilder(SummonWolfPackSpell.class)
+                .duration(2400)
+                .isSummonChoice();
     }
 
     public SummonWolfPackSpell() {

@@ -21,6 +21,8 @@ public class ImbuementRenderers extends RenderType {
     private static final RenderType SMITE_GLINT = create("smite_glint");
     private static final RenderType BLACK_BLADE_GLINT = create("black_blade_glint");
     private static final RenderType NIGHTBLADE_GLINT = create("nightblade_glint");
+    private static final RenderType BOUND_BOW_GLINT = create("bound_bow_glint");
+    private static final RenderType CREATE_OBJECT_GLINT = create("create_object_glint");
     private static final RenderType SMITE_ENTITY_GLINT_DIRECT = create("smite_entity_glint_direct");
 
     public ImbuementRenderers(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize, boolean affectsCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
@@ -31,6 +33,8 @@ public class ImbuementRenderers extends RenderType {
         put(SBSpells.SMITE, getSmiteGlint());
         put(BLACK_BLADE, getBlackBladeGlint());
         put(SBSpells.NIGHTBLADE, getNightbladeGlint());
+        put(SBSpells.BOUND_BOW, getBoundBowGlint());
+        put(SBSpells.CREATE_OBJECT, getCreateObjectGlint());
     }
 
     public static RenderType getGlint(ResourceLocation location) {
@@ -55,6 +59,14 @@ public class ImbuementRenderers extends RenderType {
 
     public static RenderType getNightbladeGlint() {
         return NIGHTBLADE_GLINT;
+    }
+
+    public static RenderType getBoundBowGlint() {
+        return BOUND_BOW_GLINT;
+    }
+
+    public static RenderType getCreateObjectGlint() {
+        return CREATE_OBJECT_GLINT;
     }
 
     public static RenderType getSmiteEntityGlintDirect() {

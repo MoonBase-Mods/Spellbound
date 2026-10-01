@@ -1,13 +1,11 @@
 package com.ombremoon.spellbound.client.renderer.entity.familiar;
 
-import com.ombremoon.spellbound.client.renderer.entity.SBModelLayerLocs;
+import com.ombremoon.spellbound.client.renderer.SBModelLayerLocs;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.main.CommonClass;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 public class CatRenderer extends MobRenderer<CatEntity, CatModel> {
     public CatRenderer(EntityRendererProvider.Context context) {

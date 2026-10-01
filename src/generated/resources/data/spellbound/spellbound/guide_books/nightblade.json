@@ -1,0 +1,80 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.nightblade"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "mastery": "novice",
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
+      "image": "spellbound:textures/gui/books/images/spells/nightblade.png",
+      "position": {
+        "xOffset": 3,
+        "yOffset": 30
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "skill.description.spellbound.nightblade"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.DECEPTION.nightblade.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.DECEPTION.nightblade.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:nightblade",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:purge_magic"
+}

@@ -49,14 +49,6 @@ public class IceSheetBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        BlockEntity entity = level.getBlockEntity(pos);
-
-
-        super.onRemove(state, level, pos, newState, movedByPiston);
-    }
-
-    @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         super.stepOn(level, pos, state, entity);
         BlockEntity blockEntity = level.getBlockEntity(pos);

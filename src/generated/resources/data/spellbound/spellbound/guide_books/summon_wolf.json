@@ -1,0 +1,80 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.summon_wolf_pack"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "mastery": "novice",
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
+      "image": "spellbound:textures/gui/books/images/spells/summon_wolf_pack.png",
+      "position": {
+        "xOffset": 3,
+        "yOffset": 30
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "skill.description.spellbound.summon_wolf_pack"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.summon_wolf_pack.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.summon_wolf_pack.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:summon_wolf_pack",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:mushroom_page_acq"
+}

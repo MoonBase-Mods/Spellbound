@@ -87,10 +87,16 @@ public class ClientPayloadHandler {
             var level = context.player().level();
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
+                AbstractSpell spell;
                 var handler = SpellUtil.getSpellHandler(livingEntity);
-                AbstractSpell spell = livingEntity.is(context.player()) ? handler.getCurrentlyCastSpell() : payload.spellType().createSpellWithData(livingEntity);
+                CompoundTag nbt = payload.initTag();
+                if (livingEntity.is(context.player()) && !nbt.getBoolean("softCast")) {
+                    spell = handler.getCurrentlyCastSpell();
+                } else {
+                    spell = payload.spellType().createSpellWithData(livingEntity);
+                }
+
                 if (spell != null) {
-                    CompoundTag nbt = payload.initTag();
                     spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt);
                 }
             }

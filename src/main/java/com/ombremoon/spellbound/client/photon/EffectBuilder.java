@@ -4,8 +4,7 @@ import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXHelper;
-import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
-import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.client.photon.effects.StaticEntityEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -263,40 +262,6 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
                         effect.setDelay(this.delay);
                         effect.setForcedDeath(this.forcedDeath);
                         effect.setAllowMulti(this.allowMulti);
-                        return effect;
-                    }
-                }
-            }
-
-            return null;
-        }
-    }
-
-    public static class FireballBuilder extends EffectBuilder<FireballEffect> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("fireball");
-        private final int entityId;
-
-        FireballBuilder(ResourceLocation location, int entityId) {
-            super(location);
-            this.entityId = entityId;
-        }
-
-        public static FireballBuilder of(int entityId) {
-            return new FireballBuilder(LOCATION, entityId);
-        }
-
-        @Override
-        public FireballEffect build() {
-            Level level = Minecraft.getInstance().level;
-            if (level != null) {
-                var fx = FXHelper.getFX(this.location);
-                if (fx != null) {
-                    var entity = level.getEntity(this.entityId);
-                    if (entity instanceof Fireball fireball) {
-                        var effect = new FireballEffect(fx, level, fireball);
-                        effect.setOffset(0, -0.5, 0);
-                        effect.setRotation(180, 180, 0);
-                        effect.setScale(0.5F, 0.5F, 0.5F);
                         return effect;
                     }
                 }

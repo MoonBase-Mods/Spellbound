@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-public record SpellAnimation(ResourceLocation animation, Type type, boolean stationary) {
+public record SpellAnimation(ResourceLocation animation, Type type, boolean stationary, boolean canPlayAnotherAnimation) {
     public static final ResourceLocation SPELL_CAST_ANIMATION = CommonClass.customLocation("spell_cast");
     public static final ResourceLocation MOVEMENT_ANIMATION = CommonClass.customLocation("movement");
 
@@ -15,6 +15,7 @@ public record SpellAnimation(ResourceLocation animation, Type type, boolean stat
             ResourceLocation.STREAM_CODEC, SpellAnimation::animation,
             NeoForgeStreamCodecs.enumCodec(Type.class), SpellAnimation::type,
             ByteBufCodecs.BOOL, SpellAnimation::stationary,
+            ByteBufCodecs.BOOL, SpellAnimation::canPlayAnotherAnimation,
             SpellAnimation::new
     );
 
@@ -22,7 +23,11 @@ public record SpellAnimation(ResourceLocation animation, Type type, boolean stat
     //isMotionTracking
 
     public SpellAnimation(String animation, Type type, boolean stationary) {
-        this(CommonClass.customLocation(animation), type, stationary);
+        this(CommonClass.customLocation(animation), type, stationary, true);
+    }
+
+    public SpellAnimation(String animation, Type type, boolean stationary, boolean canPlayAnotherAnimation) {
+        this(CommonClass.customLocation(animation), type, stationary, canPlayAnotherAnimation);
     }
 
     public enum Type {

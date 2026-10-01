@@ -12,7 +12,9 @@ public interface SBSummonable {
 
     Entity getSummoner();
 
-    void setSummoner(Entity entity);
+    default void setSummoner(Entity entity) {
+        this.setSummoner(entity.getId());
+    }
 
     void setSummoner(int id);
 }

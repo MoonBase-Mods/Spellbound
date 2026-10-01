@@ -144,6 +144,12 @@ public class ModTagProvider {
 
             this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
                     .addTags(Tags.DamageTypes.IS_MAGIC);
+
+            this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN)
+                    .add(SBDamageTypes.SB_GENERIC)
+                    .add(SBDamageTypes.RUIN_FIRE)
+                    .add(SBDamageTypes.RUIN_FROST)
+                    .add(SBDamageTypes.RUIN_SHOCK);
         }
     }
 
@@ -171,7 +177,8 @@ public class ModTagProvider {
                             SBPaintingVariants.VALKYR2,
                             SBPaintingVariants.VILLAGE,
                             SBPaintingVariants.WITCH,
-                            SBPaintingVariants.WITCH2
+                            SBPaintingVariants.WITCH2,
+                            SBPaintingVariants.FENRIR
                     );
         }
     }

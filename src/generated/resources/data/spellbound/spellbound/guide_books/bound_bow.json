@@ -1,0 +1,80 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spells.spellbound.bound_bow"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "mastery": "novice",
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
+      "image": "spellbound:textures/gui/books/images/spells/bound_bow.png",
+      "position": {
+        "xOffset": 3,
+        "yOffset": 30
+      },
+      "width": 140
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "skill.description.spellbound.bound_bow"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.bound_bow.lore"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 68
+      },
+      "translation": {
+        "translate": "guide.SUMMONS.bound_bow.boss_lore"
+      }
+    },
+    {
+      "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:bound_bow",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 195
+      }
+    }
+  ],
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:summon_wolf"
+}

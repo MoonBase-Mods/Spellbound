@@ -29,6 +29,7 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
     ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
+    ResourceKey<TransfigurationRitual> CREATE_CREATE_OBJECT = key("create_create_object");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
         register(

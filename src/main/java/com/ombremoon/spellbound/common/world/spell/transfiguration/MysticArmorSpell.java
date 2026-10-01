@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -19,7 +21,9 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -44,6 +48,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         return createSimpleSpellBuilder(MysticArmorSpell.class)
                 .duration(1200)
                 .manaCost(28)
+                .hasLayer()
                 .fullRecast(true);
     }
 
@@ -101,7 +106,8 @@ public class MysticArmorSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
-        addEventBuff(
+        Level level = context.getLevel();
+        this.addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
                 BuffCategory.BENEFICIAL,
@@ -126,24 +132,25 @@ public class MysticArmorSpell extends AnimatedSpell {
                         addCooldown(SBSkills.ELDRITCH_INTERVENTION, 2400);
                     }
                 });
-        addEventBuff(
+        this.addEventBuff(
                 caster,
                 SBSkills.MYSTIC_ARMOR,
                 BuffCategory.BENEFICIAL,
                 SpellEventListener.Events.POST_DAMAGE,
                 POST_DAMAGE,
                 post -> {
-                    Entity entity = post.getSource().getEntity();
+                    DamageSource source = post.getSource();
+                    Entity entity = source.getEntity();
                     if (entity instanceof LivingEntity living) {
                         if (context.hasSkill(SBSkills.EQUILIBRIUM))
-                            hurt(living, post.getSource(), caster.getMaxHealth() * 0.1F);
+                            hurt(living, source, caster.getMaxHealth() * 0.1F);
 
-                        if (context.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(post.getSource()))
-                            hurt(living, post.getSource(), post.getNewDamage() * 0.3F);
+                        if (context.hasSkill(SBSkills.PLANAR_DEFLECTION) && isPhysicalDamage(source))
+                            hurt(living, source, post.getNewDamage() * 0.3F);
                     }
                 });
         if (context.hasSkill(SBSkills.ARCANE_VENGEANCE)) {
-            addEventBuff(
+            this.addEventBuff(
                     caster,
                     SBSkills.ARCANE_VENGEANCE,
                     BuffCategory.BENEFICIAL,
@@ -160,7 +167,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         }
 
         if (context.hasSkill(SBSkills.PURSUIT))
-            addSkillBuff(
+            this.addSkillBuff(
                     caster,
                     SBSkills.PURSUIT,
                     PURSUIT,
@@ -169,7 +176,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                     new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(PURSUIT, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
 
         if (context.hasSkill(SBSkills.CRYSTALLINE_ARMOR))
-            addSkillBuff(
+            this.addSkillBuff(
                     caster,
                     SBSkills.CRYSTALLINE_ARMOR,
                     CRYSTALLINE_ARMOR,
@@ -181,6 +188,11 @@ public class MysticArmorSpell extends AnimatedSpell {
                 .playSeededSound(
                         null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.ARMOR_EQUIP_NETHERITE, caster.getSoundSource(), 1.0F, 1.0F, caster.getRandom().nextLong()
                 );
+
+        this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("mystic_armor"),
+                caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.1, 0));
+        level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE,
+                SoundSource.PLAYERS,0.4F + level.random.nextFloat() * 0.2F ,0.8F + level.random.nextFloat() * 0.2F);
     }
 
     @Override

@@ -245,7 +245,7 @@ public class SolarRaySpell extends ChanneledSpell {
         boolean overPower = context.hasSkill(SBSkills.OVERPOWER);
         if (caster instanceof Player player) {
             if (overPower) {
-                playMovementAnimation(player, CommonClass.customLocation("solar_walk"), new SpellAnimation(CommonClass.customLocation("solar_ray_channel"), SpellAnimation.Type.CHANNEL, false));
+                playMovementAnimation(player, CommonClass.customLocation("solar_walk"), new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, false));
             }
 
             if (context.getLevel().isClientSide) {

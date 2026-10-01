@@ -1,0 +1,8 @@
+{
+"comparator_output": 15,
+"description": {
+"translate": "item.spellbound.interstellare_music_disc_desc"
+},
+"length_in_seconds": 248,
+"sound_event": "spellbound:interstellare"
+}

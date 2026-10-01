@@ -4,8 +4,12 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +75,19 @@ public class SkillRadialMenuItem extends RadialMenuItem {
         context.guiGraphics.setColor(1.0F, 1.0F, 1.0F, 0.5F);
         context.guiGraphics.blit(sprite, (int) x, (int) y, 0, 0, 24, 24, 24, 24);
         context.guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        Minecraft minecraft = this.owner.getScreen().getMinecraft();
+        Player player = minecraft.player;
+        if (player == null)
+            return;
+
+        var skills = SpellUtil.getSkills(player);
+        float f = skills.getCooldowns().getCooldownPercent(this.skill, minecraft.getTimer().getGameTimeDeltaPartialTick(true));
+        if (f > 0.0F) {
+            int i1 = (int) (y + Mth.floor(24.0F * (1.0F - f)));
+            int j1 = i1 + Mth.ceil(24.0F * f);
+            context.guiGraphics.fill(RenderType.guiOverlay(), (int) x, i1, (int) (x + 24), j1, Integer.MAX_VALUE);
+        }
     }
 
     @Override

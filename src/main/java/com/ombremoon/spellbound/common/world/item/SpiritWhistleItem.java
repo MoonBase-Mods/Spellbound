@@ -1,7 +1,10 @@
 package com.ombremoon.spellbound.common.world.item;
 
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -26,9 +29,19 @@ public class SpiritWhistleItem extends Item {
 
     private void summon(Player player, BlockPos pos) {
         var handler = SpellUtil.getFamiliarHandler(player);
+        Level level = player.level();
+        float volume = 0.01F + level.random.nextFloat() * 0.05F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.2F;
+
         if (handler.hasActiveFamiliar()) {
+            level.playSound(null, player.blockPosition(), SpellboundSounds.WHISTLE_OFF.get(),
+                    SoundSource.PLAYERS, volume, pitch);
             handler.discardFamiliar();
             return;
+        }
+        else{
+            level.playSound(null, player.blockPosition(), SpellboundSounds.WHISTLE_ON.get(),
+                    SoundSource.PLAYERS, volume, pitch);
         }
 
         handler.summonFamiliar(pos);

@@ -14,11 +14,13 @@ public class SBAttributes {
 
     //Casting
     public static Holder<Attribute> CAST_RANGE = register("cast_range", 10.0, 0.0, 100.0);
-    public static Holder<Attribute> CAST_SPEED = register("cast_speed", 1.0, 0.0, 2.0);
+    public static Holder<Attribute> CAST_SPEED = register("cast_speed", 1.0, 0.1, 2.0);
 
     //Mana
     public static Holder<Attribute> MANA_REGEN = register("mana_regen", 1d, 0d, 100d);
     public static Holder<Attribute> MAX_MANA = register("max_mana", 100d, 100d, 5000d);
+
+    public static Holder<Attribute> ATTACK_POWER = register("attack_power", 1, 0, 1024);
 
     //Resistances
     public static Holder<Attribute> MAGIC_RESIST = registerResistance("magic_resistance");

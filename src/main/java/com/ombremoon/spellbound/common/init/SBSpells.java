@@ -52,10 +52,10 @@ public class SBSpells {
     public static final Supplier<SpellType<IceBoltSpell>> ICE_BOLT = registerSpell("ice_bolt", iceRuinBuilder(SpellMastery.NOVICE, IceBoltSpell::new)
             .skills(SBSkills.ICE_BOLT, SBSkills.FROST_PIERCER, SBSkills.GLACIAL_VOLLEY, SBSkills.ICY_JAVELIN,
                     SBSkills.PERMAFROST_LANCE, SBSkills.HAIL_STRIKE, SBSkills.CHILLING_AFTERMATH, SBSkills.SHATTERING_IMPACT,
-                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.GLACIAL_RESONANCE));
+                    SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.ICE_RING));
     public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
             .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
-                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.POLAR_PIROUETTE, SBSkills.FROST_SPRINT,
+                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.ICE_BRIDGE, SBSkills.KINETIC_FLOW,
                     SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
     public static final Supplier<SpellType<ShatteringCrystalSpell>> SHATTERING_CRYSTAL = registerSpell("shattering_crystal", iceRuinBuilder(SpellMastery.EXPERT, ShatteringCrystalSpell::new)
             .skills(SBSkills.SHATTERING_CRYSTAL, SBSkills.ICE_SHARD, SBSkills.FRIGID_BLAST, SBSkills.CHILL,
@@ -93,7 +93,7 @@ public class SBSpells {
                     SBSkills.MASONRY_WARD, SBSkills.BOULDERBACK, SBSkills.INFUSED_STONE));
     public static final Supplier<SpellType<CreateObjectSpell>> CREATE_OBJECT = registerSpell("create_object", trasnfigurationBuilder(SpellMastery.NOVICE, CreateObjectSpell::new)
             .skills(SBSkills.CREATE_OBJECT, SBSkills.LUMBERJACK, SBSkills.EXCAVATOR, SBSkills.HARVESTER,
-                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.EMERGENCY_RATIONS, SBSkills.LASTING_PROVISIONS,
+                    SBSkills.ADVENTURER, SBSkills.SCOUT, SBSkills.KNIGHT, SBSkills.LASTING_PROVISIONS,
                     SBSkills.ARTISANS_TOUCH, SBSkills.MASTERWORK_GEAR, SBSkills.MYSTIC_TOOLSMITH));
     public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder(SpellMastery.ADEPT, ShadowGateSpell::new)
             .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,

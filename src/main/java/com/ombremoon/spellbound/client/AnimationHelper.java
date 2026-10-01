@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client;
 
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -15,6 +16,10 @@ public class AnimationHelper {
     public static void playAnimation(AbstractClientPlayer player, SpellAnimation animation, float animationSpeed) {
         PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
         if (controller != null) {
+            if (!animation.canPlayAnotherAnimation() && controller.isPlayingTriggeredAnimation()) {
+                return;
+            }
+
             controller.addModifier(new SpeedModifier(animationSpeed), 0);
             controller.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(2, EasingType.EASE_IN_OUT_SINE), animation.animation(), !controller.isPlayingTriggeredAnimation());
         }

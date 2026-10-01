@@ -17,7 +17,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -30,6 +30,7 @@ import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
@@ -49,7 +50,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -217,14 +217,6 @@ public class NeoForgeEvents {
                 if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     mob.setTarget(null);
                 }
-            }
-
-            int veilId = entity.getData(SBData.SHADOW_DOMAIN_VEIL);
-            ShadowVeil veil = veilId == 0 ? null : (ShadowVeil) entity.level().getEntity(veilId);
-            if (veil != null && !entity.getBoundingBox().intersects(veil.getBoundingBox())) {
-                entity.knockback(0.5F, entity.getX() - veil.getX(), entity.getZ() - veil.getZ());
-                entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6, (double)1.0F, 0.6));
-                entity.hurtMarked = true;
             }
         }
     }
@@ -394,7 +386,7 @@ public class NeoForgeEvents {
             var handler = SpellUtil.getSpellHandler(owner);
             AbstractSpell spell;
             if (livingEntity instanceof ISpellEntity<?> spellEntity) {
-                spell = spellEntity.getSpell();
+                spell = spellEntity.getOrCreateSpell();
             } else {
                 SpellType<?> spellType = SBSpells.REGISTRY.get(livingEntity.getData(SBData.SPELL_TYPE));
                 int id = livingEntity.getData(SBData.SPELL_ID);
@@ -441,10 +433,24 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingAttack(AttackEntityEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide)
+            return;
 
         Player player = event.getEntity();
         player.setData(SBData.ATTACK_START, player.level().getGameTime());
+
+        ItemStack stack = player.getMainHandItem();
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        if (imbuement != null) {
+            int charges = imbuement.charges();
+            if (charges > 0) {
+                imbuement = imbuement.setCharges(charges - 1);
+                stack.set(SBData.IMBUEMENT, imbuement);
+            } else if (charges == 0) {
+                stack.remove(SBData.IMBUEMENT);
+            }
+        }
+
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(player, event));
     }
 
@@ -553,7 +559,7 @@ public class NeoForgeEvents {
             }
 
             var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
-            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, event));
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, livingEntity, event));
 
             EffectManager effects = SpellUtil.getSpellEffects(sourceEntity);
             effects.doPostAttackEffects(event);
@@ -573,16 +579,17 @@ public class NeoForgeEvents {
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.getListener().fireEvent(SpellEventListener.Events.PRE_DAMAGE, new DamageEvent.Pre(livingEntity, event));
 
-        if (event.getSource().is(SBDamageTypes.RUIN_FIRE))
+        DamageSource source = event.getSource();
+        if (source instanceof SpellDamageSource spellSource) {
+            spellSource.modifyDamage(event);
+        }
+
+        if (source.is(SBDamageTypes.RUIN_FIRE))
             livingEntity.igniteForSeconds(3.0F);
 
         if (livingEntity.hasEffect(SBEffects.SLEEP))
             livingEntity.removeEffect(SBEffects.SLEEP);
 
-        if (livingEntity.hasEffect(SBEffects.PERMAFROST))
-            event.setNewDamage(event.getOriginalDamage() * 1.15F);
-
-        DamageSource source = event.getSource();
         Entity entity = source.getEntity();
         RitualSavedData rituals = RitualSavedData.get(serverLevel);
         EffectManager effects = SpellUtil.getSpellEffects(livingEntity);
@@ -596,10 +603,10 @@ public class NeoForgeEvents {
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPreHurt(spell.getContext(), event);
             }
-        } else if (source.getEntity() instanceof LivingEntity living) {
-            var attackerHandler = SpellUtil.getSpellHandler(living);
-            EffectManager attackerEffects = SpellUtil.getSpellEffects(living);
-            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(living, event));
+        } else if (source.getEntity() instanceof LivingEntity sourceEntity) {
+            var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
+            EffectManager attackerEffects = SpellUtil.getSpellEffects(sourceEntity);
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(sourceEntity, livingEntity, event));
 
             attackerEffects.doPreAttackEffects(event);
             rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreAttackEffects(event));

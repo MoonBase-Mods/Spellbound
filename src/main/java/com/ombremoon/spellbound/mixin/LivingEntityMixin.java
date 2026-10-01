@@ -1,10 +1,7 @@
 package com.ombremoon.spellbound.mixin;
 
 import com.ombremoon.spellbound.common.events.EventFactory;
-import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.init.SBTriggers;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,6 +11,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -70,6 +69,14 @@ public class LivingEntityMixin {
     @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/critereon/EntityHurtPlayerTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/damagesource/DamageSource;FFZ)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float f, boolean flag) {
         SBTriggers.PLAYER_HURT.get().trigger((ServerPlayer) spellbound$self(), source, f, amount, flag);
+    }
+
+    @Inject(method = "getAttributeValue", at = @At(value = "RETURN"), cancellable = true)
+    private void getAttributeValue(Holder<Attribute> attribute, CallbackInfoReturnable<Double> cir) {
+        if (attribute == Attributes.ATTACK_DAMAGE && spellbound$self().getAttribute(SBAttributes.ATTACK_POWER) != null) {
+            double modifiedValue = spellbound$self().getAttributeValue(SBAttributes.ATTACK_POWER) * cir.getReturnValue();
+            cir.setReturnValue(modifiedValue);
+        }
     }
 
     @Unique
