@@ -121,7 +121,7 @@ public class TransfigurationMultiblock extends StandardMultiblock {
 
         public Builder() {
             this.key.put('*', BuildingBlock.ANY);
-//            this.key.put(' ', BuildingBlock.EMPTY);
+            //this.key.put(' ', BuildingBlock.EMPTY);
             this.key.put('^', BuildingBlock.of(SBBlocks.RUNE.get()));
             this.key.put('$', BuildingBlock.of(SBBlocks.TRANSFIGURATION_DISPLAY.get()));
             this.key.put('#', BuildingBlock.of(SBBlocks.TRANSFIGURATION_PEDESTAL.get()));

@@ -1,10 +1,6 @@
 {
   "elements": [
     {
-      "type": "spellbound:structure",
-      "structure": "spellbound:test"
-    },
-    {
       "type": "spellbound:image",
       "extras": {
         "enableCorners": false
@@ -115,42 +111,6 @@
           "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_staff_ritual"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.stride"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:stride"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.shadow_gate"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:shadow_gate"
-        },
-        {
-          "component": {
-            "translate": "spells.spellbound.mystic_armor"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:mystic_armor"
-        },
-        {
-          "component": {
-            "translate": "guide.transfigurations.mana_tear"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:mana_tear_ritual"
         },
         {
           "component": {

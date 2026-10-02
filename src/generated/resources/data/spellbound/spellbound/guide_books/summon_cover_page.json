@@ -1,10 +1,6 @@
 {
   "elements": [
     {
-      "type": "spellbound:structure",
-      "structure": "spellbound:test"
-    },
-    {
       "type": "spellbound:image",
       "extras": {
         "enableCorners": false

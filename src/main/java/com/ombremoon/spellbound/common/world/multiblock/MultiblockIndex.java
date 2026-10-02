@@ -39,6 +39,10 @@ public record MultiblockIndex(int x, int y, int z) implements Comparable<Multibl
         return reference.relative(facing.getClockWise(), x).relative(Direction.UP, y).relative(facing, z);
     }
 
+    public BlockPos toPos() {
+        return new BlockPos(x, y, z);
+    }
+
     @Override
     public int compareTo(@NotNull MultiblockIndex o) {
         if (this.x < o.x || this.y < o.y || this.z < o.z) {

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -30,6 +31,7 @@ public class SBTags {
         public static final TagKey<Block> ARCANTHUS_GROWTH_BLOCKS = tag("arcanthus_growth_blocks");
         public static final TagKey<Block> RITUAL_COMPATIBLE = tag("ritual_compatible");
         public static final TagKey<Block> DIVINE_SHRINE = tag("divine_shrine");
+        public static final TagKey<Block> MULTIBLOCK_HIDDEN_BLOCKS = tag("multiblock_hidden_blocks");
 
         private static TagKey<Block> tag(String name) {
             return TagKey.create(Registries.BLOCK, CommonClass.customLocation(name));

@@ -1001,6 +1001,85 @@ public class PageBuilder {
         }
     }
 
+    public static class Multiblock implements PageBuilderType {
+        private ResourceLocation structureLoc;
+        private ResourceLocation multiblockLoc;
+        private int scale;
+        private int detailedScale;
+        private ElementPosition position;
+
+        private Multiblock(ResourceLocation structure, ResourceLocation multiblock) {
+            this.structureLoc = structure;
+            this.multiblockLoc = multiblock;
+            this.scale = 2;
+            this.detailedScale = 20;
+            this.position = ElementPosition.getDefault();
+        }
+
+        public static Multiblock of(ResourceLocation location, boolean isMultiblock) {
+            if (isMultiblock) return ofMultiblock(location);
+            else return ofStructure(location);
+        }
+
+        /**
+         * Creates a multiblock render element based on a structure nbt
+         * @param structureLoc The resource location of the structure
+         * @return new MultiblockRendererBuilder
+         */
+        public static Multiblock ofStructure(ResourceLocation structureLoc) {
+            return new Multiblock(structureLoc, GuideBookManager.FIRST_PAGE);
+        }
+
+        /**
+         * Creates a multiblock render element based on a spellbound multiblock json
+         * @param multiblockLoc The resource location of the multiblock
+         * @return new MultiblockRendererBuilder
+         * @see com.ombremoon.spellbound.common.world.multiblock.MultiblockProvider
+         */
+        public static Multiblock ofMultiblock(ResourceLocation multiblockLoc) {
+            return new Multiblock(GuideBookManager.FIRST_PAGE, multiblockLoc);
+        }
+
+        /**
+         * Sets the scale of the render as viewed in the book
+         * @param scale the scale of the render, default 2
+         * @return this
+         */
+        public Multiblock setScale(int scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        /**
+         * Sets the scale of the render when opened in the structure viewer
+         * @param scale The scale of the render, defaults to 20
+         * @return this
+         */
+        public Multiblock setDetailedScale(int scale) {
+            this.detailedScale = scale;
+            return this;
+        }
+
+        /**
+         * Sets the offset from top left corner of the book texture
+         * @param x x offset
+         * @param y y offset
+         * @return this
+         */
+        public Multiblock setPos(int x, int y) {
+            this.position = new ElementPosition(x, y);
+            return this;
+        }
+
+        public GuideMultiBlockElement build() {
+            return new GuideMultiBlockElement(
+                    structureLoc, multiblockLoc,
+                    scale, detailedScale,
+                    position
+            );
+        }
+    }
+
     //Builder for GuideText
     public static class Text implements PageBuilderType {
         private Component text;

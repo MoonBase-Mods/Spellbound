@@ -201,6 +201,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_info.mana_per_tick", "Mana/Tick: %1$s");
         add("guide.element.spell_border.element", "Element: ");
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
+        add("guide.element.multiblock.open", "Click to open Multiblock inspector.");
         add("guide.general.path_items", "Path Items");
 
         basicContents();
@@ -368,6 +369,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.pedestal_legend", "- Pedestal");
         add("guide.transfiguration.display_legend", "- Display");
         add("guide.transfiguration.rune_circuit", "If I connect the displays in a ring with these runic symbols I found, the structure acts as a circuit, with the items on displays defining the properties of the ritual.");
+        add("guide.transfiguration.rune_extended", "With my first iteration I already made some useful items but increasing the size of my ritual area has allowed me to create artifacts with more power.");
         add("guide.transfiguration.pedestal", "I infused a little bit of my magic into an rickety table I had lying around in preparation for my studies. And now I have it—the heart of the altar, where the magic happens.");
         add("guide.transfiguration.display", "I've been chiseling away at these old magic stones for hours. My body aches, but at least I have a way to store my collection of materials");
         add("guide.transfiguration.chalk", "I discovered some runic marking on the walls in the caves. I don't understand what they mean, but it's almost as if I felt magic flowing through the text. I'll write some down for later.");

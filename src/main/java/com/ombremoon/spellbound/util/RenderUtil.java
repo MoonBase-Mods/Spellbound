@@ -3,6 +3,10 @@ package com.ombremoon.spellbound.util;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.logging.LogUtils;
+import com.mojang.math.Axis;
+import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
 import com.ombremoon.spellbound.client.gui.screens.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.screens.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
@@ -23,7 +27,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -34,17 +41,75 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+
+import java.util.Map;
 
 public class RenderUtil {
 
     public static void setupScreen(ResourceLocation resourceLocation) {
         setupScreen(resourceLocation, 1.0F);
+    }
+
+    public static void renderStructure(GuideBlockAndTintGetter blockGetter, PoseStack poseStack) {
+        RenderSystem.enableDepthTest();
+        Lighting.setupFor3DItems();
+
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+
+        var blockMap = blockGetter.getBlocks();
+        if (blockMap.isEmpty()) {
+            LogUtils.getLogger().warn("Unable to render structure: {}, Structure does not exist.", blockGetter.getStructure());
+            bufferSource.endBatch();
+            poseStack.popPose();
+
+            Lighting.setupForFlatItems();
+            RenderSystem.disableDepthTest();
+            return;
+        }
+
+        for (Map.Entry<BlockPos, BlockState> entry : blockGetter.getBlocks().entrySet()) {
+            BlockPos pos = entry.getKey();
+            BlockState state = entry.getValue();
+            FluidState fluid = blockGetter.getFluidState(pos);
+            RandomSource random = Minecraft.getInstance().level.getRandom();
+
+            poseStack.pushPose();
+            poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+
+            if (!fluid.isEmpty()) {
+                RenderType renderType = ItemBlockRenderTypes.getRenderLayer(fluid);
+                VertexConsumer consumer = bufferSource.getBuffer(renderType);
+                blockRenderer.renderLiquid(pos, blockGetter, consumer, state, fluid);
+            }
+
+            if (state.getRenderShape() != RenderShape.INVISIBLE) {
+                BakedModel model = blockRenderer.getBlockModel(state);
+                for (RenderType renderType : model.getRenderTypes(state, random, ModelData.EMPTY)) {
+                    VertexConsumer consumer = bufferSource.getBuffer(renderType);
+                    blockRenderer.renderBatched(state, pos, blockGetter, poseStack, consumer, true, random);
+                }
+            }
+
+            poseStack.popPose();
+        }
+
+        bufferSource.endBatch();
+        Lighting.setupForFlatItems();
+        RenderSystem.disableDepthTest();
     }
 
     public static void setupScreen(ResourceLocation resourceLocation, float alpha) {
