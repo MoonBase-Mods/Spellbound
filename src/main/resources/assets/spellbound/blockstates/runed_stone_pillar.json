@@ -1,249 +1,111 @@
 {
   "variants": {
-    "axis=x,facing=east,up=false,half=upper": {
+    "axis=x,facing=east,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 90,
-      "z": 180
-    },
-    "axis=x,facing=east,up=true,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
+      "x": 270,
       "y": 90
     },
-    "axis=x,facing=north,up=false,half=upper": {
+    "axis=x,facing=north,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "z": 180
+      "x": 270,
+      "y": 90
     },
-    "axis=x,facing=north,up=true,half=upper": {
+    "axis=x,facing=south,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90
+      "x": 270,
+      "y": 90
     },
-    "axis=x,facing=south,up=true,half=upper": {
+    "axis=x,facing=west,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 180
-    },
-    "axis=x,facing=south,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 180,
-      "z": 180
-    },
-    "axis=x,facing=west,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 270,
-      "z": 180
-    },
-    "axis=x,facing=west,up=true,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
+      "x": 270,
       "y": 270
     },
 
-    "axis=x,facing=east,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 90,
-      "z": 180
-    },
-    "axis=x,facing=east,up=true,half=lower": {
+    "axis=x,facing=east,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "x": 90,
       "y": 90
     },
-    "axis=x,facing=north,up=false,half=lower": {
+    "axis=x,facing=north,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "x": 90,
-      "z": 180
+      "y": 90
     },
-    "axis=x,facing=north,up=true,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90
-    },
-    "axis=x,facing=south,up=true,half=lower": {
+    "axis=x,facing=south,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "x": 90,
-      "y": 180
+      "y": 90
     },
-    "axis=x,facing=south,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 180,
-      "z": 180
-    },
-    "axis=x,facing=west,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 270,
-      "z": 180
-    },
-    "axis=x,facing=west,up=true,half=lower": {
+    "axis=x,facing=west,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "x": 90,
       "y": 270
     },
 
-
-
-    "axis=y,facing=east,up=true,half=upper": {
+    "axis=y,facing=east,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
       "y": 90
     },
-    "axis=y,facing=north,up=true,half=upper": {
+    "axis=y,facing=north,half=upper": {
       "model": "spellbound:block/runed_pillar_top"
     },
-    "axis=y,facing=south,up=true,half=upper": {
+    "axis=y,facing=south,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
       "y": 180
     },
-    "axis=y,facing=west,up=true,half=upper": {
+    "axis=y,facing=west,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
       "y": 270
     },
-    "axis=y,facing=east,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "y": 90,
-      "z": 180
-    },
-    "axis=y,facing=north,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "z": 180
-    },
-    "axis=y,facing=south,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "y": 180,
-      "z": 180
-    },
-    "axis=y,facing=west,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "y": 270,
-      "z": 180
-    },
 
-    "axis=y,facing=east,up=true,half=lower": {
+    "axis=y,facing=east,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "y": 90
     },
-    "axis=y,facing=north,up=true,half=lower": {
+    "axis=y,facing=north,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom"
     },
-    "axis=y,facing=south,up=true,half=lower": {
+    "axis=y,facing=south,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "y": 180
     },
-    "axis=y,facing=west,up=true,half=lower": {
+    "axis=y,facing=west,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "y": 270
     },
-    "axis=y,facing=east,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "y": 90,
-      "z": 180
-    },
-    "axis=y,facing=north,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "z": 180
-    },
-    "axis=y,facing=south,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "y": 180,
-      "z": 180
-    },
-    "axis=y,facing=west,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "y": 270,
-      "z": 180
-    },
 
-
-
-    "axis=z,facing=east,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 90,
-      "z": 180
-    },
-    "axis=z,facing=north,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "z": 180
-    },
-    "axis=z,facing=south,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 180,
-      "z": 180
-    },
-    "axis=z,facing=west,up=false,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 270,
-      "z": 180
-    },
-    "axis=z,facing=east,up=true,half=upper": {
-      "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 90
-    },
-    "axis=z,facing=north,up=true,half=upper": {
+    "axis=z,facing=east,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
       "x": 90
     },
-    "axis=z,facing=south,up=true,half=upper": {
+    "axis=z,facing=north,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 180
+      "x": 270
     },
-    "axis=z,facing=west,up=true,half=upper": {
+    "axis=z,facing=south,half=upper": {
       "model": "spellbound:block/runed_pillar_top",
-      "x": 90,
-      "y": 270
+      "x": 90
+    },
+    "axis=z,facing=west,half=upper": {
+      "model": "spellbound:block/runed_pillar_top",
+      "x": 90
     },
 
-    "axis=z,facing=east,up=false,half=lower": {
+    "axis=z,facing=east,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 90,
-      "z": 180
+      "x": 270
     },
-    "axis=z,facing=north,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "z": 180
-    },
-    "axis=z,facing=south,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 180,
-      "z": 180
-    },
-    "axis=z,facing=west,up=false,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 270,
-      "z": 180
-    },
-    "axis=z,facing=east,up=true,half=lower": {
-      "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 90
-    },
-    "axis=z,facing=north,up=true,half=lower": {
+    "axis=z,facing=north,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
       "x": 90
     },
-    "axis=z,facing=south,up=true,half=lower": {
+    "axis=z,facing=south,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 180
+      "x": 270
     },
-    "axis=z,facing=west,up=true,half=lower": {
+    "axis=z,facing=west,half=lower": {
       "model": "spellbound:block/runed_pillar_bottom",
-      "x": 90,
-      "y": 270
+      "x": 270
     }
   }
 }

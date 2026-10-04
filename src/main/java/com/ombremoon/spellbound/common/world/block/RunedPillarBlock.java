@@ -15,7 +15,6 @@ import net.minecraft.world.level.material.Fluids;
 
 public class RunedPillarBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
@@ -24,30 +23,32 @@ public class RunedPillarBlock extends Block {
         this.registerDefaultState((BlockState)this.defaultBlockState()
                 .setValue(AXIS, Direction.Axis.Y)
                 .setValue(FACING, Direction.NORTH)
-                .setValue(UP, true)
                 .setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
+        BlockPos connectedPillar = getConnectedPillar(state, pos);
+        if (level.getBlockState(connectedPillar).is(state.getBlock())) return;
 
-        if (state.getValue(HALF).equals(DoubleBlockHalf.LOWER)) {
-            BlockPos upperPos;
-            if (!state.getValue(UP)) upperPos = pos.below();
-            else upperPos = pos.relative(state.getValue(AXIS), 1);
+        level.setBlock(connectedPillar, state.setValue(HALF, state.getValue(HALF).getOtherHalf()).setValue(FACING, state.getValue(FACING).getOpposite()), 3);
+    }
 
-            BlockState upperHalf = state.setValue(HALF, DoubleBlockHalf.UPPER);
-            level.setBlock(upperPos, upperHalf, 3);
-        }
+    public Direction getPillarDirection(BlockState state) {
+        Direction.Axis axis = state.getValue(AXIS);
+        Direction facing = state.getValue(FACING);
+
+        if (axis.equals(Direction.Axis.Y))
+            return state.getValue(HALF).equals(DoubleBlockHalf.LOWER) ? Direction.UP : Direction.DOWN;
+
+        return facing;
     }
 
     public BlockPos getConnectedPillar(BlockState state, BlockPos pos) {
-        if (state.getValue(HALF).equals(DoubleBlockHalf.LOWER)) {
-            return state.getValue(UP) ? pos.relative(state.getValue(AXIS), 1) : pos.below();
-        } else {
-            return state.getValue(UP) ? pos.relative(state.getValue(AXIS), -1) : pos.above();
-        }
+        Direction direction = getPillarDirection(state);
+
+        return pos.relative(direction);
     }
 
     @Override
@@ -78,9 +79,10 @@ public class RunedPillarBlock extends Block {
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        BlockPos blockpos = pos.below();
-        BlockState blockstate = level.getBlockState(blockpos);
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER || blockstate.is(this);
+        return true;
+//        BlockPos blockpos = pos.below();
+//        BlockState blockstate = level.getBlockState(blockpos);
+//        return state.getValue(HALF) == DoubleBlockHalf.LOWER || blockstate.is(this);
     }
 
     protected BlockState rotate(BlockState state, Rotation rotation) {
@@ -92,13 +94,23 @@ public class RunedPillarBlock extends Block {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{AXIS, FACING, UP, HALF});
+        builder.add(new Property[]{AXIS, FACING, HALF});
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return (BlockState)this.defaultBlockState()
+        BlockPos pos = context.getClickedPos();
+        Direction direction = context.getClickedFace();
+        if (direction.equals(Direction.UP) || direction.equals(Direction.DOWN)) direction = Direction.NORTH;
+
+        BlockState toPlace = this.defaultBlockState()
                 .setValue(AXIS, context.getClickedFace().getAxis())
-                .setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(UP, context.getClickedFace() != Direction.DOWN);
+                .setValue(FACING, direction);
+        if (context.getClickedFace().equals(Direction.DOWN)) toPlace = toPlace.setValue(HALF, DoubleBlockHalf.UPPER);
+
+        BlockPos connected = getConnectedPillar(toPlace, pos);
+        BlockState connectedState = context.getLevel().getBlockState(connected);
+        if (!connectedState.canBeReplaced()) return null;
+
+        return toPlace;
     }
 }
