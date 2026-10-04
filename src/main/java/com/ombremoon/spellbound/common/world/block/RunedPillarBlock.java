@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.block;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.Fluids;
 
 public class RunedPillarBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -52,10 +54,26 @@ public class RunedPillarBlock extends Block {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         if (!getConnectedPillar(state, pos).equals(neighborPos)) return;
         BlockState nextState = level.getBlockState(neighborPos);
-        if (!nextState.is(state.getBlock())) return;
-        if (!nextState.getValue(HALF).getOtherHalf().equals(state.getValue(HALF))) {
-            level.destroyBlock(pos, state.getValue(HALF).equals(DoubleBlockHalf.LOWER));
+        if (nextState.is(state.getBlock())) return;
+        level.destroyBlock(pos, false);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && (player.isCreative() || !player.hasCorrectToolForDrops(state, level, pos))) {
+            DoubleBlockHalf doubleblockhalf = (DoubleBlockHalf)state.getValue(HALF);
+            if (doubleblockhalf == DoubleBlockHalf.UPPER) {
+                BlockPos blockpos = pos.below();
+                BlockState blockstate = level.getBlockState(blockpos);
+                if (blockstate.is(state.getBlock()) && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                    BlockState blockstate1 = blockstate.getFluidState().is(Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    level.setBlock(blockpos, blockstate1, 35);
+                    level.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+                }
+            }
         }
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

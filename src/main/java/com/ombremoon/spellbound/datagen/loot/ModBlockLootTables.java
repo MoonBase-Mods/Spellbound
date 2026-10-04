@@ -74,6 +74,12 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.add(SBBlocks.PURPLE_SPORE_SLAB.get(), this::createSlabItemTable);
         this.add(SBBlocks.RED_SPORE_SLAB.get(), this::createSlabItemTable);
         this.add(SBBlocks.PINK_SPORE_SLAB.get(), this::createSlabItemTable);
+        this.dropSelf(SBBlocks.STAR_MAP.get());
+        this.dropSelf(SBBlocks.RUNED_STONE_PILLAR.get());
+        this.dropSelf(SBBlocks.RUNED_END_PILLAR.get());
+        this.dropSelf(SBBlocks.RUNED_COPPER_PILLAR.get());
+        this.dropSelf(SBBlocks.ARCANE_CANDLE.get());
+        this.dropSelf(SBBlocks.ARCANE_CHALKBOARD.get());
 
         //ARCANTHUS
         this.add(SBBlocks.ARCANTHUS.get(),

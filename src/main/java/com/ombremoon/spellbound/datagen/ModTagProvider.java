@@ -106,7 +106,19 @@ public class ModTagProvider {
                     SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get(),
                     SBBlocks.JUNGLE_DIVINE_SHRINE.get(),
                     SBBlocks.SANDSTONE_DIVINE_SHRINE.get(),
-                    SBBlocks.PLAINS_DIVINE_SHRINE.get());
+                    SBBlocks.PLAINS_DIVINE_SHRINE.get(),
+                    SBBlocks.RUNED_END_PILLAR.get(),
+                    SBBlocks.RUNED_STONE_PILLAR.get(),
+                    SBBlocks.RUNED_COPPER_PILLAR.get());
+
+            populateTag(net.minecraft.tags.BlockTags.NEEDS_IRON_TOOL,
+                    SBBlocks.SUMMON_STONE.get(),
+                    SBBlocks.CRACKED_SUMMON_STONE.get(),
+                    SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get(),
+                    SBBlocks.RUNED_END_PILLAR.get());
+
+            populateTag(net.minecraft.tags.BlockTags.NEEDS_STONE_TOOL,
+                    SBBlocks.RUNED_COPPER_PILLAR.get());
         }
 
         public void populateTag(TagKey<Block> tag, Block... blocks){
