@@ -151,7 +151,8 @@ public class NightbladeSpell extends ImbuementSpell {
                         EVASIVE_STANCE,
                         incomingDamage -> {
                             incomingDamage.cancelEvent();
-                            // TODO: Play VFX
+                            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("evasive_stance"),
+                                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
                             this.removeSkillBuff(caster, SBSkills.EVASIVE_STANCE);
                         }
                 );
