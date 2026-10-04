@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "spellbound:block/star_map",
+      "y": 90
+    },
+    "facing=north": {
       "model": "spellbound:block/star_map"
+    },
+    "facing=south": {
+      "model": "spellbound:block/star_map",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "spellbound:block/star_map",
+      "y": 270
     }
   }
 }

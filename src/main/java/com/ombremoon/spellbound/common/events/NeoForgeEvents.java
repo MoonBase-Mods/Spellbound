@@ -18,6 +18,7 @@ import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
+import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -38,22 +39,29 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -67,7 +75,9 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class NeoForgeEvents {
@@ -216,6 +226,21 @@ public class NeoForgeEvents {
 
                 if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     mob.setTarget(null);
+                }
+            }
+        } else if (event.getEntity() instanceof AreaEffectCloud cloud) {
+            if (cloud.level().isClientSide) return;
+            if (cloud.potionContents.equals(PotionContents.EMPTY)) return;
+            if (cloud.tickCount % 20 != 0) return;
+
+            Iterator<BlockPos> blocks = BlockPos.betweenClosedStream(cloud.getBoundingBox().inflate(0, 1, 0)).iterator();
+            while (blocks.hasNext()) {
+                BlockPos pos = blocks.next();
+                BlockState state = cloud.level().getBlockState(pos);
+                BlockState grownArcanthus = SBBlocks.ARCANTHUS.get().defaultBlockState().setValue(ArcanthusCropBlock.AGE, ArcanthusCropBlock.MAX_AGE);
+                if (cloud.level().random.nextInt(100) <= 2) {
+                    if (state.is(BlockTags.TALL_FLOWERS) || (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state))) cloud.level().setBlockAndUpdate(pos, grownArcanthus);
+                    else if (state.is(BlockTags.FLOWERS) || state.getBlock() instanceof CropBlock) cloud.level().setBlockAndUpdate(pos, SBBlocks.ARCANTHUS.get().defaultBlockState());
                 }
             }
         }
