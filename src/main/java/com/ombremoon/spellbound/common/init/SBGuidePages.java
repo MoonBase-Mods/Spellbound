@@ -488,7 +488,7 @@ public interface SBGuidePages {
 
         createSpellPage(context, FIREBALL, RUIN_ARMOR_STAFF, Book.RUIN, SBSpells.FIREBALL);
         createSpellPage(context, ICE_SKATE, FIREBALL, Book.RUIN, SBSpells.ICE_SKATE);
-        createSpellPage(context, ICE_BOLT, ICE_SKATE, Book.RUIN, SBSpells.ICE_SKATE);
+        createSpellPage(context, ICE_BOLT, ICE_SKATE, Book.RUIN, SBSpells.ICE_BOLT);
         createSpellPage(context, FLAME_JET, ICE_BOLT, Book.RUIN, SBSpells.FLAME_JET);
         createSpellPage(context, STORM_STRIKE, FLAME_JET, Book.RUIN, SBSpells.STORMSTRIKE);
         createSpellPage(context, ELECTRIC_CHARGE, STORM_STRIKE, Book.RUIN, SBSpells.ELECTRIC_CHARGE);

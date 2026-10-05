@@ -311,10 +311,18 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.pyromancer_robes", "Exploring the nether, I spotted these robes hot to the touch. With this kind of heat, I imagine Fire spells won't get through very well.");
         add("guide.ruin.cryomancer_robes", "Frost robes were spread between igloos and abandoned shipwrecks. Finally, some clothes to protect me from the cold!");
 
-        //HERE
+        //LORE ENTRY
         addSpellContents(SpellPath.RUIN, SBSpells.FIREBALL.get(),
                 "Every Magi should have this classic spell in their arsenal. But to truly unlock its potential, I need to understand how to control the flow of energy.",
                 "This is outstanding! I can now focus my energy to create a ball of fire that will burn through anything in its path and then some.");
+
+        addSpellContents(SpellPath.RUIN, SBSpells.ICE_SKATE.get(),
+                "As much as travelling can be delightful, my difficulty about crossing rivers shall still be expresses. By researching into ice magic maybe I can find an answer",
+                "With the right mix of focus and frost, the water beneath our feet becomes stable enough to let me pass on. This is what I call element manipulation.");
+
+        addSpellContents(SpellPath.RUIN, SBSpells.ICE_BOLT.get(),
+                "Despite all the possible forms that elemental energy could take, I've observed that a quick and fast shot can always become handy in certain situations .",
+                "In ice and through the freezing cold of the mountains, a small but sharp icicle was carved. The one who later became the perfect test subject for my experiments ");
 
         addSpellContents(SpellPath.RUIN, SBSpells.FLAME_JET.get(),
                 "As a magic user, I'm pretty vulnerable at close range. I need a better way to handle enemies that get too close, that way I can protect myself on all fronts.",
@@ -471,12 +479,12 @@ public class ModLangProvider extends LanguageProvider {
 
         add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
         add("summon.acquisition.boss_rewards", "Boss Rewards");
-        add("summon.acquisition.summon_undead.lore", "One zombie may be weak, but a horde of them can be devastating...");
+        add("summon.acquisition.summon_undead.lore", "One zombie may be weak, but a horde of them can surely be devastating.");
         addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_UNDEAD.get(),
                 "I can't begin to imagine the amount of souls that are just lying around, waiting for their power to be harnessed.",
                 "I took to a dimension scattered with graves and was immediately swarmed by hordes of undead monsters. I've never been more terrified in my life."
         );
-        add("summon.acquisition.summon_villager.lore", "If I can't find the village, I'll just have to bring the village to me...");
+        add("summon.acquisition.summon_villager.lore", "If I can't find the village, I'll just have to bring the village to me.");
         addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_VILLAGER.get(),
                 "I'm not alone in this world. I've come across villages in my travels, but they are too far and wide to guarantee I can find them.",
                 "I've seen few Iron Golems in my day, but what on Earth did I just witness? I barely got out of there, but the knowledge I gained will be invaluable."
@@ -486,6 +494,17 @@ public class ModLangProvider extends LanguageProvider {
                 "Fungi are some of the most resilient living organisms. If I can find a mushroom infested realm, just think of the power it could be hiding.",
                 "Why did I think going to the home of a notably durable fungi would be a good idea. It always knows where I am... Must be these damn spores."
         );
+        add("summon.acquisition.summon_wolf_pack.lore", "After all,  we all share the same blood under the moon's gaze.");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_WOLF_PACK.get(),
+                "Wolf's fame has always been... concerning. From a widely spread predator, it was purely reduced to a miserable myth.",
+                "This place has long forgotten the fear they felt for them, they say that somewhere in those realms there it was brought back to its ancient form..."
+        );
+        add("summon.acquisition.bound_bow.lore", "The eyesight of an archer is sharp enough to even pierce through the unseen.");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.BOUND_BOW.get(),
+                "Based on techniques that has been left behind by the progressing world. Nevertheless, the way of the arrow is not just one to take.",
+                "Once there were many of them, now there are few. But those who survived won't fall easily..."
+        );
+
     }
 
     protected void divineGuideContents() {
@@ -559,6 +578,10 @@ public class ModLangProvider extends LanguageProvider {
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_BLOSSOM.get(),
                 "The Divines didn't just make sentient creatures, but also plants. I wonder if my borrowed power can be used for flora.",
                 "I managed to grow a new kind of flower by imbuing one with some of my Divine energy. I can feel it emitting a healing aura when I'm around.");
+
+        addSpellContents(SpellPath.DIVINE, SBSpells.SMITE.get(),
+                "As my Nonna said, day of Judgement is always imminent so we'd better considerate our actions. Else we could end up being §osmited § by the consequences they bring.",
+                "Although this power is behind my comprehension, it is far for my own amusement. May the peace be with us.");
     }
 
     protected void deceptionGuideContents() {
@@ -582,6 +605,12 @@ public class ModLangProvider extends LanguageProvider {
         addSpellContents(SpellPath.DECEPTION, SBSpells.PURGE_MAGIC.get(),
                 "I've learned to excel in sneaking, but when I'm caught, I'm finding my self too vulnerable. I need to find a way to turn the tides, and quick.",
                 "This is good progress. This won't hurt anyone, but this should be a super effective a way to dispel my enemies spells in a pinch.");
+        addSpellContents(SpellPath.DECEPTION, SBSpells.NIGHTBLADE.get(),
+                "I've heard that our own body is a weak spot, so one must only understand how to strike it right. What this concept is applied to incantations?",
+                "Playing with nature's mischief will always be my favourite part, channeling my direst cruelties onto a simple virgin blade...");
+        addSpellContents(SpellPath.DECEPTION, SBSpells.SHADOW_VEIL.get(),
+                "Let the deceptions of the mind shake my purposes in all of their forms. Croaking the fatal entrance of my intentions.",
+                "Peace is not the purest form, but a mere incubator for chaos to awaken. So let's cover it gently with the darkest smoke of hell.");
     }
 
     protected void skillDescriptions() {

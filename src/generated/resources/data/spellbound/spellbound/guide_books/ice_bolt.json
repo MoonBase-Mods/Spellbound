@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.ice_skate"
+        "translate": "spells.spellbound.ice_bolt"
       }
     },
     {
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/ice_skate.png",
+      "image": "spellbound:textures/gui/books/images/spells/ice_bolt.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.ice_skate"
+        "translate": "skill.description.spellbound.ice_bolt"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.ice_skate.lore"
+        "translate": "guide.RUIN.ice_bolt.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.ice_skate.boss_lore"
+        "translate": "guide.RUIN.ice_bolt.boss_lore"
       }
     },
     {
@@ -68,7 +68,7 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:ice_skate",
+      "path": "spellbound:ice_bolt",
       "position": {
         "xOffset": 172,
         "yOffset": 195
