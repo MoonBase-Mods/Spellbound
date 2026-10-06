@@ -294,12 +294,12 @@ public class SBBlocks {
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));
 
-    public static final Supplier<Block> STAR_MAP = registerBlock("star_map", () -> new StarMapBlock(blockProperties().noOcclusion()));
+    public static final Supplier<Block> STAR_MAP = registerBlock("star_map", StarMapBlock::new, false);
     public static final Supplier<Block> RUNED_STONE_PILLAR = registerBlock("runed_stone_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
     public static final Supplier<Block> RUNED_END_PILLAR = registerBlock("runed_end_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_STONE)));
     public static final Supplier<Block> RUNED_COPPER_PILLAR = registerBlock("runed_copper_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK)));
     public static final Supplier<Block> ARCANE_CANDLE = registerBlock("arcane_candle", () -> new Block(blockProperties().mapColor(MapColor.SAND).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(state -> 3).pushReaction(PushReaction.DESTROY)));
-    public static final Supplier<Block> ARCANE_CHALKBOARD = registerSimpleBlock("arcane_chalkboard");
+    public static final Supplier<Block> ARCANE_CHALKBOARD = registerBlock("arcane_chalkboard", ChalkBoardBlock::new);
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return true;

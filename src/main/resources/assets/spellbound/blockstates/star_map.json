@@ -1,18 +1,50 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "spellbound:block/star_map",
+    "facing=east,type=red": {
+      "model": "spellbound:block/star_map/red",
       "y": 90
     },
-    "facing=north": {
-      "model": "spellbound:block/star_map"
+    "facing=north,type=red": {
+      "model": "spellbound:block/star_map/red"
     },
-    "facing=south": {
-      "model": "spellbound:block/star_map",
+    "facing=south,type=red": {
+      "model": "spellbound:block/star_map/red",
       "y": 180
     },
-    "facing=west": {
-      "model": "spellbound:block/star_map",
+    "facing=west,type=red": {
+      "model": "spellbound:block/star_map/red",
+      "y": 270
+    },
+
+    "facing=east,type=purple": {
+      "model": "spellbound:block/star_map/purple",
+      "y": 90
+    },
+    "facing=north,type=purple": {
+      "model": "spellbound:block/star_map/purple"
+    },
+    "facing=south,type=purple": {
+      "model": "spellbound:block/star_map/purple",
+      "y": 180
+    },
+    "facing=west,type=purple": {
+      "model": "spellbound:block/star_map/purple",
+      "y": 270
+    },
+
+    "facing=east,type=blue": {
+      "model": "spellbound:block/star_map/blue",
+      "y": 90
+    },
+    "facing=north,type=blue": {
+      "model": "spellbound:block/star_map/blue"
+    },
+    "facing=south,type=blue": {
+      "model": "spellbound:block/star_map/blue",
+      "y": 180
+    },
+    "facing=west,type=blue": {
+      "model": "spellbound:block/star_map/blue",
       "y": 270
     }
   }

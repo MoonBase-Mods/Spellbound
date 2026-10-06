@@ -10,6 +10,8 @@ import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
+import com.ombremoon.spellbound.common.world.block.ChalkBoardBlock;
+import com.ombremoon.spellbound.common.world.block.StarMapBlock;
 import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.item.components.SatchelContents;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -22,6 +24,7 @@ import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
@@ -141,6 +144,8 @@ public class SBData {
             builder -> builder.persistent(SatchelContents.CODEC).networkSynchronized(SatchelContents.STREAM_CODEC));
     public static final Supplier<DataComponentType<WhistleMaterial>> WHISTLE_MATERIAL = COMPONENT_TYPES.registerComponentType("whistle_material",
             builder -> builder.persistent(WhistleMaterial.CODEC).networkSynchronized(ByteBufCodecs.idMapper(i -> WhistleMaterial.values()[i], WhistleMaterial::ordinal)));
+    public static final Supplier<DataComponentType<StarMapBlock.StarmapType>> STARMAP_TYPE = COMPONENT_TYPES.registerComponentType("chalkboard_type",
+            builder -> builder.persistent(StarMapBlock.StarmapType.CODEC).networkSynchronized(ByteBufCodecs.fromCodec(StarMapBlock.StarmapType.CODEC)));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> BOUND_ARROW_MARK = COMPONENT_TYPES.registerComponentType("bound_arrow_mark", builder -> builder.persistent(Unit.CODEC));

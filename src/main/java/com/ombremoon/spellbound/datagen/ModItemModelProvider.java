@@ -44,6 +44,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.CHALK);
         simpleBlockItem(SBBlocks.ARCANE_CHALKBOARD.get());
         simpleBlockItem(SBBlocks.ARCANE_CANDLE.get());
+        simpleBlockItem(SBBlocks.STAR_MAP.get());
 //        simpleBlockItem(SBBlocks.RUNED_COPPER_PILLAR.get());
 //        simpleBlockItem(SBBlocks.RUNED_END_PILLAR.get());
 //        simpleBlockItem(SBBlocks.RUNED_STONE_PILLAR.get());

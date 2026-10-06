@@ -3,10 +3,17 @@ package com.ombremoon.spellbound.common.world.block;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -16,18 +23,18 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class StarMapBlock extends Block {
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final EnumProperty<StarmapType> TYPE = EnumProperty.create("type", StarmapType.class);
-    protected static final VoxelShape NORTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)7.0F, (double)16.0F, (double)15.0F, (double)9.0F);
-    protected static final VoxelShape EAST_AABB = Block.box((double)7.0F, (double)0.0F, (double)0.0F, (double)9.0F, (double)15.0F, (double)16.0F);
+import java.util.List;
 
-    public StarMapBlock() {
+public class ChalkBoardBlock extends Block {
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    protected static final VoxelShape NORTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)9.0F, (double)16.0F, (double)16.0F, (double)10.0F);
+    protected static final VoxelShape EAST_AABB = Block.box((double)9.0F, (double)0.0F, (double)0.0F, (double)10.0F, (double)16.0F, (double)16.0F);
+
+    public ChalkBoardBlock() {
         super(BlockBehaviour.Properties.of().noOcclusion());
         this.registerDefaultState(
                 this.defaultBlockState()
-                        .setValue(FACING, Direction.NORTH)
-                        .setValue(TYPE, StarmapType.RED));
+                        .setValue(FACING, Direction.NORTH));
     }
 
     @Override
@@ -52,24 +59,6 @@ public class StarMapBlock extends Block {
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TYPE);
-    }
-
-    public enum StarmapType implements StringRepresentable {
-        RED("red"),
-        PURPLE("purple"),
-        BLUE("blue");
-
-        public static final Codec<StarmapType> CODEC = StringRepresentable.fromEnum(StarmapType::values);
-
-        private String name;
-        StarmapType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
+        builder.add(FACING);
     }
 }

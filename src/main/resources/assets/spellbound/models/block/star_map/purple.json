@@ -1,0 +1,7 @@
+{
+  "parent": "spellbound:block/star_map",
+  "textures": {
+    "0": "spellbound:block/star_map/purple",
+    "particle": "spellbound:block/star_map/purple"
+  }
+}

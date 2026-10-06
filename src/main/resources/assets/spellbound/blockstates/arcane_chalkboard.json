@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "spellbound:block/arcane_chalkboard",
+      "y": 90
+    },
+    "facing=north": {
       "model": "spellbound:block/arcane_chalkboard"
+    },
+    "facing=south": {
+      "model": "spellbound:block/arcane_chalkboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "spellbound:block/arcane_chalkboard",
+      "y": 270
     }
   }
 }
