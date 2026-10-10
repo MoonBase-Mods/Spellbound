@@ -14,6 +14,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
@@ -77,12 +78,12 @@ public class SBItems {
     public static final Supplier<Item> STARMAP_ITEM = registerItem("star_map", StarmapBlockItem::new, true);
 
     //Guide Books
-    public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);
-    public static final Supplier<Item> RUIN_BOOK = registerItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation")));
-    public static final Supplier<Item> TRANSFIG_BOOK = registerItem("architects_lexicon", () -> new GuideBookItem(CommonClass.customLocation("architects_lexicon")));
-    public static final Supplier<Item> SUMMON_BOOK = registerItem("the_necronomicon", () -> new GuideBookItem(CommonClass.customLocation("the_necronomicon")));
-    public static final Supplier<Item> DIVINE_BOOK = registerItem("sanctified_codex", () -> new GuideBookItem(CommonClass.customLocation("sanctified_codex")));
-    public static final Supplier<Item> DECEPTION_BOOK = registerItem("swindlers_guide", () -> new GuideBookItem(CommonClass.customLocation("swindlers_guide")));
+    public static final DeferredItem<BasicGuideItem> STARTER_BOOK = registerDeferredItem("studies_in_the_arcane", BasicGuideItem::new);
+    public static final DeferredItem<GuideBookItem> RUIN_BOOK = registerDeferredItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation")));
+    public static final DeferredItem<GuideBookItem> TRANSFIG_BOOK = registerDeferredItem("architects_lexicon", () -> new GuideBookItem(CommonClass.customLocation("architects_lexicon")));
+    public static final DeferredItem<GuideBookItem> SUMMON_BOOK = registerDeferredItem("the_necronomicon", () -> new GuideBookItem(CommonClass.customLocation("the_necronomicon")));
+    public static final DeferredItem<GuideBookItem> DIVINE_BOOK = registerDeferredItem("sanctified_codex", () -> new GuideBookItem(CommonClass.customLocation("sanctified_codex")));
+    public static final DeferredItem<GuideBookItem> DECEPTION_BOOK = registerDeferredItem("swindlers_guide", () -> new GuideBookItem(CommonClass.customLocation("swindlers_guide")));
 
     public static final Supplier<CreativeModeTab> SPELL_TAB = CREATIVE_MODE_TABS.register("spell_tab", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP,0)
             .icon(() -> new ItemStack(SBBlocks.ARCANTHUS.get()))
@@ -122,6 +123,12 @@ public class SBItems {
 
     public static Supplier<Item> registerSimpleItem(String name) {
         return registerItem(name, () -> new Item(getItemProperties()));
+    }
+
+    public static <T extends Item> DeferredItem<T> registerDeferredItem(String name, Supplier<T> itemSupplier) {
+        DeferredItem<T> item = ITEMS.register(name, itemSupplier);
+        SIMPLE_ITEM_LIST.add(item);
+        return item;
     }
 
     public static Supplier<Item> registerItem(String name, Supplier<Item> itemSupplier) {

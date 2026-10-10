@@ -29,6 +29,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
@@ -38,7 +39,9 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import software.bernie.geckolib.util.Color;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class SBData {
@@ -116,6 +119,45 @@ public class SBData {
             "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
                     .serialize(ResourceLocation.CODEC.listOf())
                     .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+                    .copyOnDeath()
+                    .build());
+
+    //Books unlocked
+    private static final Codec<Map<ResourceLocation, Integer>> BOOK_CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, x -> Codec.INT);
+    public static final Supplier<AttachmentType<Map<ResourceLocation, Integer>>> BOOK_LAST_PAGE = ATTACHMENT_TYPES.register(
+            "book_last_page", () -> AttachmentType.<Map<ResourceLocation, Integer>>builder(() -> new HashMap<>())
+                    .serialize(BOOK_CODEC)
+                    .sync(ByteBufCodecs.fromCodec(BOOK_CODEC))
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> RUIN_ACQUIRED = ATTACHMENT_TYPES.register(
+            "ruin_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> SUMMON_ACQUIRED = ATTACHMENT_TYPES.register(
+            "summon_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> TRANSFIG_ACQUIRED = ATTACHMENT_TYPES.register(
+            "transfig_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> DIVINE_ACQUIRED = ATTACHMENT_TYPES.register(
+            "divine_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> DECEPTION_ACQUIRED = ATTACHMENT_TYPES.register(
+            "deception_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
                     .copyOnDeath()
                     .build());
 

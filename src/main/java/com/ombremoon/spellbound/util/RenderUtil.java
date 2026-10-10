@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.client.gui.screens.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.screens.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
 import com.ombremoon.spellbound.client.gui.familiar.ResonanceStoneScreen;
+import com.ombremoon.spellbound.client.gui.toasts.BookAcquiredToast;
 import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
 import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
@@ -55,6 +56,7 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
+import java.awt.print.Book;
 import java.util.Map;
 
 public class RenderUtil {
@@ -163,6 +165,12 @@ public class RenderUtil {
         Minecraft.getInstance()
                 .getToasts()
                 .addToast(new PageScrapUnlockedToast(scrap));
+    }
+
+    public static void sendBookToast(SpellboundToasts toast) {
+        Minecraft.getInstance()
+                .getToasts()
+                .addToast(new BookAcquiredToast(toast));
     }
 
     public static void sendLevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell, @Nullable SpellPath path) {

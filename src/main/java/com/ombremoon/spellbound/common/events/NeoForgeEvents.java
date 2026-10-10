@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
@@ -36,7 +37,9 @@ import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -93,6 +96,44 @@ public class NeoForgeEvents {
         new SpellboundCommand(dispatcher, context);
 
         ConfigCommand.register(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void pickupItem(ItemEntityPickupEvent.Post event) {
+        unlockBooks(event.getOriginalStack(), event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void craftItem(PlayerEvent.ItemCraftedEvent event) {
+        unlockBooks(event.getCrafting(), event.getEntity());
+    }
+
+    private static void unlockBooks(ItemStack stack, Player player) {
+        if (stack.is(SBItems.RUIN_BOOK)) {
+            if (player.hasData(SBData.RUIN_ACQUIRED) && player.getData(SBData.RUIN_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.RUIN);
+            player.setData(SBData.RUIN_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.DECEPTION_BOOK)) {
+            if (player.hasData(SBData.DECEPTION_ACQUIRED.get()) && player.getData(SBData.DECEPTION_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DECEPTION);
+            player.setData(SBData.DECEPTION_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.DIVINE_BOOK)) {
+            if (player.hasData(SBData.DIVINE_ACQUIRED) && player.getData(SBData.DIVINE_ACQUIRED.get())) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DIVINE);
+            player.setData(SBData.DIVINE_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.TRANSFIG_BOOK)) {
+            if (player.hasData(SBData.TRANSFIG_ACQUIRED.get()) && player.getData(SBData.TRANSFIG_ACQUIRED.get())) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.TRANSFIG);
+            player.setData(SBData.TRANSFIG_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.SUMMON_BOOK)) {
+            if (player.hasData(SBData.SUMMON_ACQUIRED.get()) && player.getData(SBData.SUMMON_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.SUMMON);
+            player.setData(SBData.SUMMON_ACQUIRED.get(), true);
+        }
     }
 
     @SubscribeEvent

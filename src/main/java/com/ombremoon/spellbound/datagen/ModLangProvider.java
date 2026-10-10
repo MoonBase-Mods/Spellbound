@@ -128,6 +128,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.toast.spell_level_up", "%s has reached Level %s");
         add("spellbound.toast.path_level_up", "%s path has reached Level %s");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
+        add("spellbound.toast.book_acquired", "New tome acquired");
 
         add("spellbound.familiar_type.utility", "Utility");
         add("spellbound.familiar_type.hybrid", "Hybrid");
@@ -203,6 +204,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
         add("guide.element.multiblock.open", "Click to open Multiblock inspector.");
         add("guide.general.path_items", "Path Items");
+
+        add("guide.basic.restart", "Jump to start");
+        add("guide.basic.locked_book", "This tome has yet to be discovered.");
+        add("guide.basic.open_book", "Open %1$s");
 
         basicContents();
         ruinContents();

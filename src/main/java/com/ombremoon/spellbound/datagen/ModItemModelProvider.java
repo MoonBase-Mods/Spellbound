@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -97,6 +98,10 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     protected <T extends ItemLike> ItemModelBuilder simpleGeneratedModel(Supplier<T> item) {
+        return simpleModel(item.get().asItem(), mcLoc("item/generated"));
+    }
+
+    protected <T extends Item> ItemModelBuilder simpleGeneratedModel(DeferredItem<T> item) {
         return simpleModel(item.get().asItem(), mcLoc("item/generated"));
     }
 
