@@ -369,18 +369,18 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
         add("guide.transfiguration.quote", "Reality is not a rule. It is a suggestion");
         add("guide.transfiguration.description1", "Matter, equivalent exchange, logic—the Transfiguration Path requires great understanding of these concepts. It's more than magic—it's a science.");
-        add("guide.transfiguration.description2", "To truly master this path is to reject the world as it appears. Stone can become water, iron can become gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of physics, you must understand them first.");
+        add("guide.transfiguration.description2", "To master this path is to §lreject the world as it appears§. Iron into water, stone into gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of this world, you must understand them first.");
         add("guide.transfiguration.rituals", "Alchemy Rituals");
-        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything I do. Whether I am extracting a new spell formula or manipulating my environment, the process is the same: arrange the geometry, balance the components, and force the transmutation.");
-        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central pedestal surrounded by display stands, with each tier increasing the displays and height needed.");
+        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything. Whether I am extracting a §lnew formula§ or manipulating my surroundings, the process is the same: arrange the geometry, balance the components, and let the transmutation flow.");
+        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central §lpedestal§ surrounded by display stands, with each tier increasing the displays and height needed.");
         add("guide.transfiguration.rituals_cont", "Alchemy Rituals Cont.");
         add("guide.transfiguration.pedestal_legend", "- Pedestal");
         add("guide.transfiguration.display_legend", "- Display");
-        add("guide.transfiguration.rune_circuit", "If I connect the displays in a ring with these runic symbols I found, the structure acts as a circuit, with the items on displays defining the properties of the ritual.");
+        add("guide.transfiguration.rune_circuit", "If I connect the displays in a ring with these runic symbols I found, the structure acts as a circuit; the items on displays defining the properties of the ritual.");
         add("guide.transfiguration.rune_extended", "With my first iteration I already made some useful items but increasing the size of my ritual area has allowed me to create artifacts with more power.");
-        add("guide.transfiguration.pedestal", "I infused a little bit of my magic into an rickety table I had lying around in preparation for my studies. And now I have it—the heart of the altar, where the magic happens.");
-        add("guide.transfiguration.display", "I've been chiseling away at these old magic stones for hours. My body aches, but at least I have a way to store my collection of materials");
-        add("guide.transfiguration.chalk", "I discovered some runic marking on the walls in the caves. I don't understand what they mean, but it's almost as if I felt magic flowing through the text. I'll write some down for later.");
+        add("guide.transfiguration.pedestal", "By infusing a little bit of magic into an rickety table I had lying around, now I finally have it—the heart of the altar... where the magic happens.");
+        add("guide.transfiguration.display", "I've been chiseling away at these old stones sites for hours. My body aches, but at least I have a way to store my collection of materials");
+        add("guide.transfiguration.chalk", "I discovered some runic marking on the walls in the caves. Their meaning is unknown to me, but it's almost as if I felt magic flowing through the text.");
         add("guide.transfiguration.ritual_talisman", "I have everything in place to begin my experiment, but nothing is happening. Maybe I need a catalyst? I should be wary—if it isn't strong enough, it could be a waste.");
         add("spellbound.ritual.materials", "Ritual Materials");
 
