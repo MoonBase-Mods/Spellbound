@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
@@ -18,6 +19,7 @@ import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
+import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -36,25 +38,34 @@ import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -68,7 +79,9 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class NeoForgeEvents {
@@ -84,6 +97,44 @@ public class NeoForgeEvents {
         new SpellboundCommand(dispatcher, context);
 
         ConfigCommand.register(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void pickupItem(ItemEntityPickupEvent.Post event) {
+        unlockBooks(event.getOriginalStack(), event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void craftItem(PlayerEvent.ItemCraftedEvent event) {
+        unlockBooks(event.getCrafting(), event.getEntity());
+    }
+
+    private static void unlockBooks(ItemStack stack, Player player) {
+        if (stack.is(SBItems.RUIN_BOOK)) {
+            if (player.hasData(SBData.RUIN_ACQUIRED) && player.getData(SBData.RUIN_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.RUIN);
+            player.setData(SBData.RUIN_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.DECEPTION_BOOK)) {
+            if (player.hasData(SBData.DECEPTION_ACQUIRED.get()) && player.getData(SBData.DECEPTION_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DECEPTION);
+            player.setData(SBData.DECEPTION_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.DIVINE_BOOK)) {
+            if (player.hasData(SBData.DIVINE_ACQUIRED) && player.getData(SBData.DIVINE_ACQUIRED.get())) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DIVINE);
+            player.setData(SBData.DIVINE_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.TRANSFIG_BOOK)) {
+            if (player.hasData(SBData.TRANSFIG_ACQUIRED.get()) && player.getData(SBData.TRANSFIG_ACQUIRED.get())) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.TRANSFIG);
+            player.setData(SBData.TRANSFIG_ACQUIRED.get(), true);
+        }
+        else if (stack.is(SBItems.SUMMON_BOOK)) {
+            if (player.hasData(SBData.SUMMON_ACQUIRED.get()) && player.getData(SBData.SUMMON_ACQUIRED)) return;
+            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.SUMMON);
+            player.setData(SBData.SUMMON_ACQUIRED.get(), true);
+        }
     }
 
     @SubscribeEvent
@@ -217,6 +268,21 @@ public class NeoForgeEvents {
 
                 if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                     mob.setTarget(null);
+                }
+            }
+        } else if (event.getEntity() instanceof AreaEffectCloud cloud) {
+            if (cloud.level().isClientSide) return;
+            if (cloud.potionContents.equals(PotionContents.EMPTY)) return;
+            if (cloud.tickCount % 20 != 0) return;
+
+            Iterator<BlockPos> blocks = BlockPos.betweenClosedStream(cloud.getBoundingBox().inflate(0, 1, 0)).iterator();
+            while (blocks.hasNext()) {
+                BlockPos pos = blocks.next();
+                BlockState state = cloud.level().getBlockState(pos);
+                BlockState grownArcanthus = SBBlocks.ARCANTHUS.get().defaultBlockState().setValue(ArcanthusCropBlock.AGE, ArcanthusCropBlock.MAX_AGE);
+                if (cloud.level().random.nextInt(100) <= 2) {
+                    if (state.is(BlockTags.TALL_FLOWERS) || (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state))) cloud.level().setBlockAndUpdate(pos, grownArcanthus);
+                    else if (state.is(BlockTags.FLOWERS) || state.getBlock() instanceof CropBlock) cloud.level().setBlockAndUpdate(pos, SBBlocks.ARCANTHUS.get().defaultBlockState());
                 }
             }
         }

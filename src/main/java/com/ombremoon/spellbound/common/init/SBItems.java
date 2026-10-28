@@ -74,6 +74,8 @@ public class SBItems {
     public static final Supplier<Item> DUNGEON_KEY = registerItem("dungeon_key",  () -> new DungeonKeyItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> BOUND_BOW = registerItem("bound_bow",  () -> new BoundBowItem(getItemProperties().stacksTo(1)), true);
 
+    public static final Supplier<Item> STARMAP_ITEM = registerItem("star_map", StarmapBlockItem::new, true);
+
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);
     public static final Supplier<Item> RUIN_BOOK = registerItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation")));
@@ -98,6 +100,11 @@ public class SBItems {
                         SBSpells.SPELL_TYPES.getEntries().forEach((registryObject) -> {
                             output.accept(SpellTomeItem.createWithSpell(registryObject.get()));
                         });
+                        for (StarMapBlock.StarmapType type : StarMapBlock.StarmapType.values()) {
+                            ItemStack stack = new ItemStack(STARMAP_ITEM.get());
+                            stack.set(SBData.STARMAP_TYPE, type);
+                            output.accept(stack);
+                        }
                     }).title(Component.translatable("itemGroup.spellbound"))
             .build());
 

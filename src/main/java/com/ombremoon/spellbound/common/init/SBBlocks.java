@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFights;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -293,12 +294,12 @@ public class SBBlocks {
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));
 
-    public static final Supplier<Block> STAR_MAP = registerSimpleBlock("star_map");
-    public static final Supplier<Block> RUNED_STONE_PILLAR = registerSimpleBlock("runed_stone_pillar");
-    public static final Supplier<Block> RUNED_END_PILLAR = registerSimpleBlock("runed_end_pillar");
-    public static final Supplier<Block> RUNED_COPPER_PILLAR = registerSimpleBlock("runed_copper_pillar");
-    public static final Supplier<Block> ARCANE_CANDLE = registerSimpleBlock("arcane_candle");
-    public static final Supplier<Block> ARCANE_CHALKBOARD = registerSimpleBlock("arcane_chalkboard");
+    public static final Supplier<Block> STAR_MAP = registerBlock("star_map", StarMapBlock::new, false);
+    public static final Supplier<Block> RUNED_STONE_PILLAR = registerBlock("runed_stone_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
+    public static final Supplier<Block> RUNED_END_PILLAR = registerBlock("runed_end_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_STONE)));
+    public static final Supplier<Block> RUNED_COPPER_PILLAR = registerBlock("runed_copper_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK)));
+    public static final Supplier<Block> ARCANE_CANDLE = registerBlock("arcane_candle", () -> new Block(blockProperties().mapColor(MapColor.SAND).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(state -> 3).pushReaction(PushReaction.DESTROY)));
+    public static final Supplier<Block> ARCANE_CHALKBOARD = registerBlock("arcane_chalkboard", ChalkBoardBlock::new);
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return true;

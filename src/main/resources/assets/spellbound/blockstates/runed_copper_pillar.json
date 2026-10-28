@@ -1,0 +1,111 @@
+{
+  "variants": {
+    "axis=x,facing=east,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 270,
+      "y": 90
+    },
+    "axis=x,facing=north,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 270,
+      "y": 90
+    },
+    "axis=x,facing=south,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 270,
+      "y": 90
+    },
+    "axis=x,facing=west,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 270,
+      "y": 270
+    },
+
+    "axis=x,facing=east,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,facing=north,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,facing=south,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,facing=west,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 90,
+      "y": 270
+    },
+
+    "axis=y,facing=east,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "y": 90
+    },
+    "axis=y,facing=north,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top"
+    },
+    "axis=y,facing=south,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "y": 180
+    },
+    "axis=y,facing=west,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "y": 270
+    },
+
+    "axis=y,facing=east,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "y": 90
+    },
+    "axis=y,facing=north,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom"
+    },
+    "axis=y,facing=south,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "y": 180
+    },
+    "axis=y,facing=west,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "y": 270
+    },
+
+    "axis=z,facing=east,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 90
+    },
+    "axis=z,facing=north,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 270
+    },
+    "axis=z,facing=south,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 90
+    },
+    "axis=z,facing=west,half=upper": {
+      "model": "spellbound:block/runed_copper_pillar_top",
+      "x": 90
+    },
+
+    "axis=z,facing=east,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 270
+    },
+    "axis=z,facing=north,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 90
+    },
+    "axis=z,facing=south,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 270
+    },
+    "axis=z,facing=west,half=lower": {
+      "model": "spellbound:block/runed_copper_pillar_bottom",
+      "x": 270
+    }
+  }
+}
