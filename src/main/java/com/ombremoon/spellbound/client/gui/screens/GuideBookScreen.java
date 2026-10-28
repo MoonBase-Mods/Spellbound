@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.gui.screens;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.client.gui.guide.elements.IPageElement;
@@ -9,6 +10,7 @@ import com.ombremoon.spellbound.client.gui.guide.elements.special.IClickable;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IHoverable;
 import com.ombremoon.spellbound.client.gui.guide.elements.special.IInteractable;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -61,6 +63,7 @@ public class GuideBookScreen extends Screen {
         this.topPos = (this.height - HEIGHT) / 2;
         this.pages = GuideBookManager.getBook(bookId);
         this.lastPage = this.pages.size()-1;
+        this.currentPage = minecraft.player.getData(SBData.BOOK_LAST_PAGE).getOrDefault(bookId, 0);
     }
 
     @Override
@@ -76,6 +79,7 @@ public class GuideBookScreen extends Screen {
         int renderTop = this.topPos + PAGE_Y_OFFSET;
         ElementRenderDispatcher.tick();
         checkCornerHover(guiGraphics, mouseX, mouseY);
+        checkBookmarkHover(guiGraphics, mouseX, mouseY);
 
         List<IPageElement> elementsToRender = new ArrayList<>();
         List<IPageElement> elementsAboveAll = new ArrayList<>();
@@ -102,6 +106,13 @@ public class GuideBookScreen extends Screen {
 
     }
 
+    public void checkBookmarkHover(GuiGraphics graphics, int mouseX, int mouseY) {
+        if (mouseY > this.topPos + 245 && mouseY < this.topPos + 274 && mouseX > this.leftPos + 235 && mouseX < this.leftPos + 257){
+            graphics.renderTooltip(this.font,
+                    Component.translatable("guide.basic.restart"),
+                    mouseX, mouseY);
+        }
+    }
 
     public void checkCornerHover(GuiGraphics graphics, int mouseX, int mouseY) {
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
@@ -132,7 +143,7 @@ public class GuideBookScreen extends Screen {
                 if (pages.get(currentPage).isVisible(minecraft.player)) break;
             }
 
-            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            playClickSound();
             ElementRenderDispatcher.resetElements();
             return true;
         } else if (currentPage < lastPage && mouseX >= this.leftPos + 354 && mouseX <= this.leftPos + 370 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243) {
@@ -143,8 +154,14 @@ public class GuideBookScreen extends Screen {
                 }
             }
 
-            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            playClickSound();
             ElementRenderDispatcher.resetElements();
+            return true;
+        }
+
+        if (mouseY > this.topPos + 245 && mouseY < this.topPos + 274 && mouseX > this.leftPos + 235 && mouseX < this.leftPos + 257){
+            setPage(0);
+            playClickSound();
             return true;
         }
 
@@ -155,6 +172,10 @@ public class GuideBookScreen extends Screen {
             }
         }
         return false;
+    }
+
+    protected void playClickSound() {
+        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     @Override
@@ -172,5 +193,8 @@ public class GuideBookScreen extends Screen {
     public void onClose() {
         super.onClose();
         ElementRenderDispatcher.resetElements();
+        var lastPage = minecraft.player.getData(SBData.BOOK_LAST_PAGE.get());
+        lastPage.put(this.bookId, currentPage);
+        minecraft.player.setData(SBData.BOOK_LAST_PAGE, lastPage);
     }
 }

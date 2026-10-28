@@ -20,6 +20,14 @@ public class GuideBookItem extends Item {
         this(bookId, ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), "textures/gui/books/" + bookId.getPath() + ".png"));
     }
 
+    public ResourceLocation getBookId() {
+        return bookId;
+    }
+
+    public ResourceLocation getBookTexture() {
+        return bookTexture;
+    }
+
     public GuideBookItem(ResourceLocation bookId, ResourceLocation bookTexture) {
         super(new Properties().stacksTo(1));
         this.bookId = bookId;

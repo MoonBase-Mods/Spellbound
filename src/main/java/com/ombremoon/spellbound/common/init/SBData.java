@@ -10,6 +10,8 @@ import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
+import com.ombremoon.spellbound.common.world.block.ChalkBoardBlock;
+import com.ombremoon.spellbound.common.world.block.StarMapBlock;
 import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.item.components.SatchelContents;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -22,10 +24,12 @@ import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
@@ -35,7 +39,9 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import software.bernie.geckolib.util.Color;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class SBData {
@@ -116,6 +122,45 @@ public class SBData {
                     .copyOnDeath()
                     .build());
 
+    //Books unlocked
+    private static final Codec<Map<ResourceLocation, Integer>> BOOK_CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, x -> Codec.INT);
+    public static final Supplier<AttachmentType<Map<ResourceLocation, Integer>>> BOOK_LAST_PAGE = ATTACHMENT_TYPES.register(
+            "book_last_page", () -> AttachmentType.<Map<ResourceLocation, Integer>>builder(() -> new HashMap<>())
+                    .serialize(BOOK_CODEC)
+                    .sync(ByteBufCodecs.fromCodec(BOOK_CODEC))
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> RUIN_ACQUIRED = ATTACHMENT_TYPES.register(
+            "ruin_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> SUMMON_ACQUIRED = ATTACHMENT_TYPES.register(
+            "summon_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> TRANSFIG_ACQUIRED = ATTACHMENT_TYPES.register(
+            "transfig_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> DIVINE_ACQUIRED = ATTACHMENT_TYPES.register(
+            "divine_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+    public static final Supplier<AttachmentType<Boolean>> DECEPTION_ACQUIRED = ATTACHMENT_TYPES.register(
+            "deception_acquired", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
+                    .copyOnDeath()
+                    .build());
+
     //Components
     public static final Supplier<DataComponentType<SpellType<?>>> SPELL_TYPE_COMPONENT = COMPONENT_TYPES.registerComponentType("spells",
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
@@ -141,6 +186,8 @@ public class SBData {
             builder -> builder.persistent(SatchelContents.CODEC).networkSynchronized(SatchelContents.STREAM_CODEC));
     public static final Supplier<DataComponentType<WhistleMaterial>> WHISTLE_MATERIAL = COMPONENT_TYPES.registerComponentType("whistle_material",
             builder -> builder.persistent(WhistleMaterial.CODEC).networkSynchronized(ByteBufCodecs.idMapper(i -> WhistleMaterial.values()[i], WhistleMaterial::ordinal)));
+    public static final Supplier<DataComponentType<StarMapBlock.StarmapType>> STARMAP_TYPE = COMPONENT_TYPES.registerComponentType("chalkboard_type",
+            builder -> builder.persistent(StarMapBlock.StarmapType.CODEC).networkSynchronized(ByteBufCodecs.fromCodec(StarMapBlock.StarmapType.CODEC)));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> BOUND_ARROW_MARK = COMPONENT_TYPES.registerComponentType("bound_arrow_mark", builder -> builder.persistent(Unit.CODEC));
