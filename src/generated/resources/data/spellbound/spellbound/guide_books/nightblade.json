@@ -76,5 +76,5 @@
     }
   ],
   "id": "spellbound:swindlers_guide",
-  "insertAfter": "spellbound:purge_magic"
+  "insertAfter": "spellbound:cursed_rune"
 }

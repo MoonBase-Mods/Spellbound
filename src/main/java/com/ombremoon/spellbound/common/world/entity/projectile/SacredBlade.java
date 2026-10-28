@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.effects.SacredBladeEffect;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -24,7 +25,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import java.util.List;
 
 public class SacredBlade extends VFXSpellProjectile<SmiteSpell> {
+    public static final ResourceLocation LIGHT_VFX = CommonClass.customLocation("smite_projectile");
+    public static final ResourceLocation DARK_VFX = CommonClass.customLocation("smite_projectile_dark");
     private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(SacredBlade.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(SacredBlade.class, EntityDataSerializers.BOOLEAN);
     private int life;
 
     public SacredBlade(EntityType<? extends Projectile> entityType, Level level) {
@@ -34,17 +38,21 @@ public class SacredBlade extends VFXSpellProjectile<SmiteSpell> {
     @Override
     protected EffectBuilder<?> getEffect() {
         return SacredBladeEffect.SacredBladeBuilder.of(this.getId());
+        /*EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                .setOffset(0.5, -0.25, 0)
+                .setRotation(180, 180, 0);*/
     }
 
     @Override
     protected ResourceLocation getEffectLocation() {
-        return CommonClass.customLocation("smite_projectle");
+        return this.isDark() ? DARK_VFX : LIGHT_VFX;
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SIZE, 1);
+        builder.define(DARK, false);
     }
 
     @Override
@@ -133,5 +141,13 @@ public class SacredBlade extends VFXSpellProjectile<SmiteSpell> {
 
     public void setSize(int size) {
         this.entityData.set(SIZE, size);
+    }
+
+    public boolean isDark() {
+        return this.entityData.get(DARK);
+    }
+
+    public void setDark(boolean isDark) {
+        this.entityData.set(DARK, isDark);
     }
 }

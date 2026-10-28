@@ -1,11 +1,13 @@
 package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.init.SBDataTypes;
+import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
+import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.HurtSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.SummonerAttackGoal;
@@ -17,6 +19,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -49,7 +53,7 @@ public abstract class SummonSpell extends AnimatedSpell {
                         if (!list.isEmpty() && !spell.skipEndOnRecast(context)) {
                             list.forEach(AbstractSpell::endSpell);
                             return false;
-                        } else if (summonCount + spell.getCharges() >= maxSummons) {
+                        } else if (summonCount + spell.getCharges() > maxSummons) {
                             if (summonCount < maxSummons) {
                                 spell.setCharges(maxSummons - summonCount - 1);
                                 return true;
@@ -100,7 +104,7 @@ public abstract class SummonSpell extends AnimatedSpell {
     }
 
     protected void onMobSummoned(LivingEntity entity, SpellContext context) {
-        if (entity instanceof PathfinderMob mob) {
+        if (entity instanceof PathfinderMob mob && (entity instanceof ISpellEntity<?>)) {
             mob.goalSelector.addGoal(1, new FollowSummonerGoal(mob, 1.0, 10.0F, 2.0F));
             mob.targetSelector.addGoal(1, new HurtSummonerGoal(mob));
             mob.targetSelector.addGoal(1, new SummonerAttackGoal(mob));
@@ -130,6 +134,18 @@ public abstract class SummonSpell extends AnimatedSpell {
     public void onMobPostHurt(SpellContext context, LivingDamageEvent.Post event) {
     }
 
+    protected boolean hasFilledSoulShard(SpellContext context) {
+        ItemStack filledShard = new ItemStack(SBItems.SOUL_SHARD.get());
+        //Check if filled
+        return context.hasCatalyst(filledShard);
+    }
+
+    protected boolean useFilledSoulShard(SpellContext context) {
+        ItemStack filledShard = new ItemStack(SBItems.SOUL_SHARD.get());
+        //Check if filled
+        return context.useCatalyst(filledShard);
+    }
+
     /**
      * Discards the summons and removes the event listeners
      * @param context the context of the spells
@@ -137,7 +153,6 @@ public abstract class SummonSpell extends AnimatedSpell {
     @Override
     protected void onSpellStop(SpellContext context) {
         Level level = context.getLevel();
-        var handler = context.getSpellHandler();
         if (!level.isClientSide) {
             var summons = this.getSummons();
             for (int summonId : summons) {

@@ -4,6 +4,7 @@ import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXHelper;
+import com.ombremoon.spellbound.client.photon.effects.EntityDeathEffect;
 import com.ombremoon.spellbound.client.photon.effects.StaticEntityEffect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -164,6 +165,83 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
                     var entity = level.getEntity(this.entityId);
                     if (entity != null) {
                         var effect = new EntityEffectExecutor(fx, level, entity, this.rotate);
+                        var offset = this.offset;
+                        var rotation = this.rotation;
+                        var scale = this.scale;
+                        effect.setOffset(offset.x, offset.y, offset.z);
+                        effect.setRotation(rotation.x, rotation.y, rotation.z);
+                        effect.setScale(scale.x, scale.y, scale.z);
+                        effect.setDelay(this.delay);
+                        effect.setForcedDeath(this.forcedDeath);
+                        effect.setAllowMulti(this.allowMulti);
+                        return effect;
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public static class DeadEntity extends EffectBuilder<EntityDeathEffect> {
+        private final int entityId;
+        private final EntityEffectExecutor.AutoRotate rotate;
+        private Vec3 offset = Vec3.ZERO;
+        private Vec3 rotation = Vec3.ZERO;
+        private Vec3 scale = new Vec3(1, 1, 1);
+        private int delay;
+        private boolean forcedDeath;
+        private boolean allowMulti;
+
+        DeadEntity(ResourceLocation location, int entityId, EntityEffectExecutor.AutoRotate rotate) {
+            super(location);
+            this.entityId = entityId;
+            this.rotate = rotate;
+        }
+
+        public static DeadEntity of(ResourceLocation effect, int entityId, EntityEffectExecutor.AutoRotate rotate) {
+            return new DeadEntity(effect, entityId, rotate);
+        }
+
+        public DeadEntity setOffset(double x, double y, double z) {
+            this.offset = new Vec3(x, y, z);
+            return this;
+        }
+
+        public DeadEntity setRotation(double x, double y, double z) {
+            this.rotation = new Vec3(x, y, z);
+            return this;
+        }
+
+        public DeadEntity setScale(double x, double y, double z) {
+            this.scale = new Vec3(x, y, z);
+            return this;
+        }
+
+        public DeadEntity setDelay(int delay) {
+            this.delay = delay;
+            return this;
+        }
+
+        public DeadEntity setForcedDeath(boolean forcedDeath) {
+            this.forcedDeath = forcedDeath;
+            return this;
+        }
+
+        public DeadEntity setAllowMulti(boolean allowMulti) {
+            this.allowMulti = allowMulti;
+            return this;
+        }
+
+        @Override
+        public EntityDeathEffect build() {
+            Level level = Minecraft.getInstance().level;
+            if (level != null) {
+                var fx = FXHelper.getFX(this.location);
+                if (fx != null) {
+                    var entity = level.getEntity(this.entityId);
+                    if (entity != null) {
+                        var effect = new EntityDeathEffect(fx, level, entity, this.rotate);
                         var offset = this.offset;
                         var rotation = this.rotation;
                         var scale = this.scale;

@@ -3,7 +3,10 @@ package com.ombremoon.spellbound.common.world.item;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,11 +21,14 @@ public class DungeonKeyItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        Boolean bool = stack.get(SBData.ENCRYPTED_KEY);
-        if (bool != null && bool) {
-            ResourceKey<PuzzleConfiguration> riddleKey = stack.get(SBData.PUZZLE);
-            if (riddleKey != null) {
-                String path = riddleKey.location().getPath();
+        ResourceKey<PuzzleConfiguration> riddleKey = stack.get(SBData.PUZZLE);
+        if (riddleKey != null) {
+            String path = riddleKey.location().getPath();
+            tooltipComponents.add(Component.translatable("spells.spellbound." + path).withStyle(ChatFormatting.ITALIC).withColor(0x541675));
+
+            Boolean bool = stack.get(SBData.ENCRYPTED_KEY);
+            if (bool != null && bool) {
+                tooltipComponents.add(CommonComponents.NEW_LINE);
                 tooltipComponents.add(Component.translatable("dungeon_key." + path + ".riddle"));
             }
         }

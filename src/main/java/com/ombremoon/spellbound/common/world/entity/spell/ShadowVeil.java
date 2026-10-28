@@ -83,7 +83,7 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
                 if (context.hasSkill(SBSkills.WEIGHTED_VEIL)) {
                     List<Projectile> projectiles = this.level().getEntitiesOfClass(Projectile.class, veilBox, projectile -> {
                         Entity source = projectile.getOwner();
-                        return /*source == null || !SpellUtil.IS_ALLIED.test(caster, source)*/true;
+                        return source == null || !SpellUtil.IS_ALLIED.test(caster, source);
                     });
                     for (Projectile projectile : projectiles) {
                         int projectileId = projectile.getId();

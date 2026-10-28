@@ -213,12 +213,11 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                     }
 
                     var spellList = targetHandler.getSpellList();
-                    if (context.hasSkillReady(SBSkills.EXPUNGE) && context.hasCatalyst(SBItems.FOOL_SHARD.get()) && !spellList.isEmpty()) {
+                    if (context.hasSkillReady(SBSkills.EXPUNGE) && !spellList.isEmpty() && context.useCatalyst(SBItems.FOOL_SHARD.get())) {
                         int randSpell = target.getRandom().nextInt(0, spellList.size());
                         SpellType<?> spellType = targetHandler.getSpellList().stream().toList().get(randSpell);
                         targetHandler.removeSpell(spellType);
                         addCooldown(SBSkills.EXPUNGE, 24000);
-                        context.useCatalyst(SBItems.FOOL_SHARD.get());
 
                         targetVFX = CommonClass.customLocation("purge_magic_expunge");
                         expunge = true;

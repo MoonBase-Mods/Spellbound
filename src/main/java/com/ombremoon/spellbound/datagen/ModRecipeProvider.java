@@ -178,6 +178,23 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.ARCANE_EYE.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('*', Items.ENDER_PEARL)
+                .pattern("###")
+                .pattern("#*#")
+                .pattern("###")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, SBBlocks.DUNGEON_DOOR.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('D', ItemTags.DOORS)
+                .define('*', SBItems.ARCANE_EYE.get())
+                .pattern("#*#")
+                .pattern("#D#")
+                .pattern("###")
+                .unlockedBy("has_arcane_eye", has(SBItems.ARCANE_EYE.get()))
+                .save(output);
 
 
         RuneCraftingRecipeBuilder.createRune(

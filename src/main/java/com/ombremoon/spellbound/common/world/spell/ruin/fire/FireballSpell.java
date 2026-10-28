@@ -127,10 +127,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                         if (context.getTarget() instanceof LivingEntity target) {
                             projectile.setHomingTarget(target);
                             projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
-                                    .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.07, 0.07), RandomUtil.randomValueBetween(0, 0.15), 0)));
-//                            projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
-//                                    .addControlPoint(0.33, new Vec3(-0.1, 0, -0.1))
-//                                    .addControlPoint(0.7, new Vec3(0.3, 0.3, 0.5)));
+                                    .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.09, 0.09), RandomUtil.randomValueBetween(0.15, 0.25), 0)));
                         } else if (context.hasSkill(SBSkills.AUTO_TARGETING)) {
                             var list = this.getAttackableEntities(projectile, SpellUtil.getCastRange(caster));
                             if (!list.isEmpty()) {
@@ -141,8 +138,8 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                                 }
 
                                 projectile.setHomingTarget(target);
-//                                projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
-//                                        .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.05, 0.05), RandomUtil.randomValueBetween(0, 0.15), 0)));
+                                projectile.setSplineController(SplineController.createSpline(caster.position(), target.position())
+                                        .addControlPoint(0.5, new Vec3(RandomUtil.randomValueBetween(-0.09, 0.09), RandomUtil.randomValueBetween(0.15, 0.25), 0.75)));
                             }
                         }
                     }

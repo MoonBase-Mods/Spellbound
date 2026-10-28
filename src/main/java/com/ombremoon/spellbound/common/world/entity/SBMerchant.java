@@ -124,7 +124,8 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
             MerchantOffer[] offers = map.get(getMerchantLevel());
             if (offers != null) {
                 List<MerchantOffer> availableOffers = Lists.newArrayList(offers);
-                int maxTrades = Math.min(numberOfTrades, availableOffers.size());
+//                int maxTrades = Math.min(numberOfTrades, availableOffers.size());
+                int maxTrades = availableOffers.size();
                 for (int i = 0; i < maxTrades; i++) {
                     MerchantOffer newTrade = availableOffers.remove(this.random.nextInt(availableOffers.size()));
                     if (newTrade != null) {
@@ -141,7 +142,8 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
             MerchantOffer[] offers = map.get(level);
             if (offers != null) {
                 List<MerchantOffer> availableOffers = Lists.newArrayList(offers);
-                int maxTrades = Math.min(numberOfTrades, availableOffers.size());
+//                int maxTrades = Math.min(numberOfTrades, availableOffers.size());
+                int maxTrades = availableOffers.size();
                 for (int i = 0; i < maxTrades; i++) {
                     MerchantOffer newTrade = availableOffers.remove(this.random.nextInt(availableOffers.size()));
                     if (newTrade != null) {
@@ -173,9 +175,14 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
         super.addAdditionalSaveData(compound);
         postTradesEvent();
         if (!this.level().isClientSide) {
-            MerchantOffers merchantoffers = this.getOffers();
-            if (!merchantoffers.isEmpty()) {
-                compound.put("Offers", (Tag)MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
+            MerchantOffers trades = this.trades;
+            if (!trades.isEmpty()) {
+                compound.put("Trades", MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), trades).getOrThrow());
+            }
+
+            MerchantOffers riddles = this.riddles;
+            if (!riddles.isEmpty()) {
+                compound.put("Riddles", MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), riddles).getOrThrow());
             }
         }
         compound.putBoolean("TradeType", this.getTradeType());
@@ -187,7 +194,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     private void postTradesEvent() {
         Int2ObjectMap<MerchantOffer[]> trades = SBTrades.TRADES.getOrDefault(getMerchantType(), new Int2ObjectOpenHashMap<>());
         Int2ObjectMap<List<MerchantOffer>> mutableTrades = new Int2ObjectOpenHashMap<>();
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < trades.get(this.getMerchantLevel()).length; i++) {
             mutableTrades.put(i, NonNullList.create());
         }
         trades.int2ObjectEntrySet().forEach(e -> {
@@ -202,12 +209,20 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Offers")) {
-            DataResult var10000 = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get("Offers"));
+        if (compound.contains("Trades")) {
+            DataResult var10000 = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get("Trades"));
             Logger var10002 = Constants.LOG;
             Objects.requireNonNull(var10002);
             var10000.resultOrPartial(Util.prefix("Failed to load offers: ", var10002::warn)).ifPresent((p_323775_) -> {
                 this.trades = (MerchantOffers) p_323775_;
+            });
+        }
+        if (compound.contains("Riddles")) {
+            DataResult var10000 = MerchantOffers.CODEC.parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get("Riddles"));
+            Logger var10002 = Constants.LOG;
+            Objects.requireNonNull(var10002);
+            var10000.resultOrPartial(Util.prefix("Failed to load riddles: ", var10002::warn)).ifPresent((p_323775_) -> {
+                this.riddles = (MerchantOffers) p_323775_;
             });
         }
         this.setTradeType(compound.getBoolean("TradeType"));

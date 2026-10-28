@@ -29,7 +29,7 @@ public class LivingModel<T extends SBLivingEntity> extends GeoModel<T> {
     }
 
     protected String getName(T animatable) {
-        return BuiltInRegistries.ENTITY_TYPE.getKey(animatable.entityType()).getPath();
+        return BuiltInRegistries.ENTITY_TYPE.getKey(animatable.getType()).getPath();
     }
 
     @Override

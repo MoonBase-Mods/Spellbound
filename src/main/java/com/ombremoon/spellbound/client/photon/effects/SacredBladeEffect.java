@@ -29,7 +29,7 @@ public class SacredBladeEffect extends EntityEffectExecutor {
     }
 
     public static class SacredBladeBuilder extends EffectBuilder<SacredBladeEffect> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("smite_projectle");
+        public static final ResourceLocation LOCATION = CommonClass.customLocation("smite_projectile");
         private final int entityId;
 
         SacredBladeBuilder(ResourceLocation location, int entityId) {

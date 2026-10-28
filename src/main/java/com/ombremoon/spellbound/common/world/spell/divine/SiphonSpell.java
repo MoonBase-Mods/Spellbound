@@ -194,7 +194,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                     .setOffset(0, 1.25, 1.5)
                     .setDelay(10);
             if (harvest) {
-                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, 0.1, 0)
                         .setDelay(10);
             }
@@ -293,7 +293,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                     }
 
                     this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(fxLocation), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setOffset(0, 0.1, 0));
+                            .setOffset(0, -entity.getEyeHeight() / 2, 0));
 
                 }
 

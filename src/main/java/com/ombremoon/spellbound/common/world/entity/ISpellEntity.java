@@ -16,7 +16,9 @@ public interface ISpellEntity<T extends AbstractSpell> extends IVFXEntity, Logga
         return (Entity) this;
     }
 
-    EntityType<?> entityType();
+    default EntityType<?> entityType() {
+        return this.getEntity().getType();
+    }
 
     void setSpell(@NotNull AbstractSpell spell);
 

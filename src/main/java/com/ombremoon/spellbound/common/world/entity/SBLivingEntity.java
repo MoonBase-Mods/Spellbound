@@ -249,10 +249,6 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
         this.entityData.set(SPAWNED, true);
     }
 
-    public EntityType<?> entityType() {
-        return this.getType();
-    }
-
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;

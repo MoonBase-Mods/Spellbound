@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBBlocks;
+import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.EffectManager;
@@ -11,11 +12,9 @@ import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.world.block.entity.IceSheetBlockEntity;
-import com.ombremoon.spellbound.common.world.spell.deception.ShadowVeilSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -23,8 +22,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -186,7 +183,7 @@ public class IceSkateSpell extends ChanneledSpell {
                     if (blockpos1.distToCenterSqr(origin.x(), (double) blockpos1.getY() + 0.5, origin.z()) < (double) Mth.square(i)) {
                         if (WATER_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
-                        } else if (context.hasSkill(SBSkills.GLACIAL_GLIDE) && LAVA_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
+                        } else if (context.hasSkill(SBSkills.FROSTIER_WALKER) && LAVA_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.BASALT.defaultBlockState());
                         } else if (context.hasSkill(SBSkills.ICE_BRIDGE) && caster.isCrouching() && this.bridgeTicks > 0 && AIR_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
@@ -266,9 +263,20 @@ public class IceSkateSpell extends ChanneledSpell {
 
             if (context.hasSkill(SBSkills.SHARDS_OF_MOMENTUM)) {
                 IceBoltSpell spell = SBSpells.ICE_BOLT.get().createSpellWithData(caster);
-                //shoot ice bolts in a cone in front of the caster
+                int count = 8;
+                for (int i = 0; i < count; i++) {
+                    float yRot = this.getBoltAngle(caster.getYRot(), i, count);
+                    spell.shootProjectile(context, SBEntities.ICE_BOLT.get(), 0, yRot, 1.25F, 1.0F, iceBolt -> iceBolt.setSize(level.random.nextInt(3)));
+                }
             }
         }
+    }
+
+    private float getBoltAngle(float startAngle, int i, int count) {
+        float spread = 15.0F;
+        float totalSpread = spread * (count - 1);
+        float startOffset = -totalSpread / 2.0F;
+        return startAngle + startOffset + (i * spread);
     }
 
     @Override

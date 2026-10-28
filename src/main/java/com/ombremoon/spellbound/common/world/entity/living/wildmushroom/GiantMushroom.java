@@ -286,10 +286,9 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
     public @org.jetbrains.annotations.Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @org.jetbrains.annotations.Nullable SpawnGroupData spawnGroupData) {
         this.setStartPos(this.blockPosition());
         if (this.hasSummoner()) {
-            AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
-            if (health != null)
-                health.setBaseValue(60);
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(60);
         }
+
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
@@ -492,9 +491,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
 
     protected <T extends GeoAnimatable> PlayState giantMushroomController(AnimationState<T> data) {
         if (!this.isBouncing()) {
-            /*if (this.isStarting() && !this.hasSpawned()) {
-                data.setAnimation(RawAnimation.begin().thenPlay("spawn"));
-            } else */if (this.isDeadOrDying()) {
+            if (this.isDeadOrDying()) {
                 data.setAnimation(RawAnimation.begin().thenPlay("death"));
             } else {
                 data.setAnimation(RawAnimation.begin().thenLoop("idle"));

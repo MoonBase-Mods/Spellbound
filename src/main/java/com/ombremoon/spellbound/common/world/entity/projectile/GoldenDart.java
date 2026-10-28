@@ -32,13 +32,18 @@ import net.tslat.smartbrainlib.util.RandomUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
+    public static final ResourceLocation LIGHT_VFX = CommonClass.customLocation("smite_golden_dart");
+    public static final ResourceLocation DARK_VFX = CommonClass.customLocation("smite_golden_dart_dark");
     private static final EntityDataAccessor<Integer> ANIMATION_TICKS = SynchedEntityData.defineId(GoldenDart.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(GoldenDart.class, EntityDataSerializers.BOOLEAN);
     private static final ResourceLocation SHARDS_OF_PURITY = CommonClass.customLocation("shards_of_purity");
     private static final int ANIMATION_DURATION = 20;
     @Nullable
     private Vec3 startPos;
     @Nullable
     private Vec3 targetPos;
+    private boolean targetHit;
+    private int life;
 
     public GoldenDart(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
@@ -47,31 +52,37 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
     @Override
     protected EffectBuilder<?> getEffect() {
         return EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                .setOffset(0, -0.25, 0)
                 .setRotation(180, 180, 0)
                 .setScale(0.5, 0.5, 0.5);
     }
 
     @Override
     protected ResourceLocation getEffectLocation() {
-        return CommonClass.customLocation("smite_golden_dart");
+        return this.isDark() ? DARK_VFX : LIGHT_VFX;
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ANIMATION_TICKS, 0);
+        builder.define(DARK, false);
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("animationTicks", this.getAnimationTicks());
+        compound.putShort("life", (short)this.life);
+        compound.putBoolean("targetHit", this.targetHit);
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setAnimationTicks(compound.getInt("animationTicks"));
+        this.life = compound.getShort("life");
+        this.targetHit = compound.getBoolean("targetHit");
     }
 
     @Override
@@ -88,6 +99,9 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
             this.findTarget(smiteSpell);
         }
 
+        if (this.targetHit) {
+            this.tickDespawn();
+        }
 
         super.tick();
     }
@@ -151,7 +165,7 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
                 }
             }
 
-            this.discard();
+            this.targetHit = true;
         }
     }
 
@@ -195,6 +209,21 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
                     200
             );
         }
+    }
+
+    protected void tickDespawn() {
+        this.life++;
+        if (this.life >= 1) {
+            this.discard();
+        }
+    }
+
+    public boolean isDark() {
+        return this.entityData.get(DARK);
+    }
+
+    public void setDark(boolean isDark) {
+        this.entityData.set(DARK, isDark);
     }
 
     private int getAnimationTicks() {

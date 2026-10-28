@@ -27,7 +27,7 @@ public class StaticEntityEffect extends EntityEffectExecutor {
     @Override
     public void updateFXObjectFrame(IFXObject fxObject, float partialTicks) {
         if (this.runtime != null && fxObject == this.runtime.root && autoRotate == AutoRotate.LOOK) {
-            /*Vec3 lookAngle = entity.getLookAngle();
+            Vec3 lookAngle = entity.getLookAngle();
             Vec3 rightVector = lookAngle.cross(new Vec3(0, 1, 0)).normalize();
             Vec3 upVector = rightVector.cross(lookAngle).normalize();
             Vec3 transformedOffset = rightVector.scale(offset.x)
@@ -37,7 +37,7 @@ public class StaticEntityEffect extends EntityEffectExecutor {
             Vector3f pos = this.effectPos != null && !this.effectPos.equals(Vec3.ZERO)
                     ? this.effectPos.add(transformedOffset).toVector3f()
                     : entity.position().add(transformedOffset).toVector3f();
-            runtime.root.updatePos(pos);*/
+            runtime.root.updatePos(pos);
         }
     }
 
@@ -56,10 +56,16 @@ public class StaticEntityEffect extends EntityEffectExecutor {
                     }
                     case LOOK -> {
                         newRotation = new Quaternionf(rotation).rotateXYZ(
-                                Math.toRadians(-90),
-                                Math.toRadians(-entity.getYRot()),
+                                Math.toRadians(-entity.getXRot()),
+                                Math.toRadians(-entity.getYRot() - 90),
                                 Math.toRadians(0)
                         );
+                        /*var lookAngles = entity.getLookAngle();
+                        newRotation = new Quaternionf(rotation).rotateXYZ(
+                                0,
+                                (float) org.joml.Math.atan2(-lookAngles.z, lookAngles.x),
+                                (float) lookAngles.y
+                        );*/
                     }
                     case XROT -> {
                         newRotation = new Quaternionf(rotation).rotateXYZ(

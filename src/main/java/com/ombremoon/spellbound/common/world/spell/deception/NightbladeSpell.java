@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -72,7 +73,7 @@ public class NightbladeSpell extends ImbuementSpell {
                                 }
                             }
 
-                            if (context.hasSkill(SBSkills.THROAT_SLIT)) {
+                            if (context.hasSkill(SBSkills.THROAT_SLIT) ) {
                                 pre.setNewDamage(pre.getOriginalDamage() * 1.5F);
 
                                 //TODO: ADD BLEED
@@ -125,7 +126,7 @@ public class NightbladeSpell extends ImbuementSpell {
                                     && caster instanceof Player player
                                     && this.isCrit(player, target)
                                     && this.isAttackFromBehind(target, post.getSource())
-                                    && this.isDark(level, player.blockPosition())
+                                    && SpellUtil.isDark(level, player.blockPosition())
                                     && target.isDeadOrDying()) {
                                 RitualHelper.createItem(level, targetPos.above(2), new ItemStack(SBItems.FOOL_SHARD.get()));
                                 this.addCooldown(SBSkills.ASSASSINS_BOUNTY, 24000);
@@ -136,7 +137,7 @@ public class NightbladeSpell extends ImbuementSpell {
                                 spell.setMistPos(caster.position());
                                 spell.softCastSpell(caster);
                             }
-                            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_hit"),
+                            this.triggerSpellFX(EffectData.DeadEntity.of(CommonClass.customLocation("nightblade_hit"),
                                     post.getTarget().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
                         }
                     }
@@ -169,7 +170,7 @@ public class NightbladeSpell extends ImbuementSpell {
                 );
             }
             this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_cast"),
-                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -caster.getEyeHeight(), 0));
             level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.NIGHTBLADE.get(),
                     SoundSource.PLAYERS,0.8F + level.random.nextFloat() * 0.2F ,0.9F + level.random.nextFloat() * 0.2F );
         }
@@ -225,11 +226,6 @@ public class NightbladeSpell extends ImbuementSpell {
                 && !caster.isPassenger()
                 && target instanceof LivingEntity
                 && !caster.isSprinting();
-    }
-
-    private boolean isDark(Level level, BlockPos blockPos) {
-        int i = level.getRawBrightness(blockPos, 0) + level.getBrightness(LightLayer.BLOCK, blockPos) - level.getSkyDarken();
-        return i <= 9;
     }
 
     @Override

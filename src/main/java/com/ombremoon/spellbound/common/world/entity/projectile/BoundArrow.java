@@ -1,11 +1,17 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectCache;
+import com.ombremoon.spellbound.client.photon.FXEmitter;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,10 +41,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.Nullable;
 
-public class BoundArrow extends AbstractArrow {
+public class BoundArrow extends AbstractArrow implements FXEmitter {
     private static final EntityDataAccessor<ArrowVariant> ARROW_VARIANT = SynchedEntityData.defineId(BoundArrow.class, SBEntityDataSerializers.ARROW_VARIANT.get());
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(BoundArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> HOMING_TARGET_ID = SynchedEntityData.defineId(BoundArrow.class, EntityDataSerializers.INT);
+    private final EffectCache cache = new EffectCache();
     private boolean hitBlock;
     private int blockDespawnTick;
 
@@ -82,6 +89,10 @@ public class BoundArrow extends AbstractArrow {
 
         if (this.firstTick) {
             this.firstTick = false;
+            if (this.level().isClientSide) {
+                this.addFX(EffectBuilder.Entity.of(CommonClass.customLocation("ice_trail"), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        .setRotation(180, 90, 0));
+            }
         }
 
         Vec3 vec3 = this.getDeltaMovement();
@@ -284,6 +295,11 @@ public class BoundArrow extends AbstractArrow {
     public void setHomingTarget(LivingEntity entity) {
         this.setHoming(true);
         this.entityData.set(HOMING_TARGET_ID, entity.getId());
+    }
+
+    @Override
+    public EffectCache getFXCache() {
+        return this.cache;
     }
 
     public enum ArrowVariant {

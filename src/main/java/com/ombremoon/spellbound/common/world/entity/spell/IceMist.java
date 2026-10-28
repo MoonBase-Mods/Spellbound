@@ -41,7 +41,7 @@ public class IceMist extends SpellEntity<ShatteringCrystalSpell> {
         super.tick();
         this.refreshDimensions();
         if (this.getSummoner() instanceof LivingEntity owner) {
-            ShatteringCrystalSpell spell = SBSpells.SHATTERING_CRYSTAL.get().createSpellWithData(owner);
+            ShatteringCrystalSpell spell = this.getOrCreateSpell();
             if (spell != null) {
                 List<Entity> entityList = this.level().getEntities(owner, this.getBoundingBox());
                 for (Entity entity : entityList) {

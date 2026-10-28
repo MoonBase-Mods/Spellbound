@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity;
 
 import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.init.SBEntityDataSerializers;
 import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -33,7 +34,7 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unchecked")
 public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLivingEntity implements ISpellEntity<T> {
-    private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SmartSpellEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<SpellType<?>> SPELL_TYPE = SynchedEntityData.defineId(SmartSpellEntity.class, SBEntityDataSerializers.SPELL_TYPE.get());
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SmartSpellEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected T spell;
@@ -54,7 +55,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(SPELL_TYPE, "");
+        builder.define(SPELL_TYPE, SBSpells.FIREBALL.get());
         builder.define(SPELL_ID, -1);
     }
 
@@ -207,11 +208,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     }
 
     public SpellType<T> getSpellType(){
-        return (SpellType<T>) SBSpells.REGISTRY.get(ResourceLocation.tryParse(this.entityData.get(SPELL_TYPE)));
+        return (SpellType<T>) this.entityData.get(SPELL_TYPE);
     }
 
     public void setSpellType(SpellType<?> spellType) {
-        this.entityData.set(SPELL_TYPE, spellType.location().toString());
+        this.entityData.set(SPELL_TYPE, spellType);
     }
 
     public int getSpellId(){
@@ -223,18 +224,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     }
 
 
-
-
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new SmoothGroundNavigation(this, this.level());
     }
 
-
-    @Override
-    public EntityType<?> entityType() {
-        return this.getType();
-    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

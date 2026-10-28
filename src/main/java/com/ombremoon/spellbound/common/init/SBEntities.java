@@ -51,7 +51,7 @@ public class SBEntities {
     public static final Supplier<EntityType<ShadowGate>> SHADOW_GATE = registerEntity("shadow_gate", ShadowGate::new, 1.2F, 2.5F);
     public static final Supplier<EntityType<WildMushroom>> MUSHROOM = registerEntity("wild_mushroom", WildMushroom::new, 0.9F, 0.9F);
     public static final Supplier<EntityType<SacredBlade>> SACRED_BLADE = registerEntity("sacred_blade", SacredBlade::new, 2.5F, 0.5F);
-    public static final Supplier<EntityType<GoldenDart>> GOLDEN_DART = registerEntity("golden_dart", GoldenDart::new, 0.5F, 0.5F);
+    public static final Supplier<EntityType<GoldenDart>> GOLDEN_DART = registerEntity("golden_dart", GoldenDart::new, 0.5F, 0.5F, 1);
     public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9F, 0.9F);
     public static final Supplier<EntityType<CursedRune>> CURSED_RUNE = registerEntity("cursed_rune", CursedRune::new, 1.9F, 0.2F);
 //    public static final Supplier<EntityType<Cyclone>> CYCLONE = registerEntity("cyclone", Cyclone::new, 3.0F, 3.0F);
@@ -59,7 +59,9 @@ public class SBEntities {
 
     //Summon Entities
     //public static final Supplier<EntityType<TotemSpiritEntity>> TOTEM_SPIRIT = registerMob("totem_spirit", TotemSpiritEntity::new, MobCategory.CREATURE, 1f, 1f, 8, LivingShadow::createLivingShadowAttributes, false);
-    public static final Supplier<EntityType<Hellhound>> HELLHOUND = registerMob("hellhound", Hellhound::new, MobCategory.CREATURE, true, 0.6F, 0.55F, 0.68F, 10, Hellhound::createAttributes, false);
+    public static final Supplier<EntityType<SpectralWolf>> SPECTRAL_WOLF = registerMob("spectral_wolf", SpectralWolf::new, MobCategory.CREATURE, true, 0.6F, 0.85F, 0.68F, 10, SpectralWolf::createSpectralWolfAttributes, false);
+    public static final Supplier<EntityType<Hellhound>> HELLHOUND = registerMob("hellhound", Hellhound::new, MobCategory.CREATURE, true, 0.6F, 0.85F, 0.68F, 10, Hellhound::createHellhoundAttributes, false);
+    public static final Supplier<EntityType<ShadowWolf>> SHADOW_WOLF = registerMob("shadow_wolf", ShadowWolf::new, MobCategory.CREATURE, true, 0.6F, 0.85F, 0.68F, 10, ShadowWolf::createShadowWolfAttributes, false);
     public static final Supplier<EntityType<BoundArrow>> BOUND_ARROW = registerEntity("bound_arrow", BoundArrow::new, 0.5F, 0.5F, 0.13F, 20);
     public static final Supplier<EntityType<MiniMushroom>> MINI_MUSHROOM = registerMob("mini_mushroom", MiniMushroom::new, MobCategory.MONSTER, 1f, 1f, 8, MiniMushroom::createMiniMushroomAttributes);
     public static final Supplier<EntityType<GiantMushroom>> GIANT_MUSHROOM = registerMob("giant_mushroom", GiantMushroom::new, MobCategory.MONSTER, 4.6F, 6.0F, 3.5F, 8, GiantMushroom::createGiantMushroomAttributes, false);

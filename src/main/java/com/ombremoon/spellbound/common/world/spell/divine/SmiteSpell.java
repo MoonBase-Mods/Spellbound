@@ -105,10 +105,13 @@ public class SmiteSpell extends ImbuementSpell {
 
                                 if (context.hasSkill(SBSkills.SACRED_BLADE)) {
                                     boolean blessedArc = context.hasSkill(SBSkills.BLESSED_ARC);
+                                    boolean isDark = this.isChoice(SBSkills.BLACK_BLADE);
                                     this.shootProjectile(context, SBEntities.SACRED_BLADE.get(), blessedArc ? 3F : 1.5F, 1.0F, sacredBlade -> {
                                         if (blessedArc) {
                                             sacredBlade.setSize(3);
                                         }
+
+                                        sacredBlade.setDark(isDark);
                                     });
                                 }
 
@@ -193,6 +196,7 @@ public class SmiteSpell extends ImbuementSpell {
         Level level = context.getLevel();
         var handler = context.getSpellHandler();
         if (!level.isClientSide) {
+            boolean isDark = this.isChoice(SBSkills.BLACK_BLADE);
             if (context.isChoice(SBSkills.GOLDEN_PARRY) || !handler.inCastMode() && context.hasSkill(SBSkills.GOLDEN_PARRY)) {
                 this.parryTick = level.getGameTime();
                 if (!handler.inCastMode() && caster instanceof Player player) {
@@ -205,6 +209,8 @@ public class SmiteSpell extends ImbuementSpell {
                     if (blessedArc) {
                         sacredBlade.setSize(3);
                     }
+
+                    sacredBlade.setDark(isDark);
                 });
 
                 this.consumeMana(caster, 10);
@@ -231,11 +237,12 @@ public class SmiteSpell extends ImbuementSpell {
                     float yaw = caster.getYRot();
                     for (int i = 0; i < 5; i++) {
                         Vec3 spawnOffset = this.getSurroundingSpawnPosition(origin, yaw, radius, i, 5);
-                        this.summonEntity(context, SBEntities.GOLDEN_DART.get(), spawnOffset);
+                        this.summonEntity(context, SBEntities.GOLDEN_DART.get(), spawnOffset, goldenDart -> goldenDart.setDark(isDark));
                     }
                 }
 
-                this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("smite_prayerful_strike"), context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE)
+                String suffix = isDark ? "_dark" : "";
+                this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("smite_prayerful_strike" + suffix), context.getCaster().getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, 0.1, 0)
                         .setAllowMulti(true)
                         .setScale(2, 1, 2));

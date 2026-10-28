@@ -37,7 +37,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 @SuppressWarnings("unchecked")
 public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T>, SBSummonable {
-    private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<SpellType<?>> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, SBEntityDataSerializers.SPELL_TYPE.get());
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -49,7 +49,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
-    private boolean clientInit;
+    protected boolean clientInit;
     @Nullable
     private IntOpenHashSet piercingIgnoreEntityIds;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -67,7 +67,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SPELL_TYPE, "");
+        builder.define(SPELL_TYPE, SBSpells.FIREBALL.get());
         builder.define(SPELL_ID, -1);
         builder.define(OWNER_ID, 0);
         builder.define(IS_HOMING, false);
@@ -192,7 +192,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         super.onAddedToLevel();
     }
 
-    private void initializeClientEntity() {
+    protected void initializeClientEntity() {
         if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
             this.handler = SpellUtil.getSpellHandler(player);
             this.skills = SpellUtil.getSkills(player);
@@ -223,11 +223,11 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     public SpellType<T> getSpellType(){
-        return (SpellType<T>) SBSpells.REGISTRY.get(ResourceLocation.tryParse(this.entityData.get(SPELL_TYPE)));
+        return (SpellType<T>) this.entityData.get(SPELL_TYPE);
     }
 
     public void setSpellType(SpellType<?> spellType) {
-        this.entityData.set(SPELL_TYPE, spellType.location().toString());
+        this.entityData.set(SPELL_TYPE, spellType);
     }
 
     public int getSpellId(){
@@ -311,11 +311,6 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     @Override
     public boolean wasSummoned() {
         return true;
-    }
-
-    @Override
-    public EntityType<?> entityType() {
-        return this.getType();
     }
 
     @Override

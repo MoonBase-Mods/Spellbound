@@ -26,7 +26,6 @@ import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -51,7 +50,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
@@ -1010,27 +1008,27 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     protected boolean hasFireStaffBuff(SpellContext context) {
-        ItemStack staff = context.getCatalyst(SBItems.FIRE_STAFF.get());
+        ItemStack staff = context.getCatalystInHand(SBItems.FIRE_STAFF.get());
         return this.getSubPath() == SpellPath.FIRE && !staff.isEmpty();
     }
 
     protected boolean hasFrostStaffBuff(SpellContext context) {
-        ItemStack staff = context.getCatalyst(SBItems.ICE_STAFF.get());
+        ItemStack staff = context.getCatalystInHand(SBItems.ICE_STAFF.get());
         return this.getSubPath() == SpellPath.FROST && !staff.isEmpty();
     }
 
     protected boolean hasShockStaffBuff(SpellContext context) {
-        ItemStack staff = context.getCatalyst(SBItems.SHOCK_STAFF.get());
+        ItemStack staff = context.getCatalystInHand(SBItems.SHOCK_STAFF.get());
         return this.getSubPath() == SpellPath.SHOCK && !staff.isEmpty();
     }
 
     protected boolean hasTransfigurationStaffBuff(SpellContext context) {
-        ItemStack staff = context.getCatalyst(SBItems.CREATIONIST_STAFF.get());
+        ItemStack staff = context.getCatalystInHand(SBItems.CREATIONIST_STAFF.get());
         return this.getPath() == SpellPath.TRANSFIGURATION && !staff.isEmpty();
     }
 
     protected boolean hasSummonStaffBuff(SpellContext context) {
-        ItemStack staff = context.getCatalyst(SBItems.SHOCK_STAFF.get());
+        ItemStack staff = context.getCatalystInHand(SBItems.SHOCK_STAFF.get());
         return this.isBuffable(context) && this.getPath() == SpellPath.SUMMONS && !staff.isEmpty();
     }
 
@@ -1599,7 +1597,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return entity.getBoundingBox().inflate(range);
     }
 
-    protected void triggerSpellFX(EffectData builder) {
+    public void triggerSpellFX(EffectData builder) {
         this.triggerSpellFX(this.caster, builder);
     }
 
@@ -1693,7 +1691,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.isSoftCast = true;
         this.castContext = SpellContext.simple(this.spellType, caster);
         if (!caster.level().isClientSide) {
-            this.initNoCast(caster, caster.level(), caster.getOnPos());
+            this.createContext(caster, caster.level(), caster.getOnPos());
             this.castId = SPELL_COUNTER.incrementAndGet();
 
             CompoundTag initTag = this.initTag(false);
@@ -1718,7 +1716,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public void castSpell(LivingEntity caster, Level level, BlockPos blockPos) {
         if (!level.isClientSide) {
-            this.initNoCast(caster, level, blockPos);
+            this.createContext(caster, level, blockPos);
 
             var handler = SpellUtil.getSpellHandler(caster);
             CompoundTag nbt = new CompoundTag();
@@ -1820,7 +1818,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
      */
-    protected void initNoCast(LivingEntity caster, Level level, BlockPos blockPos) {
+    protected void createContext(LivingEntity caster, Level level, BlockPos blockPos) {
         this.caster = caster;
         this.level = level;
         this.blockPos = blockPos;
@@ -1833,8 +1831,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
     }
 
-    public void initNoCast(LivingEntity caster) {
-        this.initNoCast(caster, caster.level(), caster.getOnPos());
+    public void createContext(LivingEntity caster) {
+        this.createContext(caster, caster.level(), caster.getOnPos());
     }
 
     /**

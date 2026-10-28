@@ -59,9 +59,9 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> RUIN_PORTALS = key("ruin_portals");
     ResourceKey<GuideBookPage> RUIN_ARMOR_STAFF = key("ruin_armor_staff");
     ResourceKey<GuideBookPage> FIREBALL = key("fireball");
+    ResourceKey<GuideBookPage> FLAME_JET = key("flame_jet");
     ResourceKey<GuideBookPage> ICE_SKATE = key("ice_skate");
     ResourceKey<GuideBookPage> ICE_BOLT = key("ice_bolt");
-    ResourceKey<GuideBookPage> FLAME_JET = key("flame_jet");
     ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike");
     ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge");
     ResourceKey<GuideBookPage> SHATTERING_CRYSTAL = key("shattering_crystal");
@@ -487,10 +487,10 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.ruin.cryomancer_robes"), PAGE_TWO_START_X + 40, 140, 120));
 
         createSpellPage(context, FIREBALL, RUIN_ARMOR_STAFF, Book.RUIN, SBSpells.FIREBALL);
-        createSpellPage(context, ICE_SKATE, FIREBALL, Book.RUIN, SBSpells.ICE_SKATE);
-        createSpellPage(context, ICE_BOLT, ICE_SKATE, Book.RUIN, SBSpells.ICE_SKATE);
-        createSpellPage(context, FLAME_JET, ICE_BOLT, Book.RUIN, SBSpells.FLAME_JET);
-        createSpellPage(context, STORM_STRIKE, FLAME_JET, Book.RUIN, SBSpells.STORMSTRIKE);
+        createSpellPage(context, FLAME_JET, FIREBALL, Book.RUIN, SBSpells.FLAME_JET);
+        createSpellPage(context, ICE_BOLT, FLAME_JET, Book.RUIN, SBSpells.ICE_BOLT);
+        createSpellPage(context, ICE_SKATE, ICE_BOLT, Book.RUIN, SBSpells.ICE_SKATE);
+        createSpellPage(context, STORM_STRIKE, ICE_SKATE, Book.RUIN, SBSpells.STORMSTRIKE);
         createSpellPage(context, ELECTRIC_CHARGE, STORM_STRIKE, Book.RUIN, SBSpells.ELECTRIC_CHARGE);
         createSpellPage(context, SHATTERING_CRYSTAL, ELECTRIC_CHARGE, Book.RUIN, SBSpells.SHATTERING_CRYSTAL);
         createSpellPage(context, SOLAR_RAY, SHATTERING_CRYSTAL, Book.RUIN, SBSpells.SOLAR_RAY);
@@ -642,13 +642,12 @@ public interface SBGuidePages {
         createRitualPage(context, DOLPHINS_FIN_RITUAL, DOLPHINS_FIN, SBRituals.CREATE_DOLPHINS_FIN, 5, 0, RitualTier.ONE);
         createSpellPage(context, COBBLED_HIDE, DOLPHINS_FIN_RITUAL, Book.TRANSFIG, SBSpells.COBBLED_HIDE);
         createRitualPage(context, COBBLED_HIDE_RITUAL, COBBLED_HIDE, SBRituals.CREATE_COBBLED_HIDE, 5, 0, RitualTier.ONE);
-        createSpellPage(context, SHADOW_GATE, COBBLED_HIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
+        createSpellPage(context, CREATE_OBJECT, COBBLED_HIDE_RITUAL, Book.TRANSFIG, SBSpells.CREATE_OBJECT);
+        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 10, 0, RitualTier.ONE);
+        createSpellPage(context, SHADOW_GATE, CREATE_OBJECT_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
-        createSpellPage(context, CREATE_OBJECT, MYSTIC_ARMOR_RITUAL, Book.TRANSFIG, SBSpells.CREATE_OBJECT);
-        //idk the values
-        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 10, 0, RitualTier.TWO);
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
@@ -744,11 +743,10 @@ public interface SBGuidePages {
         );
         createSpellPage(context, SUMMON_UNDEAD, BOND, Book.SUMMONS, SBSpells.SUMMON_UNDEAD);
         createSpellPage(context, SUMMON_VILLAGER, SUMMON_UNDEAD, Book.SUMMONS, SBSpells.SUMMON_VILLAGER);
-        createSpellPage(context, WILD_MUSHROOM, SUMMON_VILLAGER, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
-        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
-
-        createSpellPage(context, SUMMON_WOLF, MUSHROOM_ACQ, Book.SUMMONS, SBSpells.SUMMON_WOLF_PACK);
+        createSpellPage(context, SUMMON_WOLF, SUMMON_VILLAGER, Book.SUMMONS, SBSpells.SUMMON_WOLF_PACK);
         createSpellPage(context, BOUND_BOW, SUMMON_WOLF, Book.SUMMONS, SBSpells.BOUND_BOW);
+        createSpellPage(context, WILD_MUSHROOM, BOUND_BOW, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
+        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
 
         //Divine
@@ -886,10 +884,10 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.deception.acquisition2"), PAGE_TWO_START_X, 90));
         createSpellPage(context, FLICKER, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.FLICKER);
         createSpellPage(context, SHADOW_VEIL, FLICKER, Book.DECEPTION, SBSpells.SHADOW_VEIL);
-        createSpellPage(context, CURSED_RUNE, FLICKER, Book.DECEPTION, SBSpells.CURSED_RUNE);
-        createSpellPage(context, SHADOWBOND, CURSED_RUNE, Book.DECEPTION, SBSpells.SHADOWBOND);
+        createSpellPage(context, CURSED_RUNE, SHADOW_VEIL, Book.DECEPTION, SBSpells.CURSED_RUNE);
+        createSpellPage(context, NIGHTBLADE, CURSED_RUNE, Book.DECEPTION, SBSpells.NIGHTBLADE);
+        createSpellPage(context, SHADOWBOND, NIGHTBLADE, Book.DECEPTION, SBSpells.SHADOWBOND);
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
-        createSpellPage(context, NIGHTBLADE, PURGE_MAGIC, Book.DECEPTION, SBSpells.NIGHTBLADE);
     }
 
     private static void createCoverPage(

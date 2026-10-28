@@ -56,7 +56,7 @@ public class SBSpells {
     public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
             .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
                     SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.ICE_BRIDGE, SBSkills.KINETIC_FLOW,
-                    SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
+                    SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.FROSTIER_WALKER));
     public static final Supplier<SpellType<ShatteringCrystalSpell>> SHATTERING_CRYSTAL = registerSpell("shattering_crystal", iceRuinBuilder(SpellMastery.EXPERT, ShatteringCrystalSpell::new)
             .skills(SBSkills.SHATTERING_CRYSTAL, SBSkills.ICE_SHARD, SBSkills.FRIGID_BLAST, SBSkills.CHILL,
                     SBSkills.FROZEN_SHRAPNEL, SBSkills.HYPOTHERMIA, SBSkills.THIN_ICE, SBSkills.CHAOTIC_SHATTER,
@@ -110,7 +110,7 @@ public class SBSpells {
                     SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.CRIMSON_PACT, SBSkills.CORPSE_EXPLOSION,
                     SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
     public static final Supplier<SpellType<SummonWolfPackSpell>> SUMMON_WOLF_PACK = registerSpell("summon_wolf_pack", summonBuilder(SpellMastery.NOVICE, SummonWolfPackSpell::new)
-            .skills(SBSkills.SUMMON_WOLF_PACK, SBSkills.HELLHOUND, SBSkills.SHADOW_WOLF, SBSkills.FULL_MOON,
+            .skills(SBSkills.SUMMON_WOLF_PACK, SBSkills.HELLHOUND, SBSkills.SHADOW_WOLF, SBSkills.SHARP_CLAWS,
                     SBSkills.BLOOD_SCENT, SBSkills.THICK_FUR, SBSkills.PACK_LEADER, SBSkills.BRIMSTONE,
                     SBSkills.ASSASSINATE, SBSkills.LONE_WOLF, SBSkills.FENRIR));
     public static final Supplier<SpellType<SummonVillagerSpell>> SUMMON_VILLAGER = registerSpell("summon_villager", summonBuilder(SpellMastery.NOVICE, SummonVillagerSpell::new)

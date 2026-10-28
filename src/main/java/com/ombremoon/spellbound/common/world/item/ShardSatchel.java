@@ -38,19 +38,20 @@ public class ShardSatchel extends Item {
         super(properties.stacksTo(1).component(SBData.SATCHEL_CONTENTS, SatchelContents.EMPTY));
     }
 
-    public boolean containsCatalyst(ItemStack stack, Item catalyst) {
+    public boolean containsCatalyst(ItemStack stack, ItemStack catalyst) {
         SatchelContents contents = stack.get(SBData.SATCHEL_CONTENTS);
         if (contents == null)
             return false;
 
         for (ItemStack bagItem : contents.items()) {
-            if (bagItem.is(catalyst)) return true;
+            if (ItemStack.isSameItemSameComponents(bagItem, catalyst))
+                return true;
         }
 
         return false;
     }
 
-    public void useCatalyst(ItemStack stack, Item catalyst) {
+    public void useCatalyst(ItemStack stack, ItemStack catalyst) {
         SatchelContents satchelContents = stack.get(SBData.SATCHEL_CONTENTS);
         if (satchelContents == null)
             return;
@@ -58,7 +59,7 @@ public class ShardSatchel extends Item {
         boolean shrunk = false;
         SatchelContents.Mutable contents = new SatchelContents.Mutable(SatchelContents.EMPTY);
         for (ItemStack item : satchelContents.items()) {
-            if (item.is(catalyst)) {
+            if (ItemStack.isSameItemSameComponents(item, catalyst)) {
                 if (!shrunk) {
                     item.shrink(1);
                     shrunk = true;

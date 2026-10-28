@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.datagen;
 import com.google.common.collect.ImmutableMap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ModLangProvider extends LanguageProvider {
@@ -114,6 +116,7 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
         affinityDescriptions();
+        riddleDescriptions();
 
         add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
         add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
@@ -679,20 +682,6 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
 
-        /* TEMPLATE
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        addSkillTooltip(SBSkills., "");
-        * */
-
         addSkillTooltip(SBSkills.FIREBALL, "Launches a ball of fire that explodes on impact");
         addSkillTooltip(SBSkills.RAPID_FIRE, "Fire a rapid stream of 3 smaller Fireballs.");
         addSkillTooltip(SBSkills.STICKY_BOMB, "Fireballs stick to surfaces or enemies, detonating after a short duration.");
@@ -733,6 +722,30 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.INFERNO_CORE, "After the eruption ends, the volcano drops a Smoldering Shard.");
         addSkillTooltip(SBSkills.EXPLOSIVE_BARRAGE, "Each lava bomb explodes on impact.");
         addSkillTooltip(SBSkills.LAVA_FLOW, "Lava bombs turn into lava pools on impact.");
+
+        addSkillTooltip(SBSkills.ICE_BOLT, "Fires a sharp icicle that pierces a single target, dealing Frost damage and reducing movement speed.");
+        addSkillTooltip(SBSkills.GLACIAL_VOLLEY, "Channel to shoot out a continuous stream of Ice Bolts.");
+        addSkillTooltip(SBSkills.ICY_JAVELIN, "Create an ice spear that can be used as a melee weapon or thrown.");
+        addSkillTooltip(SBSkills.ICE_RING, "Fires a ring of Ice Bolts around the caster.");
+        addSkillTooltip(SBSkills.PERMAFROST_LANCE, "Ice Bolt can be charged before release, increasing its damage and slowing effect.");
+        addSkillTooltip(SBSkills.HAIL_STRIKE, "Casting Ice Bolt causes icicles to rain down from the target location.");
+        addSkillTooltip(SBSkills.FROST_PIERCER, "All variants of Ice Bolt pierce through enemies.");
+        addSkillTooltip(SBSkills.WINTER_IS_COMING, "Each successful strike with Ice Bolt stacks the slow effect.");
+        addSkillTooltip(SBSkills.SHATTERING_IMPACT, "Each Ice Bolt adds additional Frost build up.");
+        addSkillTooltip(SBSkills.CHILLING_AFTERMATH, "Enemies struck with any variant of Ice Bolt have their cast speed reduced.");
+        addSkillTooltip(SBSkills.FROSTBITE_SYNERGY, "Enemies affected by slows or any frost effect take additional damage.");
+
+        addSkillTooltip(SBSkills.ICE_SKATE, "Channel to encase the caster's feet in enchanted ice, freezing blocks and water beneath them, increasing movement speed.");
+        addSkillTooltip(SBSkills.FRICTIONLESS, "Movement speed is further increased while Ice Skates are active.");
+        addSkillTooltip(SBSkills.SNOW_BOOTS, "Allies walking over the ice trail gain half the movement benefits and are immune to sliding.");
+        addSkillTooltip(SBSkills.KINETIC_FLOW, "Continuously skating temporarily grants the caster increased potency on Ice spells.");
+        addSkillTooltip(SBSkills.FROSTIER_WALKER, "Ice Skate turns lava beneath the caster to Basalt.");
+        addSkillTooltip(SBSkills.CRYSTAL_CLEATS, "Each second skated grants the caster's next melee hit additional Frost build up and slow effect.");
+        addSkillTooltip(SBSkills.ICE_BRIDGE, "Gain the ability to freeze the air beneath the caster's feet while sneaking for a short duration.");
+        addSkillTooltip(SBSkills.ICE_CLEATS, "Colliding with an enemy while skating deals Frost damage.");
+        addSkillTooltip(SBSkills.FROZEN_FEET, "Enemies who stand on the ice trail take continuous Frost damage.");
+        addSkillTooltip(SBSkills.ICE_SNARE, "Enemies who stand on the ice trail take additional Frost build up.");
+        addSkillTooltip(SBSkills.SHARDS_OF_MOMENTUM, "End the spell to send out a cone of Ice Bolts in front of the caster.");
 
         addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of ice. Cast again to detonate it, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are significantly slowed.");
@@ -830,6 +843,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.BOULDERBACK, "Retaliate a spray of gravel when struck by melee damage, reflecting a portion of the damage back to the attacker.");
         addSkillTooltip(SBSkills.INFUSED_STONE, "Receiving spell damage increases mana regeneration.");
 
+        addSkillTooltip(SBSkills.CREATE_OBJECT, " Creates a Stone Pickaxe in your inventory for 120 seconds. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
+        addSkillTooltip(SBSkills.LUMBERJACK, "Spell now summons a Stone Axe.");
+        addSkillTooltip(SBSkills.EXCAVATOR, "Spell now summons a Stone Shovel.");
+        addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
+        addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
+        addSkillTooltip(SBSkills.KNIGHT, "Spell now summons a Stone Sword.");
+        addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
+        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
+        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
+        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
+        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
+
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
         addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed.");
@@ -854,18 +879,6 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
         addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
 
-        addSkillTooltip(SBSkills.CREATE_OBJECT, " Creates a Stone Pickaxe in your inventory for 120 seconds. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
-        addSkillTooltip(SBSkills.LUMBERJACK, "Spell now summons a Stone Axe.");
-        addSkillTooltip(SBSkills.EXCAVATOR, "Spell now summons a Stone Shovel.");
-        addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
-        addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
-        addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
-        addSkillTooltip(SBSkills.KNIGHT, "Spell now summons a stack of 4 Cooked Steak.");
-        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
-        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
-        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
-        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
-
         addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
         addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
         addSkillTooltip(SBSkills.SUMMON_DROWNED, "Summons a Drowned.");
@@ -878,6 +891,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SILENT_NIGHT, "Phantom hits silence targets.");
         addSkillTooltip(SBSkills.CORPSE_EXPLOSION, "Recast on an undead summon to explode it, dealing magic damage to nearby enemies and healing the caster.");
 
+        addSkillTooltip(SBSkills.SUMMON_WOLF_PACK, "Summons a Spectral Wolf.");
+        addSkillTooltip(SBSkills.HELLHOUND, "Summons red wolves from the Nether that are immune to fire and deal Fire damage.");
+        addSkillTooltip(SBSkills.SHADOW_WOLF, "Summons black wolves that teleport around their target while attacking.");
+        addSkillTooltip(SBSkills.SHARP_CLAWS, "Spectral Wolves cause Bleed build up.");
+        addSkillTooltip(SBSkills.BRIMSTONE, "When a Hellhound dies, it explodes, dealing Fire damage to nearby enemies.");
+        addSkillTooltip(SBSkills.ASSASSINATE, "Shadow wolves silences targets while fighting in the dark.");
+        addSkillTooltip(SBSkills.BLOOD_SCENT, "Wolves do more damage to targets at less than half health.");
+        addSkillTooltip(SBSkills.THICK_FUR, "Wolves have more health and damage resistance when in their proper environment.");
+        addSkillTooltip(SBSkills.PACK_LEADER, "One of the summoned wolves is an Alpha, which is larger in size, has more health, and deals more damage. Wolves do more damage while the Alpha is alive.");
+        addSkillTooltip(SBSkills.LONE_WOLF, "Consume a filled Soul Shard. Instead of summoning wolves, the caster gains increased movement speed, jump height, and strength. Unarmed attacks deal magic damage and cause Bleed build up.");
+        addSkillTooltip(SBSkills.FENRIR, "Consume a filled Soul Shard. Summons the giant wolf, Fenrir.");
+
         addSkillTooltip(SBSkills.SUMMON_VILLAGER, "Summons a Villager without a profession, scaling with charge.");
         addSkillTooltip(SBSkills.FARMER_VILLAGER, "Summons a Farmer Villager.");
         addSkillTooltip(SBSkills.LIBRARIAN_VILLAGER, "Summons a Librarian Villager.");
@@ -889,6 +914,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.BOUNTIFUL, "Villagers killed by enemies have a chance to drop a random trade.");
         addSkillTooltip(SBSkills.LOYAL_PROTECTOR, "Spawn an Iron Golem alongside the Villager.");
         addSkillTooltip(SBSkills.SHOW_ME_THE_ROPES, "Each Villager grants the caster a unique passive.");
+
+        addSkillTooltip(SBSkills.BOUND_BOW, "Creates a magic bow that generates arrows at the cost of mana.");
+        addSkillTooltip(SBSkills.SPECTRAL_VOLLEY, "Bound bow shoots a volley of arrows instead of one.");
+        addSkillTooltip(SBSkills.QUICKDRAW, "Draw speed is increased.");
+        addSkillTooltip(SBSkills.PIERCING_SHOT, "Arrows can pierce through enemies, scaling with the spell's level.");
+        addSkillTooltip(SBSkills.INFUSED_SHOT, "Choose a Ruin sub-path. Arrows now deal additional damage of that type.");
+        addSkillTooltip(SBSkills.MYSTIC_MARKSMAN, "Bound Bow no longer costs mana to shoot arrows.");
+        addSkillTooltip(SBSkills.BOUND_ARROW, "Hitting a target marks them temporarily. If the target dies while marked, a dormant soul shard is filled in the caster's inventory.");
+        addSkillTooltip(SBSkills.ARCHERY_PROWESS, "Every third shot is a guaranteed critical hit.");
+        addSkillTooltip(SBSkills.WRAITH_SHOT, "Arrows can phase through blocks.");
+        addSkillTooltip(SBSkills.HEATSEEKER, "Arrows will home on to targets.");
+        addSkillTooltip(SBSkills.BOUND_MARKSMAN, "Instead of summoning a bow, summon a marksman who gains all the previous benefits from the bow.");
 
         addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
@@ -950,6 +987,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.CONSECRATED_PRESENCE, "Allies within a short distance of a blessed target receive half the benefits.");
         addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the target takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
 
+        addSkillTooltip(SBSkills.SMITE, "The caster imbues their weapon with Light Divine energy, dealing extra damage to Undead.");
+        addSkillTooltip(SBSkills.OATHSWORN, "Increases the imbuement duration.");
+        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby enemies and restoring health to allies.");
+        addSkillTooltip(SBSkills.SACRED_BLADE, "Fire off a golden blade projectile from the weapon.");
+        addSkillTooltip(SBSkills.GOLDEN_PARRY, "Gain the ability to parry melee hits/projectiles and knockback enemies.");
+        addSkillTooltip(SBSkills.GOLDEN_LAND, "Performing Prayerful Strike releases Golden Darts that deal damage to nearby Undead.");
+        addSkillTooltip(SBSkills.SHARDS_OF_PURITY, "Each dart from Golden Land applies a damage debuff to Undead.");
+        addSkillTooltip(SBSkills.BLESSED_ARC, "The blade increases in size and travels faster.");
+        addSkillTooltip(SBSkills.REFLECTIVE_JUDGEMENT, "After a successful parry, the parried enemy takes increased damage from the caster's next strike. Projectiles are reflected back at the shooter.");
+        addSkillTooltip(SBSkills.SACRED_PARRY, "After a successful parry, the caster will automatically counterattack with Sacred Blade.");
+        addSkillTooltip(SBSkills.BLACK_BLADE, "Imbue the weapon with Dark Divine energy instead. The weapon now scales with negative judgement and all upgrades work on all enemies. All attacks reduce enemies' max health for a duration.");
+
         addSkillTooltip(SBSkills.SIPHON, "Channel on to link to a target. While linked, the caster gains a portion of the target's health.");
         addSkillTooltip(SBSkills.GRIM_REACH, "Doubles the link range");
         addSkillTooltip(SBSkills.GLUTTONY, "If the caster is at full health, the spell restores hunger instead.");
@@ -989,7 +1038,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.CURSED_RUNE, "Place a rune at the target location. Enemies who step on it take a small amount of magic damage.");
         addSkillTooltip(SBSkills.MAGE_WRECK, "Drains mana from enemies who step on the rune.");
         addSkillTooltip(SBSkills.DISARMING_CURSE, "Disarms the target.");
-        addSkillTooltip(SBSkills.MIRROR_CURSE, "Summons a Doppelgänger of the target");
+        addSkillTooltip(SBSkills.MIRROR_CURSE, "Summons a Doppelgänger of the target.");
         addSkillTooltip(SBSkills.CURSE_OF_PAIN, "The target takes extra physical damage.");
         addSkillTooltip(SBSkills.CURSE_OF_SILENCE, "The target is silenced.");
         addSkillTooltip(SBSkills.VANISHING_CURSE, "Teleports the target away from the location.");
@@ -997,6 +1046,30 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.CURSE_OF_SUSCEPTIBILITY, "The target takes extra magic damage.");
         addSkillTooltip(SBSkills.TANGLEFOOT_CURSE, "The target is rooted.");
         addSkillTooltip(SBSkills.HIDDEN_RUNE, "The Rune is invisible to everyone but the caster.");
+
+        addSkillTooltip(SBSkills.SHADOW_VEIL, "Creates a mist of shadow. Enemies within the mist are blinded.");
+        addSkillTooltip(SBSkills.DARK_SHROUD, "Increases the duration of the mist.");
+        addSkillTooltip(SBSkills.EXPANDING_SHADOWS, "Increases the radius of the mist.");
+        addSkillTooltip(SBSkills.IN_THE_SHADOWS, "The caster and allies temporarily gain invisibility every few seconds.");
+        addSkillTooltip(SBSkills.DEEP_NIGHT, "The caster and allies remain invisible while inside the mist.");
+        addSkillTooltip(SBSkills.HIDDEN_WOUNDS, "Enemies within the mist have their health and hunger values hidden.");
+        addSkillTooltip(SBSkills.DECEPTIVE_ECHOES, "Enemies in the mist occasionally hear fake mob sounds.");
+        addSkillTooltip(SBSkills.WEIGHTED_VEIL, "Enemy projectiles fired into or through the mist have their speed reduced.");
+        addSkillTooltip(SBSkills.SAPPING_FEAR, "Enemies that remain in the mist for half of its duration are struck with Fear.");
+        addSkillTooltip(SBSkills.CLOUDED_SENSES, "Enemies in the mist have a chance to miss any attack.");
+        addSkillTooltip(SBSkills.SHADOW_DOMAIN, "Enemies caught in the mist cannot leave the mist until the spell ends.");
+
+        addSkillTooltip(SBSkills.NIGHTBLADE, "The caster imbues their weapon with shadow magic, granting their next melee attack bonus magic damage. The spell ends upon hitting an enemy.");
+        addSkillTooltip(SBSkills.LINGERING_EDGE, "The imbuement lasts for an increased amount of hits.");
+        addSkillTooltip(SBSkills.UNEXPECTED, "If the caster attacks an enemy from behind, the bonus damage is doubled.");
+        addSkillTooltip(SBSkills.NUMBING_POISON, "Enemies hit by Nightblade are greatly slowed.");
+        addSkillTooltip(SBSkills.VAMPIRIC_BLADE, "The caster heals half of the damage dealt by Nightblade.");
+        addSkillTooltip(SBSkills.MUFFLE, "Enemies hit by Nightblade are Silenced.");
+        addSkillTooltip(SBSkills.SMOKE_BOMB, "Upon hitting an enemy, a Shadow Veil is created.");
+        addSkillTooltip(SBSkills.UMBRAL_SIGHT, "While Nightblade is active, the caster gains Night Vision.");
+        addSkillTooltip(SBSkills.EVASIVE_STANCE, "The caster will dodge the first attack from an enemy after activating Nightblade.");
+        addSkillTooltip(SBSkills.ASSASSINS_BOUNTY, "If the target is killed in darkness, from behind, with a critical hit, they drop a Fool's Shard.");
+        addSkillTooltip(SBSkills.THROAT_SLIT, "Consume a Fool's Shard. The next attack is a guaranteed critical hit and applies Bleed.");
 
         addSkillTooltip(SBSkills.SHADOWBOND, "Caster and target gain invisibility. When the invisibility is broken, the caster and target swap places.");
         addSkillTooltip(SBSkills.EVERLASTING_BOND, "Increases the duration of invisibility.");
@@ -1023,8 +1096,19 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.EXPUNGE, "Removes a spell from the target's knowledge.");
     }
 
+    protected void riddleDescriptions() {
+        addRiddleTooltip(SBSpells.FLICKER, "§oI am the child of opposites, born of a hiss\nI am the glass that mocks the hammer's kiss\nI am the foundation for the floating word\nand the key to the world unheard§r");
+        addRiddleTooltip(SBSpells.SHADOW_VEIL, "§oI am the sudden night within the sea\nThe coward’s only guarantee\nI am the cloud that holds no rain\nThe phantom shield, the liquid stain\nBy the soft and spineless I’m deployed\nTo trap the light inside the void§r");
+        addRiddleTooltip(SBSpells.CURSED_RUNE, "§oI am a rock of purest white\nYet cast no spark when in a fight\nI shatter against the armor plate\nUsed in a war devoid of hate\nBut hold me tight within your grasp\nAnd I turn to tears at the very last§r");
+    }
+
     protected void addSkillTooltip(Holder<Skill> skill, String description) {
         add(skill.value().getDescriptionId(), description);
+    }
+
+    protected <T extends AbstractSpell> void addRiddleTooltip(Supplier<SpellType<T>> spell, String description) {
+        String name = spell.get().location().getPath();
+        add("dungeon_key." + name + ".riddle", description);
     }
 
     protected String checkReplace(ResourceLocation location) {

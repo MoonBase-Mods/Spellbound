@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.magic;
 
 import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -12,9 +11,10 @@ import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -103,41 +103,55 @@ public class SpellContext {
         return this.skillHolder.hasSkillReady(skill);
     }
 
-    public boolean hasCatalyst(Item catalyst) {
-        if (this.caster.isHolding(catalyst)) return true;
+    public boolean hasCatalyst(ItemStack catalyst) {
+        if (this.caster.isHolding(itemStack -> ItemStack.isSameItemSameComponents(itemStack, catalyst)))
+            return true;
 
-        boolean flag = false;
-        ItemStack mainHand = this.caster.getMainHandItem();
-        if (mainHand.is(SBItems.SHARD_SATCHEL.get())) flag = ((ShardSatchel) mainHand.getItem()).containsCatalyst(mainHand, catalyst);
+        if (this.caster instanceof Player player) {
+            Inventory inventory = player.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (stack.is(SBItems.SHARD_SATCHEL.get())) {
+                    ((ShardSatchel) stack.getItem()).containsCatalyst(stack, catalyst);
+                    return true;
+                }
+            }
+        }
 
-        if (flag) return true;
-        ItemStack offHand = this.caster.getOffhandItem();
-        if (offHand.is(SBItems.SHARD_SATCHEL.get())) flag = ((ShardSatchel) offHand.getItem()).containsCatalyst(mainHand, catalyst);
-
-        return flag;
+        return false;
     }
 
-    public ItemStack getCatalyst(Item catalyst) {
+    public boolean hasCatalyst(Item catalyst) {
+        return this.hasCatalyst(new ItemStack(catalyst));
+    }
+
+    public ItemStack getCatalystInHand(Item catalyst) {
         return this.getMainHandItem().is(catalyst) ? this.getMainHandItem() : this.getOffHandItem().is(catalyst) ? this.getOffHandItem() : ItemStack.EMPTY;
     }
 
-    public void useCatalyst(Item catalyst) {
-        ItemStack catalystStack = getCatalyst(catalyst);
+    public boolean useCatalyst(ItemStack catalyst) {
+        ItemStack catalystStack = this.getCatalystInHand(catalyst.getItem());
         if (!catalystStack.isEmpty()) {
             catalystStack.shrink(1);
-            return;
+            return true;
         }
 
-        ItemStack mainHand = this.caster.getMainHandItem();
-        if (mainHand.is(SBItems.SHARD_SATCHEL.get())) {
-            ((ShardSatchel) mainHand.getItem()).useCatalyst(mainHand, catalyst);
-            return;
+        if (this.caster instanceof Player player) {
+            Inventory inventory = player.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (stack.is(SBItems.SHARD_SATCHEL.get())) {
+                    ((ShardSatchel) stack.getItem()).useCatalyst(stack, catalyst);
+                    return true;
+                }
+            }
         }
 
-        ItemStack offHand = this.caster.getOffhandItem();
-        if (offHand.is(SBItems.SHARD_SATCHEL.get())) {
-            ((ShardSatchel) offHand.getItem()).useCatalyst(mainHand, catalyst);
-        }
+        return false;
+    }
+
+    public boolean useCatalyst(Item catalyst) {
+        return this.useCatalyst(new ItemStack(catalyst));
     }
 
     public int getActiveSpells() {
