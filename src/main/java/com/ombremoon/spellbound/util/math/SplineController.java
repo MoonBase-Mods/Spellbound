@@ -49,8 +49,6 @@ public class SplineController {
         this.targetPos = targetPos;
         this.frame = new CurveFrame(shooterPos, targetPos);
         this.controlPoints.addAll(controlPoints);
-//        this.peakParameter = Mth.clamp(peakParameter, 0, 1.0);
-//        this.gravityVector = gravityVector;
         this.maxDistance = shooterPos.distanceTo(targetPos);
     }
 

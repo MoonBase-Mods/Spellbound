@@ -1,6 +1,7 @@
-package com.ombremoon.spellbound.common.world.entity.living.wolf;
+package com.ombremoon.spellbound.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ombremoon.spellbound.common.world.entity.living.SummonedWolf;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -9,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.animal.Wolf;
 
-public abstract class SummonedWolfRenderer<T extends Wolf> extends MobRenderer<T, WolfModel<T>> {
+public abstract class SummonedWolfRenderer<T extends SummonedWolf> extends MobRenderer<T, WolfModel<T>> {
     public SummonedWolfRenderer(EntityRendererProvider.Context context) {
         super(context, new WolfModel<>(context.bakeLayer(ModelLayers.WOLF)), 0.5F);
     }
@@ -24,6 +25,10 @@ public abstract class SummonedWolfRenderer<T extends Wolf> extends MobRenderer<T
         if (entity.isWet()) {
             float f = entity.getWetShade(partialTicks);
             this.model.setColor(FastColor.ARGB32.colorFromFloat(1.0F, f, f, f));
+        }
+
+        if (entity.isPackLeader()) {
+            poseStack.scale(1.5F, 1.5F, 1.5F);
         }
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);

@@ -15,6 +15,7 @@ import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
+import com.ombremoon.spellbound.common.world.entity.spell.StormstrikeBolt;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.util.RandomUtil;
@@ -191,8 +193,9 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     @Override
     protected void onSpellStop(SpellContext context) {
         Level level = context.getLevel();
-        if (!level.isClientSide)  removeSpellFX(CommonClass.customLocation("hail_strike"));
-
+        if (!level.isClientSide){
+            this.removeSpellFX(CommonClass.customLocation("hail_strike"));
+        }
     }
 
     @Override
@@ -203,13 +206,16 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                 Entity entity = result.getEntity();
                 if (entity instanceof LivingEntity livingEntity) {
                     float damage = this.getBaseDamage() * (1.0F + (bolt.getSize() - 1) * 0.75F);
-                    if (context.hasSkill(SBSkills.FROSTBITE_SYNERGY) && (livingEntity.getAttributeValue(Attributes.MOVEMENT_SPEED) < livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) || this.hasFrostEffect(livingEntity))) {
+                    if (context.hasSkill(SBSkills.FROSTBITE_SYNERGY)
+                            && (livingEntity.getAttributeValue(Attributes.MOVEMENT_SPEED) < livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED)
+                            || this.hasSlowedCastSpeed(livingEntity)
+                            || this.hasFrostEffect(livingEntity))) {
                         damage *= 1.25F;
                     }
 
                     if (this.hurt(bolt, livingEntity, damage)) {
                         var handler = SpellUtil.getSpellHandler(livingEntity);
-                        double slowDebuff = -0.05;
+                        double slowDebuff = -0.05 * bolt.getSize();
                         var optional = handler.getSkillBuff(SBSkills.ICE_BOLT.value());
                         if (context.hasSkill(SBSkills.WINTER_IS_COMING) && optional.isPresent() && optional.get().object() instanceof ModifierData modifierData) {
                             slowDebuff += modifierData.attributeModifier().amount();
@@ -249,6 +255,22 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                 }
             }
         }
+    }
+
+    @Override
+    public void onProjectileHitBlock(ISpellEntity<?> spellEntity, SpellContext context, BlockHitResult result) {
+        Level level = context.getLevel();
+        if (!level.isClientSide && spellEntity instanceof IceBolt bolt) {
+            bolt.discard();
+        }
+    }
+
+    private boolean hasSlowedCastSpeed(LivingEntity living) {
+        if (living.getAttribute(SBAttributes.CAST_SPEED) != null) {
+            return living.getAttributeValue(SBAttributes.CAST_SPEED) < living.getAttributeBaseValue(SBAttributes.CAST_SPEED);
+        }
+
+        return false;
     }
 
     private boolean hasFrostEffect(LivingEntity livingEntity) {

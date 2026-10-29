@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.entity.SBSummonable;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +45,7 @@ public class SpellUtil {
             || attacker.isAlliedTo(target)
             || target instanceof OwnableEntity ownableTarget && ownableTarget.getOwner() == attacker
             || attacker instanceof OwnableEntity ownableAttacker && ownableAttacker.getOwner() == target
+            || isAlliedToOwner(attacker, target)
             || isSummonOf(target, attacker));
     public static final BiPredicate<LivingEntity, LivingEntity> CAN_ATTACK_ENTITY = (attacker, target) -> !IS_ALLIED.test(target, attacker)
             && !target.is(attacker)
@@ -293,6 +296,20 @@ public class SpellUtil {
         Entity entity = getOwner(summon);
         if (entity == null) return false;
         return entity.is(owner);
+    }
+
+    private static boolean isAlliedToOwner(@NotNull Entity summon, @NotNull Entity target) {
+        Entity owner = SpellUtil.getOwner(summon);
+        if (owner != null) {
+            return SpellUtil.IS_ALLIED.test(target, owner);
+        }
+
+        return false;
+    }
+
+    public static boolean isDark(Level level, BlockPos blockPos) {
+        int i = level.getRawBrightness(blockPos, 0) + level.getBrightness(LightLayer.BLOCK, blockPos) - level.getSkyDarken();
+        return i <= 9;
     }
 
     public static void grantScrap(Player player, ResourceLocation scrap) {

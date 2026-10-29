@@ -19,13 +19,11 @@ public abstract class VFXSpellProjectile<T extends AbstractSpell> extends SpellP
     protected abstract ResourceLocation getEffectLocation();
 
     @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
-        if (this.level().isClientSide) {
-            var builder = this.getEffect();
-            if (builder != null)
-                this.addFX(builder);
-        }
+    protected void initializeClientEntity() {
+        super.initializeClientEntity();
+        var builder = this.getEffect();
+        if (builder != null)
+            this.addFX(builder);
     }
 
     @Override

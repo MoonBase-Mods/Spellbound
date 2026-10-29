@@ -54,7 +54,7 @@
       "list": [
         {
           "component": {
-            "translate": "spellbound.ritual.tier_two"
+            "translate": "spellbound.ritual.tier_one"
           },
           "extraOffset": 0,
           "not_added": false,

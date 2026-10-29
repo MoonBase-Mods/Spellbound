@@ -16,10 +16,8 @@ import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
-import com.ombremoon.spellbound.client.renderer.entity.HellhoundRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.*;
 import com.ombremoon.spellbound.client.renderer.SBModelLayerLocs;
-import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
@@ -127,7 +125,9 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.SPECTRAL_WOLF.get(), SpectralWolfRenderer::new);
         event.registerEntityRenderer(SBEntities.HELLHOUND.get(), HellhoundRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_WOLF.get(), ShadowWolfRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);

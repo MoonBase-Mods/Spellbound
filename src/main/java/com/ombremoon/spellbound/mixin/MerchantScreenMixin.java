@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffers;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,6 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MerchantScreen.class)
 public abstract class MerchantScreenMixin extends AbstractContainerScreen<MerchantMenu> implements MerchantAccessor {
+    @Shadow
+    private int scrollOff;
     private static final WidgetSprites DUNGEON_BUTTON_SPRITES = new WidgetSprites(
             CommonClass.customLocation("dungeon/dungeon_key_button"),
             CommonClass.customLocation("dungeon/dungeon_key_button_highlighted")
@@ -78,6 +81,7 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
             if (entity instanceof SBMerchant merchant) {
                 this.spellbound$isRiddle = !merchant.getTradeType();
                 this.menu.setOffers(new MerchantOffers());
+                this.scrollOff = 0;
                 PayloadHandler.setBrokerTrades(this.menu.containerId, merchant.getId(), !merchant.getTradeType());
             }
         }));

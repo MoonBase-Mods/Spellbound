@@ -76,5 +76,5 @@
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:cobbled_hide_ritual"
+  "insertAfter": "spellbound:create_object_ritual"
 }

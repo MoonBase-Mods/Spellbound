@@ -256,7 +256,8 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
             }
 
             EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
-                            .setOffset(0, 0.75, -2);
+//                    .setRotation(-caster.getXRot(), -caster.getYRot() - 90, 0)
+                    .setOffset(0, 0.75, -2);
             if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
                 int index = Math.min(charges, 6);
                 SentinelBox rayBox = FLAME_JET_BOXES.get(index);

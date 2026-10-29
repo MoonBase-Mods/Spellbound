@@ -105,10 +105,10 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide && !this.isStarting() && !this.isEnding()) {
-            var list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox()/*, this.canActivateRune()*/);
+            var list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), this.canActivateRune());
             if (!list.isEmpty()) {
                 for (LivingEntity entity : list) {
-                    if (/*!this.isOwner(entity)*/true) {
+                    if (!this.isOwner(entity)) {
                         EffectManager effectManager = SpellUtil.getSpellEffects(entity);
                         this.effects.forEach(effect -> effectManager.addMagicEffect(effect, this.getSummoner()));
                     }
@@ -125,7 +125,6 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
 
             var list1 = this.level().getEntitiesOfClass(Projectile.class, this.getBoundingBox().inflate(0.25, 0.5, 0.25));
             if (!list1.isEmpty()) {
-//                this.removeEntityFX(this.getEffectLocation());
                 this.triggerFX(
                         EffectData.StaticEntity.of(CommonClass.customLocation("cursed_rune_discharge"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                 .setOffset(0, 0.1, 0)
@@ -142,6 +141,8 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
                 } else {
                     this.addFX(builder);
                 }
+
+                this.clientInit = true;
             }
         }
     }

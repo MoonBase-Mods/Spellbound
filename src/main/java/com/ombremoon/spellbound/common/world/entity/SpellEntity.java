@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.entity;
 
 import com.ombremoon.spellbound.client.photon.EffectCache;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBEntityDataSerializers;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -31,7 +32,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 @SuppressWarnings("unchecked")
 public abstract class SpellEntity<T extends AbstractSpell> extends Entity implements ISpellEntity<T>, SBSummonable, Loggable {
-    private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<SpellType<?>> SPELL_TYPE = SynchedEntityData.defineId(SpellEntity.class, SBEntityDataSerializers.SPELL_TYPE.get());
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> END_TICK = SynchedEntityData.defineId(SpellEntity.class, EntityDataSerializers.INT);
@@ -41,7 +42,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     protected SpellHandler handler;
     protected SkillHolder skills;
     private boolean isSpellCast;
-    private boolean clientInit;
+    protected boolean clientInit;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final EffectCache effectCache = new EffectCache();
 
@@ -61,7 +62,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SPELL_TYPE, "");
+        builder.define(SPELL_TYPE, SBSpells.FIREBALL.get());
         builder.define(SPELL_ID, -1);
         builder.define(OWNER_ID, 0);
         builder.define(START_TICK, 0);
@@ -134,7 +135,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         super.onAddedToLevel();
     }
 
-    private void initializeClientEntity() {
+    protected void initializeClientEntity() {
         if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
             this.handler = SpellUtil.getSpellHandler(player);
             this.skills = SpellUtil.getSkills(player);
@@ -170,11 +171,11 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     }
 
     public SpellType<T> getSpellType(){
-        return (SpellType<T>) SBSpells.REGISTRY.get(ResourceLocation.tryParse(this.entityData.get(SPELL_TYPE)));
+        return (SpellType<T>) this.entityData.get(SPELL_TYPE);
     }
 
     public void setSpellType(SpellType<?> spellType) {
-        this.entityData.set(SPELL_TYPE, spellType.location().toString());
+        this.entityData.set(SPELL_TYPE, spellType);
     }
 
     public int getSpellId(){
@@ -212,11 +213,6 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     @Override
     public Entity getSummoner() {
         return this.level().getEntity(this.entityData.get(OWNER_ID));
-    }
-
-    @Override
-    public EntityType<?> entityType() {
-        return this.getType();
     }
 
     @Override

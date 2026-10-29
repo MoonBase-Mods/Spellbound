@@ -31,6 +31,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class SkillHolder implements INBTSerializable<CompoundTag> {
     public static final int MAX_SPELL_LEVEL = ConfigHandler.COMMON.maxSpellLevel.get();
@@ -81,6 +82,10 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     public int getSpellLevel(SpellType<?> spellType) {
         int level = this.getLevelFromXP(getSpellXp(spellType));
         return Math.min(level, MAX_SPELL_LEVEL);
+    }
+
+    public <T extends AbstractSpell> int getSpellLevel(Supplier<SpellType<T>> spellType) {
+        return this.getSpellLevel(spellType.get());
     }
 
     public float getSpellXp(SpellType<?> spellType) {

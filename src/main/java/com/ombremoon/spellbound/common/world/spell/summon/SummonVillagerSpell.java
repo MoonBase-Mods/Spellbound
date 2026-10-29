@@ -171,7 +171,7 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                     }
                 }
 
-                if (context.hasSkill(SBSkills.LOYAL_PROTECTOR) && context.hasCatalyst(SBItems.SOUL_SHARD.get())) {
+                if (context.hasSkill(SBSkills.LOYAL_PROTECTOR) && this.useFilledSoulShard(context)) {
                     Vec3 pos = LandRandomPos.getPos(villager, 3, 3);
                     if (pos == null) {
                         pos = villager.position();
@@ -180,7 +180,7 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                     this.summonEntity(context, EntityType.IRON_GOLEM, pos);
                 }
 
-                if (context.hasSkill(SBSkills.SHOW_ME_THE_ROPES) && context.hasCatalyst(SBItems.SOUL_SHARD.get())) {
+                if (context.hasSkill(SBSkills.SHOW_ME_THE_ROPES) && this.useFilledSoulShard(context)) {
                     if (profession == VillagerProfession.FARMER) {
                         this.addEventBuff(
                                 caster,

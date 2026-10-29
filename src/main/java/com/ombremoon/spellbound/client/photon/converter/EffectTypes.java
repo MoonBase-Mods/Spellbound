@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client.photon.converter;
 
 import com.ombremoon.spellbound.client.photon.type.BlockEffectType;
+import com.ombremoon.spellbound.client.photon.type.EntityDeathEffectType;
 import com.ombremoon.spellbound.client.photon.type.EntityEffectType;
 import com.ombremoon.spellbound.client.photon.type.StaticEntityEffectType;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -16,6 +17,7 @@ public class EffectTypes {
     private static final Map<ResourceLocation, EffectType<?>> REGISTRY = new HashMap<>();
     public static final EffectType<EffectData.Block> BLOCK = new BlockEffectType();
     public static final EffectType<EffectData.Entity> ENTITY = new EntityEffectType();
+    public static final EffectType<EffectData.DeadEntity> ENTITY_DEATH = new EntityDeathEffectType();
     public static final EffectType<EffectData.StaticEntity> STATIC_ENTITY = new StaticEntityEffectType();
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EffectType<?>> STREAM_CODEC = SerializationUtil.REGISTRY_RESOURCE_STREAM_CODEC
@@ -24,6 +26,7 @@ public class EffectTypes {
     public static void initEffectTypes() {
         register("block", BLOCK);
         register("entity", ENTITY);
+        register("entity_death", ENTITY_DEATH);
         register("static_entity", STATIC_ENTITY);
         //TODO: ADD EVENT
     }

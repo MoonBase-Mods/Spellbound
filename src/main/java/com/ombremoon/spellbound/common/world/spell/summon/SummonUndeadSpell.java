@@ -35,6 +35,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
@@ -62,23 +64,22 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSummonChoice(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast((context, summonSpell) -> {
                     LivingEntity caster = context.getCaster();
+                    Level level = context.getLevel();
                     var handler = context.getSpellHandler();
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
                         AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
                         AbstractSpell spell1 = handler.getCurrentlyCastSpell();
                         if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && spell1 instanceof SummonUndeadSpell summonUndeadSpell && summonUndeadSpell.canExplode()) {
                             spell.heal(caster, livingEntity.getHealth() * spell.potency(0.1F));
-
-                            //VFX MARK
-                            livingEntity.getPersistentData().putBoolean("CorpseExplode", true);
+                            spell.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("summon_undead_corpse_explosion"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE));
 
                             livingEntity.kill();
-
                             List<LivingEntity> list = spell1.getAttackableEntities(livingEntity, 2);
                             for (LivingEntity entity : list) {
                                 spell.hurt(entity, 2.0F);
                             }
 
+                            level.playSound(null, caster.blockPosition(), SpellboundSounds.CORPSE_EXPLOSION.get(), SoundSource.PLAYERS, 0.5F, 0.8F);
                             return true;
                         }
                     }
@@ -171,7 +172,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         super.onSpellStart(context);
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        int charges = this.getCharges() + 1;
+        int charges = Math.max(1, this.getCharges());
         if (!level.isClientSide) {
             EntityType<?> undead = EntityType.ZOMBIE;
             if (context.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
@@ -201,19 +202,28 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
             }
 
+            if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
+                this.addSkillBuff(
+                        caster,
+                        SBSkills.SUNKEN_BREATH,
+                        SUNKEN_BREATH,
+                        BuffCategory.BENEFICIAL,
+                        SkillBuff.MOB_EFFECT,
+                        new MobEffectInstance(MobEffects.WATER_BREATHING, -1)
+                );
+            }
+
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
                     SoundSource.PLAYERS, 1F, 0.8F);
-        }
 
-        if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
-            this.addSkillBuff(
-                    caster,
-                    SBSkills.SUNKEN_BREATH,
-                    SUNKEN_BREATH,
-                    BuffCategory.BENEFICIAL,
-                    SkillBuff.MOB_EFFECT,
-                    new MobEffectInstance(MobEffects.WATER_BREATHING, -1)
-            );
+        }
+    }
+
+    @Override
+    protected void onMobSummoned(LivingEntity entity, SpellContext context) {
+        super.onMobSummoned(entity, context);
+        if (entity instanceof AbstractSkeleton skeleton) {
+            skeleton.goalSelector.removeAllGoals(goal -> goal instanceof AvoidEntityGoal<?>);
         }
     }
 
@@ -267,14 +277,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED) {
             //Spawn pile of bones
-
-
-            if (entity.getPersistentData().getBoolean("CorpseExplode")) {
-                this.triggerSpellFX(EffectData.Block.of(CommonClass.customLocation("summon_undead_corpse_explosion"),
-                        entity.blockPosition()));
-                context.getLevel().playSound(null, context.getCaster().blockPosition(), SpellboundSounds.CORPSE_EXPLOSION.get(),
-                        SoundSource.PLAYERS, 0.5F, 0.8F);
-            }
         }
     }
 
@@ -283,11 +285,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         super.onSpellStop(context);
         LivingEntity caster = context.getCaster();
         this.removeSkillBuff(caster, SBSkills.SUNKEN_BREATH);
-    }
-
-    @Override
-    public void onClientCastTick(SpellContext context) {
-        super.onClientCastTick(context);
     }
 
     @Override

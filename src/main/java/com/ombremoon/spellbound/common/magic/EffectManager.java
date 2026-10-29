@@ -116,12 +116,13 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
 
     private float calculateBuildUp(Effect effect, float amount) {
         var skills = SpellUtil.getSkills(this.livingEntity);
-        float resistance = effect != null ? 1.0F - effect.getEntityResistance(this.livingEntity) : 0.0F;
+//        float resistance = effect != null ? 1.0F - effect.getEntityResistance(this.livingEntity) : 0.0F;
 
         SpellPath path = effect.getPath();
         float pathAmount = path != null ? 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(path)) : 1.0F;
         float ruinPathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN));
-        return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
+//        return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
+        return amount * 2.0F * pathAmount * ruinPathAmount;
     }
 
     public void addMagicEffect(EffectHolder effect, @Nullable Entity source) {

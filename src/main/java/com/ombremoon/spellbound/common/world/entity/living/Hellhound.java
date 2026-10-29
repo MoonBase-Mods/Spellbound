@@ -1,60 +1,71 @@
 package com.ombremoon.spellbound.common.world.entity.living;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
+import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonWolfPackSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.*;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.Nullable;
 
-public class Hellhound extends Wolf {
+public class Hellhound extends SummonedWolf {
     public Hellhound(EntityType<? extends Wolf> entityType, Level level) {
         super(entityType, level);
     }
 
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new TamableAnimal.TamableAnimalPanicGoal(1.5, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
-        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
-        this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
+    public static AttributeSupplier.Builder createHellhoundAttributes() {
+        return Wolf.createAttributes().add(SBAttributes.MAGIC_RESIST, 0.15).add(SBAttributes.FIRE_SPELL_RESIST, 0.4).add(SBAttributes.FROST_SPELL_RESIST, -0.25).add(SBAttributes.SHOCK_SPELL_RESIST);
     }
 
     @Override
     public boolean doHurtTarget(Entity entity) {
         float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         AbstractSpell spell = SpellUtil.getActiveSpell(this);
-        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this));
+        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this))
+                .addDamageInstance(DamageInstance.ofType(SBDamageTypes.RUIN_FIRE));
+
         if (this.level() instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, source, f);
         }
 
-        source.addDamageInstance(DamageInstance.of(SBDamageTypes.RUIN_FIRE, 0));
+        if (spell != null) {
+            SpellContext context = spell.getContext();
+            if (context.hasSkill(SBSkills.BLOOD_SCENT) && entity instanceof LivingEntity living && living.getHealth() <= living.getMaxHealth() * 0.5) {
+                f *= 1.5F;
+            }
+        }
+
+        Entity entity1 = this.level().getEntity(this.getPackLeaderId());
+        if (entity1 instanceof Hellhound alpha && alpha.isAlive()) {
+            f *= 1.5F;
+        }
+
+        if (this.isPackLeader()) {
+            f *= 2.0F;
+        }
+
         boolean flag = entity.hurt(source, f);
         if (flag) {
             float f1 = this.getKnockback(entity, source);
@@ -79,8 +90,49 @@ public class Hellhound extends Wolf {
     }
 
     @Override
-    public void tryToTame(Player player) {
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        SummonWolfPackSpell spell = this.getOrCreateSpell();
+        if (spell != null) {
+            SpellContext context = spell.getContext();
+            if (context.hasSkill(SBSkills.THICK_FUR)) {
+                Holder<Biome> holder = level.getBiome(this.blockPosition());
+                if (holder.is(Tags.Biomes.IS_HOT)) {
+                    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getAttributeValue(Attributes.MAX_HEALTH) * 1.5);
+                    this.getAttribute(Attributes.ARMOR).setBaseValue(5);
+                    this.getAttribute(SBAttributes.MAGIC_RESIST).setBaseValue(this.getAttributeBaseValue(SBAttributes.MAGIC_RESIST) * 1.5);
+                    this.getAttribute(SBAttributes.FIRE_SPELL_RESIST).setBaseValue(this.getAttributeBaseValue(SBAttributes.MAGIC_RESIST) * 1.5);
+                }
+            }
+        }
 
-        
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+    }
+
+    @Override
+    public void die(DamageSource cause) {
+        SummonWolfPackSpell spell = this.getOrCreateSpell();
+        if (!this.level().isClientSide && spell != null) {
+            SpellContext context = spell.getContext();
+            if (context.hasSkill(SBSkills.BRIMSTONE)) {
+                var targets = spell.getAttackableEntities(this, 2);
+                for (LivingEntity target : targets) {
+                    spell.hurt(target, SBDamageTypes.RUIN_FIRE, 3);
+                }
+
+                spell.triggerSpellFX(EffectData.DeadEntity.of(CommonClass.customLocation("flame_inferno"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setScale(2, 2, 2));
+
+                this.level()
+                        .playSound(
+                                null,
+                                this.blockPosition(),
+                                SoundEvents.GENERIC_EXPLODE.value(),
+                                SoundSource.HOSTILE,
+                                4.0F,
+                                (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
+            }
+        }
+
+        super.die(cause);
     }
 }

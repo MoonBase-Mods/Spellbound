@@ -37,8 +37,9 @@ public class SBTrades {
                 spellTrade(8, Items.BLAZE_ROD, 4, SBSpells.FLAME_JET.get()),
                 spellTrade(8, Items.ROTTEN_FLESH, 4, SBSpells.SUMMON_UNDEAD.get()),
                 spellTrade(8, Items.EMERALD, 4, SBSpells.SUMMON_VILLAGER.get()),
-                spellTrade(8, SBItems.CHALK.get(), 1, SBSpells.CURSED_RUNE.get()),
-                spellTrade(8, Items.ENDER_PEARL, 4, SBSpells.FLICKER.get())
+                spellTrade(8, Items.ARROW, 4, SBSpells.BOUND_BOW.get()),
+                spellTrade(8, Items.BONE, 4, SBSpells.SUMMON_WOLF_PACK.get()),
+                spellTrade(8, Items.ENDER_PEARL, 4, SBSpells.NIGHTBLADE.get())
         }, 2, new MerchantOffer[]{
                 spellTrade(48, Items.BLUE_ICE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
                 spellTrade(48, Items.MAGMA_CREAM, 32, SBSpells.SOLAR_RAY.get()),
@@ -50,10 +51,10 @@ public class SBTrades {
 
     public static final Map<SBMerchantType, Int2ObjectMap<MerchantOffer[]>> RIDDLES = Util.make(Maps.newHashMap(), map -> {
         map.put(SBMerchantType.SPELL_BROKER, toIntMap(ImmutableMap.of(1, new MerchantOffer[]{
-                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.FLICKER),
-                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),
-                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.CURSED_RUNE),
-                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.NIGHTBLADE)
+                dungeonKeyTrade(8, Items.OBSIDIAN, 4, SBPuzzleConfigs.FLICKER),
+                dungeonKeyTrade(8, Items.INK_SAC, 4, SBPuzzleConfigs.SHADOW_VEIL),
+                dungeonKeyTrade(8, Items.SNOWBALL, 4, SBPuzzleConfigs.CURSED_RUNE),
+//                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.NIGHTBLADE)
         }, 2, new MerchantOffer[]{
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.FLICKER),
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),

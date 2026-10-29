@@ -34,13 +34,11 @@ public abstract class VFXSpellEntity<T extends AbstractSpell> extends SpellEntit
     }
 
     @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
-        if (this.level().isClientSide) {
-            var builder = this.getEffect();
-            if (builder != null)
-                this.addFX(builder);
-        }
+    protected void initializeClientEntity() {
+        super.initializeClientEntity();
+        var builder = this.getEffect();
+        if (builder != null)
+            this.addFX(builder);
     }
 
     @Override

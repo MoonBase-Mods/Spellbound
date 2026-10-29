@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
+    "*": {
+      "item": "spellbound:arcane_eye"
+    },
+    "D": {
+      "tag": "minecraft:doors"
+    }
+  },
+  "pattern": [
+    "#*#",
+    "#D#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:dungeon_door"
+  }
+}
