@@ -175,7 +175,7 @@ public class SBSkills {
     public static final Holder<Skill> RIDERS_RESILIENCE = registerSkill("riders_resilience", -75, 200, preReqs(FLEETFOOTED));
     public static final Holder<Skill> SUREFOOTED = registerSkill("surefooted", 50, 150, preReqs(GALLOPING_STRIDE));
     public static final Holder<Skill> AQUA_TREAD = registerSkill("aqua_tread", 75, 200, preReqs(SUREFOOTED));
-    public static final Holder<Skill> ENDURANCE = registerModifierSkill("endurance", 0, 150, preReqs(GALLOPING_STRIDE), SpellModifier.ENDURANCE);
+    public static final Holder<Skill> ENDURANCE = registerSkill("endurance", 0, 150, preReqs(GALLOPING_STRIDE));
     public static final Holder<Skill> MOMENTUM = registerSkill("momentum", -25, 200, preReqs(ENDURANCE));
     public static final Holder<Skill> STAMPEDE = registerSkill("stampede", 25, 200, preReqs(ENDURANCE));
     public static final Holder<Skill> MARATHON = registerSkill("marathon", 0, 250, preReqs(MOMENTUM, STAMPEDE));
@@ -234,7 +234,7 @@ public class SBSkills {
 
     //Mystic Armor
     public static final Holder<Skill> MYSTIC_ARMOR = registerSkill("mystic_armor");
-    public static final Holder<Skill> FORESIGHT = registerModifierSkill("foresight", -50, 50, preReqs(MYSTIC_ARMOR), SpellModifier.FORESIGHT);
+    public static final Holder<Skill> FORESIGHT = registerSkill("foresight", -50, 50, preReqs(MYSTIC_ARMOR));
     public static final Holder<Skill> ARCANE_VENGEANCE = registerSkill("arcane_vengeance", 0 , 50, preReqs(MYSTIC_ARMOR));
     public static final Holder<Skill> EQUILIBRIUM = registerSkill("equilibrium", 0, 100, preReqs(ARCANE_VENGEANCE));
     public static final Holder<Skill> PLANAR_DEFLECTION = registerSkill("planar_deflection", 0, 150, preReqs(EQUILIBRIUM));
@@ -317,7 +317,7 @@ public class SBSkills {
     public static final Holder<Skill> HEALING_TOUCH = registerSkill("healing_touch");
     public static final Holder<Skill> CONVALESCENCE = registerSkill("convalescence", -50, 50, preReqs(HEALING_TOUCH));
     public static final Holder<Skill> BLASPHEMY = registerSkill("blasphemy", -50, 100, preReqs(CONVALESCENCE));
-    public static final Holder<Skill> DIVINE_BALANCE = registerModifierSkill("divine_balance", 0, 50, preReqs(HEALING_TOUCH), SpellModifier.DIVINE_BALANCE_DURATION, SpellModifier.DIVINE_BALANCE_MANA);
+    public static final Holder<Skill> DIVINE_BALANCE = registerSkill("divine_balance", 0, 50, preReqs(HEALING_TOUCH));
     public static final Holder<Skill> NATURES_TOUCH = registerSkill("natures_touch", 0, 100, preReqs(DIVINE_BALANCE));
     public static final Holder<Skill> CLEANSING_TOUCH = registerSkill("cleansing_touch", 0, 150, preReqs(NATURES_TOUCH));
     public static final Holder<Skill> HEALING_STREAM = registerSkill("healing_stream", 50, 50, preReqs(HEALING_TOUCH));
@@ -393,7 +393,7 @@ public class SBSkills {
 
     //Shadow Veil
     public static Holder<Skill> SHADOW_VEIL = registerSkill("shadow_veil");
-    public static Holder<Skill> DARK_SHROUD = registerModifierSkill("dark_shroud", -50, 50, preReqs(SHADOW_VEIL), SpellModifier.DARK_SHADOW);
+    public static Holder<Skill> DARK_SHROUD = registerSkill("dark_shroud", -50, 50, preReqs(SHADOW_VEIL));
     public static Holder<Skill> EXPANDING_SHADOWS = registerSkill("expanding_shadows", 50, 50, preReqs(SHADOW_VEIL));
     public static Holder<Skill> IN_THE_SHADOWS = registerSkill("in_the_shadows", -100, 50, preReqs(SHADOW_VEIL));
     public static Holder<Skill> DEEP_NIGHT = registerSkill("deep_night", -100, 100, preReqs(IN_THE_SHADOWS));

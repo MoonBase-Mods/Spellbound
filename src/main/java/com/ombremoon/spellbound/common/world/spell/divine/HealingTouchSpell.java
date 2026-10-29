@@ -224,6 +224,16 @@ public class HealingTouchSpell extends AnimatedSpell {
     }
 
     @Override
+    protected int getDuration(SpellContext context) {
+        return context.hasSkill(SBSkills.DIVINE_BALANCE) ? super.getDuration(context) * 2 : super.getDuration(context);
+    }
+
+    @Override
+    public float getManaCost(SpellContext context) {
+        return context.hasSkill(SBSkills.DIVINE_BALANCE) ? super.getManaCost(context) * 1.5F : super.getManaCost(context);
+    }
+
+    @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
         CompoundTag nbt = super.saveData(compoundTag);
         nbt.putInt("overgrowth", this.overgrowthStacks);

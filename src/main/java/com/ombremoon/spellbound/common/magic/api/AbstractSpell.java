@@ -204,7 +204,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.spellType().getMastery();
     }
 
-    public float getManaCost() {
+    public final float getManaCost() {
         return getManaCost(this.getCurrentContext());
     }
 
@@ -224,7 +224,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * Returns the total duration the spells will remain active.
      * @return The spells duration
      */
-    public int getDuration() {
+    public final int getDuration() {
         float duration = this.getDuration(this.context) * getModifier(ModifierType.DURATION);
         duration *= this.getTransfigurationArmorBuff(this.context);
         return Mth.floor(duration);
@@ -258,7 +258,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.castType;
     }
 
-    public CastType getCastType() {
+    public final CastType getCastType() {
         return this.getCastType(this.context);
     }
 
@@ -270,7 +270,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.castTime;
     }
 
-    public int getCastTime() {
+    public final int getCastTime() {
         return (int) (this.getCastTime(this.castContext) * (1 / SpellUtil.getCastSpeed(this.caster)));
     }
 
@@ -1222,9 +1222,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected float getModifier(ModifierType modifierType, LivingEntity livingEntity, LivingEntity target) {
         var skills = SpellUtil.getSkills(livingEntity);
         float f = 1;
-        for (var modifier : skills.getModifiers()) {
+        for (var mutableModifier : skills.getModifiers()) {
+            SpellModifier modifier = mutableModifier.getSpellModifier();
             if (modifierType.equals(modifier.modifierType()) && modifier.spellPredicate().test(spellType(), target))
-                f += modifier.modifier();
+                f += mutableModifier.getModifiedAmount();
         }
         for (MobEffectInstance instance : livingEntity.getActiveEffects()) {
             if (!(instance.getEffect().value() instanceof SBEffect sbEffect)) continue;

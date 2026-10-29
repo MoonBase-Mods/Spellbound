@@ -30,6 +30,7 @@ import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.living.Hellhound;
 import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
 import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
+import com.ombremoon.spellbound.common.world.item.GuideBookItem;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -65,6 +66,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -81,6 +83,7 @@ import net.neoforged.neoforge.server.command.ConfigCommand;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
@@ -97,44 +100,6 @@ public class NeoForgeEvents {
         new SpellboundCommand(dispatcher, context);
 
         ConfigCommand.register(dispatcher);
-    }
-
-    @SubscribeEvent
-    public static void pickupItem(ItemEntityPickupEvent.Post event) {
-        unlockBooks(event.getOriginalStack(), event.getPlayer());
-    }
-
-    @SubscribeEvent
-    public static void craftItem(PlayerEvent.ItemCraftedEvent event) {
-        unlockBooks(event.getCrafting(), event.getEntity());
-    }
-
-    private static void unlockBooks(ItemStack stack, Player player) {
-        if (stack.is(SBItems.RUIN_BOOK)) {
-            if (player.hasData(SBData.RUIN_ACQUIRED) && player.getData(SBData.RUIN_ACQUIRED)) return;
-            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.RUIN);
-            player.setData(SBData.RUIN_ACQUIRED.get(), true);
-        }
-        else if (stack.is(SBItems.DECEPTION_BOOK)) {
-            if (player.hasData(SBData.DECEPTION_ACQUIRED.get()) && player.getData(SBData.DECEPTION_ACQUIRED)) return;
-            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DECEPTION);
-            player.setData(SBData.DECEPTION_ACQUIRED.get(), true);
-        }
-        else if (stack.is(SBItems.DIVINE_BOOK)) {
-            if (player.hasData(SBData.DIVINE_ACQUIRED) && player.getData(SBData.DIVINE_ACQUIRED.get())) return;
-            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.DIVINE);
-            player.setData(SBData.DIVINE_ACQUIRED.get(), true);
-        }
-        else if (stack.is(SBItems.TRANSFIG_BOOK)) {
-            if (player.hasData(SBData.TRANSFIG_ACQUIRED.get()) && player.getData(SBData.TRANSFIG_ACQUIRED.get())) return;
-            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.TRANSFIG);
-            player.setData(SBData.TRANSFIG_ACQUIRED.get(), true);
-        }
-        else if (stack.is(SBItems.SUMMON_BOOK)) {
-            if (player.hasData(SBData.SUMMON_ACQUIRED.get()) && player.getData(SBData.SUMMON_ACQUIRED)) return;
-            if (player.level().isClientSide) RenderUtil.sendBookToast(SpellboundToasts.SUMMON);
-            player.setData(SBData.SUMMON_ACQUIRED.get(), true);
-        }
     }
 
     @SubscribeEvent
@@ -399,6 +364,31 @@ public class NeoForgeEvents {
             } else if (PuzzleDungeonData.isDungeon(level)) {
                 PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
                 puzzle.destroyDimension(serverLevel);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPickupItemPost(ItemEntityPickupEvent.Post event) {
+        unlockBooks(event.getOriginalStack(), event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void onCraftItem(PlayerEvent.ItemCraftedEvent event) {
+        unlockBooks(event.getCrafting(), event.getEntity());
+    }
+
+    private static void unlockBooks(ItemStack stack, Player player) {
+        if (stack.getItem() instanceof GuideBookItem item) {
+            Supplier<AttachmentType<Boolean>> attachment = item.getBookAttachment();
+            boolean acquiredBook = player.getData(attachment);
+            if (acquiredBook)
+                return;
+
+            player.setData(attachment, true);
+
+            if (player.level().isClientSide) {
+                RenderUtil.sendBookToast(item.getBookToast());
             }
         }
     }
@@ -714,6 +704,7 @@ public class NeoForgeEvents {
         SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.EFFECT_APPLICABLE, new EffectApplicableEvent(entity, event));
     }
 
+    @SubscribeEvent
     public static void onEffectApplied(MobEffectEvent.Added event) {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide) return;

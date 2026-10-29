@@ -6,7 +6,7 @@ import com.ombremoon.spellbound.common.events.custom.SpellLevelUpEvent;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.common.magic.api.buff.MutableSpellModifier;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -29,6 +29,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -42,8 +43,8 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     protected final Map<SpellType<?>, Integer> skillPoints = new Object2IntOpenHashMap<>();
     private final Map<SpellType<?>, SkillProvider> skillChoices = new Object2ObjectOpenHashMap<>();
     public final Map<SpellType<?>, Set<Skill>> unlockedSkills = new Object2ObjectOpenHashMap<>();
-    private final Set<SpellModifier> permanentModifiers = new ObjectOpenHashSet<>();
-    private final Set<SpellModifier> timedModifiers = new ObjectOpenHashSet<>();
+//    private final Set<SpellModifier> persistentSpellModifiers = new ObjectOpenHashSet<>();
+    private final Set<MutableSpellModifier> spellModifiers = new ObjectOpenHashSet<>();
     private final SkillCooldowns cooldowns = new SkillCooldowns();
 
     public void sync() {
@@ -157,12 +158,12 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             add(root);
         }});
         this.resetSpellXP(spellType);
-        for (Skill skill : spellType.getSkills()) {
+        /*for (Skill skill : spellType.getSkills()) {
             if (skill instanceof ModifierSkill modifierSkill) {
                 var modifiers = modifierSkill.getModifiers();
-                modifiers.forEach(permanentModifiers::remove);
+                modifiers.forEach(persistentSpellModifiers::remove);
             }
-        }
+        }*/
         this.skillPoints.put(spellType, 0);
 
         if (root.isRadial())
@@ -178,8 +179,8 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         if (this.caster instanceof Player player)
             skill.onSkillUnlock(player);
 
-        if (skill instanceof ModifierSkill modifierSkill)
-            this.permanentModifiers.addAll(modifierSkill.getModifiers());
+//        if (skill instanceof ModifierSkill modifierSkill)
+//            this.persistentSpellModifiers.addAll(modifierSkill.getModifiers());
 
         this.awardSkillPoints(spellType, skill.isRoot() || !consumePoints ? 0 : -1);
     }
@@ -254,23 +255,37 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void addModifier(SpellModifier spellModifier) {
-        this.timedModifiers.add(spellModifier);
+        MutableSpellModifier modifier = new MutableSpellModifier(spellModifier);
+        this.spellModifiers.removeIf(mod -> {
+            if (mod.getSpellModifier().equals(spellModifier)) {
+                modifier.incrementStacks(mod.getCurrentStacks());
+                return true;
+            }
+
+            return false;
+        });
+
+        this.spellModifiers.add(modifier);
     }
 
     public void removeModifier(SpellModifier spellModifier) {
-        this.timedModifiers.remove(spellModifier);
-        this.permanentModifiers.remove(spellModifier);
+        this.spellModifiers.removeIf(mod -> mod.getSpellModifier().equals(spellModifier));
+//        this.persistentSpellModifiers.remove(spellModifier);
     }
 
-    public Set<SpellModifier> getModifiers() {
-        var modifiers = new ObjectOpenHashSet<>(this.permanentModifiers);
-        modifiers.addAll(this.timedModifiers);
+    /*public Set<SpellModifier> getModifiers() {
+        var modifiers = new ObjectOpenHashSet<>(this.persistentSpellModifiers);
+        modifiers.addAll(this.spellModifiers);
         return modifiers;
+    }*/
+
+    public Set<MutableSpellModifier> getModifiers() {
+        return this.spellModifiers;
     }
 
-    public void clearModifiers() {
-        this.permanentModifiers.clear();
-    }
+    /*public void clearModifiers() {
+        this.persistentSpellModifiers.clear();
+    }*/
 
     public SkillCooldowns getCooldowns() {
         return this.cooldowns;
@@ -292,7 +307,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         ListTag spellXpTag = new ListTag();
         ListTag skillPointTag = new ListTag();
         ListTag skillsTag = new ListTag();
-        ListTag modifierList = new ListTag();
+//        ListTag modifierList = new ListTag();
         ListTag choiceTag = new ListTag();
 
         for (SpellType<?> spellType : this.spellXp.keySet()) {
@@ -347,18 +362,18 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             pathxpTag.add(newTag);
         }
 
-        if (!this.permanentModifiers.isEmpty()) {
-            for (var modifier : this.permanentModifiers) {
+        /*if (!this.persistentSpellModifiers.isEmpty()) {
+            for (var modifier : this.persistentSpellModifiers) {
                 CompoundTag modifierTag = new CompoundTag();
                 modifierTag.putString("Modifier", modifier.id().toString());
                 modifierList.add(modifierTag);
             }
-        }
+        }*/
         tag.put("PathXp", pathxpTag);
         tag.put("SpellXp", spellXpTag);
         tag.put("SkillPoints", skillPointTag);
         tag.put("Skills", skillsTag);
-        tag.put("Modifiers", modifierList);
+//        tag.put("Modifiers", modifierList);
         tag.put("Choices", choiceTag);
         return tag;
     }
@@ -410,15 +425,15 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
                 this.skillChoices.put(spellType, skill);
         }
 
-        if (compoundTag.contains("Modifiers", 9)) {
-            this.permanentModifiers.clear();
+        /*if (compoundTag.contains("Modifiers", 9)) {
+            this.persistentSpellModifiers.clear();
             ListTag modifierList = compoundTag.getList("Modifiers", 10);
             for (int i = 0; i < modifierList.size(); i++) {
                 CompoundTag nbt = modifierList.getCompound(i);
                 SpellModifier modifier = SpellModifier.getTypeFromLocation(ResourceLocation.tryParse(nbt.getString("Modifier")));
                 if (modifier != null)
-                    this.permanentModifiers.add(modifier);
+                    this.persistentSpellModifiers.add(modifier);
             }
-        }
+        }*/
     }
 }

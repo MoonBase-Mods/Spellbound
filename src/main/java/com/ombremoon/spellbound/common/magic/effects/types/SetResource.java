@@ -30,7 +30,6 @@ public record SetResource(EntityResource resource, double amount, EntityResource
     @Override
     public void onActivated(ServerLevel level, int tier, @Nullable Entity source, LivingEntity target, BlockPos centerPos, Multiblock.MultiblockPattern pattern) {
         this.resource.consume(target, this.amount, this.operation);
-        Constants.LOG.info("{}", target.getData(SBData.MANA));
     }
 
     @Override

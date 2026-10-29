@@ -1,18 +1,23 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.common.world.block.StarMapBlock;
 import com.ombremoon.spellbound.common.world.item.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -78,11 +83,11 @@ public class SBItems {
 
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);
-    public static final Supplier<Item> RUIN_BOOK = registerItem("grimoire_of_annihilation", () -> new GuideBookItem(CommonClass.customLocation("grimoire_of_annihilation")));
-    public static final Supplier<Item> TRANSFIG_BOOK = registerItem("architects_lexicon", () -> new GuideBookItem(CommonClass.customLocation("architects_lexicon")));
-    public static final Supplier<Item> SUMMON_BOOK = registerItem("the_necronomicon", () -> new GuideBookItem(CommonClass.customLocation("the_necronomicon")));
-    public static final Supplier<Item> DIVINE_BOOK = registerItem("sanctified_codex", () -> new GuideBookItem(CommonClass.customLocation("sanctified_codex")));
-    public static final Supplier<Item> DECEPTION_BOOK = registerItem("swindlers_guide", () -> new GuideBookItem(CommonClass.customLocation("swindlers_guide")));
+    public static final Supplier<GuideBookItem> RUIN_BOOK = registerGuideBook("grimoire_of_annihilation", SBData.RUIN_ACQUIRED, SpellboundToasts.RUIN);
+    public static final Supplier<GuideBookItem> TRANSFIG_BOOK = registerGuideBook("architects_lexicon", SBData.TRANSFIG_ACQUIRED, SpellboundToasts.TRANSFIG);
+    public static final Supplier<GuideBookItem> SUMMON_BOOK = registerGuideBook("the_necronomicon", SBData.SUMMON_ACQUIRED, SpellboundToasts.SUMMON);
+    public static final Supplier<GuideBookItem> DIVINE_BOOK = registerGuideBook("sanctified_codex", SBData.DIVINE_ACQUIRED, SpellboundToasts.DIVINE);
+    public static final Supplier<GuideBookItem> DECEPTION_BOOK = registerGuideBook("swindlers_guide", SBData.DECEPTION_ACQUIRED, SpellboundToasts.DECEPTION);
 
     public static final Supplier<CreativeModeTab> SPELL_TAB = CREATIVE_MODE_TABS.register("spell_tab", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP,0)
             .icon(() -> new ItemStack(SBBlocks.ARCANTHUS.get()))
@@ -116,6 +121,20 @@ public class SBItems {
         return registerItem(name, () -> new CatalystItem(path, getItemProperties().stacksTo(1)), true);
     }
 
+    public static Supplier<GuideBookItem> registerGuideBook(String name, Supplier<AttachmentType<Boolean>> bookAttachment, SpellboundToasts toast) {
+        return registerItemByType(name, () -> new GuideBookItem(CommonClass.customLocation(name)) {
+            @Override
+            public Supplier<AttachmentType<Boolean>> getBookAttachment() {
+                return bookAttachment;
+            }
+
+            @Override
+            public SpellboundToasts getBookToast() {
+                return toast;
+            }
+        });
+    }
+
     public static Supplier<Item> registerShardItem(String name) {
         return registerItem(name, () -> new Item(getItemProperties().stacksTo(1)));
     }
@@ -126,6 +145,11 @@ public class SBItems {
 
     public static Supplier<Item> registerItem(String name, Supplier<Item> itemSupplier) {
         return registerItem(name, itemSupplier, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Item> Supplier<T> registerItemByType(String name, Supplier<T> itemSupplier) {
+        return (Supplier<T>) registerItem(name, (Supplier<Item>) itemSupplier, false);
     }
 
     public static Supplier<Item> registerItem(String name, Supplier<Item> itemSupplier, boolean excludeModel) {

@@ -126,7 +126,6 @@ public class StormstrikeSpell extends AnimatedSpell {
                 context.getSpellHandler().applyStormStrike(livingEntity, 60);
                 bolt.discard();
 
-                log(result.getLocation().y);
                 this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("stormstrike_impact"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, entity.getBbHeight() / 2 - entity.getEyeHeight(), 0));
 

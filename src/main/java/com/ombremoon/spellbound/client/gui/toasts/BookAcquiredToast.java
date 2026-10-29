@@ -1,7 +1,5 @@
 package com.ombremoon.spellbound.client.gui.toasts;
 
-import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.init.SBPageScraps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -9,7 +7,6 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class BookAcquiredToast implements Toast {
     private static final String translationKey = "spellbound.toast.book_acquired";

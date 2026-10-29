@@ -75,6 +75,12 @@ public class StrideSpell extends AnimatedSpell {
                     caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.3, 0));
         }
     }
+
+    @Override
+    protected int getDuration(SpellContext context) {
+        return context.hasSkill(SBSkills.ENDURANCE) ? super.getDuration(context) * 2 : super.getDuration(context);
+    }
+
     public void playCastSound(Level level, SpellContext context) {
         float volume = 0.4F + level.random.nextFloat() * 0.3F;
         float pitch = 1.0F + level.random.nextFloat() * 0.2F;

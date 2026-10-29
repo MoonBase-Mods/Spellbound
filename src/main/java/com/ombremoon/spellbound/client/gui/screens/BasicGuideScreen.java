@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager
 import com.ombremoon.spellbound.common.world.item.GuideBookItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -32,37 +33,26 @@ public class BasicGuideScreen extends GuideBookScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseY <= this.topPos + 243 || mouseY >= this.topPos + 280) return super.mouseClicked(mouseX, mouseY, button);
+        if (mouseY <= this.topPos + 243 || mouseY >= this.topPos + 280)
+            return super.mouseClicked(mouseX, mouseY, button);
 
-        Player player = this.getMinecraft().player;
-        boolean hasRuin = player.hasData(SBData.RUIN_ACQUIRED.get()) && player.getData(SBData.RUIN_ACQUIRED.get());
-        boolean hasSummon = player.hasData(SBData.SUMMON_ACQUIRED.get()) && player.getData(SBData.SUMMON_ACQUIRED.get());
-        boolean hasTransfig = player.hasData(SBData.TRANSFIG_ACQUIRED.get()) && player.getData(SBData.TRANSFIG_ACQUIRED.get());
-        boolean hasDivine = player.hasData(SBData.DIVINE_ACQUIRED.get()) && player.getData(SBData.DIVINE_ACQUIRED.get());
-        boolean hasDeception = player.hasData(SBData.DECEPTION_ACQUIRED.get()) && player.getData(SBData.DECEPTION_ACQUIRED.get());
-
-        if (mouseX > this.leftPos + 54 && mouseX < this.leftPos + 83 && hasTransfig){
-            openBook(SBItems.TRANSFIG_BOOK);
+        if (mouseX > this.leftPos + 54 && mouseX < this.leftPos + 83 && openBook(SBItems.TRANSFIG_BOOK)){
             playClickSound();
             return true;
         }
-        if (mouseX > this.leftPos + 102 && mouseX < this.leftPos + 131 && hasRuin){
-            openBook(SBItems.RUIN_BOOK);
+        if (mouseX > this.leftPos + 102 && mouseX < this.leftPos + 131 && openBook(SBItems.RUIN_BOOK)){
             playClickSound();
             return true;
         }
-        if (mouseX > this.leftPos + 150 && mouseX < this.leftPos + 179 && hasSummon){
-            openBook(SBItems.SUMMON_BOOK);
+        if (mouseX > this.leftPos + 150 && mouseX < this.leftPos + 179 && openBook(SBItems.SUMMON_BOOK)){
             playClickSound();
             return true;
         }
-        if (mouseX > this.leftPos + 280 && mouseX < this.leftPos + 308 && hasDeception){
-            openBook(SBItems.DECEPTION_BOOK);
+        if (mouseX > this.leftPos + 280 && mouseX < this.leftPos + 308 && openBook(SBItems.DECEPTION_BOOK)){
             playClickSound();
             return true;
         }
-        if (mouseX > this.leftPos + 327 && mouseX < this.leftPos + 356 && hasDivine){
-            openBook(SBItems.DIVINE_BOOK);
+        if (mouseX > this.leftPos + 327 && mouseX < this.leftPos + 356 && openBook(SBItems.DIVINE_BOOK)){
             playClickSound();
             return true;
         }
@@ -77,48 +67,48 @@ public class BasicGuideScreen extends GuideBookScreen {
             return;
         }
 
-        Player player = this.getMinecraft().player;
-        boolean hasRuin = player.hasData(SBData.RUIN_ACQUIRED.get()) && player.getData(SBData.RUIN_ACQUIRED.get());
-        boolean hasSummon = player.hasData(SBData.SUMMON_ACQUIRED.get()) && player.getData(SBData.SUMMON_ACQUIRED.get());
-        boolean hasTransfig = player.hasData(SBData.TRANSFIG_ACQUIRED.get()) && player.getData(SBData.TRANSFIG_ACQUIRED.get());
-        boolean hasDivine = player.hasData(SBData.DIVINE_ACQUIRED.get()) && player.getData(SBData.DIVINE_ACQUIRED.get());
-        boolean hasDeception = player.hasData(SBData.DECEPTION_ACQUIRED.get()) && player.getData(SBData.DECEPTION_ACQUIRED.get());
-
         if (mouseX > this.leftPos + 54 && mouseX < this.leftPos + 83){
-            if (hasTransfig) openTooltip(graphics, mouseX, mouseY, SBItems.TRANSFIG_BOOK);
-            else lockedTooltip(graphics, mouseX, mouseY);
+            openTooltip(graphics, mouseX, mouseY, SBItems.TRANSFIG_BOOK);
         } else if (mouseX > this.leftPos + 102 && mouseX < this.leftPos + 131){
-            if (hasRuin) openTooltip(graphics, mouseX, mouseY, SBItems.RUIN_BOOK);
-            else lockedTooltip(graphics, mouseX, mouseY);
+            openTooltip(graphics, mouseX, mouseY, SBItems.RUIN_BOOK);
         } else if (mouseX > this.leftPos + 150 && mouseX < this.leftPos + 179){
-            if (hasSummon) openTooltip(graphics, mouseX, mouseY, SBItems.SUMMON_BOOK);
-            else lockedTooltip(graphics, mouseX, mouseY);
+            openTooltip(graphics, mouseX, mouseY, SBItems.SUMMON_BOOK);
         } else if (mouseX > this.leftPos + 280 && mouseX < this.leftPos + 308){
-            if (hasDeception) openTooltip(graphics, mouseX, mouseY, SBItems.DECEPTION_BOOK);
-            else lockedTooltip(graphics, mouseX, mouseY);
+            openTooltip(graphics, mouseX, mouseY, SBItems.DECEPTION_BOOK);
         } else if (mouseX > this.leftPos + 327 && mouseX < this.leftPos + 356){
-            if (hasDivine) openTooltip(graphics, mouseX, mouseY, SBItems.DIVINE_BOOK);
-            else lockedTooltip(graphics, mouseX, mouseY);
+            openTooltip(graphics, mouseX, mouseY, SBItems.DIVINE_BOOK);
         }
 
         super.checkBookmarkHover(graphics, mouseX, mouseY);
     }
 
-    private void lockedTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.renderTooltip(this.font,
-                Component.translatable("guide.basic.locked_book"),
-                mouseX, mouseY);
-    }
-
     private void openTooltip(GuiGraphics graphics, int mouseX, int mouseY, Supplier<GuideBookItem> item) {
-        graphics.renderTooltip(this.font,
-                Component.translatable("guide.basic.open_book", item.get().getDescription()),
-                mouseX, mouseY);
+        Player player = Minecraft.getInstance().player;
+        GuideBookItem book = item.get();
+        if (player.getData(book.getBookAttachment())) {
+            graphics.renderTooltip(this.font,
+                    Component.translatable("guide.basic.open_book", book.getDescription()),
+                    mouseX, mouseY);
+        } else {
+            graphics.renderTooltip(this.font,
+                    Component.translatable("guide.basic.locked_book"),
+                    mouseX, mouseY);
+        }
     }
 
-    public void openBook(Supplier<GuideBookItem> bookItem) {
-        ResourceLocation bookId = bookItem.get().getBookId();
-        if (GuideBookManager.getBook(bookId) == null) return;
-        RenderUtil.openBook(bookId, bookItem.get().getBookTexture());
+    public boolean openBook(Supplier<GuideBookItem> bookItem) {
+        Player player = Minecraft.getInstance().player;
+        GuideBookItem item = bookItem.get();
+        if (!player.getData(item.getBookAttachment())) {
+            return false;
+        }
+
+        ResourceLocation bookId = item.getBookId();
+        if (GuideBookManager.getBook(bookId) == null) {
+            return false;
+        }
+
+        RenderUtil.openBook(bookId, item.getBookTexture());
+        return true;
     }
 }

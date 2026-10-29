@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataCom
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
@@ -182,6 +183,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
+
+        /*if (!this.isClientSide() && this.caster instanceof Player && this.caster.tickCount % 20 == 0) {
+            log(this.skillHolder.getModifiers());
+        }*/
     }
 
     public void onPlayerSpawn(Player player) {
@@ -329,7 +334,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void clearList() {
         this.spellSet.forEach(skillHolder::resetSkills);
         this.spellSet.forEach(skillHolder::resetSpellXP);
-        this.skillHolder.clearModifiers();
+//        this.skillHolder.clearModifiers();
         this.skillHolder.clearChoices();
         this.spellSet.clear();
         this.equippedSpellSet.clear();
@@ -518,7 +523,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     public void addSkillBuff(SkillBuff<?> skillBuff, Entity source, int ticks) {
-        this.removeSkillBuff(skillBuff);
+        if (!(skillBuff.object() instanceof SpellModifier modifier && modifier.isStackable())) {
+            this.removeSkillBuff(skillBuff);
+        }
+
         int duration = this.caster.tickCount + ticks;
         if (ticks == -1)
             duration = -1;

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.common.init.SBMagicEffects;
+import com.ombremoon.spellbound.util.Loggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.jetbrains.annotations.Nullable;
 
-public interface MagicEffect {
+public interface MagicEffect extends Loggable {
     Codec<MagicEffect> CODEC = SBMagicEffects.REGISTRY
             .byNameCodec()
             .dispatch(MagicEffect::serializer, Serializer::codec);
