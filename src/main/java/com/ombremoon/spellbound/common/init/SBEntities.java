@@ -54,6 +54,7 @@ public class SBEntities {
     public static final Supplier<EntityType<GoldenDart>> GOLDEN_DART = registerEntity("golden_dart", GoldenDart::new, 0.5F, 0.5F, 1);
     public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9F, 0.9F);
     public static final Supplier<EntityType<CursedRune>> CURSED_RUNE = registerEntity("cursed_rune", CursedRune::new, 1.9F, 0.2F);
+    public static final Supplier<EntityType<ShadowVeil>> SHADOW_VEIL = registerEntity("shadow_veil", ShadowVeil::new, 5.4F, 6.4F);
 //    public static final Supplier<EntityType<Cyclone>> CYCLONE = registerEntity("cyclone", Cyclone::new, 3.0F, 3.0F);
     public static final Supplier<EntityType<Hail>> HAIL = registerEntity("hail", Hail::new, 3.0F, 3.0F);
 
@@ -71,7 +72,6 @@ public class SBEntities {
     public static final Supplier<EntityType<Valkyr>> VALKYR = registerMob("valkyr", Valkyr::new, MobCategory.CREATURE,0.6F, 1.95F, 8, Valkyr::createValkyrAttributes, false);
 
     //Deception Entities
-    public static final Supplier<EntityType<ShadowVeil>> SHADOW_VEIL = registerEntity("shadow_veil", ShadowVeil::new, 5f, 4F);
     public static final Supplier<EntityType<ShadowMist>> SHADOW_MIST = registerEntity("shadow_mist", ShadowMist::new,1.4F, 3.4F);
     public static final Supplier<EntityType<WatchfulEye>> WATCHFUL_EYE = registerMob("watchful_eye", WatchfulEye::new, MobCategory.MONSTER, 0.9F, 0.9F, 8, WatchfulEye::createWatchfulEyeAttributes, false);
     public static final Supplier<EntityType<LivingShadow>> LIVING_SHADOW = registerMob("living_shadow", LivingShadow::new, MobCategory.CREATURE, false, 0.6F, 1.95F, 8, LivingShadow::createLivingShadowAttributes, false);

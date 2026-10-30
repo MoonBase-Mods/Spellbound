@@ -164,7 +164,8 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
 
     @Override
     protected @NotNull AABB makeBoundingBox() {
-        if (this.dimensions != null) return this.dimensions.makeBoundingBox(this.position());
+        if (this.dimensions != null)
+            return this.dimensions.makeBoundingBox(this.position());
 
         Entity owner = this.getSummoner();
         if (!(owner instanceof LivingEntity caster))
