@@ -1,13 +1,28 @@
 package com.ombremoon.spellbound.client.photon.effects;
 
+import com.lowdragmc.lowdraglib2.client.renderer.impl.IModelRenderer;
+import com.lowdragmc.lowdraglib2.configurator.IConfigurable;
+import com.lowdragmc.lowdraglib2.math.GradientColor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.fx.FXData;
 import com.lowdragmc.photon.client.fx.FXRuntime;
 import com.lowdragmc.photon.client.gameobject.IFXObject;
-import com.lowdragmc.photon.client.gameobject.emitter.data.number.Constant;
-import com.lowdragmc.photon.client.gameobject.emitter.data.number.NumberFunction3;
+import com.lowdragmc.photon.client.gameobject.emitter.data.LightOverLifetimeSetting;
+import com.lowdragmc.photon.client.gameobject.emitter.data.MaterialSetting;
+import com.lowdragmc.photon.client.gameobject.emitter.data.material.TextureMaterial;
+import com.lowdragmc.photon.client.gameobject.emitter.data.material.UIResourceMaterial;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.color.Gradient;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.color.RandomGradient;
+import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleConfig;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleEmitter;
+import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleRendererSetting;
+import com.ombremoon.spellbound.client.photon.ConfigurableEffect;
+import com.ombremoon.spellbound.client.photon.FXObjectFactory;
+import com.ombremoon.spellbound.client.photon.PhotonHelper;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
+import com.ombremoon.spellbound.client.photon.data.NumberFunctionBuilder;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -15,7 +30,9 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import software.bernie.geckolib.util.Color;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -66,12 +83,6 @@ public class StaticEntityEffect extends EntityEffectExecutor {
                                 Math.toRadians(-entity.getYRot() - 90),
                                 Math.toRadians(0)
                         );
-                        /*var lookAngles = entity.getLookAngle();
-                        newRotation = new Quaternionf(rotation).rotateXYZ(
-                                0,
-                                (float) org.joml.Math.atan2(-lookAngles.z, lookAngles.x),
-                                (float) lookAngles.y
-                        );*/
                     }
                     case XROT -> {
                         newRotation = new Quaternionf(rotation).rotateXYZ(
@@ -87,6 +98,7 @@ public class StaticEntityEffect extends EntityEffectExecutor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void start() {
         if (!entity.isAlive()) return;
@@ -107,44 +119,9 @@ public class StaticEntityEffect extends EntityEffectExecutor {
             }
         }
 
-        this.runtime = fx.createRuntime();
-
-//        FXData data = fx.getFxData().copy(false);
-        FXData testData = fx.getFxData();
-        var listo = new ArrayList<>(testData.objects());
-        FXData data = new FXData(listo);
-        var list = new ArrayList<>(data.objects());
-        list.replaceAll(object -> {
-            if (object.getName().equals("cicle") && object instanceof ParticleEmitter emitter) {
-                ParticleEmitter emit = emitter.shallowCopy();
-                Constants.LOG.info("{}, {}, {}", ((Constant)emitter.config.getStartSize().x).getNumber(), ((Constant)emitter.config.getStartSize().y).getNumber(), ((Constant)emitter.config.getStartSize().z).getNumber());
-//                emit.config.setStartSize(new NumberFunction3(3.6, 3.6, 3.6));
-                return emit;
-            }
-
-            return object;
-        });
-        list.forEach(object -> {
-            if (object.getName().equals("cicle") && object instanceof ParticleEmitter emitter) {
-//                emitter.config.setLooping(true);
-//                emitter.config.setDuration(20);
-//                emitter.config.setStartSize(new NumberFunction3(3.6, 3.6, 3.6));
-//                emitter.config.renderer.setMaterials();
-//                Constants.LOG.info("{}", emitter.config.isLooping());
-            }
-
-            /*if (object.getName().equals("cicle") && object instanceof ParticleEmitter emitter) {
-                Constants.LOG.info("{}, {}, {}", ((Constant)emitter.config.getStartSize().x).getNumber(), ((Constant)emitter.config.getStartSize().y).getNumber(), ((Constant)emitter.config.getStartSize().z).getNumber());
-                Constants.LOG.info("2");
-            }*/
-        });
-        FXData fxData = new FXData(list);
-//        this.runtime = new FXRuntime(fxData.copy(false));
-//        Constants.LOG.info("{}", fxRuntime.fxData.objects().stream().map(IFXObject::getName).toList());
-//        Constants.LOG.info("{}", list.stream().map(IFXObject::getName).toList());
-
+        ConfigurableEffect effect = (ConfigurableEffect) this;
+        this.runtime = effect.modifyFXRuntime(fx, level.registryAccess());
         var root = this.runtime.getRoot();
-
         Vec3 lookAngle = entity.getForward();
         Vec3 rightVector = lookAngle.cross(new Vec3(0, 1, 0)).normalize();
         Vec3 upVector = rightVector.cross(lookAngle).normalize();
@@ -161,12 +138,14 @@ public class StaticEntityEffect extends EntityEffectExecutor {
 
         var lost = this.runtime.findObject("cicle");
         if (lost instanceof ParticleEmitter emitter) {
-            Constants.LOG.info("{}", emitter.config.getDuration());
-//            this.runtime.objects.replace(emitter.id());
-//            Constants.LOG.info("{}", object);
+            var registries = entity.registryAccess();
+//            emitter.config.renderer.setRenderMode(ParticleRendererSetting.Mode.Model);
+//            emitter.config.renderer.setModel(new IModelRenderer(CommonClass.customLocation("test")));
+//            Constants.LOG.info("{}", emitter.config.serializeNBT(entity.registryAccess()));
         }
 
         this.runtime.emmit(this, delay);
         effects.add(this);
     }
+
 }

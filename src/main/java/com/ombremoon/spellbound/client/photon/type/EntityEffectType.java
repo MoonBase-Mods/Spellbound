@@ -29,13 +29,18 @@ public class EntityEffectType extends EffectType<EffectData.Entity> {
             return null;
         }
 
-        EffectBuilder.Entity builder = EffectBuilder.Entity.of(entityData.location, entityData.entityId, entityData.rotate);
+        EffectBuilder.Entity builder = EffectBuilder.Entity.of(entityData.getLocation(), entityData.entityId, entityData.rotate);
         builder.setOffset(entityData.offset.x, entityData.offset.y, entityData.offset.z);
         builder.setRotation(entityData.rotation.x, entityData.rotation.y, entityData.rotation.z);
         builder.setScale(entityData.scale.x, entityData.scale.y, entityData.scale.z);
         builder.setDelay(entityData.delay);
         builder.setForcedDeath(entityData.forcedDeath);
         builder.setAllowMulti(entityData.allowMulti);
+
+        for (var config : entityData.getConfigs()) {
+            builder.defineConfig(config);
+        }
+
         return builder;
     }
 }

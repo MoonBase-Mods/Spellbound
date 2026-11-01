@@ -1,7 +1,13 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.gameobject.emitter.data.shape.Box;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
+import com.ombremoon.spellbound.client.photon.data.EmissionBuilder;
+import com.ombremoon.spellbound.client.photon.data.NumberFunctionBuilder;
+import com.ombremoon.spellbound.client.photon.data.ShapeBuilder;
+import com.ombremoon.spellbound.client.photon.data.ShapeSettingBuilder;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -42,6 +48,7 @@ import java.util.Set;
 
 public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
     public static final ResourceLocation VFX = CommonClass.customLocation("shadow_veil");
+    public static final EntityDataAccessor<Boolean> EXPANDING_SHADOWS = SynchedEntityData.defineId(ShadowVeil.class, EntityDataSerializers.BOOLEAN);
     private static final List<SoundEvent> MOB_SOUNDS = List.of(
             SoundEvents.CREEPER_PRIMED,
             SoundEvents.SKELETON_AMBIENT,
@@ -55,6 +62,12 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
 
     public ShadowVeil(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(EXPANDING_SHADOWS, false);
     }
 
     @Override
@@ -174,8 +187,9 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
         SkillHolder skillHolder = SpellUtil.getSkills(caster);
         if (skillHolder.hasSkill(SBSkills.EXPANDING_SHADOWS)) {
             if (dimensions == null) {
-                this.dimensions = EntityDimensions.scalable(10f, 4f);
+                this.dimensions = EntityDimensions.scalable(10.8f, 11.8f);
             }
+
             return this.dimensions.makeBoundingBox(this.position());
         }
 
@@ -184,9 +198,23 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
 
     @Override
     protected EffectBuilder<?> getEffect() {
-        return EffectBuilder.Entity.of(VFX, this.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                .setOffset(0, -1.5, 0)
-                .setScale(1, 1, 1);
+        int scale = this.isExpanded() ? 2 : 1;
+        double offsetY = this.isExpanded() ? -3 : -4;
+        var builder = EffectBuilder.Entity.of(VFX, this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                .setOffset(0, offsetY, 0)
+                .setScale(scale, scale, scale)
+                .defineConfig(ConfigBuilder.Particle.of("particle_emitter", this.level().registryAccess())
+                        .shape(ShapeSettingBuilder.of()
+                                .shape(ShapeBuilder.Cube.create()
+                                        .emitFrom(Box.Type.Volume))));
+
+        if (this.isExpanded()) {
+            builder.defineConfig(ConfigBuilder.Particle.of("particle_emitter", this.level().registryAccess())
+                    .emission(EmissionBuilder.of()
+                            .emissionRate(NumberFunctionBuilder.Constant.of().number(2.64F))));
+        }
+
+        return builder;
     }
 
     @Override
@@ -196,5 +224,13 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
 
     public Set<Integer> getVeilAttendees() {
         return this.veilAttendees.keySet();
+    }
+
+    public boolean isExpanded() {
+        return this.getEntityData().get(EXPANDING_SHADOWS);
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.getEntityData().set(EXPANDING_SHADOWS, expanded);
     }
 }

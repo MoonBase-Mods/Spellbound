@@ -1,50 +1,56 @@
-package com.ombremoon.spellbound.client.photon.converter;
+package com.ombremoon.spellbound.client.photon;
 
 import com.lowdragmc.photon.client.gameobject.emitter.data.*;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleConfig;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleEmitter;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleRendererSetting;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
+import net.minecraft.core.HolderLookup;
 
-public class ConfigCopier {
+public class PhotonHelper {
 
-    public static ParticleConfig copyParticleConfig(ParticleConfig config) {
-        ParticleConfig newConfig = new ParticleConfig();
-        newConfig.setDuration(config.getDuration());
-        newConfig.setLooping(config.isLooping());
-        newConfig.setPrewarm(config.getPrewarm());
-        newConfig.setStartDelay(config.getStartDelay());
-        newConfig.setStartLifetime(config.getStartLifetime());
-        newConfig.setStartSpeed(config.getStartSpeed());
-        newConfig.setStartSize(config.getStartSize());
-        newConfig.setStartRotation(config.getStartRotation());
-        newConfig.setSimulationSpace(config.getSimulationSpace());
-        newConfig.setMaxParticles(config.getMaxParticles());
-        newConfig.setParallelUpdate(config.isParallelUpdate());
-        newConfig.setParallelRendering(config.isParallelRendering());
+    public static ParticleEmitter createParticle(ParticleConfig config, ConfigBuilder<ParticleConfig> modifiedConfig, HolderLookup.Provider registries) {
+        ParticleEmitter emitter = new ParticleEmitter();
+        emitter.setName(modifiedConfig.getEmitterName());
+        ParticleConfig newConfig = modifiedConfig.createConfig(registries, config.serializeNBT(registries));
+        copyParticleConfig(emitter.config, newConfig);
+        return emitter;
+    }
 
-        copyEmissionSettings(newConfig.emission, config.emission);
-        copyShapeSettings(newConfig.shape, config.shape);
-        copyParticleRendererSettings(newConfig.renderer, config.renderer);
-        copyPhysicsSettings(newConfig.physics, config.physics);
-        copyLightOverLifetimeSettings(newConfig.lights, config.lights);
-        copyVelocityOverLifetimeSettings(newConfig.velocityOverLifetime, config.velocityOverLifetime);
-        copyInheritVelocitySettings(newConfig.inheritVelocity, config.inheritVelocity);
-        copyLifetimeByEmitterSpeedSettings(newConfig.lifetimeByEmitterSpeed, config.lifetimeByEmitterSpeed);
-        copyForceOverLifetimeSettings(newConfig.forceOverLifetime, config.forceOverLifetime);
-        copyColorOverLifetimeSettings(newConfig.colorOverLifetime, config.colorOverLifetime);
-        copyColorBySpeedSettings(newConfig.colorBySpeed, config.colorBySpeed);
-        copySizeOverLifetimeSettings(newConfig.sizeOverLifetime, config.sizeOverLifetime);
-        copySizeBySpeedSettings(newConfig.sizeBySpeed, config.sizeBySpeed);
-        copyRotationOverLifetimeSettings(newConfig.rotationOverLifetime, config.rotationOverLifetime);
-        copyRotationBySpeedSettings(newConfig.rotationBySpeed, config.rotationBySpeed);
-        copyNoiseSettings(newConfig.noise, config.noise);
-        copyUVAnimationSettings(newConfig.uvAnimation, config.uvAnimation);
-        copyTrailsSettings(newConfig.trails, config.trails);
-        copySubEmittersSettings(newConfig.subEmitters, config.subEmitters);
+    private static void copyParticleConfig(ParticleConfig copyTo, ParticleConfig copyFrom) {
+        copyTo.setDuration(copyFrom.getDuration());
+        copyTo.setLooping(copyFrom.isLooping());
+        copyTo.setPrewarm(copyFrom.getPrewarm());
+        copyTo.setStartDelay(copyFrom.getStartDelay());
+        copyTo.setStartLifetime(copyFrom.getStartLifetime());
+        copyTo.setStartSpeed(copyFrom.getStartSpeed());
+        copyTo.setStartSize(copyFrom.getStartSize());
+        copyTo.setStartRotation(copyFrom.getStartRotation());
+        copyTo.setStartColor(copyFrom.getStartColor());
+        copyTo.setSimulationSpace(copyFrom.getSimulationSpace());
+        copyTo.setMaxParticles(copyFrom.getMaxParticles());
+        copyTo.setParallelUpdate(copyFrom.isParallelUpdate());
+        copyTo.setParallelRendering(copyFrom.isParallelRendering());
 
-//        var emit = new ParticleEmitter(newConfig);
-
-        return newConfig;
+        copyEmissionSettings(copyTo.emission, copyFrom.emission);
+        copyShapeSettings(copyTo.shape, copyFrom.shape);
+        copyParticleRendererSettings(copyTo.renderer, copyFrom.renderer);
+        copyPhysicsSettings(copyTo.physics, copyFrom.physics);
+        copyLightOverLifetimeSettings(copyTo.lights, copyFrom.lights);
+        copyVelocityOverLifetimeSettings(copyTo.velocityOverLifetime, copyFrom.velocityOverLifetime);
+        copyInheritVelocitySettings(copyTo.inheritVelocity, copyFrom.inheritVelocity);
+        copyLifetimeByEmitterSpeedSettings(copyTo.lifetimeByEmitterSpeed, copyFrom.lifetimeByEmitterSpeed);
+        copyForceOverLifetimeSettings(copyTo.forceOverLifetime, copyFrom.forceOverLifetime);
+        copyColorOverLifetimeSettings(copyTo.colorOverLifetime, copyFrom.colorOverLifetime);
+        copyColorBySpeedSettings(copyTo.colorBySpeed, copyFrom.colorBySpeed);
+        copySizeOverLifetimeSettings(copyTo.sizeOverLifetime, copyFrom.sizeOverLifetime);
+        copySizeBySpeedSettings(copyTo.sizeBySpeed, copyFrom.sizeBySpeed);
+        copyRotationOverLifetimeSettings(copyTo.rotationOverLifetime, copyFrom.rotationOverLifetime);
+        copyRotationBySpeedSettings(copyTo.rotationBySpeed, copyFrom.rotationBySpeed);
+        copyNoiseSettings(copyTo.noise, copyFrom.noise);
+        copyUVAnimationSettings(copyTo.uvAnimation, copyFrom.uvAnimation);
+        copyTrailsSettings(copyTo.trails, copyFrom.trails);
+        copySubEmittersSettings(copyTo.subEmitters, copyFrom.subEmitters);
     }
 
     private static void copyEmissionSettings(EmissionSetting copyTo, EmissionSetting copyFrom) {

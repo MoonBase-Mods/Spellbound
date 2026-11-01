@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.NumberFunction3;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;

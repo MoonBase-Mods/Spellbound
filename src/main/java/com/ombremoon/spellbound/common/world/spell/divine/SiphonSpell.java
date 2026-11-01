@@ -1,8 +1,24 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.lowdraglib2.editor.resource.BuiltinPath;
+import com.lowdragmc.lowdraglib2.editor.resource.FilePath;
+import com.lowdragmc.lowdraglib2.math.GradientColor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.gameobject.emitter.data.LightOverLifetimeSetting;
+import com.lowdragmc.photon.client.gameobject.emitter.data.MaterialSetting;
+import com.lowdragmc.photon.client.gameobject.emitter.data.RendererSetting;
+import com.lowdragmc.photon.client.gameobject.emitter.data.material.BlendMode;
+import com.lowdragmc.photon.client.gameobject.emitter.data.material.TextureMaterial;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.NumberFunction3;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.RandomConstant;
+import com.lowdragmc.photon.client.gameobject.emitter.data.number.curve.Curve;
+import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleRendererSetting;
+import com.lowdragmc.photon.gui.editor.resource.MaterialResource;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.client.photon.data.*;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -16,10 +32,15 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -29,8 +50,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 public class SiphonSpell extends ChanneledSpell implements RadialSpell {
     private static final ResourceLocation SIPHON = CommonClass.customLocation("siphon");
@@ -293,7 +318,8 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                     }
 
                     this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(fxLocation), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setOffset(0, -entity.getEyeHeight() / 2, 0));
+                            .setOffset(0, -entity.getEyeHeight() / 2, 0)
+                    );
 
                 }
 
