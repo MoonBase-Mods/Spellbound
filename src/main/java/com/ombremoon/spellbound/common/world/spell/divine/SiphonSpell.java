@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.lowdraglib2.LDLib2;
 import com.lowdragmc.lowdraglib2.editor.resource.BuiltinPath;
 import com.lowdragmc.lowdraglib2.editor.resource.FilePath;
 import com.lowdragmc.lowdraglib2.math.GradientColor;
@@ -217,7 +218,16 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
             //VFX
             EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                     .setOffset(0, 1.25, 1.5)
-                    .setDelay(10);
+                    .setDelay(10)
+                    /*.defineConfig(ConfigBuilder.Particle.of("black", level.registryAccess())
+                            .renderer(ParticleRendererBuilder.of()
+                                    .materials(MaterialSettingBuilder.of()
+                                            .material(MaterialBuilder.UIResource.of()
+                                                    .resourcePath(new FilePath(ResourceLocation.fromNamespaceAndPath(LDLib2.MOD_ID, "resources/global/siphon_magic_circle.material.nbt")))
+                                            )
+                                    )
+                            )
+                    )*/;
             if (harvest) {
                 effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, 0.1, 0)

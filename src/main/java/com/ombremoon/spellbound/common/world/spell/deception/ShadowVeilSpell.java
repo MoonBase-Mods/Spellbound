@@ -69,7 +69,7 @@ public class ShadowVeilSpell extends AnimatedSpell {
             if (this.mistPos == null) {
                 this.mistPos = this.getSpawnVec();
                 if (this.mistPos == null)
-                    this.mistPos = caster.position().relative(Direction.DOWN, 0.5);
+                    this.mistPos = caster.position()/*.relative(Direction.DOWN, 0.5)*/;
             }
 
             this.summonEntity(context, SBEntities.SHADOW_VEIL.get(), this.mistPos, veil -> {

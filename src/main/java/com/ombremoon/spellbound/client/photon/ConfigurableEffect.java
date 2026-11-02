@@ -7,6 +7,8 @@ import com.lowdragmc.photon.client.fx.FXRuntime;
 import com.lowdragmc.photon.client.gameobject.IFXObject;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleEmitter;
 import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
+import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.HolderLookup;
 
 import java.util.ArrayList;
@@ -21,11 +23,14 @@ public interface ConfigurableEffect {
     default FXRuntime modifyFXRuntime(FX fx, HolderLookup.Provider registries) {
         if (this.modifiedConfigs().isEmpty()) {
             FXRuntime runtime = fx.createRuntime();
-            var object = runtime.findObject("particle_emitter");
+            var object = runtime.findObject("squares");
             if (object instanceof ParticleEmitter emitter) {
 //                Constants.LOG.info("{}", emitter.config.serializeNBT(registries));
             }
 //            Constants.LOG.info("{}", runtime.fxData.objects().stream().map(IFXObject::getName).toList());
+            if (fx.getFxLocation().equals(CommonClass.customLocation("siphon_caster"))) {
+                Constants.LOG.info("{}", runtime.fxData.serializeNBT(registries));
+            }
             return runtime;
 //            return fx.createRuntime();
         }
@@ -45,7 +50,7 @@ public interface ConfigurableEffect {
 
         FXData fxData = new FXData(list);
         FXRuntime runtime = new FXRuntime(fxData);
-        var object = runtime.findObject("particle_emitter");
+        var object = runtime.findObject("spark");
         if (object instanceof ParticleEmitter emitter) {
 //            Constants.LOG.info("{}", emitter.config.serializeNBT(registries));
         }
