@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;

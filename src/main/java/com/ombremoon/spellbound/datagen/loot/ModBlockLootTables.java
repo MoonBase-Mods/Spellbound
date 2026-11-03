@@ -10,6 +10,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -80,6 +81,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.RUNED_COPPER_PILLAR.get());
         this.dropSelf(SBBlocks.ARCANE_CANDLE.get());
         this.dropSelf(SBBlocks.ARCANE_CHALKBOARD.get());
+        this.dropOther(SBBlocks.HOLY_WATER_CAULDRON.get(), Blocks.CAULDRON);
 
         //ARCANTHUS
         this.add(SBBlocks.ARCANTHUS.get(),

@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 public class StarMapBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<StarmapType> TYPE = EnumProperty.create("type", StarmapType.class);
-    protected static final VoxelShape NORTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)7.0F, (double)16.0F, (double)15.0F, (double)9.0F);
-    protected static final VoxelShape EAST_AABB = Block.box((double)7.0F, (double)0.0F, (double)0.0F, (double)9.0F, (double)15.0F, (double)16.0F);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0F, 0.0F, 7.0F, 16.0F, 15.0F, 9.0F);
+    protected static final VoxelShape EAST_AABB = Block.box(7.0F, 0.0F, 0.0F, 9.0F, 15.0F, 16.0F);
 
     public StarMapBlock() {
         super(BlockBehaviour.Properties.of().noOcclusion());
@@ -40,15 +40,15 @@ public class StarMapBlock extends Block {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        return (BlockState)this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     protected BlockState rotate(BlockState state, Rotation rotation) {
-        return (BlockState)state.setValue(FACING, rotation.rotate((Direction)state.getValue(FACING)));
+        return state.setValue(FACING, rotation.rotate((Direction)state.getValue(FACING)));
     }
 
     protected BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation((Direction)state.getValue(FACING)));
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -61,15 +61,15 @@ public class StarMapBlock extends Block {
         BLUE("blue");
 
         public static final Codec<StarmapType> CODEC = StringRepresentable.fromEnum(StarmapType::values);
-
         private String name;
+
         StarmapType(String name) {
             this.name = name;
         }
 
         @Override
         public String getSerializedName() {
-            return name;
+            return this.name;
         }
     }
 }

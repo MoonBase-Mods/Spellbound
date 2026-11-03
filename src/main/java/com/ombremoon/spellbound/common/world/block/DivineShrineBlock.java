@@ -41,7 +41,7 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
 
     @Override
     protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
-        return 1f;
+        return 1F;
     }
 
     @Override

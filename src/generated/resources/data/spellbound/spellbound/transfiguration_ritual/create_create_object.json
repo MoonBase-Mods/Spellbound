@@ -1,0 +1,49 @@
+{
+  "definition": {
+    "duration": 1,
+    "mastery_requirement": "novice",
+    "path_xp": 10,
+    "tier": 1
+  },
+  "effects": [
+    {
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_spell_tome",
+        "path": "spellbound:create_object",
+        "tier": 1
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:stone_pickaxe"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:stone_sword"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:leather_chestplate"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "spellbound:magic_essence"
+      }
+    }
+  ]
+}

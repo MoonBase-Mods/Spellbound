@@ -21,6 +21,7 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_STRIDE = key("create_stride");
     ResourceKey<TransfigurationRitual> CREATE_DOLPHINS_FIN = key("create_dolphins_fin");
     ResourceKey<TransfigurationRitual> CREATE_COBBLED_HIDE = key("create_cobbled_hide");
+    ResourceKey<TransfigurationRitual> CREATE_CREATE_OBJECT = key("create_create_object");
     ResourceKey<TransfigurationRitual> CREATE_SHADOW_GATE = key("create_shadow_gate");
     ResourceKey<TransfigurationRitual> CREATE_MYSTIC_ARMOR = key("create_mystic_armor");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_HELM = key("create_transfig_helmet");
@@ -29,7 +30,6 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
     ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
-    ResourceKey<TransfigurationRitual> CREATE_CREATE_OBJECT = key("create_create_object");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
         register(
@@ -81,6 +81,25 @@ public interface SBRituals {
                         .withEffect(
                                 EffectHolder.simple(
                                         new CreateSpellTome(SBSpells.COBBLED_HIDE.get(), 1),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+
+        );
+        register(
+                context,
+                CREATE_CREATE_OBJECT,
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
+                        .requires(Ingredient.of(Items.STONE_PICKAXE))
+                        .requires(Ingredient.of(Items.STONE_SWORD))
+                        .requires(Ingredient.of(Items.LEATHER_CHESTPLATE))
+                        .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.CREATE_OBJECT.get(), 1),
                                         Optional.empty(),
                                         new TickProvider.AtTick(0),
                                         BuffCategory.NEUTRAL,

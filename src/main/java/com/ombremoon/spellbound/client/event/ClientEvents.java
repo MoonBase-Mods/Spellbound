@@ -62,22 +62,30 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.util.Color;
 
@@ -120,6 +128,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.GOLDEN_DART.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
         event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), CursedRuneRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_VEIL.get(), VFXSpellRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
         event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
 
@@ -130,13 +139,13 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.SHADOW_WOLF.get(), ShadowWolfRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
+        event.registerEntityRenderer(SBEntities.PHIAL.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
         event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
 
         event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SHADOW_MIST.get(), VFXEntityRenderer::new);
-        event.registerEntityRenderer(SBEntities.SHADOW_VEIL.get(), VFXSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.SEEKING_PROJECTILE.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
@@ -198,10 +207,52 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRegisterRenderBuffers(RegisterRenderBuffersEvent event) {
+        event.registerRenderBuffer(ImbuementRenderers.getCreateObjectGlint());
+        event.registerRenderBuffer(ImbuementRenderers.getBoundBowGlint());
         event.registerRenderBuffer(ImbuementRenderers.getSmiteGlint());
         event.registerRenderBuffer(ImbuementRenderers.getBlackBladeGlint());
         event.registerRenderBuffer(ImbuementRenderers.getNightbladeGlint());
         event.registerRenderBuffer(ImbuementRenderers.getSmiteEntityGlintDirect());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            private static final ResourceLocation UNDERWATER = CommonClass.customLocation("textures/misc/under_holy_water.png");
+            private static final ResourceLocation HOLY_WATER_STILL = CommonClass.customLocation("block/holy_water_still");
+            private static final ResourceLocation HOLY_WATER_FLOW = CommonClass.customLocation("block/holy_water_flow");
+            private static final ResourceLocation HOLY_WATER_OVERLAY = CommonClass.customLocation("block/holy_water_overlay");
+
+            @Override
+            public ResourceLocation getStillTexture() {
+                return HOLY_WATER_STILL;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return HOLY_WATER_FLOW;
+            }
+
+            @Override
+            public @Nullable ResourceLocation getOverlayTexture() {
+                return HOLY_WATER_OVERLAY;
+            }
+
+            @Override
+            public @Nullable ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return UNDERWATER;
+            }
+
+            @Override
+            public int getTintColor() {
+                return 0xFFD700;
+            }
+
+            @Override
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                return this.getTintColor() | 0xFF000000;
+            }
+        }, SBFluids.HOLY_WATER_TYPE.get());
     }
 
     @SubscribeEvent

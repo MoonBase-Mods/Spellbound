@@ -1,10 +1,10 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.DynamicLevelSpawnData;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.ResetFlags;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.InteractWithBlockTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.PlayerHurtTrigger;
@@ -17,7 +17,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 
 public interface SBPuzzleConfigs {
     ResourceKey<PuzzleConfiguration> FLICKER = key("flicker");

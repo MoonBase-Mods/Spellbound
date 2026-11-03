@@ -70,6 +70,7 @@ public class SBEntities {
 
     //Divine Entities
     public static final Supplier<EntityType<Valkyr>> VALKYR = registerMob("valkyr", Valkyr::new, MobCategory.CREATURE,0.6F, 1.95F, 8, Valkyr::createValkyrAttributes, false);
+    public static final Supplier<EntityType<ThrownPhial>> PHIAL = registerEntity("phial", ThrownPhial::new, 0.25F, 0.25F, 10);
 
     //Deception Entities
     public static final Supplier<EntityType<ShadowMist>> SHADOW_MIST = registerEntity("shadow_mist", ShadowMist::new,1.4F, 3.4F);

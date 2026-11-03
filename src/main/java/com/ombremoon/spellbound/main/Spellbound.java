@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.skills.SkillProviderRegistry;
+import com.ombremoon.spellbound.common.world.block.HolyWaterCauldronBlock;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -65,6 +66,7 @@ public class Spellbound {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         SkillProviderRegistry.initSkillProviders();
+        HolyWaterCauldronBlock.createInteractions();
     }
 
     private void registerRegistry(NewRegistryEvent event) {

@@ -29,6 +29,14 @@ public record PseudoSkillProvider(Optional<ResourceLocation> spellType, Resource
             PseudoSkillProvider::new
     );
 
+    public static PseudoSkillProvider withSpell(ResourceLocation spellType, ResourceLocation location) {
+        return new PseudoSkillProvider(Optional.of(spellType), location);
+    }
+
+    public static PseudoSkillProvider withoutSpell(ResourceLocation location) {
+        return new PseudoSkillProvider(Optional.empty(), location);
+    }
+
     @Override
     public SpellType<?> getSpell() {
         return this.spellType.map(SBSpells.REGISTRY::get).orElse(null);
