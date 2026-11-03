@@ -30,6 +30,7 @@ public class CommonClass {
         SBEntityDataSerializers.register(modEventBus);
         SBFamiliars.register();
         SBFeatures.register(modEventBus);
+        SBFluids.register(modEventBus);
         SBItems.register(modEventBus);
         SBLootFunctions.register(modEventBus);
         SBMemoryTypes.register(modEventBus);

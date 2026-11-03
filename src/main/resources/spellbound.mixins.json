@@ -29,8 +29,11 @@
     "ZombieVillagerMixin"
   ],
   "client": [
+    "BlockEffectExecutorMixin",
     "EffectRenderingInventoryScreenMixin",
+    "EntityEffectExecutorMixin",
     "EntityRenderDispatcherMixin",
+    "FXEffectExecutorMixin",
     "GameRendererMixin",
     "HumanoidModelMixin",
     "ItemRendererMixin",
@@ -39,6 +42,7 @@
     "LocalPlayerMixin",
     "MerchantScreenMixin",
     "MinecraftMixin",
+    "ParticleEmitterMixin",
     "ParticleEngineMixin",
     "PlayerModelMixin",
     "PlayerRendererMixin",

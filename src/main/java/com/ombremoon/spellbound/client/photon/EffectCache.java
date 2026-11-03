@@ -4,6 +4,7 @@ import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXRuntime;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
@@ -18,6 +19,12 @@ public class EffectCache {
         var fx = builder.build();
         if (fx != null) {
             this.cache.put(fx.fx.getFxLocation(), fx);
+            for (var config : builder.configs) {
+                if (fx instanceof ConfigurableEffect configurableEffect) {
+                    configurableEffect.addModifiedConfig(config);
+                }
+            }
+
             fx.start();
         }
     }

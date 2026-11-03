@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.client.photon.effects;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.gameobject.IFXObject;
+import com.ombremoon.spellbound.client.photon.ConfigurableEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.joml.Math;
@@ -86,7 +87,9 @@ public class EntityDeathEffect extends EntityEffectExecutor {
                 }
             }
         }
-        this.runtime = fx.createRuntime();
+
+        ConfigurableEffect effect = (ConfigurableEffect) this;
+        this.runtime = effect.modifyFXRuntime(fx, level.registryAccess());
         var root = this.runtime.getRoot();
         root.updatePos(entity.getEyePosition().toVector3f().add(offset.x, offset.y, offset.z));
         root.updateRotation(rotation);

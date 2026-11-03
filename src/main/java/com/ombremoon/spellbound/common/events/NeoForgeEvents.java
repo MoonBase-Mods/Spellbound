@@ -63,6 +63,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -79,6 +80,8 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
 import java.util.Iterator;
@@ -679,6 +682,11 @@ public class NeoForgeEvents {
         if (famHandler.getActiveFamiliar() instanceof OwlFamiliar owl && owl.hasAffinity(famHandler, SBAffinities.PHANTOM_SHIELD)) {
             event.setResult(PlayerSpawnPhantomsEvent.Result.DENY);
         }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCauldronFluidContent(RegisterCauldronFluidContentEvent event) {
+        event.register(SBBlocks.HOLY_WATER_CAULDRON.get(), SBFluids.HOLY_WATER.get(), FluidType.BUCKET_VOLUME, LayeredCauldronBlock.LEVEL);
     }
 
     @SubscribeEvent

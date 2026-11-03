@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;

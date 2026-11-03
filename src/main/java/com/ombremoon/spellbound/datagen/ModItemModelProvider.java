@@ -42,7 +42,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
-        simpleGeneratedModel(SBItems.CHALK);
+        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
         simpleBlockItem(SBBlocks.ARCANE_CHALKBOARD.get());
         simpleBlockItem(SBBlocks.ARCANE_CANDLE.get());
         simpleBlockItem(SBBlocks.STAR_MAP.get());
@@ -73,7 +73,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleGeneratedModel(SBItems.MAGIC_ESSENCE);
         simpleGeneratedModel(SBItems.MANA_TEAR);
+        simpleGeneratedModel(SBItems.CHALK);
         simpleGeneratedModel(SBItems.DUNGEON_KEY);
+        simpleGeneratedModel(SBItems.DIVINE_PHIAL);
+        simpleGeneratedModel(SBItems.CURSED_PHIAL);
 
         simpleGeneratedModel(SBItems.DECEPTION_BOOK);
         simpleGeneratedModel(SBItems.DIVINE_BOOK);
@@ -85,7 +88,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.ARCANE_EYE);
 
         simpleGeneratedModel((SBItems.INTERSTELLARE_DISC));
-        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
 
     }
 

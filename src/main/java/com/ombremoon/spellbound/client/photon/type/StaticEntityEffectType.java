@@ -29,7 +29,7 @@ public class StaticEntityEffectType extends EffectType<EffectData.StaticEntity> 
             return null;
         }
 
-        EffectBuilder.StaticEntity builder = EffectBuilder.StaticEntity.of(entityData.location, entityData.entityId, entityData.rotate);
+        EffectBuilder.StaticEntity builder = EffectBuilder.StaticEntity.of(entityData.getLocation(), entityData.entityId, entityData.rotate);
         builder.setPos(entityData.effectPos);
         builder.setOffset(entityData.offset.x, entityData.offset.y, entityData.offset.z);
         builder.setRotation(entityData.rotation.x, entityData.rotation.y, entityData.rotation.z);
@@ -37,6 +37,11 @@ public class StaticEntityEffectType extends EffectType<EffectData.StaticEntity> 
         builder.setDelay(entityData.delay);
         builder.setForcedDeath(entityData.forcedDeath);
         builder.setAllowMulti(entityData.allowMulti);
+
+        for (var config : entityData.getConfigs()) {
+            builder.defineConfig(config);
+        }
+
         return builder;
     }
 }

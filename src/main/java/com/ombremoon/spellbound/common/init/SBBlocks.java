@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.block.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -251,9 +252,22 @@ public class SBBlocks {
     public static final Supplier<Block> PLAINS_DIVINE_SHRINE = registerBlock("plains_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
     public static final Supplier<Block> JUNGLE_DIVINE_SHRINE = registerBlock("jungle_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
     public static final Supplier<Block> VALKYR_STATUE = registerBlock("valkyr_statue", () -> new ValkyrStatueBlock(blockProperties().noOcclusion().strength(5f)));
-    public static final Supplier<Block> UMBRAL_SLUDGE = registerSludge("umbral_sludge", true);
-    public static final Supplier<Block> PENUMBRAL_SLUDGE = registerSludge("penumbral_sludge", false);
-//    public static final Supplier<Block> WOVEN_SHADE = registerSimpleBlock("woven_shade");
+    public static final Supplier<LiquidBlock> HOLY_WATER = registerBlock(
+            "holy_water", () -> new LiquidBlock(
+                    SBFluids.HOLY_WATER.get(),
+                    blockProperties()
+                            .mapColor(MapColor.COLOR_YELLOW)
+                            .replaceable()
+                            .noCollission()
+                            .strength(100.0F)
+                            .lightLevel(p_50755_ -> 10)
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()
+                            .liquid()
+                            .sound(SoundType.EMPTY)
+            ), false
+    );
+    public static final Supplier<Block> HOLY_WATER_CAULDRON = registerBlock("holy_water_cauldron", () -> new HolyWaterCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON).lightLevel(state -> 10)), false);
 
     public static final Supplier<Block> GREEN_SPORE_BLOCK = registerBlock("green_spore_block", () -> new SporeBlock(blockProperties()));
     public static final Supplier<Block> GREEN_SPORE_SLAB = registerBlock("green_spore_slab", () -> new SporeSlabBlock(blockProperties()));
@@ -293,6 +307,8 @@ public class SBBlocks {
     public static final Supplier<Block> DARK_ALTAR = registerBlock("dark_altar", () -> new DarkAltarBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));
+    public static final Supplier<Block> UMBRAL_SLUDGE = registerSludge("umbral_sludge", true);
+    public static final Supplier<Block> PENUMBRAL_SLUDGE = registerSludge("penumbral_sludge", false);
 
     public static final Supplier<Block> STAR_MAP = registerBlock("star_map", StarMapBlock::new, false);
     public static final Supplier<Block> RUNED_STONE_PILLAR = registerBlock("runed_stone_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));

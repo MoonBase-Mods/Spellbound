@@ -29,7 +29,7 @@ public class BlockEffectType extends EffectType<EffectData.Block> {
             return null;
         }
 
-        EffectBuilder.Block builder = EffectBuilder.Block.of(blockData.location, blockData.blockPos);
+        EffectBuilder.Block builder = EffectBuilder.Block.of(blockData.getLocation(), blockData.blockPos);
         builder.setOffset(blockData.offset.x, blockData.offset.y, blockData.offset.z);
         builder.setRotation(blockData.rotation.x, blockData.rotation.y, blockData.rotation.z);
         builder.setScale(blockData.scale.x, blockData.scale.y, blockData.scale.z);
@@ -37,6 +37,11 @@ public class BlockEffectType extends EffectType<EffectData.Block> {
         builder.setForcedDeath(blockData.forcedDeath);
         builder.setAllowMulti(blockData.allowMulti);
         builder.setCheckState(blockData.checkState);
+
+        for (var config : blockData.getConfigs()) {
+            builder.defineConfig(config);
+        }
+
         return builder;
     }
 }

@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.entity.projectile.BoundArrow;
+import com.ombremoon.spellbound.common.world.item.PhialItem;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SerializationUtil;
 import com.ombremoon.spellbound.util.math.SplineController;
@@ -23,6 +24,7 @@ public class SBEntityDataSerializers {
     public static final Supplier<EntityDataSerializer<Vec3>> VEC3 = ENTITY_DATA_SERIALIZERS.register("vec3", () -> EntityDataSerializer.forValueType(SerializationUtil.VEC3_STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<SplineController>> SPLINE_CONTROLLER = ENTITY_DATA_SERIALIZERS.register("spline_controller", () -> EntityDataSerializer.forValueType(SplineController.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<BoundArrow.ArrowVariant>> ARROW_VARIANT = ENTITY_DATA_SERIALIZERS.register("arrow_variant", () -> EntityDataSerializer.forValueType(BoundArrow.ArrowVariant.STREAM_CODEC));
+    public static final Supplier<EntityDataSerializer<PhialItem.PhialType>> PHIAL_TYPE = ENTITY_DATA_SERIALIZERS.register("phial_type", () -> EntityDataSerializer.forValueType(PhialItem.PhialType.STREAM_CODEC));
 
     public static void register(IEventBus modEventBus) {
         ENTITY_DATA_SERIALIZERS.register(modEventBus);

@@ -70,6 +70,9 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
     public static final SpellModifier MURKY_HABITAT = registerModifier("murky_habitat", ModifierType.POTENCY, (spellType, target) -> true, 0.1F);
     public static final SpellModifier BLOOD_MAGIC = registerModifier("blood_magic", ModifierType.POTENCY, ((spellType, livingEntity) -> true), 0.1f);
 
+    //Misc
+    public static final SpellModifier DIVINE_PHIAL = registerModifier("divine_phial", ModifierType.POTENCY, (spellType, living) -> spellType.getPath() == SpellPath.DIVINE, 0.1F);
+
     private static SpellModifier registerModifier(String name, ModifierType type, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier, float stackMultiplier, int maxStacks) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier, stackMultiplier, maxStacks);
         registerModifier(spellModifier);

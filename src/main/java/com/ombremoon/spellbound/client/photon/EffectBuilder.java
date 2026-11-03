@@ -4,6 +4,7 @@ import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXHelper;
+import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
 import com.ombremoon.spellbound.client.photon.effects.EntityDeathEffect;
 import com.ombremoon.spellbound.client.photon.effects.StaticEntityEffect;
 import net.minecraft.client.Minecraft;
@@ -12,8 +13,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class EffectBuilder<T extends FXEffectExecutor> {
     protected final ResourceLocation location;
+    protected final List<ConfigBuilder<?>> configs = new ArrayList<>();
 
     public EffectBuilder(ResourceLocation location) {
         this.location = location;
@@ -23,8 +28,15 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
     public void buildAndStart() {
         var effect = this.build();
-        if (effect != null)
+        if (effect != null) {
+            for (var config : this.configs) {
+                if (effect instanceof ConfigurableEffect configurableEffect) {
+                    configurableEffect.addModifiedConfig(config);
+                }
+            }
+
             effect.start();
+        }
     }
 
     public static class Block extends EffectBuilder<BlockEffectExecutor> {
@@ -78,6 +90,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
         public Block setCheckState(boolean checkState) {
             this.checkState = checkState;
+            return this;
+        }
+
+        public Block defineConfig(ConfigBuilder<?> config) {
+            this.configs.add(config);
             return this;
         }
 
@@ -156,6 +173,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
             return this;
         }
 
+        public Entity defineConfig(ConfigBuilder<?> config) {
+            this.configs.add(config);
+            return this;
+        }
+
         @Override
         public EntityEffectExecutor build() {
             Level level = Minecraft.getInstance().level;
@@ -230,6 +252,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
         public DeadEntity setAllowMulti(boolean allowMulti) {
             this.allowMulti = allowMulti;
+            return this;
+        }
+
+        public DeadEntity defineConfig(ConfigBuilder<?> config) {
+            this.configs.add(config);
             return this;
         }
 
@@ -318,6 +345,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
         public StaticEntity setAllowMulti(boolean allowMulti) {
             this.allowMulti = allowMulti;
+            return this;
+        }
+
+        public StaticEntity defineConfig(ConfigBuilder<?> config) {
+            this.configs.add(config);
             return this;
         }
 

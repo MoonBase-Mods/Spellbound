@@ -28,16 +28,12 @@ public class ModDataGen {
         generator.addProvider(includeServer, new ModRecipeProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModLootTableProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModSoundProvider(packOutput, existingFileHelper));
-        generator.addProvider(includeServer, new ModTagProvider.BlockTags(packOutput, event.getLookupProvider(), existingFileHelper));
-        generator.addProvider(includeServer, new ModTagProvider.ItemTags(packOutput, event.getLookupProvider(), existingFileHelper));
-        generator.addProvider(includeServer, new ModTagProvider.EntityTypeTags(packOutput, event.getLookupProvider(), existingFileHelper));
-        generator.addProvider(includeServer, new ModTagProvider.DamageTypeTags(packOutput, event.getLookupProvider(), existingFileHelper));
-        generator.addProvider(includeServer, new ModTagProvider.PaintingVariantTags(packOutput, event.getLookupProvider(), existingFileHelper));
         generator.addProvider(includeServer, new ModGlobalLootModifiersProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModPageScrapProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModMultiblockProvider(packOutput, lookupProvider));
         generator.addProvider(includeClient, new ModItemModelProvider(packOutput, existingFileHelper));
         generator.addProvider(includeClient, new ModBlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(includeClient, new ModLangProvider(packOutput));
+        ModTagProvider.registerTagProviders(generator, includeServer, packOutput, event.getLookupProvider(), existingFileHelper);
     }
 }

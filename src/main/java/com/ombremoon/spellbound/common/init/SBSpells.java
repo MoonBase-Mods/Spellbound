@@ -143,7 +143,7 @@ public class SBSpells {
             .skills(SBSkills.SMITE, SBSkills.PRAYERFUL_STRIKE, SBSkills.SACRED_BLADE, SBSkills.GOLDEN_PARRY,
                     SBSkills.OATHSWORN, SBSkills.GOLDEN_LAND, SBSkills.SHARDS_OF_PURITY, SBSkills.BLESSED_ARC,
                     SBSkills.REFLECTIVE_JUDGEMENT, SBSkills.SACRED_PARRY, SBSkills.BLACK_BLADE));
-    public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
+    public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", darkDivineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
             .skills(SBSkills.SIPHON, SBSkills.GRIM_REACH, SBSkills.GLUTTONY, SBSkills.WITHERING,
                     SBSkills.SOUL_TAP, SBSkills.PARASITIC_LINK, SBSkills.UNRELENTING, SBSkills.OVERHEAL,
                     SBSkills.IRON_MAIDEN, SBSkills.ARCANE_FEEDBACK, SBSkills.HARVEST));
@@ -204,6 +204,10 @@ public class SBSpells {
 
     private static <T extends AbstractSpell> SpellType.Builder<T> divineBuilder(SpellMastery mastery, SpellType.SpellFactory<T> factory) {
         return new SpellType.Builder<>(factory).setPath(SpellPath.DIVINE).setMastery(mastery);
+    }
+
+    private static <T extends AbstractSpell> SpellType.Builder<T> darkDivineBuilder(SpellMastery mastery, SpellType.SpellFactory<T> factory) {
+        return new SpellType.Builder<>(factory).setPath(SpellPath.DIVINE, SpellPath.DARK_DIVINE).setMastery(mastery);
     }
 
     private static <T extends AbstractSpell> SpellType.Builder<T> deceptionBuilder(SpellMastery mastery, SpellType.SpellFactory<T> factory) {

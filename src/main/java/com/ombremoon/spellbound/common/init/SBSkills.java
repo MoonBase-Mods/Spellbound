@@ -214,7 +214,7 @@ public class SBSkills {
     public static final Holder<Skill> HARVESTER = registerRadialSkill("harvester", -33, 50, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> SCOUT = registerRadialSkill("scout", 33, 50, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> ADVENTURER = registerRadialSkill("adventurer", 66, 50, preReqs(CREATE_OBJECT));
-    public static final Holder<Skill> KNIGHT = registerRadialSkill("emergency_rations", 100, 50, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> KNIGHT = registerRadialSkill("knight", 100, 50, preReqs(CREATE_OBJECT));
     public static final Holder<Skill> ARTISANS_TOUCH = registerSkill("artisans_touch", 0, 100, preReqs(LASTING_PROVISIONS, LUMBERJACK, EXCAVATOR, HARVESTER, SCOUT, ADVENTURER, KNIGHT));
     public static final Holder<Skill> MASTERWORK_GEAR = registerSkill("masterwork_gear", 0, 150, preReqs(ARTISANS_TOUCH));
     public static final Holder<Skill> MYSTIC_TOOLSMITH = registerSkill("mystic_toolsmith", 0, 200, preReqs(MASTERWORK_GEAR));

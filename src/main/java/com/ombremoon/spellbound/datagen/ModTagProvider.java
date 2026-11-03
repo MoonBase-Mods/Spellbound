@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
@@ -15,6 +16,8 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +27,15 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
 public class ModTagProvider {
+
+    public static void registerTagProviders(DataGenerator generator, boolean includeServer, PackOutput output, CompletableFuture<HolderLookup.Provider> provider, ExistingFileHelper fileHelper) {
+        generator.addProvider(includeServer, new BlockTags(output, provider, fileHelper));
+        generator.addProvider(includeServer, new ItemTags(output, provider, fileHelper));
+        generator.addProvider(includeServer, new EntityTypeTags(output, provider, fileHelper));
+        generator.addProvider(includeServer, new DamageTypeTags(output, provider, fileHelper));
+        generator.addProvider(includeServer, new FluidTags(output, provider, fileHelper));
+        generator.addProvider(includeServer, new PaintingVariantTags(output, provider, fileHelper));
+    }
 
     public static class ItemTags extends TagsProvider<Item> {
 
@@ -80,6 +92,9 @@ public class ModTagProvider {
                     Blocks.JIGSAW,
                     Blocks.STRUCTURE_BLOCK,
                     Blocks.STRUCTURE_VOID);
+
+            populateTag(net.minecraft.tags.BlockTags.CAULDRONS,
+                    SBBlocks.HOLY_WATER_CAULDRON.get());
 
             populateTag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE,
                     SBBlocks.STORM_CRYSTAL_BLOCK.get(),
@@ -192,6 +207,25 @@ public class ModTagProvider {
                             SBPaintingVariants.WITCH2,
                             SBPaintingVariants.FENRIR
                     );
+        }
+    }
+
+    public static class FluidTags extends TagsProvider<Fluid> {
+        public FluidTags(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.FLUID, provider, Constants.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            populateTag(net.minecraft.tags.FluidTags.WATER,
+                    SBFluids.HOLY_WATER.get(),
+                    SBFluids.FLOWING_HOLY_WATER.get());
+        }
+
+        public void populateTag(TagKey<Fluid> tag, Fluid... fluids){
+            for (Fluid fluid : fluids) {
+                tag(tag).add(BuiltInRegistries.FLUID.getResourceKey(fluid).get());
+            }
         }
     }
 }

@@ -7,15 +7,12 @@ import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -78,8 +75,13 @@ public class SBItems {
     public static final Supplier<Item> ARCANE_EYE = registerItem("arcane_eye",  () -> new ArcaneEyeItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> DUNGEON_KEY = registerItem("dungeon_key",  () -> new DungeonKeyItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> BOUND_BOW = registerItem("bound_bow",  () -> new BoundBowItem(getItemProperties().stacksTo(1)), true);
+    public static final Supplier<Item> STAR_MAP = registerItem("star_map", StarmapBlockItem::new, true, true);
 
-    public static final Supplier<Item> STARMAP_ITEM = registerItem("star_map", StarmapBlockItem::new, true);
+    public static final Supplier<Item> DIVINE_PHIAL = registerItem("divine_phial", () -> new PhialItem(PhialItem.PhialType.DIVINE, getItemProperties()));
+    public static final Supplier<Item> CURSED_PHIAL = registerItem("cursed_phial", () -> new PhialItem(PhialItem.PhialType.CURSED, getItemProperties()));
+    public static final Supplier<Item> TEAR_OF_THE_ECLIPSE = registerItem("tear_of_the_eclipse", () -> new PhialItem(PhialItem.PhialType.ECLIPSE, getItemProperties()));
+    public static final Supplier<Item> HOLY_WATER_BUCKET = registerItem("holy_water_bucket", () -> new BucketItem(SBFluids.HOLY_WATER.get(), getItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final Supplier<Item> BLESSED_BANDAGES = registerItem("blessed_bandages", () -> new BlessedBandageItem(getItemProperties().stacksTo(16)));
 
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);
@@ -102,14 +104,14 @@ public class SBItems {
                             stack.set(SBData.TALISMAN_RINGS, i + 1);
                             output.accept(stack);
                         }
-                        SBSpells.SPELL_TYPES.getEntries().forEach((registryObject) -> {
-                            output.accept(SpellTomeItem.createWithSpell(registryObject.get()));
-                        });
                         for (StarMapBlock.StarmapType type : StarMapBlock.StarmapType.values()) {
-                            ItemStack stack = new ItemStack(STARMAP_ITEM.get());
+                            ItemStack stack = new ItemStack(STAR_MAP.get());
                             stack.set(SBData.STARMAP_TYPE, type);
                             output.accept(stack);
                         }
+                        SBSpells.SPELL_TYPES.getEntries().forEach((registryObject) -> {
+                            output.accept(SpellTomeItem.createWithSpell(registryObject.get()));
+                        });
                     }).title(Component.translatable("itemGroup.spellbound"))
             .build());
 
