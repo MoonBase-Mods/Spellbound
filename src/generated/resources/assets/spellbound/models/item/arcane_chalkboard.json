@@ -1,3 +1,6 @@
 {
-  "parent": "spellbound:item/arcane_chalkboard"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "spellbound:item/arcane_chalkboard"
+  }
 }
