@@ -1,0 +1,24 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "use_blessed_bandages": {
+      "conditions": {
+        "item": {
+          "items": "spellbound:blessed_bandages"
+        }
+      },
+      "trigger": "spellbound:consume_item"
+    }
+  },
+  "requirements": [
+    [
+      "use_blessed_bandages"
+    ]
+  ],
+  "rewards": {
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:healing_touch"
+    ]
+  }
+}

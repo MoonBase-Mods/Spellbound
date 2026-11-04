@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class SpecialTrigger extends SimpleTrigger<SpecialTrigger.TriggerInstance> {
+public class DivineTrigger extends SimpleTrigger<DivineTrigger.TriggerInstance> {
 
     @Override
     public Codec<TriggerInstance> codec() {
@@ -18,14 +18,19 @@ public class SpecialTrigger extends SimpleTrigger<SpecialTrigger.TriggerInstance
     }
 
     public void trigger(ServerPlayer player) {
-        this.trigger(player, p_222625_ -> true);
+        this.trigger(player, instance -> true);
     }
 
-    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleTrigger.Instance {
-        public static final Codec<SpecialTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(
-                p_337390_ -> p_337390_.group(EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(SpecialTrigger.TriggerInstance::player))
-                        .apply(p_337390_, SpecialTrigger.TriggerInstance::new)
+    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements Instance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
+                ).apply(instance, TriggerInstance::new)
         );
+
+        public static ActionCriterion<TriggerInstance> blessShrine() {
+            return SBTriggers.BLESS_SHRINE.get().createCriterion(new TriggerInstance(Optional.empty()));
+        }
 
         public static ActionCriterion<TriggerInstance> decoratedShrine() {
             return SBTriggers.DECORATED_SHRINE.get().createCriterion(new TriggerInstance(Optional.empty()));

@@ -43,8 +43,8 @@ import java.util.function.Predicate;
 public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier {
     public static final EntityDataAccessor<PhialItem.PhialType> PHIAL_TYPE = SynchedEntityData.defineId(ThrownPhial.class, SBEntityDataSerializers.PHIAL_TYPE.get());
     public static final Predicate<LivingEntity> HOLY_WATER_SENSITIVE_OR_ON_FIRE = livingEntity -> livingEntity.isSensitiveToWater() || livingEntity.isOnFire() || livingEntity.getType().is(EntityTypeTags.UNDEAD);
-    private static final ResourceLocation DIVINE_BUFF_LOCATION = CommonClass.customLocation("divine_phial");
-    private static final PseudoSkillProvider DIVINE_BUFF = PseudoSkillProvider.withoutSpell(DIVINE_BUFF_LOCATION);
+    public static final ResourceLocation DIVINE_BUFF_LOCATION = CommonClass.customLocation("divine_phial");
+    public static final PseudoSkillProvider DIVINE_BUFF = PseudoSkillProvider.withoutSpell(DIVINE_BUFF_LOCATION);
 
     public ThrownPhial(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
         super(entityType, level);
@@ -98,9 +98,11 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
         super.onHit(result);
         if (!this.level().isClientSide) {
             PhialItem.PhialType type = this.getPhialType();
-            this.applyWater();
-            this.applySplashFromType(type, result.getType() == HitResult.Type.ENTITY ? ((EntityHitResult)result).getEntity() : null);
+            if (type == PhialItem.PhialType.DIVINE) {
+                this.applyWater();
+            }
 
+            this.applySplashFromType(type, result.getType() == HitResult.Type.ENTITY ? ((EntityHitResult)result).getEntity() : null);
             for (int color : type.getColors()) {
                 this.level().levelEvent(2007, this.blockPosition(), color);
             }
@@ -193,18 +195,18 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
 
     private void handleBlockInteractions(PhialItem.PhialType type, BlockPos pos) {
         BlockState blockstate = this.level().getBlockState(pos);
-        if (blockstate.is(BlockTags.FIRE)) {
-            this.level().destroyBlock(pos, false, this);
-        } else if (AbstractCandleBlock.isLit(blockstate)) {
-            AbstractCandleBlock.extinguish(null, blockstate, this.level(), pos);
-        } else if (CampfireBlock.isLitCampfire(blockstate)) {
-            this.level().levelEvent(null, 1009, pos, 0);
-            CampfireBlock.dowse(this.getOwner(), this.level(), pos, blockstate);
-            this.level().setBlockAndUpdate(pos, blockstate.setValue(CampfireBlock.LIT, Boolean.valueOf(false)));
-        }
+        if (type == PhialItem.PhialType.DIVINE) {
+            if (blockstate.is(BlockTags.FIRE)) {
+                this.level().destroyBlock(pos, false, this);
+            } else if (AbstractCandleBlock.isLit(blockstate)) {
+                AbstractCandleBlock.extinguish(null, blockstate, this.level(), pos);
+            } else if (CampfireBlock.isLitCampfire(blockstate)) {
+                this.level().levelEvent(null, 1009, pos, 0);
+                CampfireBlock.dowse(this.getOwner(), this.level(), pos, blockstate);
+                this.level().setBlockAndUpdate(pos, blockstate.setValue(CampfireBlock.LIT, Boolean.valueOf(false)));
+            }
 
-        if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE)) {
-            if (type == PhialItem.PhialType.DIVINE) {
+            if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE)) {
 
             }
         }

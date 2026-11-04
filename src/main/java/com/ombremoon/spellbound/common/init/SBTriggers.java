@@ -24,11 +24,15 @@ public class SBTriggers {
     public static final Supplier<PlayerKillEntityTrigger> KILL_VILLAGER = register("kill_villager", new PlayerKillEntityTrigger());
     public static final Supplier<HealActionTrigger> ENTITY_HEALED = register("entity_healed", new HealActionTrigger());
     public static final Supplier<HealActionTrigger> HEAL_TO_FULL = register("heal_to_full", new HealActionTrigger());
+    public static final Supplier<ConsumeItemTrigger> CONSUME_ITEM = register("consume_item", new ConsumeItemTrigger());
     public static final Supplier<CuredZombieVillagerTrigger> CURED_ZOMBIE_VILLAGER = register("cured_zombie_villager", new CuredZombieVillagerTrigger());
-    public static final Supplier<SpecialTrigger> DECORATED_SHRINE = register("decorated_shrine", new SpecialTrigger());
+    public static final Supplier<DivineTrigger> BLESS_SHRINE = register("bless_shrine", new DivineTrigger());
+    public static final Supplier<DivineTrigger> DECORATED_SHRINE = register("decorated_shrine", new DivineTrigger());
     public static final Supplier<PlayerHurtTrigger> PLAYER_HURT = register("player_hurt", new PlayerHurtTrigger());
     public static final Supplier<InteractWithBlockTrigger> INTERACT_WITH_BLOCK = register("interact_with_block", new InteractWithBlockTrigger());
     public static final Supplier<LearnSpellTrigger> LEARN_SPELL = register("learn_spell", new LearnSpellTrigger());
+    public static final Supplier<SkillBuffTrigger> RECEIVED_SKILL_BUFF = register("received_skill_buff", new SkillBuffTrigger());
+    public static final Supplier<SkillBuffTrigger> BUFF_SELF = register("buff_self", new SkillBuffTrigger());
 
     public static <T extends ActionTrigger<?>> Supplier<T> register(String name, T trigger) {
         return TRIGGERS.register(name, () -> trigger);

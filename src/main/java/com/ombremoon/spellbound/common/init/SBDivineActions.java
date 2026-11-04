@@ -3,10 +3,8 @@ package com.ombremoon.spellbound.common.init;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionRequirements;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionRewards;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.CuredZombieVillagerTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.HealActionTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.PlayerKillEntityTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.*;
+import com.ombremoon.spellbound.common.world.entity.projectile.ThrownPhial;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -79,18 +77,43 @@ public interface SBDivineActions {
                 HEAL_MOB_TO_FULL,
                 addMobsToHeal(SpellAction.Builder.action(), NON_HOSTILE_MOBS)
                         .requirements(ActionRequirements.Strategy.OR)
-                        .rewards(ActionRewards.Builder.spell(SBSpells.HEALING_TOUCH.get()).addExperience(10)));
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.HEALING_TOUCH.get())
+                                .addExperience(2))
+                        .cooldown(6000));
+        register(context,
+                USE_BLESSED_BANDAGES,
+                SpellAction.Builder.action()
+                        .addCriterion("use_blessed_bandages", ConsumeItemTrigger.TriggerInstance
+                                .usedItem(SBItems.BLESSED_BANDAGES.get()))
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.HEALING_TOUCH.get())
+                                .addJudgement(1))
+                        .cooldown(6000));
+        register(context,
+                USE_PHIAL,
+                SpellAction.Builder.action()
+                        .addCriterion("use_phial", SkillBuffTrigger.TriggerInstance
+                                .buffSelf(SkillBuffPredicate.isSkill(ThrownPhial.DIVINE_BUFF)))
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.HEALING_TOUCH.get())
+                                .addJudgement(1))
+                        .cooldown(6000));
         register(context,
                 CURE_ZOMBIE_VILLAGER,
                 SpellAction.Builder.action()
-                        .addCriterion("cured_zombie", CuredZombieVillagerTrigger.TriggerInstance.curedZombieVillager())
-                        .rewards(ActionRewards.Builder.spell(SBSpells.BLESSING.get()).addExperience(10)));
+                        .addCriterion("cured_zombie", CuredZombieVillagerTrigger.TriggerInstance
+                                .curedZombieVillager())
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.BLESSING.get())
+                                .addExperience(10)));
         register(context,
                 KILL_VILLAGER,
                 SpellAction.Builder.action()
-                        .addCriterion("kill_villager", PlayerKillEntityTrigger.Instance.playerKilledVillager(
-                                EntityPredicate.Builder.entity(),
-                                MinMaxBounds.Ints.exactly(5)))
+                        .addCriterion("kill_villager", PlayerKillEntityTrigger.Instance
+                                .playerKilledVillager(
+                                        EntityPredicate.Builder.entity(),
+                                        MinMaxBounds.Ints.exactly(5)))
                         .rewards(ActionRewards.Builder
                                 .spell(SBSpells.SIPHON.get())
                                 .addExperience(20)
@@ -98,8 +121,11 @@ public interface SBDivineActions {
         register(context,
                 DECORATE_SHRINE,
                 SpellAction.Builder.action()
-                        .addCriterion("decorate_shrine", SpecialTrigger.TriggerInstance.decoratedShrine())
-                        .rewards(ActionRewards.Builder.spell(SBSpells.HEALING_BLOSSOM.get()).addExperience(20)));
+                        .addCriterion("decorate_shrine", DivineTrigger.TriggerInstance
+                                .decoratedShrine())
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.HEALING_BLOSSOM.get())
+                                .addExperience(20)));
     }
 
     private static SpellAction.Builder addMobsToHeal(SpellAction.Builder builder, List<EntityType<?>> mobs) {

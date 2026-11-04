@@ -534,8 +534,14 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         skillBuff.addBuff(source, this.caster);
         this.skillBuffs.put(skillBuff, duration);
 
-        if (this.caster instanceof Player player)
-            PayloadHandler.updateSkillBuff((ServerPlayer) player, skillBuff, ticks, false);
+        if (this.caster instanceof ServerPlayer player) {
+            SBTriggers.RECEIVED_SKILL_BUFF.get().trigger(player, skillBuff, source);
+            if (source.is(player)) {
+                SBTriggers.BUFF_SELF.get().trigger(player, skillBuff, source);
+            }
+
+            PayloadHandler.updateSkillBuff( player, skillBuff, ticks, false);
+        }
     }
 
     public void removeSkillBuff(SkillBuff<?> skillBuff) {

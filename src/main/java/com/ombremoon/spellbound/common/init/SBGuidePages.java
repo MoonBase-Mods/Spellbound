@@ -539,36 +539,6 @@ public interface SBGuidePages {
                         new TextEntry(translatable("guide.transfiguration.rune_extended"), PAGE_TWO_START_X, 110)
                 )
         );
-//        createDescriptionAndImages(
-//                context,
-//                TRANSFIG_RITUALS,
-//                TRANSFIG_DESCRIPTION,
-//                Book.TRANSFIG,
-//                translatable("guide.transfiguration.rituals_cont"),
-//                null,
-//                false,
-//                List.of(
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier1.png"), 9, 37, 70, 70, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier2.png"), 60, 110, 70, 70, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier3.png"), PAGE_TWO_START_X + 9, 9, 100, 100, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/pedestal.png"), PAGE_TWO_START_X + 9, 111, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/display.png"), PAGE_TWO_START_X + 9, 130, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_1.png"), 95, 50, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_5.png"), 124, 64, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_17.png"), 103, 83, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_4.png"), 15, 125, 16, 16, false), //8, 21 -- 14, 19
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_22.png"), 38, 139, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_19.png"), 4, 148, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_13.png"), 284, 25, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_6.png"), 294, 52, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_18.png"), 304, 75, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_15.png"), 284, 75, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_26.png"), 304, 25, 16, 16, false)
-//                ),
-//                new TextEntry(translatable("guide.transfiguration.pedestal_legend"), PAGE_TWO_START_X + 31, 115),
-//                new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
-//                new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
-//        );
         createDescriptionWithRecipeAndItem(
                 context,
                 TRANSFIG_RITUAL_ITEMS_1,
@@ -826,9 +796,9 @@ public interface SBGuidePages {
                 HEALING_TOUCH,
                 SBSpells.HEALING_TOUCH,
                 false,
-                new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 5, 24000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
-                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.USE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
+                new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 2, 6000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
+                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 1, 6000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
+                new ItemActionEntry(SBDivineActions.USE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 1, 6000, 10, Ingredient.of(SBItems.DIVINE_PHIAL.get()))
         );
         createDivineSpellPage(context, BLESSING, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.BLESSING, 0);
         createDivineActionPage(

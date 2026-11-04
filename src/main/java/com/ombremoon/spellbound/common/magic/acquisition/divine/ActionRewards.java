@@ -55,6 +55,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
     public static final ActionRewards EMPTY = new ActionRewards(0, 0, 600, List.of(), List.of(), List.of());
 
     public void grant(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
         player.giveExperiencePoints(this.experience);
         LootParams lootParams = new LootParams.Builder(player.serverLevel())
                 .withParameter(LootContextParams.THIS_ENTITY, player)
@@ -68,15 +69,12 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         ResourceLocation action_vfx = CommonClass.customLocation("divine_action");
         SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
 
-
-        ServerLevel level = player.serverLevel();
-
         if (this.judgementGranted < 0){
             action_vfx = CommonClass.customLocation("dark_divine_action");
             sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
         }
 
-        if (blockState != null) {
+        if (blockState != null/* && blockState.getSecond().getValue(DivineShrineBlock.ACTIVE)*/) {
             BlockPos pos = blockState.getFirst();
             float volume = 0.4F + level.random.nextFloat() * 0.3F;
             float pitch = 1.0F + level.random.nextFloat() * 0.2F;

@@ -1,0 +1,27 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "use_phial": {
+      "conditions": {
+        "skill_buff": {
+          "skill": {
+            "type": "spellbound:psuedo",
+            "location": "spellbound:divine_phial"
+          }
+        }
+      },
+      "trigger": "spellbound:buff_self"
+    }
+  },
+  "requirements": [
+    [
+      "use_phial"
+    ]
+  ],
+  "rewards": {
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:healing_touch"
+    ]
+  }
+}
