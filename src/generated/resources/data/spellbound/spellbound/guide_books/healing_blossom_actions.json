@@ -60,7 +60,7 @@
               "text": "+5"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
@@ -122,7 +122,7 @@
               "text": "+10"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
@@ -181,7 +181,7 @@
               "text": "+15"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",

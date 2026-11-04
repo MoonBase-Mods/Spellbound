@@ -82,6 +82,7 @@ public class SBItems {
     public static final Supplier<Item> TEAR_OF_THE_ECLIPSE = registerItem("tear_of_the_eclipse", () -> new PhialItem(PhialItem.PhialType.ECLIPSE, getItemProperties()));
     public static final Supplier<Item> HOLY_WATER_BUCKET = registerItem("holy_water_bucket", () -> new BucketItem(SBFluids.HOLY_WATER.get(), getItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Supplier<Item> BLESSED_BANDAGES = registerItem("blessed_bandages", () -> new BlessedBandageItem(getItemProperties().stacksTo(16)));
+    public static final Supplier<Item> DIVINE_CHARM = registerItem("divine_charm", () -> new DivineCharmItem(getItemProperties().stacksTo(1)));
 
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);

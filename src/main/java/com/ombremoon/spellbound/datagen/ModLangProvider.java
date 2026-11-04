@@ -173,7 +173,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.affinity.description.magma_digestion", "Magma cubes have a chance to drop frog lights.");
         add("spellbound.affinity.description.elongated_tongue", "Summoner gains increased block/entity reach.");
         add("spellbound.affinity.description.murky_habitat", "Summoner gains +10% spell potency in swamps.");
-        add("spellbound.affinity.description.slimey_expulsion", "Summoners attacks slow their target.");
+        add("spellbound.affinity.description.slimey_expulsion", "Summoners attacks slow their entity.");
 
         add("spellbound.affinity.description.sharpened_claws", "Familiars attacks inflict blood loss.");
         add("spellbound.affinity.description.natural_predator", "Familiar gains +1 damage and +10% health.");
@@ -295,8 +295,8 @@ public class ModLangProvider extends LanguageProvider {
 
         add("guide.ruin.build_up", "Elemental Overload");
         add("guide.ruin.effects", "Elemental Effects");
-        add("guide.ruin.build_up1", "Through my discoveries I've found that a single body can't take too much of a single element. When a target is unable to absorb more elemental energy, their body seems to react differently depending on the element. More experiments are needed in order to understand why this happens.");
-        add("guide.ruin.fire_status", "§4§lFire§r\nEnergy explodes out from the target, dealing §4massive damage§r and setting on fire the area around it.");
+        add("guide.ruin.build_up1", "Through my discoveries I've found that a single body can't take too much of a single element. When a entity is unable to absorb more elemental energy, their body seems to react differently depending on the element. More experiments are needed in order to understand why this happens.");
+        add("guide.ruin.fire_status", "§4§lFire§r\nEnergy explodes out from the entity, dealing §4massive damage§r and setting on fire the area around it.");
         add("guide.ruin.frost_status", "§3§lFrost§r\nFreezes foes solid, §3stopping§r them from performing any §3actions§r for a period of time.");
         add("guide.ruin.shock_status", "§5§lShock§r\nTargets access to the arcane is disrupted, temporarily §5silencing§r them and draining their mana.");
 
@@ -342,7 +342,7 @@ public class ModLangProvider extends LanguageProvider {
 
         addSpellContents(SpellPath.RUIN, SBSpells.ELECTRIC_CHARGE.get(),
                 "I don't think I'm powerful enough to take people head on right now. I need to give my self an advantage before the fight starts.",
-                "I'm certain this will work... This spell should be able to start building up shock charge on my target before they knew what hit them.");
+                "I'm certain this will work... This spell should be able to start building up shock charge on my entity before they knew what hit them.");
 
         addSpellContents(SpellPath.RUIN, SBSpells.STORM_RIFT.get(),
                 "I started experimenting with Shock spells by forming small storms in front of me. With all my new found knowledge, how powerful can I make that?",
@@ -510,7 +510,7 @@ public class ModLangProvider extends LanguageProvider {
     protected void divineGuideContents() {
         add("guide.divine.divine_judgement", "Divine Judgement");
 
-        add("divine_action.judgement", "Judgement: ");
+        add("divine.judgement", "Judgement: ");
         add("divine_action.judgement_required", "Judgement Required: ");
         add("divine_action.cooldown", "Cooldown: %s ticks");
 
@@ -727,12 +727,12 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.STICKY_BOMB, "Fireballs stick to surfaces or enemies, detonating after a short duration.");
         addSkillTooltip(SBSkills.CHARGED_BLAST, "Fireball can be Charged, increasing its size, explosion radius, and damage per charge.");
         addSkillTooltip(SBSkills.VOLATILE_CLUSTER, "Fireball can be Charged, increasing the number of Fireballs shot per charge.");
-        addSkillTooltip(SBSkills.HOMING_MISSILE, "Fireball follows the caster's target.");
+        addSkillTooltip(SBSkills.HOMING_MISSILE, "Fireball follows the caster's entity.");
         addSkillTooltip(SBSkills.EXPLOSIVE_AMPLIFIER, "Increases the explosion radius of all Fireball variants.");
         addSkillTooltip(SBSkills.BURNING_ADHESIVE, "Enemies struck by Sticky Bomb take additional damage to their armor.");
         addSkillTooltip(SBSkills.MOLTEN_CORE, "Fully Charged Fireballs from Charged Blast pierce enemies.");
         addSkillTooltip(SBSkills.CLUSTER_STRIKE, "Increases the max charges of Volatile Cluster");
-        addSkillTooltip(SBSkills.AUTO_TARGETING, "Homing Missile no longer needs a direct target and will track the nearest enemy to the caster.");
+        addSkillTooltip(SBSkills.AUTO_TARGETING, "Homing Missile no longer needs a direct entity and will track the nearest enemy to the caster.");
 
         addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
         addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");
@@ -750,7 +750,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
         addSkillTooltip(SBSkills.HEALING_LIGHT, "Allies hit by the ray are healed.");
         addSkillTooltip(SBSkills.OVERPOWER, "Gain the ability to slowly move while casting Solar Ray.");
-        addSkillTooltip(SBSkills.CONCENTRATED_HEAT, "Continuously hitting the same target increases the damage of Solar Ray.");
+        addSkillTooltip(SBSkills.CONCENTRATED_HEAT, "Continuously hitting the same entity increases the damage of Solar Ray.");
         addSkillTooltip(SBSkills.OVERHEAT, "Continuous use of Solar Ray causes the caster to emit intense heat, dealing fire damage to nearby enemies.");
         addSkillTooltip(SBSkills.SOLAR_BURST, "Both ends of the beam periodically release a small Solar Burst that deals additional fire damage.");
         addSkillTooltip(SBSkills.SOLAR_BORE, "The end of the Solar Ray opposite of the caster periodically explodes, setting the ground ablaze.");
@@ -775,35 +775,35 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.LINGERING_FROST, "After detonation, the crystal leaves a damaging mist behind, dealing frost damage and significant frost build up.");
         addSkillTooltip(SBSkills.GLACIAL_IMPACT, "Recast with a Frozen Shard to mark a crystal. Marked crystal's explosion applies Frozen and Permafrost to enemies hit.");
 
-        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target");
+        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a entity");
         addSkillTooltip(SBSkills.STATIC_SHOCK, "Hitting a block now creates a small explosion that applies Stormstrike to anyone it hits.");
-        addSkillTooltip(SBSkills.ELECTRIFY, "Decreases the target's shock resistance.");
+        addSkillTooltip(SBSkills.ELECTRIFY, "Decreases the entity's shock resistance.");
         addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage scaling with the caster's mana.");
         addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, scaling with the caster's mana.");
-        addSkillTooltip(SBSkills.REFRACTION, "Restores mana back to the caster when the target takes Shock damage from sources other than Stormstrike.");
-        addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the target each damage tick.");
-        addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard.");
+        addSkillTooltip(SBSkills.REFRACTION, "Restores mana back to the caster when the entity takes Shock damage from sources other than Stormstrike.");
+        addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the entity each damage tick.");
+        addSkillTooltip(SBSkills.STORM_SHARD, "If the entity dies while affected by Stormstrike, the caster is awarded a Storm Shard.");
         addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases the mana cost of Shock spells for a duration.");
-        addSkillTooltip(SBSkills.DISARM, "Chance to disarm the target each damage tick.");
-        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells if the target dies while affected by Stormstrike.");
+        addSkillTooltip(SBSkills.DISARM, "Chance to disarm the entity each damage tick.");
+        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells if the entity dies while affected by Stormstrike.");
 
-        addSkillTooltip(SBSkills.ELECTRIC_CHARGE, "Sneakily apply an electric charge to the target. Recast to discharge.");
+        addSkillTooltip(SBSkills.ELECTRIC_CHARGE, "Sneakily apply an electric charge to the entity. Recast to discharge.");
         addSkillTooltip(SBSkills.ELECTRIFICATION, "Applies Stormstrike on discharge.");
-        addSkillTooltip(SBSkills.SUPERCONDUCTOR, "Decreases target's shock resistance on discharge.");
+        addSkillTooltip(SBSkills.SUPERCONDUCTOR, "Decreases entity's shock resistance on discharge.");
         addSkillTooltip(SBSkills.PIEZOELECTRIC, "If killed by Electric Charge, the enemy drops a storm shard.");
         addSkillTooltip(SBSkills.OSCILLATION, "Increases the discharge damage for each storm shard in the caster's inventory. All shards are destroyed on discharge.");
-        addSkillTooltip(SBSkills.HIGH_VOLTAGE, "Recast with a storm shard to instantly stun the target.");
-        addSkillTooltip(SBSkills.UNLEASHED_STORM, "If killed by Electric Charge, the target will explode, damaging nearby enemies.");
+        addSkillTooltip(SBSkills.HIGH_VOLTAGE, "Recast with a storm shard to instantly stun the entity.");
+        addSkillTooltip(SBSkills.UNLEASHED_STORM, "If killed by Electric Charge, the entity will explode, damaging nearby enemies.");
         addSkillTooltip(SBSkills.STORM_SURGE, "If killed by Electric Charge, mana is restored to the caster.");
         addSkillTooltip(SBSkills.CHAIN_REACTION, "The discharge applies Electric Charge to all nearby enemies, including the caster. The secondary charge is discharged immediately.");
         addSkillTooltip(SBSkills.AMPLIFY, "Electric Charge can be Channeled seconds to increase the damage");
-        addSkillTooltip(SBSkills.ALTERNATING_CURRENT, "The discharge has a small chance to instantly kill the target. Does not work on target with more than twice the caster's current health. On failure, the caster takes damage proportional to their max health.");
+        addSkillTooltip(SBSkills.ALTERNATING_CURRENT, "The discharge has a small chance to instantly kill the entity. Does not work on entity with more than twice the caster's current health. On failure, the caster takes damage proportional to their max health.");
 
         addSkillTooltip(SBSkills.STORM_RIFT, "Creates a storm portal. If two portals are active, those approaching either get warped across and take shock damage to health and mana.");
         addSkillTooltip(SBSkills.STORM_FURY, "The vortex doubles in size and damage.");
         addSkillTooltip(SBSkills.DISPLACEMENT_FIELD, "A single portal can now teleport enemies to a random location.");
         addSkillTooltip(SBSkills.MAGNETIC_FIELD, "The vortex has twice the pull strength. Enemies caught in the field have their armor reduced.");
-        addSkillTooltip(SBSkills.EVENT_HORIZON, "When a target is warped, they pull nearby enemies towards the warp field.");
+        addSkillTooltip(SBSkills.EVENT_HORIZON, "When a entity is warped, they pull nearby enemies towards the warp field.");
         addSkillTooltip(SBSkills.CHARGED_RIFT, "Each warp between portals charges the storm, increasing shock damage.");
         addSkillTooltip(SBSkills.MOTION_SICKNESS, "Warped enemies have their movement, attack, and mining speed reduced.");
         addSkillTooltip(SBSkills.FORCED_WARP, "Upon being warped, targets are launched out of the portal with a high velocity, potentially dealing damage on impact.");
@@ -903,7 +903,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ROTTEN_SOLDIERS, "Zombies inflict disease build up.");
         addSkillTooltip(SBSkills.HALL_OF_THE_DEAD, "Upon death, Skeletons fall into a pile of bones. If not hit with Fire Damage, they come back to life.");
         addSkillTooltip(SBSkills.SUNKEN_BREATH, "Drowned grant caster water breathing.");
-        addSkillTooltip(SBSkills.CRIMSON_PACT, "Zombified Piglin deal bonus damage to any target that recently damaged the caster and negate Fire Damage.");
+        addSkillTooltip(SBSkills.CRIMSON_PACT, "Zombified Piglin deal bonus damage to any entity that recently damaged the caster and negate Fire Damage.");
         addSkillTooltip(SBSkills.SILENT_NIGHT, "Phantom hits silence targets.");
         addSkillTooltip(SBSkills.CORPSE_EXPLOSION, "Recast on an undead summon to explode it, dealing magic damage to nearby enemies and healing the caster.");
 
@@ -919,27 +919,27 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.LOYAL_PROTECTOR, "Spawn an Iron Golem alongside the Villager.");
         addSkillTooltip(SBSkills.SHOW_ME_THE_ROPES, "Each Villager grants the caster a unique passive.");
 
-        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
+        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
         addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
         addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
         addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
         addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell temporarily gains potency.");
-        addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is temporarily decreased.");
+        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a entity dies to a mushroom, the spell temporarily gains potency.");
+        addSkillTooltip(SBSkills.SYNTHESIS, "If a entity dies to a mushroom, the casting cost of the spell is temporarily decreased.");
         addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
         addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
-/*        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
+/*        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
         addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
         addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
         addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
         addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell temporarily gains potency.");
-        addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is temporarily decreased.");
+        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a entity dies to a mushroom, the spell temporarily gains potency.");
+        addSkillTooltip(SBSkills.SYNTHESIS, "If a entity dies to a mushroom, the casting cost of the spell is temporarily decreased.");
         addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
         addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");*/
 
@@ -967,28 +967,28 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each heal tick increases the caster's max health.");
         addSkillTooltip(SBSkills.OAK_BLESSING, "Temporarily increases armor if the caster's health drops below a certain threshold.");
 
-        addSkillTooltip(SBSkills.BLESSING, "Grants a small regeneration buff to the target.");
+        addSkillTooltip(SBSkills.BLESSING, "Grants a small regeneration buff to the entity.");
         addSkillTooltip(SBSkills.COURAGE, "Increases the targets armor.");
         addSkillTooltip(SBSkills.ARCANE_RESTORATION, "Coverts the regeneration to mana.");
         addSkillTooltip(SBSkills.SATIATING_BLESSING, "Converts the regeneration to hunger.");
         addSkillTooltip(SBSkills.AIR_BUBBLE, "Converts the regeneration to air supply.");
-        addSkillTooltip(SBSkills.PURIFYING_WARD, "Removes a random negative effect from the target.");
+        addSkillTooltip(SBSkills.PURIFYING_WARD, "Removes a random negative effect from the entity.");
         addSkillTooltip(SBSkills.EXTENDED_GRACE, "Increases the duration and amplifies the regeneration effect.");
-        addSkillTooltip(SBSkills.SHARED_BOON, "Allows Blessing to target two allies within a small radius if cast near another target.");
-        addSkillTooltip(SBSkills.OVERFLOWING_AID, "Grants damage reduction to the target if the relevant resource is full.");
-        addSkillTooltip(SBSkills.CONSECRATED_PRESENCE, "Allies within a short distance of a blessed target receive half the benefits.");
-        addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the target takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
+        addSkillTooltip(SBSkills.SHARED_BOON, "Allows Blessing to entity two allies within a small radius if cast near another entity.");
+        addSkillTooltip(SBSkills.OVERFLOWING_AID, "Grants damage reduction to the entity if the relevant resource is full.");
+        addSkillTooltip(SBSkills.CONSECRATED_PRESENCE, "Allies within a short distance of a blessed entity receive half the benefits.");
+        addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the entity takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
 
-        addSkillTooltip(SBSkills.SIPHON, "Channel on to link to a target. While linked, the caster gains a portion of the target's health.");
+        addSkillTooltip(SBSkills.SIPHON, "Channel on to link to a entity. While linked, the caster gains a portion of the entity's health.");
         addSkillTooltip(SBSkills.GRIM_REACH, "Doubles the link range");
         addSkillTooltip(SBSkills.GLUTTONY, "If the caster is at full health, the spell restores hunger instead.");
-        addSkillTooltip(SBSkills.WITHERING, "The target suffers Slowness II while being siphoned.");
+        addSkillTooltip(SBSkills.WITHERING, "The entity suffers Slowness II while being siphoned.");
         addSkillTooltip(SBSkills.SOUL_TAP, "You now drain mana instead of health (mana is not absorbed).");
-        addSkillTooltip(SBSkills.PARASITIC_LINK, "When the target casts a spell, the caster receives a portion of the mana cost.");
+        addSkillTooltip(SBSkills.PARASITIC_LINK, "When the entity casts a spell, the caster receives a portion of the mana cost.");
         addSkillTooltip(SBSkills.UNRELENTING, "The link can persist through walls/blocks for a short duration before breaking.");
         addSkillTooltip(SBSkills.OVERHEAL, "If health and hunger are full, Siphon temporarily increases the caster's max health.");
-        addSkillTooltip(SBSkills.IRON_MAIDEN, "Attacks from the target deal less damage to the caster.");
-        addSkillTooltip(SBSkills.ARCANE_FEEDBACK, "If the target runs out of mana, they are Silenced and take damage instead.");
+        addSkillTooltip(SBSkills.IRON_MAIDEN, "Attacks from the entity deal less damage to the caster.");
+        addSkillTooltip(SBSkills.ARCANE_FEEDBACK, "If the entity runs out of mana, they are Silenced and take damage instead.");
         addSkillTooltip(SBSkills.HARVEST, "The caster links to all nearby enemies, draining from them simultaneously.");
 
         addSkillTooltip(SBSkills.HEALING_BLOSSOM, "Plants a divine blossom. After blooming, the blossom heals the caster when nearby.");
@@ -1015,41 +1015,41 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.LOOK_OVER_HERE, "The caster no longer teleports, but immediately turns invisible, sending a decoy in a chosen direction.");
         addSkillTooltip(SBSkills.HALL_OF_MIRRORS, "Recast to swap places with the decoy, ending the invisibility.");
 
-        addSkillTooltip(SBSkills.CURSED_RUNE, "Place a rune at the target location. Enemies who step on it take a small amount of magic damage.");
+        addSkillTooltip(SBSkills.CURSED_RUNE, "Place a rune at the entity location. Enemies who step on it take a small amount of magic damage.");
         addSkillTooltip(SBSkills.MAGE_WRECK, "Drains mana from enemies who step on the rune.");
-        addSkillTooltip(SBSkills.DISARMING_CURSE, "Disarms the target.");
-        addSkillTooltip(SBSkills.MIRROR_CURSE, "Summons a Doppelgänger of the target");
-        addSkillTooltip(SBSkills.CURSE_OF_PAIN, "The target takes extra physical damage.");
-        addSkillTooltip(SBSkills.CURSE_OF_SILENCE, "The target is silenced.");
-        addSkillTooltip(SBSkills.VANISHING_CURSE, "Teleports the target away from the location.");
-        addSkillTooltip(SBSkills.CURSE_OF_WEAKNESS, "Reduces the target's attack damage.");
-        addSkillTooltip(SBSkills.CURSE_OF_SUSCEPTIBILITY, "The target takes extra magic damage.");
-        addSkillTooltip(SBSkills.TANGLEFOOT_CURSE, "The target is rooted.");
+        addSkillTooltip(SBSkills.DISARMING_CURSE, "Disarms the entity.");
+        addSkillTooltip(SBSkills.MIRROR_CURSE, "Summons a Doppelgänger of the entity");
+        addSkillTooltip(SBSkills.CURSE_OF_PAIN, "The entity takes extra physical damage.");
+        addSkillTooltip(SBSkills.CURSE_OF_SILENCE, "The entity is silenced.");
+        addSkillTooltip(SBSkills.VANISHING_CURSE, "Teleports the entity away from the location.");
+        addSkillTooltip(SBSkills.CURSE_OF_WEAKNESS, "Reduces the entity's attack damage.");
+        addSkillTooltip(SBSkills.CURSE_OF_SUSCEPTIBILITY, "The entity takes extra magic damage.");
+        addSkillTooltip(SBSkills.TANGLEFOOT_CURSE, "The entity is rooted.");
         addSkillTooltip(SBSkills.HIDDEN_RUNE, "The Rune is invisible to everyone but the caster.");
 
-        addSkillTooltip(SBSkills.SHADOWBOND, "Caster and target gain invisibility. When the invisibility is broken, the caster and target swap places.");
+        addSkillTooltip(SBSkills.SHADOWBOND, "Caster and entity gain invisibility. When the invisibility is broken, the caster and entity swap places.");
         addSkillTooltip(SBSkills.EVERLASTING_BOND, "Increases the duration of invisibility.");
         addSkillTooltip(SBSkills.SHADOW_STEP, "After the swap, the caster's movement speed is increased.");
         addSkillTooltip(SBSkills.SNEAK_ATTACK, "After the swap, the caster's first attack within a short duration deals more damage.");
-        addSkillTooltip(SBSkills.SILENT_EXCHANGE, "After the swap, the target is Silenced.");
-        addSkillTooltip(SBSkills.SNARE, "After the swap, the target is rooted.");
-        addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and temporarily deals less damage.");
-        addSkillTooltip(SBSkills.OBSERVANT, "The target is outlined to the caster while invisible.");
-        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast to swap back with the target.");
+        addSkillTooltip(SBSkills.SILENT_EXCHANGE, "After the swap, the entity is Silenced.");
+        addSkillTooltip(SBSkills.SNARE, "After the swap, the entity is rooted.");
+        addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the entity gets dizzy and temporarily deals less damage.");
+        addSkillTooltip(SBSkills.OBSERVANT, "The entity is outlined to the caster while invisible.");
+        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast to swap back with the entity.");
         addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible and leaves behind a decoy.");
-        addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional target. Swapping order is in the order of targets affected.");
+        addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional entity. Swapping order is in the order of targets affected.");
 
         addSkillTooltip(SBSkills.PURGE_MAGIC, "Stops all of the targets active spells.");
         addSkillTooltip(SBSkills.RADIO_WAVES, "Purge Magic is now cast in an AoE.");
         addSkillTooltip(SBSkills.COUNTER_MAGIC, "Gain a magic shield that negates any spell cast on the caster.");
         addSkillTooltip(SBSkills.CLEANSE, "Removes all harmful effects.");
         addSkillTooltip(SBSkills.MANA_SPONGE, "Absorbs a portion of the mana cost if attacked by a spell.");
-        addSkillTooltip(SBSkills.DOMINANT_MAGIC, "Silences the target.");
+        addSkillTooltip(SBSkills.DOMINANT_MAGIC, "Silences the entity.");
         addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have reduced cast chance.");
-        addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power.");
+        addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the entity's spell power.");
         addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced for each active spell purged.");
-        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's equipment");
-        addSkillTooltip(SBSkills.EXPUNGE, "Removes a spell from the target's knowledge.");
+        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the entity's equipment");
+        addSkillTooltip(SBSkills.EXPUNGE, "Removes a spell from the entity's knowledge.");
     }
 
     protected void addSkillTooltip(Holder<Skill> skill, String description) {

@@ -379,7 +379,7 @@ public abstract class Familiar<T extends LivingEntity> {
     }
 
     /**
-     * Hurts the target entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
+     * Hurts the entity entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
      * @param handler familiar handler
      * @param targetEntity The hurt entity
      * @param damageType The damage type

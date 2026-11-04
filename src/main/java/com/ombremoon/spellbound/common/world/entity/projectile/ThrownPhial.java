@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -195,6 +196,7 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
 
     private void handleBlockInteractions(PhialItem.PhialType type, BlockPos pos) {
         BlockState blockstate = this.level().getBlockState(pos);
+        Entity owner = this.getEffectSource();
         if (type == PhialItem.PhialType.DIVINE) {
             if (blockstate.is(BlockTags.FIRE)) {
                 this.level().destroyBlock(pos, false, this);
@@ -206,8 +208,8 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
                 this.level().setBlockAndUpdate(pos, blockstate.setValue(CampfireBlock.LIT, Boolean.valueOf(false)));
             }
 
-            if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE)) {
-
+            if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE) && owner instanceof ServerPlayer player) {
+                SBTriggers.BLESS_SHRINE.get().trigger(player);
             }
         }
     }

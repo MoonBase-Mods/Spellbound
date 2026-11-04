@@ -2,8 +2,13 @@ package com.ombremoon.spellbound.common.world.entity;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.level.EntityGetter;
+import org.jetbrains.annotations.Nullable;
 
-public interface SBSummonable {
+import java.util.UUID;
+
+public interface SBSummonable extends OwnableEntity {
     boolean isSummoner(LivingEntity entity);
 
     boolean hasSummoner();
@@ -17,4 +22,9 @@ public interface SBSummonable {
     }
 
     void setSummoner(int id);
+
+    @Override
+    @Nullable default UUID getOwnerUUID() {
+        return this.getSummoner().getUUID();
+    }
 }

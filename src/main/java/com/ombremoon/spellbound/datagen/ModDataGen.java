@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.common.world.block.HolyWaterCauldronBlock;
 import com.ombremoon.spellbound.datagen.provider.DatapackRegistriesProvider;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.HolderLookup;

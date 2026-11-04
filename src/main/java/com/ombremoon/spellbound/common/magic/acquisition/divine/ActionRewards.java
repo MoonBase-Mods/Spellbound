@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
@@ -26,6 +27,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import javax.naming.Context;
@@ -65,11 +68,12 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         boolean flag = false;
         var effects = SpellUtil.getSpellEffects(player);
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
+        float judgementGranted = this.judgementGranted;
 
         ResourceLocation action_vfx = CommonClass.customLocation("divine_action");
         SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
 
-        if (this.judgementGranted < 0){
+        if (judgementGranted < 0){
             action_vfx = CommonClass.customLocation("dark_divine_action");
             sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
         }
@@ -105,7 +109,14 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
             player.containerMenu.broadcastChanges();
         }
 
-        effects.giveJudgement(this.judgementGranted);
+        AABB aabb = player.getBoundingBox().inflate(4.0, 2.0, 4.0);
+
+        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, aabb, livingEntity -> livingEntity.getData(SBData.DIVINE_CHARM) == player.getId());
+        if (!list.isEmpty()) {
+            judgementGranted *= 1.5F;
+        }
+
+        effects.giveJudgement(judgementGranted);
         for (ResourceLocation location : this.bookScraps) {
             SpellUtil.grantScrap(player, location);
         }

@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.world.entity.projectile.ThrownPhial;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -67,6 +68,7 @@ public interface SBDivineActions {
     ResourceKey<SpellAction> USE_PHIAL = key("healing_touch/use_phial");
     ResourceKey<SpellAction> CURE_ZOMBIE_VILLAGER = key("blessing/cure_zombie_villager");
     ResourceKey<SpellAction> BLESS_SHRINE = key("blessing/bless_shrine");
+    ResourceKey<SpellAction> BESTOW_CHARM = key("blessing/bestow_charm");
     ResourceKey<SpellAction> DECORATE_SHRINE = key("healing_blossom/decorate_shrine");
     ResourceKey<SpellAction> PURIFY_WITHER_ROSE = key("healing_blossom/purify_wither_rose");
     ResourceKey<SpellAction> GROW_AMBROSIA_BUSH = key("healing_blossom/grow_ambrosia_bush");
@@ -100,13 +102,32 @@ public interface SBDivineActions {
                                 .addJudgement(1))
                         .cooldown(6000));
         register(context,
+                BLESS_SHRINE,
+                SpellAction.Builder.action()
+                        .addCriterion("bless_shrine", DivineTrigger.TriggerInstance
+                                .blessShrine())
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.BLESSING.get())
+                                .addJudgement(1))
+                        .cooldown(6000));
+        register(context,
                 CURE_ZOMBIE_VILLAGER,
                 SpellAction.Builder.action()
                         .addCriterion("cured_zombie", CuredZombieVillagerTrigger.TriggerInstance
                                 .curedZombieVillager())
                         .rewards(ActionRewards.Builder
                                 .spell(SBSpells.BLESSING.get())
-                                .addExperience(10)));
+                                .addExperience(5)));
+        register(context,
+                BESTOW_CHARM,
+                SpellAction.Builder.action()
+                        .addCriterion("bestow_charm", ItemUsedOnEntityTrigger.TriggerInstance
+                                .itemUsedOnEntity(ItemPredicate.Builder.item()
+                                        .of(SBItems.DIVINE_CHARM.get())))
+                        .rewards(ActionRewards.Builder
+                                .spell(SBSpells.BLESSING.get())
+                                .addJudgement(1))
+                        .cooldown(6000));
         register(context,
                 KILL_VILLAGER,
                 SpellAction.Builder.action()
@@ -125,7 +146,8 @@ public interface SBDivineActions {
                                 .decoratedShrine())
                         .rewards(ActionRewards.Builder
                                 .spell(SBSpells.HEALING_BLOSSOM.get())
-                                .addExperience(20)));
+                                .addJudgement(5))
+                        .cooldown(24000));
     }
 
     private static SpellAction.Builder addMobsToHeal(SpellAction.Builder builder, List<EntityType<?>> mobs) {

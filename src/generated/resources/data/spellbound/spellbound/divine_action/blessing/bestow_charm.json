@@ -1,0 +1,24 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "bestow_charm": {
+      "conditions": {
+        "item": {
+          "items": "spellbound:divine_charm"
+        }
+      },
+      "trigger": "spellbound:use_item_on_entity"
+    }
+  },
+  "requirements": [
+    [
+      "bestow_charm"
+    ]
+  ],
+  "rewards": {
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:blessing"
+    ]
+  }
+}

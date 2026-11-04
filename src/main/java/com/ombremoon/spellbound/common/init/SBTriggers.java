@@ -33,6 +33,7 @@ public class SBTriggers {
     public static final Supplier<LearnSpellTrigger> LEARN_SPELL = register("learn_spell", new LearnSpellTrigger());
     public static final Supplier<SkillBuffTrigger> RECEIVED_SKILL_BUFF = register("received_skill_buff", new SkillBuffTrigger());
     public static final Supplier<SkillBuffTrigger> BUFF_SELF = register("buff_self", new SkillBuffTrigger());
+    public static final Supplier<ItemUsedOnEntityTrigger> USE_ITEM_ON_ENTITY = register("use_item_on_entity", new ItemUsedOnEntityTrigger());
 
     public static <T extends ActionTrigger<?>> Supplier<T> register(String name, T trigger) {
         return TRIGGERS.register(name, () -> trigger);

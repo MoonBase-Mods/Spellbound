@@ -36,10 +36,9 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T>, SBSummonable {
+public abstract class SpellProjectile<T extends AbstractSpell> extends Projectile implements ISpellEntity<T> {
     private static final EntityDataAccessor<SpellType<?>> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, SBEntityDataSerializers.SPELL_TYPE.get());
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> HOMING_TARGET_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Byte> PIERCE_LEVEL = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BYTE);
@@ -69,7 +68,6 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SPELL_TYPE, SBSpells.FIREBALL.get());
         builder.define(SPELL_ID, -1);
-        builder.define(OWNER_ID, 0);
         builder.define(IS_HOMING, false);
         builder.define(HOMING_TARGET_ID, -1);
         builder.define(PIERCE_LEVEL, (byte) 0);
@@ -185,7 +183,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     @Override
     public void onAddedToLevel() {
-        if (this.getSummoner() instanceof LivingEntity livingEntity) {
+        if (this.getOwner() instanceof LivingEntity livingEntity) {
             this.handler = SpellUtil.getSpellHandler(livingEntity);
             this.skills = SpellUtil.getSkills(livingEntity);
         }
@@ -193,7 +191,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     protected void initializeClientEntity() {
-        if (this.getSummoner() instanceof Player player /*or instanceof SpellCaster*/) {
+        if (this.getOwner() instanceof Player player /*or instanceof SpellCaster*/) {
             this.handler = SpellUtil.getSpellHandler(player);
             this.skills = SpellUtil.getSkills(player);
             this.getOrCreateSpell();
@@ -206,7 +204,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
             SpellType<T> spellType = this.getSpellType();
             if (this.handler != null && spellType != null) {
                 this.spell = this.handler.getSpell(spellType, this.getSpellId());
-                if (this.spell == null && this.getSummoner() instanceof LivingEntity caster) {
+                if (this.spell == null && this.getOwner() instanceof LivingEntity caster) {
                     this.spell = spellType.createSpellWithData(caster);
                 }
             }
@@ -236,14 +234,6 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     public void setSpellId(int id) {
         this.entityData.set(SPELL_ID, id);
-    }
-
-    protected boolean isOwner(LivingEntity entity) {
-        return getSummoner() != null && getSummoner().is(entity);
-    }
-
-    public void setOwner(LivingEntity livingEntity) {
-        this.entityData.set(OWNER_ID, livingEntity.getId());
     }
 
     public boolean isHoming() {
@@ -288,29 +278,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     @Override
     public @Nullable Entity getSummoner() {
-        return this.level().getEntity(this.entityData.get(OWNER_ID));
-    }
-
-    @Override
-    public void setSummoner(int id) {
-        this.entityData.set(OWNER_ID, id);
-    }
-
-    @Override
-    public boolean isSummoner(LivingEntity entity) {
-        Entity owner = this.getSummoner();
-        return owner != null && owner.is(entity);
-    }
-
-    @Override
-    public boolean hasSummoner() {
-        Entity owner = this.getSummoner();
-        return owner != null && owner.isAlive();
-    }
-
-    @Override
-    public boolean wasSummoned() {
-        return true;
+        return this.getOwner();
     }
 
     @Override

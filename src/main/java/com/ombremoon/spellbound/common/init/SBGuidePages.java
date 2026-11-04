@@ -1849,7 +1849,7 @@ public interface SBGuidePages {
                             .of()
                             .addTooltip(translatable(action + ".name").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE))
                             .addTooltip(literal(""))
-                            .addTooltip(translatable("divine_action.judgement").append(positiveJudgement ? literal("+" + judgement).withStyle(ChatFormatting.DARK_GREEN) : literal(Integer.toString(judgement)).withStyle(ChatFormatting.DARK_RED)))
+                            .addTooltip(translatable("divine.judgement").append(positiveJudgement ? literal("+" + judgement).withStyle(ChatFormatting.DARK_GREEN) : literal(Integer.toString(judgement)).withStyle(ChatFormatting.DARK_RED)))
                             .addTooltip(translatable("divine_action.cooldown", Integer.toString(entry.cooldown())))
                             .position(0, yPos)
                             .dimensions(155, 40)

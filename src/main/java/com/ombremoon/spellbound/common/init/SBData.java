@@ -121,6 +121,8 @@ public class SBData {
                     .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .copyOnDeath()
                     .build());
+    public static final Supplier<AttachmentType<Integer>> DIVINE_CHARM = ATTACHMENT_TYPES.register(
+            "divine_charm", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Books unlocked
     private static final Codec<Map<ResourceLocation, Integer>> BOOK_CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, x -> Codec.INT);

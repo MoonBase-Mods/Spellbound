@@ -607,7 +607,7 @@
     ]
   ],
   "rewards": {
-    "experience": 10,
+    "experience": 2,
     "spells": [
       "spellbound:healing_touch"
     ]

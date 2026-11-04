@@ -226,15 +226,17 @@ public class SpellUtil {
     public static Entity getOwner(@NotNull Entity entity) {
         if (entity instanceof SBSummonable spellEntity) {
             return spellEntity.getSummoner();
+        } else if (entity instanceof Projectile projectile) {
+            return projectile.getOwner();
         }
 
         return entity.level().getEntity(entity.getData(SBData.OWNER_ID));
     }
 
     /**
-     * Gets the target of the current entity
-     * @param entity The entity to get the target of
-     * @return the current target, null if no current target
+     * Gets the entity of the current entity
+     * @param entity The entity to get the entity of
+     * @return the current entity, null if no current entity
      * @apiNote Should only be used for summons
      */
     @Nullable
@@ -250,9 +252,9 @@ public class SpellUtil {
     }
 
     /**
-     * Sets the target for a given mob both through vanilla targeting and summon targeting systems.
-     * @param summon The summon to set the target of
-     * @param target The new target for the summon
+     * Sets the entity for a given mob both through vanilla targeting and summon targeting systems.
+     * @param summon The summon to set the entity of
+     * @param target The new entity for the summon
      */
     public static void setTarget(@NotNull LivingEntity summon, @NotNull LivingEntity target) {
         if (summon instanceof SBLivingEntity livingEntity) {

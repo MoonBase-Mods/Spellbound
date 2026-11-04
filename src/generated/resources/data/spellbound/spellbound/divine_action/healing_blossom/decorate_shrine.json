@@ -1,4 +1,5 @@
 {
+  "cooldown": 24000,
   "criteria": {
     "decorate_shrine": {
       "trigger": "spellbound:decorated_shrine"
@@ -10,7 +11,7 @@
     ]
   ],
   "rewards": {
-    "experience": 20,
+    "judgement_granted": 5,
     "spells": [
       "spellbound:healing_blossom"
     ]

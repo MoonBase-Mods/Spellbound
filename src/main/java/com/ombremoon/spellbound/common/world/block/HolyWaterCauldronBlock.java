@@ -1,14 +1,19 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
-import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.init.SBItems;
+import com.ombremoon.spellbound.common.DamageInstance;
+import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -63,6 +68,7 @@ public class HolyWaterCauldronBlock extends LayeredCauldronBlock {
         var emptyMap = CauldronInteraction.EMPTY.map();
         emptyMap.put(SBItems.HOLY_WATER_BUCKET.get(), FILL_HOLY_WATER);
 
+        var weapons = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.WEAPON_ENCHANTABLE);
         var map = HOLY_WATER.map();
         CauldronInteraction.addDefaultInteractions(map);
         map.put(
@@ -130,5 +136,30 @@ public class HolyWaterCauldronBlock extends LayeredCauldronBlock {
                     return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
         );
+
+        for (var weapon : weapons) {
+            map.put(
+                    weapon.value(),
+                    (state, level, pos, player, hand, stack) -> {
+                        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+                        if (!stack.is(ItemTags.WEAPON_ENCHANTABLE)) {
+                            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                        } else if (imbuement != null && !imbuement.canImbueStack(stack)) {
+                            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                        } else {
+                            if (!level.isClientSide) {
+                                imbuement = Imbuement.create(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F, EntityTypeTags.UNDEAD), 1, CommonClass.customLocation("smite"));
+                                stack.set(SBData.IMBUEMENT, imbuement);
+                                player.awardStat(SBStats.WEAPONS_IMBUED.get());
+                                LayeredCauldronBlock.lowerFillLevel(state, level, pos);
+                                level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                                level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
+                            }
+
+                            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        }
+                    }
+            );
+        }
     }
 }

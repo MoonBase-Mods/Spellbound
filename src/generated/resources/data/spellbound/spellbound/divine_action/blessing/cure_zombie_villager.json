@@ -10,7 +10,7 @@
     ]
   ],
   "rewards": {
-    "experience": 10,
+    "experience": 5,
     "spells": [
       "spellbound:blessing"
     ]

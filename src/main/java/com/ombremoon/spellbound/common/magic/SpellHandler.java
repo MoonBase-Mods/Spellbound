@@ -630,8 +630,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Updates the cached target entity by performing a raycast.
-     * The target remains cached for 1/2 second (10 ticks) unless a new target is found.
+     * Updates the cached entity entity by performing a raycast.
+     * The entity remains cached for 1/2 second (10 ticks) unless a new entity is found.
      */
     private void updateTargetEntity() {
         if (this.caster instanceof Player) {
@@ -652,8 +652,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Gets the currently cached target entity.
-     * @return The cached target entity, or null if no target is found
+     * Gets the currently cached entity entity.
+     * @return The cached entity entity, or null if no entity is found
      */
     @Nullable
     public Entity getTargetEntity() {
@@ -661,9 +661,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Gets the target entity using a raycast.
+     * Gets the entity entity using a raycast.
      * @param range The maximum range to search for entities
-     * @return The target entity, or null if none found
+     * @return The entity entity, or null if none found
      */
     @Nullable
     private Entity getTargetEntity(double range) {

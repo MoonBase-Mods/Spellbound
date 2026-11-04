@@ -721,7 +721,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Clears a given number of effects from the target
+     * Clears a given number of effects from the entity
      * @param cleanseTarget Target to be cleansed
      * @param effectsToRemove Number of effects to remove, 0 will remove all effect of a given category
      * @param category The type of effects to remove
@@ -755,7 +755,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
+     * Hurts the entity entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageType The damage type
@@ -797,7 +797,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity. The damage type is determined by the sub-path of the spell.
+     * Hurts the entity entity. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @param hurtAmount The amount of damage the entity takes
      * @return Whether the entity takes damage or not
@@ -819,7 +819,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity by the pre-defined base damage of the spell. The damage type is determined by the sub-path of the spell.
+     * Hurts the entity entity by the pre-defined base damage of the spell. The damage type is determined by the sub-path of the spell.
      * @param targetEntity The hurt entity
      * @return Whether the entity takes damage or not
      */
@@ -941,7 +941,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
 
     /**
-     * Heals the target, scaling with path level, potency, and judgment.
+     * Heals the entity, scaling with path level, potency, and judgment.
      * Will not work if caster's judgment does not correspond with the type of heal path
      * @param healEntity The entity being healed
      * @param amount The base heal amount

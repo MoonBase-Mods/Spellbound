@@ -55,15 +55,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+2"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -118,15 +118,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+1"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -180,15 +180,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+1"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -203,7 +203,7 @@
       },
       "item": [
         {
-          "item": "spellbound:ritual_talisman"
+          "item": "spellbound:divine_phial"
         }
       ],
       "position": {

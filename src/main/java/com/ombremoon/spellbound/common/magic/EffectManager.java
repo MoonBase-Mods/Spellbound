@@ -38,7 +38,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     private LivingEntity livingEntity;
     private final Map<Effect, Float> buildUp = new HashMap<>();
     private final List<MagicEffectInstance> magicEffects = new ObjectArrayList<>();
-    private int judgement;
+    private float judgement;
 
     /**
      * Initializes the effect handler
@@ -133,11 +133,11 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         }
     }
 
-    public int getJudgement() {
+    public float getJudgement() {
         return this.judgement;
     }
 
-    public void giveJudgement(int amount) {
+    public void giveJudgement(float amount) {
         this.judgement = Math.clamp(this.judgement + amount, MIN_JUDGEMENT, MAX_JUDGEMENT);
     }
 
@@ -255,7 +255,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         for (Effect effect : this.buildUp.keySet()) {
             tag.putFloat(effect.name(), this.buildUp.get(effect));
         }
-        tag.putInt("Judgement", this.judgement);
+        tag.putFloat("Judgement", this.judgement);
 
         return tag;
     }
@@ -268,8 +268,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
 
-        if (tag.contains("Judgement", 99))
-            this.judgement = tag.getInt("Judgement");
+        this.judgement = tag.getFloat("Judgement");
     }
 
     public enum Effect {
