@@ -1,3 +1,6 @@
 {
-  "parent": "spellbound:block/star_map"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "spellbound:item/star_map"
+  }
 }
