@@ -27,7 +27,7 @@ public class StarMapBlock extends Block {
         this.registerDefaultState(
                 this.defaultBlockState()
                         .setValue(FACING, Direction.NORTH)
-                        .setValue(TYPE, StarmapType.RED));
+                        .setValue(TYPE, StarmapType.VICIO));
     }
 
     @Override
@@ -56,9 +56,9 @@ public class StarMapBlock extends Block {
     }
 
     public enum StarmapType implements StringRepresentable {
-        RED("red"),
-        PURPLE("purple"),
-        BLUE("blue");
+        FORNAX("fornax"),
+        HOROLOGIUM("horologium"),
+        VICIO("vicio");
 
         public static final Codec<StarmapType> CODEC = StringRepresentable.fromEnum(StarmapType::values);
         private String name;

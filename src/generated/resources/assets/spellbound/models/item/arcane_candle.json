@@ -1,3 +1,6 @@
 {
-  "parent": "spellbound:block/arcane_candle"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "spellbound:item/arcane_candle"
+  }
 }
