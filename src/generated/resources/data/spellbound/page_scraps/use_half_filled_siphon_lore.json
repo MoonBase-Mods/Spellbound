@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "craft_mana_siphon": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:cursed_phial"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "craft_mana_siphon"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:use_half_filled_siphon_lore"
+    ]
+  }
+}

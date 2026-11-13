@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.common.world.entity.ai.goal.HurtSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.SummonerAttackGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -314,8 +315,8 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> hasLayer() {
-            this.hasLayer = true;
+        public Builder<T> spellLayer(BiFunction<SpellContext, T, ResourceLocation> spellLayer) {
+            this.spellLayer = spellLayer;
             return this;
         }
     }

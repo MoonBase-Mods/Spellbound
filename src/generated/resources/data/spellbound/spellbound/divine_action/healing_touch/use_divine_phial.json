@@ -1,7 +1,7 @@
 {
   "cooldown": 6000,
   "criteria": {
-    "use_phial": {
+    "use_divine_phial": {
       "conditions": {
         "skill_buff": {
           "skill": {
@@ -15,10 +15,14 @@
   },
   "requirements": [
     [
-      "use_phial"
+      "use_divine_phial"
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:use_phial",
+      "spellbound:use_phial_lore"
+    ],
     "judgement_granted": 1,
     "spells": [
       "spellbound:healing_touch"

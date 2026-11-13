@@ -16,6 +16,10 @@
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:bestow_charm",
+      "spellbound:bestow_charm_lore"
+    ],
     "judgement_granted": 1,
     "spells": [
       "spellbound:blessing"

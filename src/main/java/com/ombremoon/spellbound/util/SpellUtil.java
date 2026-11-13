@@ -97,6 +97,10 @@ public class SpellUtil {
         return compoundTag;
     }
 
+    public SpellType<?> parseSpellType(CompoundTag tag) {
+        return SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell")));
+    }
+
     public static ResourceLocation getSpellId(CompoundTag compoundTag, String tagKey) {
         return ResourceLocation.tryParse(compoundTag.getString(tagKey));
     }
@@ -316,7 +320,8 @@ public class SpellUtil {
 
     public static void grantScrap(Player player, ResourceLocation scrap) {
         List<ResourceLocation> bookScraps = new ArrayList<>(player.getData(SBData.BOOK_SCRAPS));
-//        if (bookScraps.contains(scrap)) return;
+        if (bookScraps.contains(scrap))
+            return;
 
         bookScraps.add(scrap);
         player.sendSystemMessage(Component.literal("Book scrap acquired"));

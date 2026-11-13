@@ -9,6 +9,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -71,20 +73,25 @@ public class PhialItem extends Item implements ProjectileItem {
                 .build();
     }
 
-    public enum PhialType {
-        DIVINE(0, SBItems.DIVINE_PHIAL, Color.YELLOW.argbInt()),
-        CURSED(1, SBItems.CURSED_PHIAL, Color.MAGENTA.darker(2.5F).argbInt()),
-        ECLIPSE(2, SBItems.TEAR_OF_THE_ECLIPSE, Color.BLACK.argbInt(), Color.WHITE.argbInt());
+    public enum PhialType implements StringRepresentable {
+        DIVINE("divine", 0, SBItems.DIVINE_PHIAL, false, Color.YELLOW.argbInt()),
+        CURSED("cursed", 1, SBItems.CURSED_PHIAL, true, Color.MAGENTA.darker(2.5F).argbInt()),
+        ECLIPSE("eclipse", 2, SBItems.TEAR_OF_THE_ECLIPSE, false, Color.BLACK.argbInt(), Color.WHITE.argbInt());
 
         public static final IntFunction<PhialType> BY_ID = ByIdMap.continuous(PhialType::id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final StringRepresentable.EnumCodec<PhialType> CODEC = StringRepresentable.fromEnum(PhialType::values);
         public static final StreamCodec<ByteBuf, PhialType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, PhialType::id);
+        private final String name;
         private final int id;
         private final Supplier<Item> item;
+        private final boolean cursedProperty;
         private final int[] colors;
 
-        PhialType(int id, Supplier<Item> item, int... colors) {
+        PhialType(String name, int id, Supplier<Item> item, boolean cursedProperty, int... colors) {
+            this.name = name;
             this.id = id;
             this.item = item;
+            this.cursedProperty = cursedProperty;
             this.colors = colors;
         }
 
@@ -98,6 +105,15 @@ public class PhialItem extends Item implements ProjectileItem {
 
         public int[] getColors() {
             return this.colors;
+        }
+
+        public boolean isCursedProperty() {
+            return this.cursedProperty;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
         }
     }
 }

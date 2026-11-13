@@ -250,21 +250,4 @@ public class DarkAltarBlockEntity extends BlockEntity {
         this.setChanged();
         this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
-/*
-    @Override
-    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
-        super.applyImplicitComponents(componentInput);
-        componentInput.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.getItems());
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.getItems()));
-    }
-
-    @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        tag.remove("Items");
-    }*/
 }

@@ -79,7 +79,7 @@ public class SBSkills {
     //Ice Bolt
     public static final Holder<Skill> ICE_BOLT = registerRadialSkill("ice_bolt");
     public static final Holder<Skill> GLACIAL_VOLLEY = registerRadialSkill("glacial_volley", -100, 50, preReqs(ICE_BOLT));
-    public static final Holder<Skill> ICY_JAVELIN = registerRadialSkill("icy_javelin", -50, 50, preReqs(ICE_BOLT));
+    public static final Holder<Skill> ICY_JAVELIN = registerRadialSkill("icy_javelin", -50, 50, preReqs(ICE_BOLT), true);
     public static final Holder<Skill> ICE_RING = registerRadialSkill("ice_ring", 0, 50, preReqs(ICE_BOLT));
     public static final Holder<Skill> PERMAFROST_LANCE = registerRadialSkill("permafrost_lance", 50, 50, preReqs(ICE_BOLT));
     public static final Holder<Skill> HAIL_STRIKE = registerRadialSkill("hail_strike", 100, 50, preReqs(ICE_BOLT));
@@ -253,7 +253,7 @@ public class SBSkills {
     public static final Holder<Skill> SUMMON_DROWNED = registerRadialSkill("summon_drowned", 100, 50, preReqs(SUMMON_UNDEAD));
     public static final Holder<Skill> ROTTEN_SOLDIERS = registerSkill("rotten_soldiers", 0, 100, preReqs(SUMMON_UNDEAD));
     public static final Holder<Skill> CRIMSON_PACT = registerSkill("crimson_pact", -100, 100, preReqs(SUMMON_ZOMBIFIED_PIGLIN));
-    public static final Holder<Skill> HALL_OF_THE_DEAD = registerSkill("hall_of_the_dead", -50, 100, preReqs(SUMMON_SKELETON));
+    public static final Holder<Skill> HALL_OF_THE_DEAD = registerSkill("hall_of_the_dead", -50, 100, preReqs(SUMMON_SKELETON), true);
     public static final Holder<Skill> SILENT_NIGHT = registerSkill("silent_night", 50, 100, preReqs(SUMMON_PHANTOM));
     public static final Holder<Skill> SUNKEN_BREATH = registerSkill("sunken_breath", 100, 100, preReqs(SUMMON_DROWNED));
     public static final Holder<Skill> CORPSE_EXPLOSION = registerSkill("corpse_explosion", 0, 150, preReqs(ROTTEN_SOLDIERS, CRIMSON_PACT, HALL_OF_THE_DEAD, SILENT_NIGHT, SUNKEN_BREATH));
@@ -269,7 +269,7 @@ public class SBSkills {
     public static final Holder<Skill> THICK_FUR = registerSkill("thick_fur", 25, 100, preReqs(SUMMON_WOLF_PACK));
     public static final Holder<Skill> PACK_LEADER = registerSkill("pack_leader", 0, 150, preReqs(BLOOD_SCENT, THICK_FUR));
     public static final Holder<Skill> LONE_WOLF = registerRadialSkill("lone_wolf", -25, 200, preReqs(PACK_LEADER));
-    public static final Holder<Skill> FENRIR = registerRadialSkill("fenrir", 25, 200, preReqs(PACK_LEADER));
+    public static final Holder<Skill> FENRIR = registerRadialSkill("fenrir", 25, 200, preReqs(PACK_LEADER), true);
 
     //Summon Villager
     public static final Holder<Skill> SUMMON_VILLAGER = registerRadialSkill("summon_villager");
@@ -298,7 +298,7 @@ public class SBSkills {
     public static final Holder<Skill> ARCHERY_PROWESS = registerSkill("archery_prowess", 50, 100, preReqs(PIERCING_SHOT, INFUSED_SHOT));
     public static final Holder<Skill> WRAITH_SHOT = registerSkill("wraith_shot", 50, 150, preReqs(ARCHERY_PROWESS));
     public static final Holder<Skill> HEATSEEKER = registerSkill("heatseeker", 0, 200, preReqs(BOUND_ARROW, WRAITH_SHOT));
-    public static final Holder<Skill> BOUND_MARKSMAN = registerRadialSkill("bound_marksman", 0, 250, preReqs(HEATSEEKER));
+    public static final Holder<Skill> BOUND_MARKSMAN = registerRadialSkill("bound_marksman", 0, 250, preReqs(HEATSEEKER), true);
 
     //Wild Mushroom
     public static final Holder<Skill> WILD_MUSHROOM = registerSkill("wild_mushroom");
@@ -475,8 +475,17 @@ public class SBSkills {
         return SKILLS.register(name, Skill::new);
     }
 
+    private static Holder<Skill> registerSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, boolean wip) {
+        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
+            @Override
+            public boolean inTestingPhase() {
+                return wip;
+            }
+        });
+    }
+
     private static Holder<Skill> registerSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs) {
-        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs));
+        return registerSkill(name, xPos, yPos, prereqs, false);
     }
 
     private static Holder<Skill> registerRadialSkill(String name, PseudoSkillProvider... pseudoSkills) {
@@ -493,7 +502,7 @@ public class SBSkills {
         });
     }
 
-    private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, PseudoSkillProvider... pseudoSkills) {
+    private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, boolean wip, PseudoSkillProvider... pseudoSkills) {
         return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
             @Override
             public boolean isRadial() {
@@ -501,10 +510,19 @@ public class SBSkills {
             }
 
             @Override
+            public boolean inTestingPhase() {
+                return wip;
+            }
+
+            @Override
             public ObjectArrayList<SkillProvider> getPseudoChoices() {
                 return ObjectArrayList.of(pseudoSkills);
             }
         });
+    }
+
+    private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, PseudoSkillProvider... pseudoSkills) {
+        return registerRadialSkill(name, xPos, yPos, prereqs, false, pseudoSkills);
     }
 
     public static PseudoSkillProvider createProvider(String spellType, String provider) {
@@ -536,10 +554,6 @@ public class SBSkills {
                 return true;
             }
         });
-    }
-
-    private static Holder<Skill> registerModifierSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, SpellModifier... spellModifiers) {
-        return SKILLS.register(name, () -> new ModifierSkill(xPos, yPos, prereqs, spellModifiers));
     }
 
     private static HolderSet<Skill> preReqs(Holder<Skill>... skills) {

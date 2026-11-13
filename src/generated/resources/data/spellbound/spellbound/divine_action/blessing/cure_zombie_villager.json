@@ -10,7 +10,12 @@
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:cure_villager",
+      "spellbound:cure_villager_lore"
+    ],
     "experience": 5,
+    "judgement_granted": 2,
     "spells": [
       "spellbound:blessing"
     ]

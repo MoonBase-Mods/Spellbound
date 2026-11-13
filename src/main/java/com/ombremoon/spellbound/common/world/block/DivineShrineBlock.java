@@ -1,12 +1,16 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.datafixers.util.Pair;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBTags;
+import com.ombremoon.spellbound.common.world.item.PhialItem;
+import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,15 +22,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -38,46 +39,53 @@ import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewableMultiblock {
+    public static final ResourceLocation DIVINE_FX = CommonClass.customLocation("divine_action");;
+    public static final ResourceLocation DIVINE_ACTIVE_FX = CommonClass.customLocation("divine_action_idle");;
+    public static final ResourceLocation CURSED_FX = CommonClass.customLocation("dark_divine_action");
+    public static final ResourceLocation CURSED_ACTIVE_FX = CommonClass.customLocation("dark_divine_action_idle");
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final BooleanProperty CURSED = BooleanProperty.create("cursed");
     public static final VoxelShape SHAPE = makeShape();
 
     public DivineShrineBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(ACTIVE, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ACTIVE, false).setValue(CURSED, false));
     }
 
-    /*@Override
+    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(SBItems.MAGIC_ESSENCE.get()) && !state.getValue(ACTIVE)) {
-            BlockPos otherPos = pos.relative(state.getValue(CENTER) ? Direction.UP : Direction.DOWN);
-            BlockState other = level.getBlockState(otherPos);
-            level.setBlock(pos, state.setValue(ACTIVE, true), 3);
-            level.setBlock(otherPos, other.setValue(ACTIVE, true), 3);
-            //Trigger FX
-            //Play Sound
+        BlockPos center = this.getShrineBase(state, pos);
+        BlockState blockState = level.getBlockState(center);
+        if (stack.is(SBItems.MAGIC_ESSENCE.get()) && !blockState.getValue(ACTIVE)) {
+            if (!level.isClientSide) {
+                level.setBlock(center, blockState.setValue(ACTIVE, true), 3);
+                ResourceLocation fx = blockState.getValue(CURSED) ? CURSED_ACTIVE_FX : DIVINE_ACTIVE_FX;
+                RenderUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
+                        .setOffset(0, -0.49, 0));
+            }
+
             level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            level.scheduleTick(pos, this, 1200);
+            level.scheduleTick(center, this, 1200);
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-    }*/
-
-    private static Direction getNeighbourDirection(boolean center) {
-        return center ? Direction.UP : Direction.DOWN;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        /*if (state.getValue(ACTIVE)) {
+        if (state.getValue(ACTIVE)) {
             level.setBlock(pos, state.setValue(ACTIVE, false), 3);
-            //Remove FX
-            //Play Sound
-        }*/
+            ResourceLocation activeFX = state.getValue(CURSED) ? CURSED_ACTIVE_FX : DIVINE_ACTIVE_FX;
+            RenderUtil.removeBlockEffect(level, pos, activeFX);
+        }
+    }
+
+    public BlockPos getShrineBase(BlockState state, BlockPos pos) {
+        return state.getValue(CENTER) ? pos : pos.below();
     }
 
     @Override
@@ -100,14 +108,10 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
         BlockState state = super.getStateForPlacement(context);
         if (state != null) {
             state.setValue(ACTIVE, false);
+            state.setValue(CURSED, false);
         }
 
         return state;
-    }
-
-    @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override
@@ -131,7 +135,20 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(ACTIVE);
+        builder.add(ACTIVE, CURSED);
+    }
+
+    public boolean canConvert(BlockState state, PhialItem.PhialType type) {
+        boolean isCursed = state.getValue(CURSED);
+        if (type == PhialItem.PhialType.ECLIPSE) {
+            return false;
+        } else if (isCursed && type == PhialItem.PhialType.CURSED) {
+            return false;
+        } else if (!isCursed && type == PhialItem.PhialType.DIVINE) {
+            return false;
+        }
+
+        return true;
     }
 
     @Nullable

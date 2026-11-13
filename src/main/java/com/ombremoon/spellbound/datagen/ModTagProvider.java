@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -162,21 +161,33 @@ public class ModTagProvider {
 
         @Override
         protected void addTags(HolderLookup.Provider provider) {
-            this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
+            this.tag(SBTags.DamageTypes.SPELLBOUND_DAMAGE)
                     .add(SBDamageTypes.SB_GENERIC)
                     .add(SBDamageTypes.RUIN_FIRE)
                     .add(SBDamageTypes.RUIN_FROST)
                     .add(SBDamageTypes.RUIN_SHOCK)
-                    .add(SBDamageTypes.BLOOD_LOSS);
+                    .add(SBDamageTypes.DISEASE)
+                    .addTags(SBTags.DamageTypes.HOLY_DAMAGE);
+
+            this.tag(SBTags.DamageTypes.HOLY_DAMAGE)
+                    .add(SBDamageTypes.HOLY);
 
             this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
-                    .addTags(Tags.DamageTypes.IS_MAGIC);
+                    .addTags(Tags.DamageTypes.IS_MAGIC,
+                            SBTags.DamageTypes.SPELLBOUND_DAMAGE);
 
             this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN)
                     .add(SBDamageTypes.SB_GENERIC)
                     .add(SBDamageTypes.RUIN_FIRE)
                     .add(SBDamageTypes.RUIN_FROST)
                     .add(SBDamageTypes.RUIN_SHOCK);
+
+            this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_SHIELD)
+                    .addTags(SBTags.DamageTypes.SPELLBOUND_DAMAGE)
+                    .add(SBDamageTypes.BLEED);
+
+            this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR)
+                    .add(SBDamageTypes.BLEED);
         }
     }
 

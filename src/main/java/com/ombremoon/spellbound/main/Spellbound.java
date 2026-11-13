@@ -43,9 +43,6 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //Chroma Table - Customization options
 // - Respec and skill point transfer
 
-//Items
-//Shard Pouch - Carry a bunch of shards
-
 @Mod(Constants.MOD_ID)
 public class Spellbound {
 
@@ -66,7 +63,6 @@ public class Spellbound {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         SkillProviderRegistry.initSkillProviders();
-        HolyWaterCauldronBlock.createInteractions();
     }
 
     private void registerRegistry(NewRegistryEvent event) {

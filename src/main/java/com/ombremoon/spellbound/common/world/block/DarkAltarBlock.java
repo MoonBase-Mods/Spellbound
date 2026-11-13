@@ -49,6 +49,8 @@ public class DarkAltarBlock extends BaseEntityBlock {
                     player.awardStat(SBStats.INTERACT_WITH_DARK_ALTAR.get());
                     return ItemInteractionResult.SUCCESS;
                 }
+
+                return ItemInteractionResult.CONSUME;
             }
         }
 

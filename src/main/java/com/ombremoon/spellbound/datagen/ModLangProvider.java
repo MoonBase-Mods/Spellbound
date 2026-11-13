@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.datagen;
 import com.google.common.collect.ImmutableMap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ModLangProvider extends LanguageProvider {
@@ -114,6 +116,7 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
         affinityDescriptions();
+        riddleDescriptions();
 
         add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
         add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
@@ -138,6 +141,7 @@ public class ModLangProvider extends LanguageProvider {
         add("chat.spelltome.spellunlocked", "Spell unlocked: ");
         add("tooltip.spellbound.holdshift", "Hold shift for more information.");
         add("tooltip.spelltome.testing", "DO NOT USE. This spell is WIP and may change.");
+        add("tooltip.skill.testing", "DO NOT USE. This skill is WIP and may change.");
 
         add("spellbound.sb_generic", "Magic Damage");
         add("spellbound.physical_damage", "Physical Damage");
@@ -158,6 +162,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
 
         add("item.spellbound.interstellare_music_disc_desc", "piedilerci - Interstellare");
+        add("item.spellbound.mana_bottle_name", "Bottle o' Mana");
     }
 
     protected void affinityDescriptions() {
@@ -226,6 +231,7 @@ public class ModLangProvider extends LanguageProvider {
 
         //§§r
 
+        add("guide.basic.restart", "Jump To Start");
         add("guide.basic.discord", "§lDiscord§r");
         add("guide.basic.bugs", "§lBug Reports§r");
         add("guide.basic.blurb", "Welcome fellow Magi, to the world of §lSpellbound!§r I present to you the first in many books documenting the arcane. " + "Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries yet to be discovered.⭐");
@@ -368,11 +374,11 @@ public class ModLangProvider extends LanguageProvider {
 
         add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
         add("guide.transfiguration.quote", "Reality is not a rule. It is a suggestion");
-        add("guide.transfiguration.description1", "Matter, equivalent exchange, logic—the Transfiguration Path requires great understanding of these concepts. It's more than magic—it's a science.");
-        add("guide.transfiguration.description2", "To master this path is to §lreject the world as it appears§. Iron into water, stone into gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of this world, you must understand them first.");
+        add("guide.transfiguration.description1", "Matter, equivalent exchange, logic—the Transfiguration Path requires great understanding of these concepts. It's more than magic, it's a science.");
+        add("guide.transfiguration.description2", "To master this path is to reject the world as it appears. Iron into water, stone into gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of this world, you must understand them first.");
         add("guide.transfiguration.rituals", "Alchemy Rituals");
-        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything. Whether I am extracting a §lnew formula§ or manipulating my surroundings, the process is the same: arrange the geometry, balance the components, and let the transmutation flow.");
-        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central §lpedestal§ surrounded by display stands, with each tier increasing the displays and height needed.");
+        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything. Whether I am extracting a new formula or manipulating my surroundings, the process is the same: arrange the geometry, balance the components, and let the transmutation flow.");
+        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central pedestal surrounded by display stands, with each tier increasing the displays and height needed.");
         add("guide.transfiguration.rituals_cont", "Alchemy Rituals Cont.");
         add("guide.transfiguration.pedestal_legend", "- Pedestal");
         add("guide.transfiguration.display_legend", "- Display");
@@ -537,26 +543,45 @@ public class ModLangProvider extends LanguageProvider {
 
         add("guide.divine.divine_actions", "Divine Actions:\n");
         add("healing_touch.heal_mob_to_full.name", "Shepherd");
-        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full");
-        add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
+        add("healing_touch.use_divine_phial.name", "Blessed");
         add("healing_touch.use_blessed_bandages.name", "Field Medic");
+        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full");
+        add("divine_action.healing_touch.use_divine_phial", "Bless yourself with a Divine Phial");
         add("divine_action.healing_touch.use_blessed_bandages", "Heal your wounds with Blessed Bandages.");
+        add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
         add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
-        add("healing_touch.use_phial.name", "Blessed");
-        add("divine_action.healing_touch.use_phial", "Bless yourself with a Divine Phial");
-        add("healing_touch.use_phial.lore", "The effects of holy water still need to be tested, but I think it is still worth collecting. Who knows what kind of benefits it could provide?");
+        add("healing_touch.use_divine_phial.lore", "The effects of holy water still need to be tested, but I think it is still worth collecting. Who knows what kind of benefits it could provide?");
         add("blessing.bless_shrine.name", "Caretaker");
-        add("blessing.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action—good or bad. I think as long as I take good care of it, I can become even stronger!");
         add("blessing.cure_zombie_villager.name", "Plague Doctor");
+        add("blessing.bestow_charm.name", "Loyal Companion");
+        add("divine_action.blessing.bless_shrine", "Bless a Shrine with a Divine Phial");
         add("divine_action.blessing.cure_zombie_villager", "Cure a Zombie Villager");
+        add("divine_action.blessing.bestow_charm", "Give a Companion a Divine Charm");
+        add("blessing.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action—good or bad. I think as long as I take good care of it, I can become even stronger!");
         add("blessing.cure_zombie_villager.lore", "I was heartbroken when I saw a Villager succumb to the infection. I'll do my best to find a way to cure them.");
-        add("siphon.kill_villager.name", "Murderer");
-        add("divine_action.siphon.kill_villager", "Kill 5 Villagers");
-        add("siphon.kill_villager.lore", "The voices, they are telling me things. These Villagers are just as dangerous as any undead. I must defend myself.");
+        add("blessing.bestow_charm.lore", "Having a pet with me on my journeys is a blessing in itself. I'll be sure to use this blessing to my advantage with some Divine guidance.");
+        add("smite.anoint_weapon.name", "Baptize");
+        add("smite.deflect_undead_arrow.name", "Paladin");
+        add("smite.curse_weapon.name", "Cursed");
+        add("divine_action.smite.anoint_weapon", "Imbue a weapon with Holy Water");
+        add("divine_action.smite.deflect_undead_arrow", "Deflect an Arrow back at a Skeleton");
+        add("divine_action.smite.curse_weapon", "Imbue a weapon with Cursed Water");
+        add("smite.anoint_weapon.lore", "Holy Water is such a wonderful tool against the undead. It would be pretty useful to coat my weapons with this stuff.");
+        add("smite.deflect_undead_arrow.lore", "If I time my block just right, I can send projectiles flying back to their shooter. Time to give these Skeletons a taste of their own medicine!");
+        add("smite.curse_weapon.lore", "Holy Water might only harm the undead, but Cursed Water seems to effect all living beings. With this, no one is safe before me.");
+        add("siphon.curse_enemy_with_phial.name", "Disgraced");
+        add("siphon.use_half_filled_siphon.name", "Mana Thief");
+        add("siphon.curse_shrine.name", "Desecrator");
+        add("divine_action.siphon.curse_enemy_with_phial", "Curse an Enemy with a Cursed Phial");
+        add("divine_action.siphon.curse_shrine", "Curse a Divine Shrine with a Cursed Phial");
+        add("divine_action.siphon.use_half_filled_siphon", "Collect Mana from a Mana Siphon with at least half capacity");
+        add("siphon.curse_enemy_with_phial.lore", "This water looks...weird. It's definitely cursed to some degree. I should test its effects on the next person who gets in my way.");
+        add("siphon.use_half_filled_siphon.lore", "If mana is energy, there must be a way to collect and distribute it. If I collect enough, I might be able to study it further.");
+        add("siphon.curse_shrine.lore", "This shrine of light doesn't suit me and my cursed deeds. If I can reconfigure it, my connection with the darkness will be better than ever!");
         add("healing_blossom.decorate_shrine.name", "Gardener");
-        add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
         add("healing_blossom.purify_wither_rose.name", "Life From Death");
         add("healing_blossom.grow_ambrosia_bush.name", "Living Pollen");
+        add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
         add("divine_action.healing_blossom.grow_ambrosia_bush", "Convert a Berry Bush into an Ambrosia Bush");
         add("divine_action.healing_blossom.purify_wither_rose", "Purify a Wither Rose");
         add("healing_blossom.decorate_shrine.lore", "As I grow in tune with the divine, I can feel a strong presence of magic emanating from Overworld flora. I should collect as much as I can to study.");
@@ -763,6 +788,30 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.EXPLOSIVE_BARRAGE, "Each lava bomb explodes on impact.");
         addSkillTooltip(SBSkills.LAVA_FLOW, "Lava bombs turn into lava pools on impact.");
 
+        addSkillTooltip(SBSkills.ICE_BOLT, "Fires a sharp icicle that pierces a single target, dealing frost damage and slightly reducing their movement speed.");
+        addSkillTooltip(SBSkills.ICE_RING, "Fires a ring of Ice Bolts around the caster.");
+        addSkillTooltip(SBSkills.GLACIAL_VOLLEY, "Channel to shoot out a continuous stream of icicles.");
+        addSkillTooltip(SBSkills.ICY_JAVELIN, "Transform the Ice Bolt into an Ice Spear. For the duration, the spear can be used as a melee weapon or thrown.");
+        addSkillTooltip(SBSkills.PERMAFROST_LANCE, "Ice Bolt can be charged before release, increasing it's damage and slowing effect.");
+        addSkillTooltip(SBSkills.HAIL_STRIKE, "Ice Bolts rain down from the target location.");
+        addSkillTooltip(SBSkills.CHILLING_AFTERMATH, "Enemies struck with any variant of Ice Bolt are afflicted with a lingering frost, temporarily reducing cast speed.");
+        addSkillTooltip(SBSkills.SHATTERING_IMPACT, "Each Ice Bolt has increased Frost build up.");
+        addSkillTooltip(SBSkills.FROSTBITE_SYNERGY, "Enemies affected by slows or any frost effect take 25% more damage from Ice Bolt.");
+        addSkillTooltip(SBSkills.WINTER_IS_COMING, "Each successful strike with Ice Bolt stacks the slowing effect.");
+        addSkillTooltip(SBSkills.FROST_PIERCER, "All variants of Ice Bolt pierce through enemies.");
+
+        addSkillTooltip(SBSkills.ICE_SKATE, "Encases the caster's feet in enchanted ice, instantly freezing blocks below. Channel to move forward at increased speed, with the ability to skate across land and water.");
+        addSkillTooltip(SBSkills.FRICTIONLESS, "Skating speed is increased.");
+        addSkillTooltip(SBSkills.ICE_CLEATS, "Colliding with a mob while skating deals frost damage.");
+        addSkillTooltip(SBSkills.FROZEN_FEET, "Enemies who stand on the ice take continuous frost damage each second.");
+        addSkillTooltip(SBSkills.ICE_SNARE, "Enemies who stand on the ice trail take additional frost build up.");
+        addSkillTooltip(SBSkills.SNOW_BOOTS, "Allies walking over the ice trail gain half the movement benefits and are immune to sliding.");
+        addSkillTooltip(SBSkills.KINETIC_FLOW, "Continuously skating temporarily grants the caster potency for Ice spells.");
+        addSkillTooltip(SBSkills.SHARDS_OF_MOMENTUM, "When the spell ends, send out a cone of Ice Bolts towards the caster's look direction.");
+        addSkillTooltip(SBSkills.CRYSTAL_CLEATS, "Gain additional frost build up and slow on the caster's next melee hit while skating.");
+        addSkillTooltip(SBSkills.FROSTIER_WALKER, "Turns lava beneath the caster to Basalt.");
+        addSkillTooltip(SBSkills.ICE_BRIDGE, "Gain the ability to freeze the air beneath the caster's feet while sneaking for a short duration.");
+
         addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of ice. Cast again to detonate it, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are significantly slowed.");
         addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard.");
@@ -859,6 +908,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.BOULDERBACK, "Retaliate a spray of gravel when struck by melee damage, reflecting a portion of the damage back to the attacker.");
         addSkillTooltip(SBSkills.INFUSED_STONE, "Receiving spell damage increases mana regeneration.");
 
+        addSkillTooltip(SBSkills.CREATE_OBJECT, "Creates a Stone Pickaxe in the caster's inventory. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
+        addSkillTooltip(SBSkills.LUMBERJACK, "Creates a Stone Axe.");
+        addSkillTooltip(SBSkills.EXCAVATOR, "Creates a Stone Shovel.");
+        addSkillTooltip(SBSkills.HARVESTER, "Creates a Stone Hoe.");
+        addSkillTooltip(SBSkills.KNIGHT, "Creates a Stone Sword.");
+        addSkillTooltip(SBSkills.ADVENTURER, "Equips a full set of Leather Armor.");
+        addSkillTooltip(SBSkills.SCOUT, "Creates a Spyglass.");
+        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased.");
+        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by one tier.");
+        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by two tiers.");
+        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
+
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
         addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed.");
@@ -918,6 +979,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.BOUNTIFUL, "Villagers killed by enemies have a chance to drop a random trade.");
         addSkillTooltip(SBSkills.LOYAL_PROTECTOR, "Spawn an Iron Golem alongside the Villager.");
         addSkillTooltip(SBSkills.SHOW_ME_THE_ROPES, "Each Villager grants the caster a unique passive.");
+
+        addSkillTooltip(SBSkills.BOUND_BOW, "Creates a magic bow. The bow generates arrows at the cost of mana.");
+        addSkillTooltip(SBSkills.QUICKDRAW, "Bound Bow draw speed is increased.");
+        addSkillTooltip(SBSkills.SPECTRAL_VOLLEY, "Shots are split into ");
+        addSkillTooltip(SBSkills.PIERCING_SHOT, "");
+        addSkillTooltip(SBSkills.INFUSED_SHOT, "");
+        addSkillTooltip(SBSkills.MYSTIC_MARKSMAN, "");
+        addSkillTooltip(SBSkills.BOUND_ARROW, "");
+        addSkillTooltip(SBSkills.ARCHERY_PROWESS, "");
+        addSkillTooltip(SBSkills.WRAITH_SHOT, "");
+        addSkillTooltip(SBSkills.HEATSEEKER, "");
+        addSkillTooltip(SBSkills.BOUND_MARKSMAN, "");
 
         addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
@@ -1052,8 +1125,20 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.EXPUNGE, "Removes a spell from the entity's knowledge.");
     }
 
+    protected void riddleDescriptions() {
+        addRiddleTooltip(SBSpells.FLICKER, "§oI am the child of opposites, born of a hiss\nI am the glass that mocks the hammer's kiss\nI am the foundation for the floating word\nand the key to the world unheard§r");
+        addRiddleTooltip(SBSpells.SHADOW_VEIL, "§oI am the sudden night within the sea\nThe coward’s only guarantee\nI am the cloud that holds no rain\nThe phantom shield, the liquid stain\nBy the soft and spineless I’m deployed\nTo trap the light inside the void§r");
+        addRiddleTooltip(SBSpells.CURSED_RUNE, "§oI am a rock of purest white\nYet cast no spark when in a fight\nI shatter against the armor plate\nUsed in a war devoid of hate\nBut hold me tight within your grasp\nAnd I turn to tears at the very last§r");
+    }
+
+
     protected void addSkillTooltip(Holder<Skill> skill, String description) {
         add(skill.value().getDescriptionId(), description);
+    }
+
+    protected <T extends AbstractSpell> void addRiddleTooltip(Supplier<SpellType<T>> spell, String description) {
+        String name = spell.get().location().getPath();
+        add("dungeon_key." + name + ".riddle", description);
     }
 
     protected String checkReplace(ResourceLocation location) {

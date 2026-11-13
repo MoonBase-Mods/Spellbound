@@ -172,6 +172,15 @@ public class ClientPayloadHandler {
         });
     }
 
+    public static void handleClientEffectsSync(SyncEffectsPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+
+            var effects = SpellUtil.getSpellEffects(context.player());
+            effects.deserializeNBT(level.registryAccess(), payload.tag());
+        });
+    }
+
     public static void handleClientSetSpellData(SetSpellDataPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Level level = context.player().level();

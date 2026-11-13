@@ -21,10 +21,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.Optional;
 
-public class InteractWithBlockTrigger extends SimpleTrigger<InteractWithBlockTrigger.Instance> {
+public class InteractWithBlockTrigger extends SimpleTrigger<InteractWithBlockTrigger.TriggerInstance> {
     @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, ItemStack stack) {
@@ -41,18 +41,18 @@ public class InteractWithBlockTrigger extends SimpleTrigger<InteractWithBlockTri
         this.trigger(player, instance -> instance.matches(lootcontext, block));
     }
 
-    public record Instance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> location, Optional<BlockPredicate> block) implements SimpleTrigger.Instance {
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(
+    public record TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> location, Optional<BlockPredicate> block) implements SimpleTrigger.Instance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(InteractWithBlockTrigger.Instance::player),
-                        ContextAwarePredicate.CODEC.optionalFieldOf("location").forGetter(InteractWithBlockTrigger.Instance::location),
-                        BlockPredicate.CODEC.optionalFieldOf("block").forGetter(InteractWithBlockTrigger.Instance::block)
+                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                        ContextAwarePredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
+                        BlockPredicate.CODEC.optionalFieldOf("block").forGetter(TriggerInstance::block)
                     )
-                    .apply(instance, InteractWithBlockTrigger.Instance::new)
+                    .apply(instance, TriggerInstance::new)
         );
 
-        public static ActionCriterion<Instance> interactedWithBlock(BlockPredicate blockPredicate) {
-            return SBTriggers.INTERACT_WITH_BLOCK.get().createCriterion(new Instance(Optional.empty(), Optional.empty(), Optional.of(blockPredicate)));
+        public static ActionCriterion<TriggerInstance> interactedWithBlock(BlockPredicate blockPredicate) {
+            return SBTriggers.INTERACT_WITH_BLOCK.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.empty(), Optional.of(blockPredicate)));
         }
 
         public boolean matches(LootContext context, BlockInWorld block) {

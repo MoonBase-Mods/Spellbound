@@ -16,6 +16,7 @@
     "GuiMixin",
     "HealOrHarmMobEffectMixin",
     "HurtByTargetGoalMixin",
+    "InventoryChangeTriggerMixin",
     "LivingEntityMixin",
     "MerchantMenuMixin",
     "MerchantResultSlotMixin",
@@ -26,8 +27,10 @@
     "ServerEntityMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
+    "ServerPlayerMixin",
     "SlotMixin",
     "StructureBlockEntityMixin",
+    "TameAnimalMixin",
     "ZombieVillagerMixin"
   ],
   "client": [

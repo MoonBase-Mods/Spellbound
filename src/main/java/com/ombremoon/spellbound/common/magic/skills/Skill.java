@@ -103,6 +103,10 @@ public class Skill implements SkillProvider {
         return ObjectArrayList.of();
     }
 
+    public boolean inTestingPhase() {
+        return false;
+    }
+
     public boolean isRoot() {
         return this.prerequisites == null;
     }

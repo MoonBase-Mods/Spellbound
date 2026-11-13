@@ -1,10 +1,6 @@
 {
   "values": [
-    "spellbound:sb_generic",
-    "spellbound:ruin_fire",
-    "spellbound:ruin_frost",
-    "spellbound:ruin_shock",
-    "spellbound:blood_loss",
-    "#neoforge:is_magic"
+    "#neoforge:is_magic",
+    "#spellbound:spellbound_damage"
   ]
 }

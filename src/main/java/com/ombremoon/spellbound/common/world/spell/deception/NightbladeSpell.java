@@ -228,9 +228,4 @@ public class NightbladeSpell extends ImbuementSpell {
                 && target instanceof LivingEntity
                 && !caster.isSprinting();
     }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
-    }
 }

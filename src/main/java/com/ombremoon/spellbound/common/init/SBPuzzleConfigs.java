@@ -7,7 +7,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.deception.ResetFlags;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.InteractWithBlockTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.PlayerHurtTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.EntityHurtPlayerTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.PlayerKillEntityTrigger;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
@@ -35,7 +35,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "interact_with_altar",
-                                                                InteractWithBlockTrigger.Instance
+                                                                InteractWithBlockTrigger.TriggerInstance
                                                                         .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
                                                         )
                                         )
@@ -43,7 +43,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "hurt_by_fall",
-                                                                PlayerHurtTrigger.Instance
+                                                                EntityHurtPlayerTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
                                                                                         TagPredicate.is(DamageTypeTags.IS_FALL)
@@ -75,7 +75,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "interact_with_altar",
-                                                                InteractWithBlockTrigger.Instance
+                                                                InteractWithBlockTrigger.TriggerInstance
                                                                         .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
                                                         )
                                         )
@@ -83,7 +83,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "hurt_by_fall",
-                                                                PlayerHurtTrigger.Instance
+                                                                EntityHurtPlayerTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
                                                                                         TagPredicate.is(DamageTypeTags.IS_FALL)
@@ -115,7 +115,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "interact_with_altar",
-                                                                InteractWithBlockTrigger.Instance
+                                                                InteractWithBlockTrigger.TriggerInstance
                                                                         .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
                                                         )
                                         )
@@ -123,7 +123,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "hurt_by_magic",
-                                                                PlayerHurtTrigger.Instance
+                                                                EntityHurtPlayerTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
                                                                                         TagPredicate.is(SBTags.DamageTypes.SPELL_DAMAGE)
@@ -135,7 +135,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "hurt_by_fall",
-                                                                PlayerHurtTrigger.Instance
+                                                                EntityHurtPlayerTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
                                                                                         TagPredicate.is(DamageTypeTags.IS_FALL)
@@ -168,7 +168,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "player_killed_nightblade",
-                                                                PlayerKillEntityTrigger.Instance
+                                                                PlayerKillEntityTrigger.TriggerInstance
                                                                         .playerKilledEntity(
                                                                                 EntityPredicate.Builder.entity().of(SBEntities.MINI_MUSHROOM.get())
                                                                         )
@@ -178,7 +178,7 @@ public interface SBPuzzleConfigs {
                                                 SpellAction.Builder.action()
                                                         .addCriterion(
                                                                 "hurt_by_fall",
-                                                                PlayerHurtTrigger.Instance
+                                                                EntityHurtPlayerTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
                                                                                         TagPredicate.is(DamageTypeTags.IS_FALL)

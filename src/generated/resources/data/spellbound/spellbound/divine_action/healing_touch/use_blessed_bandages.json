@@ -16,6 +16,10 @@
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:use_blessed_bandages",
+      "spellbound:use_blessed_bandages_lore"
+    ],
     "judgement_granted": 1,
     "spells": [
       "spellbound:healing_touch"

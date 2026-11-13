@@ -1,18 +1,19 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.block.StarMapBlock;
 import com.ombremoon.spellbound.common.world.item.*;
-import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -29,7 +30,7 @@ public class SBItems {
     public static final List<Supplier<? extends Item>> EXCLUDED_ITEMS = new ArrayList<>();
     public static final List<Supplier<? extends Item>> BLOCK_ITEM_LIST = new ArrayList<>();
 
-    public static final Supplier<Item> DEBUG_ITEM = registerItem("debug_item", () -> new DebugItem(getItemProperties()));
+    public static final Supplier<Item> DEBUG_ITEM = registerItem("debug_item", () -> new DebugItem(getItemProperties()), false, true);
 
     public static final Supplier<Item> INTERSTELLARE_DISC = registerItem("interstellare_music_disc",
             () -> new Item(new Item.Properties().jukeboxPlayable(SpellboundSounds.INTERSTELLARE_KEY).stacksTo(1)));
@@ -70,6 +71,8 @@ public class SBItems {
     public static final Supplier<Item> MAGIC_ESSENCE = registerSimpleItem("magic_essence");
     public static final Supplier<Item> RITUAL_TALISMAN = registerItem("ritual_talisman", () -> new RitualTalismanItem(getItemProperties().durability(25)), true, true);
     public static final Supplier<Item> MANA_TEAR = registerItem("mana_tear", () -> new ManaTearItem(getItemProperties()));
+    public static final Supplier<Item> MANA_BOTTLE = registerItem("mana_bottle", () -> new ManaBottle(getItemProperties()));
+    public static final Supplier<Item> MAGIC_SHIELD = registerItem("magic_shield", () -> new MagicShieldItem(getItemProperties().durability(336)));
     public static final Supplier<Item> CHALK = registerItem("chalk", () -> new ChalkItem(getItemProperties().stacksTo(16)));
     public static final Supplier<Item> SPIRIT_WHISTLE = registerItem("spirit_whistle",  () -> new SpiritWhistleItem(getItemProperties().component(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD)), true);
     public static final Supplier<Item> ARCANE_EYE = registerItem("arcane_eye",  () -> new ArcaneEyeItem(getItemProperties().stacksTo(1)));
@@ -82,7 +85,14 @@ public class SBItems {
     public static final Supplier<Item> TEAR_OF_THE_ECLIPSE = registerItem("tear_of_the_eclipse", () -> new PhialItem(PhialItem.PhialType.ECLIPSE, getItemProperties()));
     public static final Supplier<Item> HOLY_WATER_BUCKET = registerItem("holy_water_bucket", () -> new BucketItem(SBFluids.HOLY_WATER.get(), getItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Supplier<Item> BLESSED_BANDAGES = registerItem("blessed_bandages", () -> new BlessedBandageItem(getItemProperties().stacksTo(16)));
-    public static final Supplier<Item> DIVINE_CHARM = registerItem("divine_charm", () -> new DivineCharmItem(getItemProperties().stacksTo(1)));
+    public static final Supplier<Item> DIVINE_CHARM = registerItem("divine_charm", () -> new Item(getItemProperties().stacksTo(1)) {
+
+        @Override
+        public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+            super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+            RenderUtil.renderJudgementTooltip(stack, context, tooltipComponents, tooltipFlag);
+        }
+    });
 
     //Guide Books
     public static final Supplier<Item> STARTER_BOOK = registerItem("studies_in_the_arcane", BasicGuideItem::new);
@@ -111,7 +121,11 @@ public class SBItems {
                             output.accept(stack);
                         }
                         SBSpells.SPELL_TYPES.getEntries().forEach((registryObject) -> {
-                            output.accept(SpellTomeItem.createWithSpell(registryObject.get()));
+                            SpellType<?> spellType = registryObject.get();
+                            if (spellType.isEmpty())
+                                return;
+
+                            output.accept(SpellTomeItem.createWithSpell(spellType));
                         });
                     }).title(Component.translatable("itemGroup.spellbound"))
             .build());

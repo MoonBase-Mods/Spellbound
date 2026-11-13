@@ -2,7 +2,8 @@ package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.client.MovementData;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRule;
+import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -10,26 +11,20 @@ import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
-import com.ombremoon.spellbound.common.world.block.ChalkBoardBlock;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.common.world.block.StarMapBlock;
 import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
 import com.ombremoon.spellbound.common.world.item.components.SatchelContents;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.EffectManager;
-import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Unit;
-import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
@@ -123,6 +118,8 @@ public class SBData {
                     .build());
     public static final Supplier<AttachmentType<Integer>> DIVINE_CHARM = ATTACHMENT_TYPES.register(
             "divine_charm", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<Boolean>> DEFLECTED = ATTACHMENT_TYPES.register(
+            "deflected", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
     //Books unlocked
     private static final Codec<Map<ResourceLocation, Integer>> BOOK_CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, x -> Codec.INT);

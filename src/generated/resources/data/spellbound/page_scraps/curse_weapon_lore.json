@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "acquired_cursed_phial": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:cursed_phial"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    },
+    "acquired_ominous_bottle": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:ominous_bottle"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "acquired_ominous_bottle",
+      "acquired_cursed_phial"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:curse_weapon_lore"
+    ]
+  }
+}

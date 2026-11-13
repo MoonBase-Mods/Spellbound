@@ -29,10 +29,73 @@
       "type": "spellbound:text",
       "extras": {
         "maxLineLength": 100,
+        "pageScrap": "spellbound:bless_shrine"
+      },
+      "position": {
+        "xOffset": 54,
+        "yOffset": 40
+      },
+      "translation": {
+        "translate": "divine_action.blessing.bless_shrine"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 40
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "blessing.bless_shrine.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "spellbound:plains_divine_shrine"
+        }
+      ],
+      "position": {
+        "xOffset": -26,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
         "pageScrap": "spellbound:cure_villager"
       },
       "position": {
-        "yOffset": 40
+        "yOffset": 93
       },
       "translation": {
         "translate": "divine_action.blessing.cure_zombie_villager"
@@ -42,7 +105,7 @@
       "type": "spellbound:tooltip",
       "height": 40,
       "position": {
-        "yOffset": 40
+        "yOffset": 93
       },
       "tooltips": [
         {
@@ -56,7 +119,7 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+2"
             }
           ],
           "translate": "divine.judgement"
@@ -64,7 +127,7 @@
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -84,7 +147,70 @@
       ],
       "position": {
         "xOffset": 74,
-        "yOffset": 7
+        "yOffset": 64
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:bestow_charm"
+      },
+      "position": {
+        "xOffset": 54,
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "divine_action.blessing.bestow_charm"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 150
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "blessing.bestow_charm.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "spellbound:divine_charm"
+        }
+      ],
+      "position": {
+        "xOffset": -26,
+        "yOffset": 110
       }
     },
     {
@@ -97,11 +223,29 @@
       "list": [
         {
           "component": {
-            "translate": "blessing.cure_zombie_villager.lore"
+            "translate": "blessing.bless_shrine.lore"
           },
           "extraOffset": 0,
           "not_added": false,
+          "scrap": "spellbound:bless_shrine_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "blessing.cure_zombie_villager.lore"
+          },
+          "extraOffset": 10,
+          "not_added": false,
           "scrap": "spellbound:cure_villager_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "blessing.bestow_charm.lore"
+          },
+          "extraOffset": 15,
+          "not_added": false,
+          "scrap": "spellbound:bestow_charm_lore",
           "target_page": "spellbound:default"
         }
       ],

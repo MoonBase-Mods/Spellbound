@@ -173,9 +173,4 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
 
         return true;
     }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
-    }
 }

@@ -238,7 +238,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
             return false;
         } else if (!this.wasSummoned()) {
             boolean flag = this.getPhase() == 2;
-            Entity entity = source.getDirectEntity();
+            Entity entity = source.getEntity();
             if (entity instanceof MiniMushroom mushroom) {
                 if (flag && mushroom.getSummoner() != this) {
                     amount *= 1.5F;

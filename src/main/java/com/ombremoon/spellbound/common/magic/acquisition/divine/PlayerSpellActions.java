@@ -16,6 +16,8 @@ import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
@@ -45,7 +48,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
-public class PlayerSpellActions implements Loggable {
+public class PlayerSpellActions implements INBTSerializable<CompoundTag>, Loggable {
     private final Map<ActionHolder, ActionProgress> progress = new LinkedHashMap<>();
     private final Map<ActionHolder, Integer> recentActions = new Object2IntOpenHashMap<>();
     private final ServerPlayer player;
@@ -342,5 +345,15 @@ public class PlayerSpellActions implements Loggable {
         Mob mob = event.getMob();
         if (!level.isClientSide)
             mob.setData(SBData.INTERACT_HEAL_TARGET, 0);
+    }
+
+    @Override
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+        return null;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+
     }
 }

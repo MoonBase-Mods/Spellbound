@@ -6,12 +6,13 @@
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
-            "predicate": {}
+            "predicate": {
+              "type": "minecraft:villager"
+            }
           }
-        ],
-        "number_entities_killed": 5
+        ]
       },
-      "trigger": "spellbound:kill_villager"
+      "trigger": "spellbound:player_kill"
     }
   },
   "requirements": [
@@ -20,10 +21,6 @@
     ]
   ],
   "rewards": {
-    "experience": 20,
-    "judgement_granted": -5,
-    "spells": [
-      "spellbound:siphon"
-    ]
+    "judgement_granted": -2
   }
 }

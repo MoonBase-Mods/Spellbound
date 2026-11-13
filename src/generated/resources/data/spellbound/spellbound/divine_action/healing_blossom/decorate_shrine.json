@@ -11,6 +11,10 @@
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:decorate_shrine",
+      "spellbound:decorate_shrine_lore"
+    ],
     "judgement_granted": 5,
     "spells": [
       "spellbound:healing_blossom"

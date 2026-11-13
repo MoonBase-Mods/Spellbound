@@ -25,6 +25,7 @@ public interface SBSummonable extends OwnableEntity {
 
     @Override
     @Nullable default UUID getOwnerUUID() {
-        return this.getSummoner().getUUID();
+        Entity entity = this.getSummoner();
+        return entity == null ? null : entity.getUUID();
     }
 }

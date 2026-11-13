@@ -27,13 +27,21 @@ public class SBTriggers {
     public static final Supplier<ConsumeItemTrigger> CONSUME_ITEM = register("consume_item", new ConsumeItemTrigger());
     public static final Supplier<CuredZombieVillagerTrigger> CURED_ZOMBIE_VILLAGER = register("cured_zombie_villager", new CuredZombieVillagerTrigger());
     public static final Supplier<DivineTrigger> BLESS_SHRINE = register("bless_shrine", new DivineTrigger());
+    public static final Supplier<DivineTrigger> CURSE_SHRINE = register("curse_shrine", new DivineTrigger());
+    public static final Supplier<DivineTrigger> USE_HALF_FILLED_SIPHON = register("use_half_filled_siphon", new DivineTrigger());
     public static final Supplier<DivineTrigger> DECORATED_SHRINE = register("decorated_shrine", new DivineTrigger());
-    public static final Supplier<PlayerHurtTrigger> PLAYER_HURT = register("player_hurt", new PlayerHurtTrigger());
+    public static final Supplier<EntityHurtPlayerTrigger> ENTITY_HURT_PLAYER = register("entity_hurt_player", new EntityHurtPlayerTrigger());
+    public static final Supplier<PlayerHurtEntityTrigger> PLAYER_HURT_ENTITY = register("player_hurt_entity", new PlayerHurtEntityTrigger());
+    public static final Supplier<PlayerHurtEntityTrigger> DEFLECT_AND_HIT_PROJECTILE = register("deflect_and_hit_projectile", new PlayerHurtEntityTrigger());
     public static final Supplier<InteractWithBlockTrigger> INTERACT_WITH_BLOCK = register("interact_with_block", new InteractWithBlockTrigger());
     public static final Supplier<LearnSpellTrigger> LEARN_SPELL = register("learn_spell", new LearnSpellTrigger());
     public static final Supplier<SkillBuffTrigger> RECEIVED_SKILL_BUFF = register("received_skill_buff", new SkillBuffTrigger());
     public static final Supplier<SkillBuffTrigger> BUFF_SELF = register("buff_self", new SkillBuffTrigger());
     public static final Supplier<ItemUsedOnEntityTrigger> USE_ITEM_ON_ENTITY = register("use_item_on_entity", new ItemUsedOnEntityTrigger());
+    public static final Supplier<UseMagicCauldronTrigger> USE_HOLY_CAULDRON = register("use_holy_cauldron", new UseMagicCauldronTrigger());
+    public static final Supplier<InventoryChangeTrigger> INVENTORY_CHANGED = register("inventory_changed", new InventoryChangeTrigger());
+    public static final Supplier<RecipeCraftedTrigger> RECIPE_CRAFTED = register("recipe_crafted", new RecipeCraftedTrigger());
+    public static final Supplier<TameAnimalTrigger> TAME_ANIMAL = register("tame_animal", new TameAnimalTrigger());
 
     public static <T extends ActionTrigger<?>> Supplier<T> register(String name, T trigger) {
         return TRIGGERS.register(name, () -> trigger);

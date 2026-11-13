@@ -12,11 +12,11 @@ import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.Optional;
 
-public class PlayerKillEntityTrigger extends SimpleTrigger<PlayerKillEntityTrigger.Instance> {
+public class PlayerKillEntityTrigger extends SimpleTrigger<PlayerKillEntityTrigger.TriggerInstance> {
 
     @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Entity entity, DamageSource source, int numKilled) {
@@ -24,29 +24,33 @@ public class PlayerKillEntityTrigger extends SimpleTrigger<PlayerKillEntityTrigg
         this.trigger(player, instance -> instance.matches(player, context, source, numKilled));
     }
 
-    public record Instance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> entityPredicate, Optional<DamageSourcePredicate> killingBlow, MinMaxBounds.Ints numKilled) implements SimpleTrigger.Instance {
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(
+    public record TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> entityPredicate, Optional<DamageSourcePredicate> killingBlow, MinMaxBounds.Ints numKilled) implements SimpleTrigger.Instance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
-                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(Instance::entityPredicate),
-                        DamageSourcePredicate.CODEC.optionalFieldOf("killing_blow").forGetter(Instance::killingBlow),
-                        MinMaxBounds.Ints.CODEC.optionalFieldOf("number_entities_killed", MinMaxBounds.Ints.ANY).forGetter(Instance::numKilled)
-        ).apply(instance, Instance::new));
+                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                        EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entityPredicate),
+                        DamageSourcePredicate.CODEC.optionalFieldOf("killing_blow").forGetter(TriggerInstance::killingBlow),
+                        MinMaxBounds.Ints.CODEC.optionalFieldOf("number_entities_killed", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::numKilled)
+        ).apply(instance, TriggerInstance::new));
 
-        public static ActionCriterion<Instance> playerKilledEntity(Optional<EntityPredicate> entityPredicate) {
-            return SBTriggers.PLAYER_KILL.get().createCriterion(new Instance(Optional.empty(), EntityPredicate.wrap(entityPredicate), Optional.empty(), MinMaxBounds.Ints.ANY));
+        public static ActionCriterion<TriggerInstance> playerKilledEntity(Optional<EntityPredicate> entityPredicate) {
+            return SBTriggers.PLAYER_KILL.get().createCriterion(new TriggerInstance(Optional.empty(), EntityPredicate.wrap(entityPredicate), Optional.empty(), MinMaxBounds.Ints.ANY));
         }
 
-        public static ActionCriterion<Instance> playerKilledEntity(EntityPredicate.Builder entityPredicate) {
-            return SBTriggers.PLAYER_KILL.get().createCriterion(new Instance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), MinMaxBounds.Ints.ANY));
+        public static ActionCriterion<TriggerInstance> playerKilledEntity(EntityPredicate.Builder entityPredicate) {
+            return SBTriggers.PLAYER_KILL.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), MinMaxBounds.Ints.ANY));
         }
 
-        public static ActionCriterion<Instance> playerKilledUndead(EntityPredicate.Builder entityPredicate, MinMaxBounds.Ints numKilled) {
-            return SBTriggers.KILL_UNDEAD.get().createCriterion(new Instance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), numKilled));
+        public static ActionCriterion<TriggerInstance> playerKilledEntity(EntityPredicate.Builder entityPredicate, DamageSourcePredicate killingBlow) {
+            return SBTriggers.PLAYER_KILL.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.of(killingBlow), MinMaxBounds.Ints.ANY));
         }
 
-        public static ActionCriterion<Instance> playerKilledVillager(EntityPredicate.Builder entityPredicate, MinMaxBounds.Ints numKilled) {
-            return SBTriggers.KILL_VILLAGER.get().createCriterion(new Instance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), numKilled));
+        public static ActionCriterion<TriggerInstance> playerKilledUndead(EntityPredicate.Builder entityPredicate, MinMaxBounds.Ints numKilled) {
+            return SBTriggers.KILL_UNDEAD.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), numKilled));
+        }
+
+        public static ActionCriterion<TriggerInstance> playerKilledVillager(EntityPredicate.Builder entityPredicate, MinMaxBounds.Ints numKilled) {
+            return SBTriggers.KILL_VILLAGER.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(EntityPredicate.wrap(entityPredicate)), Optional.empty(), numKilled));
         }
 
         public boolean matches(ServerPlayer player, LootContext context, DamageSource source, int numKilled) {

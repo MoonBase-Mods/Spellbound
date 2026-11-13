@@ -25,7 +25,7 @@ public class DamageSourcesMixin {
         ItemStack stack = player.getWeaponItem();
         Imbuement imbuement = stack.get(SBData.IMBUEMENT);
         Imbuement playerImbuement = player.getData(SBData.ENTITY_IMBUEMENT);
-        if (imbuement == null && playerImbuement.addsDamage())
+        if (imbuement == null && playerImbuement.addsDamage() && stack.isEmpty())
             imbuement = playerImbuement;
 
         if (imbuement != null) {

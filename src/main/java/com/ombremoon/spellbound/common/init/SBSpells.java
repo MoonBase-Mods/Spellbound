@@ -1,6 +1,9 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.spell.deception.*;
 import com.ombremoon.spellbound.common.world.spell.divine.*;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
@@ -14,9 +17,6 @@ import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
 import com.ombremoon.spellbound.common.world.spell.summon.*;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.*;
-import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Registry;
@@ -31,6 +31,8 @@ public class SBSpells {
     public static final ResourceKey<Registry<SpellType<?>>> SPELL_TYPE_REGISTRY_KEY = ResourceKey.createRegistryKey(CommonClass.customLocation("spell_type"));
     public static final Registry<SpellType<?>> REGISTRY = new RegistryBuilder<>(SPELL_TYPE_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<SpellType<?>> SPELL_TYPES = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
+
+//    public static final Supplier<SpellType<EmptySpell>> EMPTY = registerSpell("empty", new SpellType.Builder<>(EmptySpell::new));
 
     //Ruin
     public static final Supplier<SpellType<FireballSpell>> FIREBALL = registerSpell("fireball", fireRuinBuilder(SpellMastery.NOVICE, FireballSpell::new)

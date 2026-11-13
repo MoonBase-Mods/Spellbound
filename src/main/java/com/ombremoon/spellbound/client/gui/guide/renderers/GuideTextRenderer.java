@@ -26,7 +26,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
 
         boolean visible = isVisible(element.extras().pageScrap());
         Style style = Style.EMPTY;
-        if (!visible) style = style.applyFormat(ChatFormatting.OBFUSCATED);
+        style = style.applyFormat(visible ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED);
 
         style = style.withBold(element.extras().bold());
         style = style.withItalic(element.extras().italic());

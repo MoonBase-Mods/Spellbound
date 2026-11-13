@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "acquire_divine_shrine": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#spellbound:divine_shrine"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    },
+    "use_divine_shrine": {
+      "conditions": {
+        "block": {
+          "blocks": "#spellbound:divine_shrine"
+        }
+      },
+      "trigger": "spellbound:interact_with_block"
+    }
+  },
+  "requirements": [
+    [
+      "acquire_divine_shrine",
+      "use_divine_shrine"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:bless_shrine_lore"
+    ]
+  }
+}

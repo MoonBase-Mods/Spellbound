@@ -42,13 +42,13 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
-        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
-        simpleGeneratedModel((SBBlocks.ARCANE_CHALKBOARD));
-        simpleGeneratedModel((SBBlocks.ARCANE_CANDLE));
-        simpleGeneratedModel((SBBlocks.STAR_MAP));
-        simpleGeneratedModel((SBBlocks.RUNED_COPPER_PILLAR));
-        simpleGeneratedModel((SBBlocks.RUNED_END_PILLAR));
-        simpleGeneratedModel((SBBlocks.RUNED_STONE_PILLAR));
+        simpleGeneratedModel(SBBlocks.DUNGEON_DOOR);
+        simpleGeneratedModel(SBBlocks.ARCANE_CHALKBOARD);
+        simpleGeneratedModel(SBBlocks.ARCANE_CANDLE);
+        simpleGeneratedModel(SBBlocks.STAR_MAP);
+        simpleGeneratedModel(SBBlocks.RUNED_COPPER_PILLAR);
+        simpleGeneratedModel(SBBlocks.RUNED_END_PILLAR);
+        simpleGeneratedModel(SBBlocks.RUNED_STONE_PILLAR);
 
 
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
@@ -73,18 +73,16 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleGeneratedModel(SBItems.MAGIC_ESSENCE);
         simpleGeneratedModel(SBItems.MANA_TEAR);
+        simpleGeneratedModel(SBItems.MANA_BOTTLE);
         simpleGeneratedModel(SBItems.CHALK);
         simpleGeneratedModel(SBItems.DUNGEON_KEY);
         simpleGeneratedModel(SBItems.DIVINE_PHIAL);
         simpleGeneratedModel(SBItems.CURSED_PHIAL);
-
-        //NEW
         simpleGeneratedModel((SBItems.TEAR_OF_THE_ECLIPSE));
         simpleGeneratedModel((SBItems.BLESSED_BANDAGES));
         simpleGeneratedModel((SBItems.HOLY_WATER_BUCKET));
-        //simpleGeneratedModel((SBItems.MAGIC_SHIELD));
-        //simpleGeneratedModel((SBItems.DIVINE_CHARM));
-
+        simpleGeneratedModel((SBItems.DIVINE_CHARM));
+        simpleGeneratedModel((SBItems.MAGIC_SHIELD));
 
         simpleGeneratedModel(SBItems.DECEPTION_BOOK);
         simpleGeneratedModel(SBItems.DIVINE_BOOK);
@@ -96,8 +94,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.ARCANE_EYE);
 
         simpleGeneratedModel((SBItems.INTERSTELLARE_DISC));
-
-
     }
 
     private void registerItemModels(Collection<Supplier<? extends Item>> registryObjects) {
@@ -138,6 +134,15 @@ public class ModItemModelProvider extends ItemModelProvider {
         return withExistingParent(BuiltInRegistries.ITEM.getKey(item).getPath(),
                 ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated")).texture("layer0",
                 CommonClass.customLocation("item/" + "temp_texture"));
+    }
+
+    protected ItemModelBuilder blockItem(Supplier<Block> block) {
+        return blockItem(block.get());
+    }
+
+    protected ItemModelBuilder blockItem(Block block) {
+        String path = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        return withExistingParent(path, CommonClass.customLocation(path));
     }
 
     protected String getName(Item item) {

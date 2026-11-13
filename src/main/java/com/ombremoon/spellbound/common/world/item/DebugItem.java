@@ -98,7 +98,8 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        player.setItemInHand(InteractionHand.OFF_HAND, DungeonKeyItem.createWithRiddle(SBPuzzleConfigs.NIGHTBLADE));
+        EffectManager effects = SpellUtil.getSpellEffects(player);
+        log(effects.getJudgement());
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {

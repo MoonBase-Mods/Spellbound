@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "acquired_cursed_phial": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:cursed_phial"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "acquired_cursed_phial"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:curse_enemy_with_phial_lore"
+    ]
+  }
+}

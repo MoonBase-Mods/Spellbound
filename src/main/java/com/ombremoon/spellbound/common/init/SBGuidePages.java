@@ -1,7 +1,5 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.client.gui.guide.elements.GuideMultiBlockElement;
-import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
@@ -28,10 +26,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Struct;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -797,8 +793,8 @@ public interface SBGuidePages {
                 SBSpells.HEALING_TOUCH,
                 false,
                 new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 2, 6000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
-                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 1, 6000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.USE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 1, 6000, 10, Ingredient.of(SBItems.DIVINE_PHIAL.get()))
+                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 1, 6000, 0, Ingredient.of(SBItems.BLESSED_BANDAGES.get())),
+                new ItemActionEntry(SBDivineActions.USE_DIVINE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 1, 6000, 10, Ingredient.of(SBItems.DIVINE_PHIAL.get()))
         );
         createDivineSpellPage(context, BLESSING, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.BLESSING, 0);
         createDivineActionPage(
@@ -806,18 +802,32 @@ public interface SBGuidePages {
                 BLESSING_ACTIONS,
                 BLESSING,
                 SBSpells.BLESSING,
-                false,
-                new ItemActionEntry(SBDivineActions.CURE_ZOMBIE_VILLAGER, SBPageScraps.CURE_VILLAGER, SBPageScraps.CURE_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.ZOMBIE_VILLAGER_SPAWN_EGG))
+                true,
+                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 1, 6000, 0, Ingredient.of(SBBlocks.PLAINS_DIVINE_SHRINE.get())),
+                new ItemActionEntry(SBDivineActions.CURE_ZOMBIE_VILLAGER, SBPageScraps.CURE_VILLAGER, SBPageScraps.CURE_VILLAGER_LORE, 2, 6000, 10, Ingredient.of(Items.ZOMBIE_VILLAGER_SPAWN_EGG)),
+                new ItemActionEntry(SBDivineActions.BESTOW_CHARM, SBPageScraps.BESTOW_CHARM, SBPageScraps.BESTOW_CHARM_LORE, 1, 6000, 15, Ingredient.of(SBItems.DIVINE_CHARM.get()))
         );
         createDivineSpellPage(context, SMITE, BLESSING_ACTIONS, DIVINE_BOOK, SBSpells.SMITE, 0);
-        createDivineSpellPage(context, SIPHON, SMITE, DIVINE_BOOK, SBSpells.SIPHON, 0);
+        createDivineActionPage(
+                context,
+                SMITE_ACTIONS,
+                SMITE,
+                SBSpells.SMITE,
+                false,
+                new ItemActionEntry(SBDivineActions.ANOINT_WEAPON, SBPageScraps.ANOINT_WEAPON, SBPageScraps.ANOINT_WEAPON_LORE, 1, 6000, 0, Ingredient.of(Items.GOLDEN_SWORD)),
+                new ItemActionEntry(SBDivineActions.DEFLECT_UNDEAD_ARROW, SBPageScraps.DEFLECT_UNDEAD_ARROW, SBPageScraps.DEFLECT_UNDEAD_ARROW_LORE, 1, 6000, 10, Ingredient.of(SBItems.MAGIC_SHIELD.get())),
+                new ItemActionEntry(SBDivineActions.CURSE_WEAPON, SBPageScraps.CURSE_WEAPON, SBPageScraps.CURSE_WEAPON_LORE, -1, 6000, 15, Ingredient.of(Items.OMINOUS_BOTTLE))
+        );
+        createDivineSpellPage(context, SIPHON, SMITE_ACTIONS, DIVINE_BOOK, SBSpells.SIPHON, 0);
         createDivineActionPage(
                 context,
                 SIPHON_ACTIONS,
                 SIPHON,
                 SBSpells.SIPHON,
-                false,
-                new ItemActionEntry(SBDivineActions.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.IRON_AXE))
+                true,
+                new ItemActionEntry(SBDivineActions.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL_LORE, -1, 6000, 0, Ingredient.of(SBItems.CURSED_PHIAL.get())),
+                new ItemActionEntry(SBDivineActions.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON_LORE, -1, 6000, 10, Ingredient.of(SBBlocks.MANA_SIPHON.get())),
+                new ItemActionEntry(SBDivineActions.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE_LORE, -1, 6000, 15, Ingredient.of(Items.IRON_AXE))
         );
         createDivineSpellPage(context, HEALING_BLOSSOM, SIPHON_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(

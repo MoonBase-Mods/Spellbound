@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "kill_zombie_villager": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:zombie_villager"
+            }
+          }
+        ]
+      },
+      "trigger": "spellbound:player_kill"
+    }
+  },
+  "requirements": [
+    [
+      "kill_zombie_villager"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:cure_villager_lore"
+    ]
+  }
+}

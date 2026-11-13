@@ -70,31 +70,35 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
         float judgementGranted = this.judgementGranted;
 
-        ResourceLocation action_vfx = CommonClass.customLocation("divine_action");
+        ResourceLocation fx = DivineShrineBlock.DIVINE_FX;
         SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
 
         if (judgementGranted < 0){
-            action_vfx = CommonClass.customLocation("dark_divine_action");
+            fx = DivineShrineBlock.CURSED_FX;
             sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
         }
 
-        if (blockState != null/* && blockState.getSecond().getValue(DivineShrineBlock.ACTIVE)*/) {
+        if (blockState != null && blockState.getSecond().getValue(DivineShrineBlock.ACTIVE)) {
+            boolean spellFlag = false;
             BlockPos pos = blockState.getFirst();
-            float volume = 0.4F + level.random.nextFloat() * 0.3F;
-            float pitch = 1.0F + level.random.nextFloat() * 0.2F;
-            RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(action_vfx, pos)
-                            .setOffset(0, -0.49, 0));
-
-            level.playSound(null, player.blockPosition(),sound, SoundSource.PLAYERS, volume, pitch);
-
             if (this.hasSufficientJudgement(effects)) {
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
                         ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
                         RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                        spellFlag = true;
                     }
                 }
+            }
+
+            if (spellFlag) {
+                float volume = 0.4F + level.random.nextFloat() * 0.3F;
+                float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+                RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(fx, pos)
+                        .setOffset(0, -0.49, 0));
+
+                level.playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);
             }
         }
 
@@ -219,8 +223,11 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
             return new Builder().addBookScrap(scrap);
         }
 
-        public Builder addBookScrap(ResourceLocation scrap) {
-            this.scraps.add(scrap);
+        public Builder addBookScrap(ResourceLocation... scraps) {
+            for (ResourceLocation scrap : scraps) {
+                this.scraps.add(scrap);
+            }
+
             return this;
         }
 

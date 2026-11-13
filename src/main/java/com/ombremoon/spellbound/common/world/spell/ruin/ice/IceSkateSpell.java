@@ -86,7 +86,7 @@ public class IceSkateSpell extends ChanneledSpell {
                 .castCondition((context, iceSkateSpell) -> context.getCaster().onGround() && !context.getLevel().dimensionType().ultraWarm())
                 .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, true))
-                .hasLayer()
+                .spellLayer((context, spell) -> CommonClass.customLocation("ice_skate"))
                 .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
 
     }
@@ -277,10 +277,5 @@ public class IceSkateSpell extends ChanneledSpell {
         float totalSpread = spread * (count - 1);
         float startOffset = -totalSpread / 2.0F;
         return startAngle + startOffset + (i * spread);
-    }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
     }
 }

@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
-import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
@@ -20,6 +19,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
+import com.ombremoon.spellbound.common.world.block.HolyWaterCauldronBlock;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -27,39 +27,35 @@ import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.living.Hellhound;
-import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
 import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.item.GuideBookItem;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
-import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
@@ -69,7 +65,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -78,7 +73,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -89,7 +84,6 @@ import net.neoforged.neoforge.server.command.ConfigCommand;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class NeoForgeEvents {
@@ -132,12 +126,6 @@ public class NeoForgeEvents {
                 if (!level.isClientSide) {
                     ServerLevel serverLevel = (ServerLevel) level;
                     handler.onPlayerSpawn(player);
-
-                    var holder = SpellUtil.getSkills(player);
-                    holder.sync();
-
-                    var tree = player.getData(SBData.UPGRADE_TREE);
-                    tree.refreshTree(player);
 
                     ArenaSavedData data = ArenaSavedData.get(serverLevel);
                     data.closeCachedArenas(player);
@@ -201,6 +189,11 @@ public class NeoForgeEvents {
                 puzzle.destroyDimension(serverLevel);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerStarted(ServerStartedEvent event) {
+        HolyWaterCauldronBlock.createInteractions();
     }
 
     @SubscribeEvent
@@ -508,7 +501,9 @@ public class NeoForgeEvents {
             if (charges > 0) {
                 imbuement = imbuement.setCharges(charges - 1);
                 stack.set(SBData.IMBUEMENT, imbuement);
-            } else if (charges == 0) {
+            }
+
+            if (imbuement.outOfCharge()) {
                 stack.remove(SBData.IMBUEMENT);
             }
         }
@@ -521,6 +516,23 @@ public class NeoForgeEvents {
         if (event.getEntity().level().isClientSide) return;
 
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.BLOCK, new LivingBlockEvent(event.getEntity(), event));
+    }
+
+    @SubscribeEvent
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteractSpecific event) {
+        Player player = event.getEntity();
+        ItemStack stack = event.getItemStack();
+        Entity entity = event.getTarget();
+        if (entity instanceof OwnableEntity ownable && stack.is(SBItems.DIVINE_CHARM.get())) {
+            Entity owner = ownable.getOwner();
+            if (entity.isAlive() && entity.getData(SBData.DIVINE_CHARM) != player.getId() && owner != null && player.is(owner)) {
+                entity.level().playSound(player, entity, SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                if (!player.level().isClientSide) {
+                    entity.setData(SBData.DIVINE_CHARM, player.getId());
+                    stack.shrink(1);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -575,6 +587,10 @@ public class NeoForgeEvents {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(livingEntity);
             handler.getListener().fireEvent(SpellEventListener.Events.INCOMING_DAMAGE, new IncomingDamageEvent(livingEntity, event));
+
+            if (livingEntity.isBlocking() && livingEntity.getOffhandItem().is(SBItems.MAGIC_SHIELD.get())) {
+                handler.handleMagicShield(event);
+            }
         }
 
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
@@ -606,6 +622,7 @@ public class NeoForgeEvents {
         handler.getListener().fireEvent(SpellEventListener.Events.POST_DAMAGE, new DamageEvent.Post(livingEntity, event));
 
         DamageSource source = event.getSource();
+        Entity direct = source.getDirectEntity();
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity attacker && SpellUtil.isSummon(attacker)) {
             AbstractSpell spell = SpellUtil.getActiveSpell(attacker);

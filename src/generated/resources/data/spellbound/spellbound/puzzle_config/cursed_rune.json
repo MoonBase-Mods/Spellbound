@@ -42,7 +42,7 @@
                   }
                 }
               },
-              "trigger": "spellbound:player_hurt"
+              "trigger": "spellbound:entity_hurt_player"
             }
           },
           "requirements": [
@@ -67,7 +67,7 @@
                   }
                 }
               },
-              "trigger": "spellbound:player_hurt"
+              "trigger": "spellbound:entity_hurt_player"
             }
           },
           "requirements": [

@@ -1,13 +1,16 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.skills.PseudoSkillProvider;
+import com.ombremoon.spellbound.common.world.block.DivineShrineBlock;
 import com.ombremoon.spellbound.common.world.item.PhialItem;
-import com.ombremoon.spellbound.datagen.ModTagProvider;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.doubles.DoubleDoubleImmutablePair;
 import net.minecraft.core.BlockPos;
@@ -15,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
@@ -36,6 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.Tags;
+import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -45,7 +50,9 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
     public static final EntityDataAccessor<PhialItem.PhialType> PHIAL_TYPE = SynchedEntityData.defineId(ThrownPhial.class, SBEntityDataSerializers.PHIAL_TYPE.get());
     public static final Predicate<LivingEntity> HOLY_WATER_SENSITIVE_OR_ON_FIRE = livingEntity -> livingEntity.isSensitiveToWater() || livingEntity.isOnFire() || livingEntity.getType().is(EntityTypeTags.UNDEAD);
     public static final ResourceLocation DIVINE_BUFF_LOCATION = CommonClass.customLocation("divine_phial");
+    public static final ResourceLocation CURSED_BUFF_LOCATION = CommonClass.customLocation("cursed_phial");
     public static final PseudoSkillProvider DIVINE_BUFF = PseudoSkillProvider.withoutSpell(DIVINE_BUFF_LOCATION);
+    public static final PseudoSkillProvider CURSED_BUFF = PseudoSkillProvider.withoutSpell(CURSED_BUFF_LOCATION);
 
     public ThrownPhial(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
         super(entityType, level);
@@ -120,10 +127,11 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
             if (d0 < 16.0) {
                 boolean undead = livingentity.getType().is(EntityTypeTags.UNDEAD);
                 if (livingentity.isSensitiveToWater() || undead) {
-                    livingentity.hurt(this.damageSources().indirectMagic(this, this.getOwner()), 1.0F);
+                    livingentity.hurt(SpellUtil.damageSource(this.level(), SBDamageTypes.HOLY, this.getOwner(), this), 1.0F);
+                    livingentity.igniteForSeconds(3);
                 }
 
-                if (livingentity.isOnFire() && livingentity.isAlive() || !undead) {
+                if (livingentity.isOnFire() && livingentity.isAlive() && !undead) {
                     livingentity.extinguishFire();
                 }
             }
@@ -152,13 +160,6 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
                 if (livingEntity.isAffectedByPotions()) {
                     double d0 = this.distanceToSqr(livingEntity);
                     if (d0 < 16.0) {
-                        double d1;
-                        if (livingEntity == entity) {
-                            d1 = 1.0;
-                        } else {
-                            d1 = 1.0 - Math.sqrt(d0) / 4.0;
-                        }
-
                         if (!(livingEntity.getType().is(EntityTypeTags.UNDEAD) || livingEntity.getType().is(Tags.EntityTypes.BOSSES))) {
                             var handler = SpellUtil.getSpellHandler(livingEntity);
                             SkillBuff<SpellModifier> buff = new SkillBuff<>(DIVINE_BUFF, DIVINE_BUFF_LOCATION, BuffCategory.BENEFICIAL, SkillBuff.SPELL_MODIFIER, SpellModifier.DIVINE_PHIAL);
@@ -175,14 +176,31 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
     }
 
     private void applyCursedSplash(@Nullable Entity entity) {
+        AABB aabb = this.getBoundingBox().inflate(4.0, 2.0, 4.0);
+        List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, aabb);
+        if (!list.isEmpty()) {
+            Entity owner = this.getEffectSource();
 
+            for (LivingEntity livingEntity : list) {
+                if (livingEntity.isAffectedByPotions()) {
+                    double d0 = this.distanceToSqr(livingEntity);
+                    if (d0 < 16.0) {
+                        if (livingEntity.is(owner)) {
+                            var handler = SpellUtil.getSpellHandler(livingEntity);
+                            SkillBuff<SpellModifier> buff = new SkillBuff<>(CURSED_BUFF, CURSED_BUFF_LOCATION, BuffCategory.BENEFICIAL, SkillBuff.SPELL_MODIFIER, SpellModifier.CURSED_PHIAL);
+                            handler.addSkillBuff(buff, owner, 400);
+                        } else if (owner instanceof LivingEntity living) {
+                            living.heal(2);
+                        }
+
+                        livingEntity.hurt(SpellUtil.damageSource(this.level(), SBDamageTypes.SB_GENERIC, this.getOwner(), this), 4);
+                    }
+                }
+            }
+        }
     }
 
     private void applyEclipseSplash(@Nullable Entity entity) {
-
-    }
-
-    private void blessShrine() {
 
     }
 
@@ -205,11 +223,45 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
             } else if (CampfireBlock.isLitCampfire(blockstate)) {
                 this.level().levelEvent(null, 1009, pos, 0);
                 CampfireBlock.dowse(this.getOwner(), this.level(), pos, blockstate);
-                this.level().setBlockAndUpdate(pos, blockstate.setValue(CampfireBlock.LIT, Boolean.valueOf(false)));
+                this.level().setBlockAndUpdate(pos, blockstate.setValue(CampfireBlock.LIT, false));
+            }
+        }
+        if (type == PhialItem.PhialType.CURSED) {
+
+        }
+
+        if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE)) {
+            this.convertAndBuffShrine(this.level(), blockstate, pos, owner, type);
+        }
+    }
+
+    private void convertAndBuffShrine(Level level, BlockState state, BlockPos pos, Entity owner, PhialItem.PhialType type) {
+        boolean isCursed = type.isCursedProperty();
+        if (state.getBlock() instanceof DivineShrineBlock block) {
+            if (block.canConvert(state, type)) {
+                BlockPos center = block.getShrineBase(state, pos);
+                var blocks = block.getFullBlockShape(level, pos, state);
+                for (BlockPos blockPos : blocks) {
+                    BlockState blockState = level.getBlockState(blockPos);
+                    blockState = blockState.setValue(DivineShrineBlock.CURSED, isCursed).setValue(DivineShrineBlock.ACTIVE, false);
+                    level.setBlock(blockPos, blockState, 3);
+                }
+
+                if (!level.isClientSide) {
+                    ResourceLocation fx = type.isCursedProperty() ? DivineShrineBlock.CURSED_FX : DivineShrineBlock.DIVINE_FX;
+                    ResourceLocation activeFX = type.isCursedProperty() ? DivineShrineBlock.DIVINE_ACTIVE_FX : DivineShrineBlock.CURSED_ACTIVE_FX;
+                    RenderUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
+                            .setOffset(0, -0.49, 0));
+                    RenderUtil.removeBlockEffect((ServerLevel) level, center, activeFX);
+                }
             }
 
-            if (blockstate.is(SBTags.Blocks.DIVINE_SHRINE) && owner instanceof ServerPlayer player) {
-                SBTriggers.BLESS_SHRINE.get().trigger(player);
+            if (owner instanceof ServerPlayer player) {
+                if (isCursed) {
+                    SBTriggers.CURSE_SHRINE.get().trigger(player);
+                } else {
+                    SBTriggers.BLESS_SHRINE.get().trigger(player);
+                }
             }
         }
     }

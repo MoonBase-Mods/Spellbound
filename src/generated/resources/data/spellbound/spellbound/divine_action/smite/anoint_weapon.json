@@ -1,0 +1,29 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "anoint_weapon": {
+      "conditions": {
+        "type": "divine",
+        "item": {
+          "items": "#spellbound:imbueable"
+        }
+      },
+      "trigger": "spellbound:use_holy_cauldron"
+    }
+  },
+  "requirements": [
+    [
+      "anoint_weapon"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:anoint_weapon",
+      "spellbound:anoint_weapon_lore"
+    ],
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:smite"
+    ]
+  }
+}

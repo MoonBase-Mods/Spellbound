@@ -32,6 +32,14 @@ public class DivineTrigger extends SimpleTrigger<DivineTrigger.TriggerInstance> 
             return SBTriggers.BLESS_SHRINE.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
+        public static ActionCriterion<TriggerInstance> curseShrine() {
+            return SBTriggers.CURSE_SHRINE.get().createCriterion(new TriggerInstance(Optional.empty()));
+        }
+
+        public static ActionCriterion<TriggerInstance> useHalfFilledSiphon() {
+            return SBTriggers.USE_HALF_FILLED_SIPHON.get().createCriterion(new TriggerInstance(Optional.empty()));
+        }
+
         public static ActionCriterion<TriggerInstance> decoratedShrine() {
             return SBTriggers.DECORATED_SHRINE.get().createCriterion(new TriggerInstance(Optional.empty()));
         }

@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "acquire_divine_phial": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:divine_phial"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "acquire_divine_phial"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:use_phial_lore"
+    ]
+  }
+}

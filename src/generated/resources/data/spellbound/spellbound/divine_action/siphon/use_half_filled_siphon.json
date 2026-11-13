@@ -1,0 +1,23 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "use_half_filled_siphon": {
+      "trigger": "spellbound:use_half_filled_siphon"
+    }
+  },
+  "requirements": [
+    [
+      "use_half_filled_siphon"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:use_half_filled_siphon",
+      "spellbound:use_half_filled_siphon_lore"
+    ],
+    "judgement_granted": -1,
+    "spells": [
+      "spellbound:siphon"
+    ]
+  }
+}

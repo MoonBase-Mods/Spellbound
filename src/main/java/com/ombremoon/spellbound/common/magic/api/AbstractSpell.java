@@ -81,10 +81,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * The main class used to create spells. Spells exist on both the client and server and must be handled as such. In general, spells should extend {@link AnimatedSpell} unless you don't want the player to have an animation while casting the spells.
@@ -121,7 +118,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private final boolean fullRecast;
     private final boolean resetDuration;
     private final BiPredicate<SpellContext, AbstractSpell> skipEndOnRecast;
-    private final boolean hasLayer;
+    private final BiFunction<SpellContext, AbstractSpell, ResourceLocation> spellLayer;
     private final BiPredicate<SpellContext, AbstractSpell> negativeScaling;
     private final int updateInterval;
     protected final SyncedSpellData spellData;
@@ -171,7 +168,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.fullRecast = builder.fullRecast;
         this.resetDuration = builder.resetDuration;
         this.skipEndOnRecast = (BiPredicate<SpellContext, AbstractSpell>) builder.skipEndOnRecast;
-        this.hasLayer = builder.hasLayer;
+        this.spellLayer = (BiFunction<SpellContext, AbstractSpell, ResourceLocation>) builder.spellLayer;
         this.negativeScaling = (BiPredicate<SpellContext, AbstractSpell>) builder.negativeScaling;
         this.updateInterval = builder.updateInterval;
         SyncedSpellData.Builder dataBuilder = new SyncedSpellData.Builder(this);
@@ -1681,7 +1678,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return Whether the spell has a render layer
      */
     public boolean hasLayer() {
-        return this.hasLayer;
+        return this.spellLayer.apply(this.context, this) != null;
+    }
+
+    public ResourceLocation spellLayer() {
+        return this.spellLayer.apply(this.context, this);
     }
 
     public void castSpell(LivingEntity caster) {
@@ -1943,7 +1944,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected boolean fullRecast;
         protected boolean resetDuration;
         protected BiPredicate<SpellContext, T> skipEndOnRecast = (context, spell) -> false;
-        protected boolean hasLayer;
+        protected BiFunction<SpellContext, T, ResourceLocation> spellLayer;
         protected BiPredicate<SpellContext, T> negativeScaling = (context, spell) -> false;
         protected int updateInterval = 3;
 
@@ -2065,8 +2066,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
          * Must be set to render the layer set by this path.
          * @return The spells builder
          */
-        public Builder<T> hasLayer() {
-            this.hasLayer = true;
+        public Builder<T> spellLayer(BiFunction<SpellContext, T, ResourceLocation> spellLayer) {
+            this.spellLayer = spellLayer;
             return this;
         }
 

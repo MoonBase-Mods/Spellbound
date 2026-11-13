@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.world.block.ManaSiphonBlock;
 import com.ombremoon.spellbound.common.world.block.entity.*;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.registries.Registries;
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 public class SBBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Constants.MOD_ID);
 
+    public static final Supplier<BlockEntityType<ManaSiphonBlockEntity>> MANA_SIPHON = BLOCK_ENTITY_TYPE.register("mana_siphon", () -> BlockEntityType.Builder.of(ManaSiphonBlockEntity::new, SBBlocks.MANA_SIPHON.get()).build(null));
     public static final Supplier<BlockEntityType<IceSheetBlockEntity>> ICE_SHEET = BLOCK_ENTITY_TYPE.register("ice_sheet", () -> BlockEntityType.Builder.of(IceSheetBlockEntity::new, SBBlocks.ICE_SHEET.get()).build(null));
     public static final Supplier<BlockEntityType<SummonPortalBlockEntity>> SUMMON_PORTAL = BLOCK_ENTITY_TYPE.register("summon_portal", () -> BlockEntityType.Builder.of(SummonPortalBlockEntity::new, SBBlocks.SUMMON_PORTAL.get()).build(null));
     public static final Supplier<BlockEntityType<RuneBlockEntity>> RUNE = BLOCK_ENTITY_TYPE.register("rune", () -> BlockEntityType.Builder.of(RuneBlockEntity::new, SBBlocks.RUNE.get()).build(null));

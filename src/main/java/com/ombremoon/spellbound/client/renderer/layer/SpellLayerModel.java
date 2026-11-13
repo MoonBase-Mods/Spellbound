@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.client.renderer.layer;
 
-import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
@@ -8,16 +7,19 @@ import software.bernie.geckolib.model.GeoModel;
 public class SpellLayerModel<T extends AbstractSpell> extends GeoModel<T> {
     @Override
     public ResourceLocation getModelResource(T animatable) {
-        return CommonClass.customLocation("geo/spell_layer/" + animatable.location().getPath() + ".geo.json");
+        ResourceLocation location = animatable.spellLayer();
+        return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "geo/spell_layer/" + location.getPath() + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(T animatable) {
-        return CommonClass.customLocation("textures/spell_layer/" + animatable.location().getPath() + ".png");
+        ResourceLocation location = animatable.spellLayer();
+        return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/spell_layer/" + location.getPath() + ".png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(T animatable) {
-        return CommonClass.customLocation("animations/spell_layer/" + animatable.location().getPath() + ".animation.json");
+        ResourceLocation location = animatable.spellLayer();
+        return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "animations/spell_layer/" + location.getPath() + ".animation.json");
     }
 }

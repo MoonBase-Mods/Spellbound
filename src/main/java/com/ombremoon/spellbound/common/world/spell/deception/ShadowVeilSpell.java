@@ -193,9 +193,4 @@ public class ShadowVeilSpell extends AnimatedSpell {
     public void setMistPos(Vec3 pos) {
         this.mistPos = pos;
     }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
-    }
 }

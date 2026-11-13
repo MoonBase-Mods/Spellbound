@@ -29,13 +29,14 @@
       "type": "spellbound:text",
       "extras": {
         "maxLineLength": 100,
-        "pageScrap": "spellbound:kill_villager"
+        "pageScrap": "spellbound:curse_enemy_with_phial"
       },
       "position": {
+        "xOffset": 54,
         "yOffset": 40
       },
       "translation": {
-        "translate": "divine_action.siphon.kill_villager"
+        "translate": "divine_action.siphon.curse_enemy_with_phial"
       }
     },
     {
@@ -48,15 +49,15 @@
         {
           "bold": true,
           "color": "yellow",
-          "translate": "siphon.kill_villager.name",
+          "translate": "siphon.curse_enemy_with_phial.name",
           "underlined": true
         },
         "",
         {
           "extra": [
             {
-              "color": "dark_green",
-              "text": "+5"
+              "color": "dark_red",
+              "text": "-1"
             }
           ],
           "translate": "divine.judgement"
@@ -64,7 +65,132 @@
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "spellbound:cursed_phial"
+        }
+      ],
+      "position": {
+        "xOffset": -26,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:use_half_filled_siphon"
+      },
+      "position": {
+        "yOffset": 93
+      },
+      "translation": {
+        "translate": "divine_action.siphon.use_half_filled_siphon"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 93
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "siphon.use_half_filled_siphon.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_red",
+              "text": "-1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "spellbound:mana_siphon"
+        }
+      ],
+      "position": {
+        "xOffset": 74,
+        "yOffset": 64
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:curse_shrine"
+      },
+      "position": {
+        "xOffset": 54,
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "divine_action.siphon.curse_shrine"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 150
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "siphon.curse_shrine.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_red",
+              "text": "-1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
           ]
         }
       ],
@@ -83,8 +209,8 @@
         }
       ],
       "position": {
-        "xOffset": 74,
-        "yOffset": 7
+        "xOffset": -26,
+        "yOffset": 110
       }
     },
     {
@@ -97,11 +223,29 @@
       "list": [
         {
           "component": {
-            "translate": "siphon.kill_villager.lore"
+            "translate": "siphon.curse_enemy_with_phial.lore"
           },
           "extraOffset": 0,
           "not_added": false,
-          "scrap": "spellbound:kill_villager_lore",
+          "scrap": "spellbound:curse_enemy_with_phial_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "siphon.use_half_filled_siphon.lore"
+          },
+          "extraOffset": 10,
+          "not_added": false,
+          "scrap": "spellbound:use_half_filled_siphon_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "siphon.curse_shrine.lore"
+          },
+          "extraOffset": 15,
+          "not_added": false,
+          "scrap": "spellbound:curse_shrine_lore",
           "target_page": "spellbound:default"
         }
       ],

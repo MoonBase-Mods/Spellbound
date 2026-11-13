@@ -158,7 +158,7 @@ public class CobbledHideSpell extends AnimatedSpell {
                         SpellEventListener.Events.PRE_DAMAGE,
                         IRON_HIDE,
                         pre -> {
-                            if (pre.getSource().getEntity() instanceof Projectile) {
+                            if (pre.getSource().getDirectEntity() instanceof Projectile) {
                                 pre.setNewDamage(pre.getOriginalDamage() * invertedPotency(0.9F));
                             }
                         }

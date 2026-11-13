@@ -11,6 +11,10 @@
     ]
   ],
   "rewards": {
+    "book_scraps": [
+      "spellbound:bless_shrine",
+      "spellbound:bless_shrine_lore"
+    ],
     "judgement_granted": 1,
     "spells": [
       "spellbound:blessing"

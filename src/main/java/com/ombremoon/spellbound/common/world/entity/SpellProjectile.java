@@ -78,12 +78,19 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("isSpellCast", this.isSpellCast);
+
+        SpellType<?> spellType = this.getSpellType();
+        if (!spellType.isEmpty())
+            compound.putString("SpellType", spellType.toString());
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.isSpellCast = compound.getBoolean("isSpellCast");
+
+        if (compound.contains("SpellType", 8))
+            this.setSpellType(SBSpells.REGISTRY.get(ResourceLocation.tryParse(compound.getString("SpellType"))));
     }
 
     @Override

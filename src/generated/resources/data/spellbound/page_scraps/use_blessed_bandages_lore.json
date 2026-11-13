@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "acquire_blessed_bandages": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:blessed_bandages"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "acquire_blessed_bandages"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:use_blessed_bandages_lore"
+    ]
+  }
+}

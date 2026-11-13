@@ -147,9 +147,9 @@ public class SpellLayerRenderer<T extends AbstractSpell> extends HumanoidModel i
         return model.getBone("vfx").orElse(null);
     }
 
-    public ResourceLocation getTextureLocation(AbstractSpell spell) {
-        return CommonClass.customLocation("textures/spell_layer/" + spell.location().getPath() + ".png");
-    }
+    /*public ResourceLocation getTextureLocation(AbstractSpell spell) {
+        return GeoRenderer.super.getTextureLocation(spell);
+    }*/
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
