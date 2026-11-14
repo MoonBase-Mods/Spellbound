@@ -117,6 +117,7 @@ public class ModLangProvider extends LanguageProvider {
         guideContents();
         affinityDescriptions();
         riddleDescriptions();
+        runeNames();
 
         add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
         add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
@@ -139,7 +140,7 @@ public class ModLangProvider extends LanguageProvider {
         add("chat.spelltome.awardxp", "Spell already known. +10 spells XP.");
         add("chat.spelltome.nospell", "This spells tome is blank.");
         add("chat.spelltome.spellunlocked", "Spell unlocked: ");
-        add("tooltip.spellbound.holdshift", "Hold shift for more information.");
+        add("tooltip.spellbound.holdshift", "Hold Shift for more information.");
         add("tooltip.spelltome.testing", "DO NOT USE. This spell is WIP and may change.");
         add("tooltip.skill.testing", "DO NOT USE. This skill is WIP and may change.");
 
@@ -612,11 +613,14 @@ public class ModLangProvider extends LanguageProvider {
     protected void deceptionGuideContents() {
         add("guide.deception.quote", "Honor is a shackle. Break it.");
 
-        add("guide.deception.acquisition", "Spell Acquisition");
+        add("guide.deception.broker_riddles", "Broker Riddles");
         add("guide.deception.description1", "Deceit, trickery, fraud... All words of power to fool those who would doubt you. Using this path of magic I will twist what people see, manipulating what they understand as truth.");
         add("guide.deception.description2", "This discipline demands a new kind of sight—one that sees through the world's lies to weave falsehoods of my own");
-        add("guide.deception.acquisition1", "How am I to learn this damn path when I can't even begin to find these books. I could ask around, but what if they lie? I must be cautious...");
-        add("guide.deception.acquisition2", "FINE! I caved in and bought some spells from a Spell Broker. But you can bet I'm going to try these on someone else first!");
+        add("guide.deception.broker_riddles1", "That magic merchant I found in the tower, he's gatekeeping access to all these spells! Luckily enough, he seems reasonable enough to negotiate with.");
+        add("guide.deception.broker_riddles2", "This will be tricky... He's told me the spells are locked in alternate dimensions. If I had the keys, I could access them, but I must solve his riddles first.");
+        add("guide.deception.puzzle_dungeons", "Puzzle Dungeons");
+        add("guide.deception.arcane_eyes", "To see what's hidden and access the inaccessible, I need a new set of eyes. Not only is this a necessary step to acquire new spells, but can be useful in locating hidden magic.");
+        add("guide.deception.dungeon_door", "The Broker told me I can use the keys he gave me on this door to access new spells. Unfortunately, he also warned these dungeons house unique puzzles that must be solved before the spells are granted");
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.FLICKER.get(),
                 "I don't always have a means to attack or defend myself. Sometimes I just need a way to dodge and get out of the way!",
@@ -916,8 +920,8 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ADVENTURER, "Equips a full set of Leather Armor.");
         addSkillTooltip(SBSkills.SCOUT, "Creates a Spyglass.");
         addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased.");
-        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by one tier.");
-        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by two tiers.");
+        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
+        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
         addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
@@ -943,18 +947,6 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ELDRITCH_INTERVENTION, "Restores caster to half health if below a certain HP threshold.");
         addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
         addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
-
-        addSkillTooltip(SBSkills.CREATE_OBJECT, " Creates a Stone Pickaxe in your inventory for 120 seconds. It cannot be cast from the player's inventory. Recast to dismiss the tools.");
-        addSkillTooltip(SBSkills.LUMBERJACK, "Spell now summons a Stone Axe.");
-        addSkillTooltip(SBSkills.EXCAVATOR, "Spell now summons a Stone Shovel.");
-        addSkillTooltip(SBSkills.HARVESTER, "Spell now summons a Stone Hoe.");
-        addSkillTooltip(SBSkills.ADVENTURER, "Spell now summons a full set of Leather Armor.\n");
-        addSkillTooltip(SBSkills.SCOUT, "Spell now summons a Spyglass.");
-        addSkillTooltip(SBSkills.KNIGHT, "Spell now summons a stack of 4 Cooked Steak.");
-        addSkillTooltip(SBSkills.LASTING_PROVISIONS, "Tool duration is increased to 300 seconds.");
-        addSkillTooltip(SBSkills.ARTISANS_TOUCH, "Tools and gear are increased by +1 tier.");
-        addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
-        addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
         addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
         addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
@@ -1129,6 +1121,11 @@ public class ModLangProvider extends LanguageProvider {
         addRiddleTooltip(SBSpells.FLICKER, "§oI am the child of opposites, born of a hiss\nI am the glass that mocks the hammer's kiss\nI am the foundation for the floating word\nand the key to the world unheard§r");
         addRiddleTooltip(SBSpells.SHADOW_VEIL, "§oI am the sudden night within the sea\nThe coward’s only guarantee\nI am the cloud that holds no rain\nThe phantom shield, the liquid stain\nBy the soft and spineless I’m deployed\nTo trap the light inside the void§r");
         addRiddleTooltip(SBSpells.CURSED_RUNE, "§oI am a rock of purest white\nYet cast no spark when in a fight\nI shatter against the armor plate\nUsed in a war devoid of hate\nBut hold me tight within your grasp\nAnd I turn to tears at the very last§r");
+    }
+
+    protected void runeNames() {
+        add("rune.spellbound.curse", "Minor Harm Curse");
+        add("rune.spellbound.tanglefoot", "Tanglefoot Curse");
     }
 
 

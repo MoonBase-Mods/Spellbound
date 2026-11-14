@@ -102,7 +102,7 @@ public class DarkAltarBlockEntity extends BlockEntity {
                 blockEntity.craftingProgress++;
                 if (blockEntity.craftingProgress >= blockEntity.craftingTime) {
                     RuneCraftingRecipe recipe = recipeHolder.value();
-                    blockEntity.chalk = recipe.assemble(new RuneCraftingInput(blockEntity.items), level.registryAccess());
+                    blockEntity.chalk = recipe.assemble(level.registryAccess(), recipeHolder.id());
                     blockEntity.craftingProgress = 0;
                     blockEntity.items.clear();
                     level.sendBlockUpdated(pos, state, state, 3);
@@ -157,12 +157,9 @@ public class DarkAltarBlockEntity extends BlockEntity {
     }
 
     public boolean canTransmuteChalk() {
-        return this.isRunicChalk(this.chalk)
-                && this.items.stream()
-                .filter(stack -> !stack.isEmpty())
-                .allMatch(this::isRunicChalk)
-                && this.items.stream()
-                .anyMatch(this::isRunicChalk);
+        return this.hasChalk()
+                && this.items.stream().filter(stack -> !stack.isEmpty()).allMatch(this::isRunicChalk)
+                && this.items.stream().anyMatch(this::isRunicChalk);
     }
 
     public boolean isRunicChalk(ItemStack stack) {

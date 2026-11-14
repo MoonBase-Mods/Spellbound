@@ -1,5 +1,6 @@
 {
   "values": [
-    "#spellbound:spellbound_damage"
+    "#spellbound:spellbound_damage",
+    "spellbound:bleed"
   ]
 }

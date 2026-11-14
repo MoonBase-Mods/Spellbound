@@ -14,4 +14,9 @@ public class BleedEffect extends SBEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         livingEntity.hurt(SpellUtil.damageSource(livingEntity.level(), SBDamageTypes.BLEED, null, null), livingEntity.getMaxHealth() * 0.15F);
     }
+
+    @Override
+    public boolean isInstantenous() {
+        return super.isInstantenous();
+    }
 }

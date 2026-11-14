@@ -130,12 +130,15 @@ public interface SBGuidePages {
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
     ResourceKey<GuideBookPage> DECEPTION_DESCRIPTION = key("deception_description");
+    ResourceKey<GuideBookPage> PUZZLE_DUNGEONS = key("puzzle_dungeons");
+    ResourceKey<GuideBookPage> DARK_ALTAR = key("dark_altar");
     ResourceKey<GuideBookPage> FLICKER = key("flicker");
     ResourceKey<GuideBookPage> SHADOW_VEIL = key("shadow_veil");
     ResourceKey<GuideBookPage> CURSED_RUNE = key("cursed_rune");
     ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond");
     ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic");
     ResourceKey<GuideBookPage> NIGHTBLADE = key("nightblade");
+    ResourceKey<GuideBookPage> ALTAR_RECIPES_1 = key("altar_recipes_1");
 
     //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
@@ -846,22 +849,47 @@ public interface SBGuidePages {
         //Deception
         createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
                 new ContentsEntry(translatable("spellbound.path.deception"), DECEPTION_DESCRIPTION),
+                new ContentsEntry(translatable("guide.deception.puzzle_dungeons"), PUZZLE_DUNGEONS),
+                new ContentsEntry(translatable("guide.deception.dark_altar"), DARK_ALTAR),
                 new ContentsEntry(translatable("guide.general.novice_spells"), FLICKER),
                 new ContentsEntry(translatable("guide.general.apprentice_spells"), null),
                 new ContentsEntry(translatable("guide.general.adept_spells"), SHADOWBOND),
                 new ContentsEntry(translatable("guide.general.expert_spells"), null),
                 new ContentsEntry(translatable("guide.general.master_spells"), null));
-        createDescription(context,
+        createDescriptionAndItems(
+                context,
                 DECEPTION_DESCRIPTION,
                 DECEPTION_COVER_PAGE,
                 Book.DECEPTION,
                 translatable("spellbound.path.deception"),
-                translatable("guide.deception.acquisition"),
+                translatable("guide.deception.broker_riddles"),
                 false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.DUNGEON_KEY.get()), PAGE_TWO_START_X, 120, false)
+                ),
                 new TextEntry(translatable("guide.deception.description1"), 35),
                 new TextEntry(translatable("guide.deception.description2"), 120),
-                new TextEntry(translatable("guide.deception.acquisition1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.deception.acquisition2"), PAGE_TWO_START_X, 90));
+                new TextEntry(translatable("guide.deception.broker_riddles1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.deception.broker_riddles2"), PAGE_TWO_START_X, 100));
+        createDescriptionWithRecipeAndItem(
+                context,
+                PUZZLE_DUNGEONS,
+                DECEPTION_DESCRIPTION,
+                Book.DECEPTION,
+                translatable("guide.deception.puzzle_dungeons"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("arcane_eye"), 0, 100),
+                        new RecipeEntry(loc("dungeon_door"), PAGE_TWO_START_X + 65, 15)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.ARCANE_EYE.get()), 67, 100, false),
+                        new ItemEntry(Ingredient.of(SBBlocks.DUNGEON_DOOR.get()), PAGE_TWO_START_X - 20, 15, false)
+                ),
+                new TextEntry(translatable("guide.deception.arcane_eyes"), 0, 35),
+                new TextEntry(translatable("guide.deception.dungeon_door"), PAGE_TWO_START_X, 115)
+        );
         createSpellPage(context, FLICKER, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.FLICKER);
         createSpellPage(context, SHADOW_VEIL, FLICKER, Book.DECEPTION, SBSpells.SHADOW_VEIL);
         createSpellPage(context, CURSED_RUNE, SHADOW_VEIL, Book.DECEPTION, SBSpells.CURSED_RUNE);

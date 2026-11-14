@@ -1944,7 +1944,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected boolean fullRecast;
         protected boolean resetDuration;
         protected BiPredicate<SpellContext, T> skipEndOnRecast = (context, spell) -> false;
-        protected BiFunction<SpellContext, T, ResourceLocation> spellLayer;
+        protected BiFunction<SpellContext, T, ResourceLocation> spellLayer = (context, spell) -> null;
         protected BiPredicate<SpellContext, T> negativeScaling = (context, spell) -> false;
         protected int updateInterval = 3;
 

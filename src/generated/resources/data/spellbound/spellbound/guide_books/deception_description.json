@@ -31,7 +31,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.deception.acquisition"
+        "translate": "guide.deception.broker_riddles"
       }
     },
     {
@@ -68,7 +68,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.deception.acquisition1"
+        "translate": "guide.deception.broker_riddles1"
       }
     },
     {
@@ -78,7 +78,22 @@
         "yOffset": 90
       },
       "translation": {
-        "translate": "guide.deception.acquisition2"
+        "translate": "guide.deception.broker_riddles2"
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:dungeon_key"
+        }
+      ],
+      "position": {
+        "xOffset": 172,
+        "yOffset": 120
       }
     }
   ],

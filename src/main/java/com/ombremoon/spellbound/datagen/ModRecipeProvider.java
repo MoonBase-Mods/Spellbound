@@ -204,6 +204,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("#*#")
                 .unlockedBy("has_shield", has(Items.SHIELD))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.DARK_ALTAR.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('^', Items.GOLD_INGOT)
+                .define('*', Items.PURPLE_CARPET)
+                .define('S', Items.DEEPSLATE)
+                .pattern("*^*")
+                .pattern("S#S")
+                .pattern("SSS")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
 
 
         RuneCraftingRecipeBuilder.createRune(

@@ -12,6 +12,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -22,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -124,6 +127,25 @@ public class ChalkItem extends BlockItem {
                     itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        tooltipComponents.add(Component.empty());
+        List<EffectHolder> effects = stack.get(SBData.RUNE_EFFECTS);
+        if (effects != null && !effects.isEmpty()) {
+            if (tooltipFlag.hasShiftDown()) {
+                for (EffectHolder effect : effects) {
+                    if (effect.name().isPresent()) {
+                        ResourceLocation name = effect.name().get();
+                        tooltipComponents.add(Component.literal("- ").append(Component.translatable("rune." + name.getNamespace() + "." + name.getPath())));
+                    }
+                }
+            } else {
+                tooltipComponents.add(Component.translatable("tooltip.spellbound.holdshift"));
             }
         }
     }

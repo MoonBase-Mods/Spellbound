@@ -11,8 +11,10 @@ import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,8 +31,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, Optional<RangeProvider> range, DataComponentMap components, BuffCategory category, int effectDuration) {
-    public static final EffectHolder EMPTY = new EffectHolder(new Nothing(), Optional.empty(), new TickProvider.NoTick(), Optional.empty(), DataComponentMap.EMPTY, BuffCategory.NEUTRAL, 0);
+public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, Optional<RangeProvider> range, DataComponentMap components, BuffCategory category, int effectDuration, Optional<ResourceLocation> name) {
+    public static final EffectHolder EMPTY = new EffectHolder(new Nothing(), Optional.empty(), new TickProvider.NoTick(), Optional.empty(), DataComponentMap.EMPTY, BuffCategory.NEUTRAL, 0, Optional.empty());
 
     public static final Codec<EffectHolder> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             MagicEffect.CODEC.fieldOf("effect").forGetter(EffectHolder::effect),
@@ -39,7 +41,8 @@ public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requi
             RangeProvider.CODEC.optionalFieldOf("range").forGetter(EffectHolder::range),
             DataComponentMap.CODEC.optionalFieldOf("components", DataComponentMap.EMPTY).forGetter(EffectHolder::components),
             BuffCategory.CODEC.fieldOf("category").forGetter(EffectHolder::category),
-            ExtraCodecs.POSITIVE_INT.fieldOf("effect_duration").forGetter(EffectHolder::effectDuration)
+            ExtraCodecs.POSITIVE_INT.fieldOf("effect_duration").forGetter(EffectHolder::effectDuration),
+            ResourceLocation.CODEC.optionalFieldOf("name").forGetter(EffectHolder::name)
     ).apply(inst, EffectHolder::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, EffectHolder> STREAM_CODEC = StreamCodec.composite(
             MagicEffect.STREAM_CODEC, EffectHolder::effect,
@@ -47,19 +50,24 @@ public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requi
             ByteBufCodecs.optional(RangeProvider.STREAM_CODEC), EffectHolder::range,
             NeoForgeStreamCodecs.enumCodec(BuffCategory.class), EffectHolder::category,
             ByteBufCodecs.VAR_INT, EffectHolder::effectDuration,
+            ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), EffectHolder::name,
             EffectHolder::forStreamCodec
     );
 
     public static EffectHolder simple(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, BuffCategory category, int effectDuration) {
-        return new EffectHolder(effect, requirement, tickProvider, Optional.empty(), DataComponentMap.EMPTY, category, effectDuration);
+        return new EffectHolder(effect, requirement, tickProvider, Optional.empty(), DataComponentMap.EMPTY, category, effectDuration, Optional.empty());
     }
 
     public static EffectHolder withComponents(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, DataComponentMap.Builder components, BuffCategory category, int effectDuration) {
-        return new EffectHolder(effect, requirement, tickProvider, Optional.empty(), components.build(), category, effectDuration);
+        return new EffectHolder(effect, requirement, tickProvider, Optional.empty(), components.build(), category, effectDuration, Optional.empty());
     }
 
-    public static EffectHolder withRange(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, Optional<RangeProvider> range, BuffCategory category, int effectDuration) {
-        return new EffectHolder(effect, requirement, tickProvider, range, DataComponentMap.EMPTY, category, effectDuration);
+    public static EffectHolder withRange(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, RangeProvider range, BuffCategory category, int effectDuration) {
+        return new EffectHolder(effect, requirement, tickProvider, Optional.of(range), DataComponentMap.EMPTY, category, effectDuration, Optional.empty());
+    }
+
+    public EffectHolder named(ResourceLocation name) {
+        return new EffectHolder(this.effect, this.requirement, this.tickProvider, this.range, this.components, this.category, this.effectDuration, Optional.of(name));
     }
 
     public <T> boolean hasComponent(Supplier<DataComponentType<T>> component) {
@@ -82,7 +90,8 @@ public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requi
         return this.components.get(component);
     }
 
-    public static EffectHolder forStreamCodec(MagicEffect effect, TickProvider tickProvider, Optional<RangeProvider> range, BuffCategory category, int effectDuration) {
-        return new EffectHolder(effect, Optional.empty(), tickProvider, range, DataComponentMap.EMPTY, category, effectDuration);
+
+    public static EffectHolder forStreamCodec(MagicEffect effect, TickProvider tickProvider, Optional<RangeProvider> range, BuffCategory category, int effectDuration, Optional<ResourceLocation> name) {
+        return new EffectHolder(effect, Optional.empty(), tickProvider, range, DataComponentMap.EMPTY, category, effectDuration, name);
     }
 }
