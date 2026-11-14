@@ -90,6 +90,10 @@ public class SpellType<S extends AbstractSpell> {
         return spell;
     }
 
+    public boolean isEmpty() {
+        return false;
+    }
+
     public interface SpellFactory<S extends AbstractSpell> {
         S create();
     }

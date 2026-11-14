@@ -200,6 +200,10 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new SyncSkillPayload(SpellUtil.getSkills(player).serializeNBT(player.level().registryAccess())));
     }
 
+    public static void syncEffectsToClient(Player player) {
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new SyncEffectsPayload(SpellUtil.getSpellEffects(player).serializeNBT(player.level().registryAccess())));
+    }
+
     public static void setSpellData(LivingEntity entity, SpellType<?> spellType, int id, List<SyncedSpellData.DataValue<?>> packedItems) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new SetSpellDataPayload(entity.getId(), spellType, id, packedItems));
     }
@@ -347,6 +351,11 @@ public class PayloadHandler {
                 SyncSkillPayload.TYPE,
                 SyncSkillPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleClientSkillSync
+        );
+        registrar.playToClient(
+                SyncEffectsPayload.TYPE,
+                SyncEffectsPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleClientEffectsSync
         );
         registrar.playToClient(
                 SetSpellDataPayload.TYPE,

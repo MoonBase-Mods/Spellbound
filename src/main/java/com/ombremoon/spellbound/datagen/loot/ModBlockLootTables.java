@@ -82,6 +82,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.ARCANE_CANDLE.get());
         this.dropSelf(SBBlocks.ARCANE_CHALKBOARD.get());
         this.dropOther(SBBlocks.HOLY_WATER_CAULDRON.get(), Blocks.CAULDRON);
+        this.dropSelf(SBBlocks.MANA_SIPHON.get());
 
         //ARCANTHUS
         this.add(SBBlocks.ARCANTHUS.get(),

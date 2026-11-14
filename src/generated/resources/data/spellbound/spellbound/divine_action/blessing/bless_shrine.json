@@ -1,0 +1,23 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "bless_shrine": {
+      "trigger": "spellbound:bless_shrine"
+    }
+  },
+  "requirements": [
+    [
+      "bless_shrine"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:bless_shrine",
+      "spellbound:bless_shrine_lore"
+    ],
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:blessing"
+    ]
+  }
+}

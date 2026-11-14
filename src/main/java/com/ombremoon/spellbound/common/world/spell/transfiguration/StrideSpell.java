@@ -45,7 +45,7 @@ public class StrideSpell extends AnimatedSpell {
                 .duration(600)
                 .manaCost(12)
                 .selfBuffCast()
-                .hasLayer()
+                .spellLayer((context, spell) -> CommonClass.customLocation("stride"))
                 .fullRecast(true);
     }
 

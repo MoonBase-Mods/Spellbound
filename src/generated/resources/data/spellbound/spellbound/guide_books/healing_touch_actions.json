@@ -55,15 +55,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+2"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -118,15 +118,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+1"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -141,7 +141,7 @@
       },
       "item": [
         {
-          "item": "minecraft:golden_apple"
+          "item": "spellbound:blessed_bandages"
         }
       ],
       "position": {
@@ -159,7 +159,7 @@
         "yOffset": 150
       },
       "translation": {
-        "translate": "divine_action.healing_touch.use_phial"
+        "translate": "divine_action.healing_touch.use_divine_phial"
       }
     },
     {
@@ -172,7 +172,7 @@
         {
           "bold": true,
           "color": "yellow",
-          "translate": "healing_touch.use_phial.name",
+          "translate": "healing_touch.use_divine_phial.name",
           "underlined": true
         },
         "",
@@ -180,15 +180,15 @@
           "extra": [
             {
               "color": "dark_green",
-              "text": "+5"
+              "text": "+1"
             }
           ],
-          "translate": "divine_action.judgement"
+          "translate": "divine.judgement"
         },
         {
           "translate": "divine_action.cooldown",
           "with": [
-            "24000"
+            "6000"
           ]
         }
       ],
@@ -203,7 +203,7 @@
       },
       "item": [
         {
-          "item": "spellbound:ritual_talisman"
+          "item": "spellbound:divine_phial"
         }
       ],
       "position": {
@@ -239,7 +239,7 @@
         },
         {
           "component": {
-            "translate": "healing_touch.use_phial.lore"
+            "translate": "healing_touch.use_divine_phial.lore"
           },
           "extraOffset": 10,
           "not_added": false,

@@ -72,6 +72,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
 
     //Misc
     public static final SpellModifier DIVINE_PHIAL = registerModifier("divine_phial", ModifierType.POTENCY, (spellType, living) -> spellType.getPath() == SpellPath.DIVINE, 0.1F);
+    public static final SpellModifier CURSED_PHIAL = registerModifier("cursed_phial", ModifierType.POTENCY, (spellType, living) -> spellType.getIdentifiablePath() == SpellPath.DARK_DIVINE, 0.1F);
 
     private static SpellModifier registerModifier(String name, ModifierType type, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier, float stackMultiplier, int maxStacks) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier, stackMultiplier, maxStacks);

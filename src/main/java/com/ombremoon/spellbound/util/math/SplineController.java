@@ -16,7 +16,7 @@ import java.util.Set;
  * Controls projectile trajectory using directional gravity (acceleration).
  * 
  * The controller applies a gravity vector (acceleration) along a specified axis
- * until the projectile reaches a peak point along the shooter->target line.
+ * until the projectile reaches a peak point along the shooter->entity line.
  * After the peak, gravity stops (projectile continues with constant velocity + normal gravity).
  * 
  * Example: If A=(0,0,0), B=(0,0,10), W=0.5, V=(0,1,0):
@@ -71,7 +71,7 @@ public class SplineController {
 
     /**
      * Determines if gravity should be applied at the current position.
-     * Gravity applies based on the projectile's position along the shooter->target line.
+     * Gravity applies based on the projectile's position along the shooter->entity line.
      * 
      * @param currentPos The projectile's current position
      * @return The gravity vector to apply (in world space), or zero vector if past peak
@@ -96,11 +96,11 @@ public class SplineController {
     }
 
     /**
-     * Calculates where the projectile is along the shooter->target line.
+     * Calculates where the projectile is along the shooter->entity line.
      * This is done by projecting the projectile's position onto the line.
      * 
      * @param currentPos The projectile's current position
-     * @return Parameter t from 0 to 1, where 0=shooter and 1=target
+     * @return Parameter t from 0 to 1, where 0=shooter and 1=entity
      */
     private double getProjectionParameter(Vec3 currentPos) {
         Vec3 toTarget = this.targetPos.subtract(this.shooterPos);
@@ -127,7 +127,7 @@ public class SplineController {
     }
 
     /**
-     * Gets the peak position along the shooter->target line.
+     * Gets the peak position along the shooter->entity line.
      * This is where gravity stops being applied.
      * 
      * @return The position at the peak point
@@ -156,7 +156,7 @@ public class SplineController {
     }
 
     /**
-     * Gets the target position.
+     * Gets the entity position.
      */
     public Vec3 getTargetPos() {
         return this.targetPos;
@@ -181,7 +181,7 @@ public class SplineController {
     }*/
 
     /**
-     * Gets the maximum distance (shooter to target).
+     * Gets the maximum distance (shooter to entity).
      */
     public double getMaxDistance() {
         return this.maxDistance;

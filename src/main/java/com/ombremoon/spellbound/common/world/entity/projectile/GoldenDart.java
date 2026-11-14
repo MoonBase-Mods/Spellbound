@@ -1,13 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
-import com.lowdragmc.lowdraglib2.LDLib2;
-import com.lowdragmc.lowdraglib2.editor.resource.FilePath;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
-import com.ombremoon.spellbound.client.photon.data.MaterialBuilder;
-import com.ombremoon.spellbound.client.photon.data.MaterialSettingBuilder;
-import com.ombremoon.spellbound.client.photon.data.ParticleRendererBuilder;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -57,45 +51,15 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
 
     @Override
     protected EffectBuilder<?> getEffect() {
-        var builder = EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+        return EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                 .setOffset(0, -0.25, 0)
                 .setRotation(180, 180, 0)
                 .setScale(0.5, 0.5, 0.5);
-
-        if (this.isDark()) {
-            builder/*.defineConfig(ConfigBuilder.Particle.of("main_box", this.level().registryAccess())
-                    .renderer(ParticleRendererBuilder.of()
-                            .materials(MaterialSettingBuilder.of()
-                                    .material(MaterialBuilder.UIResource.of()
-                                            .resourcePath(new FilePath(ResourceLocation.fromNamespaceAndPath(LDLib2.MOD_ID, "resources/global/gold_dart_dark.material.nbt")))
-                                    )
-                            )
-                    )
-            )*/.defineConfig(ConfigBuilder.Particle.of("spark", this.level().registryAccess())
-                    .renderer(ParticleRendererBuilder.of()
-                            .materials(MaterialSettingBuilder.of()
-                                    .material(MaterialBuilder.UIResource.of()
-                                            .resourcePath(new FilePath(ResourceLocation.fromNamespaceAndPath(LDLib2.MOD_ID, "resources/global/dark_divine_stars.material.nbt")))
-                                    )
-                            )
-                    )
-            ).defineConfig(ConfigBuilder.Particle.of("squares", this.level().registryAccess())
-                    .renderer(ParticleRendererBuilder.of()
-                            .materials(MaterialSettingBuilder.of()
-                                    .material(MaterialBuilder.UIResource.of()
-                                            .resourcePath(new FilePath(ResourceLocation.fromNamespaceAndPath(LDLib2.MOD_ID, "resources/global/lastra_luce.material.nbt")))
-                                    )
-                            )
-                    )
-            );
-        }
-
-        return builder;
     }
 
     @Override
     protected ResourceLocation getEffectLocation() {
-        return /*this.isDark() ? DARK_VFX : */LIGHT_VFX;
+        return this.isDark() ? DARK_VFX : LIGHT_VFX;
     }
 
     @Override
@@ -134,6 +98,9 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
         } else if (smiteSpell != null && this.getAnimationTicks() >= 15 && this.getHomingTarget() == null) {
             this.findTarget(smiteSpell);
         }
+
+        if (this.tickCount % 20 == 0)
+            log(this.targetHit);
 
         if (this.targetHit) {
             this.tickDespawn();
@@ -200,6 +167,8 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
                     }
                 }
             }
+
+            this.discard();
 
             this.targetHit = true;
         }

@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "craft_bestow_charm": {
+      "conditions": {
+        "recipe_id": "spellbound:divine_charm"
+      },
+      "trigger": "spellbound:recipe_crafted"
+    },
+    "tame_an_animal": {
+      "trigger": "spellbound:tame_animal"
+    }
+  },
+  "requirements": [
+    [
+      "craft_bestow_charm",
+      "tame_an_animal"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:bestow_charm_lore"
+    ]
+  }
+}

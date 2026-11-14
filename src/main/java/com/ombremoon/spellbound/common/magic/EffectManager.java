@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffectInstance;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -19,6 +20,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -38,7 +40,12 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     private LivingEntity livingEntity;
     private final Map<Effect, Float> buildUp = new HashMap<>();
     private final List<MagicEffectInstance> magicEffects = new ObjectArrayList<>();
-    private int judgement;
+    private float judgement;
+
+    public void sync() {
+        if (this.livingEntity instanceof Player player)
+            PayloadHandler.syncEffectsToClient(player);
+    }
 
     /**
      * Initializes the effect handler
@@ -133,12 +140,13 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         }
     }
 
-    public int getJudgement() {
+    public float getJudgement() {
         return this.judgement;
     }
 
-    public void giveJudgement(int amount) {
+    public void giveJudgement(float amount) {
         this.judgement = Math.clamp(this.judgement + amount, MIN_JUDGEMENT, MAX_JUDGEMENT);
+        sync();
     }
 
     public float getJudgementFactor(boolean isNegative) {
@@ -255,7 +263,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         for (Effect effect : this.buildUp.keySet()) {
             tag.putFloat(effect.name(), this.buildUp.get(effect));
         }
-        tag.putInt("Judgement", this.judgement);
+        tag.putFloat("Judgement", this.judgement);
 
         return tag;
     }
@@ -268,8 +276,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
 
-        if (tag.contains("Judgement", 99))
-            this.judgement = tag.getInt("Judgement");
+        this.judgement = tag.getFloat("Judgement");
     }
 
     public enum Effect {
@@ -277,7 +284,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
         SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100),
         DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100),
-        BLOOD(SpellPath.BLOOD, SBEffects.BLOOD_LOSS, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLOOD_LOSS, 100);
+        BLOOD(SpellPath.BLOOD, SBEffects.BLEED, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLEED, 100);
 
         @Nullable
         private final SpellPath path;

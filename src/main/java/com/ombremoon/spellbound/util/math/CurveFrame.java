@@ -5,17 +5,17 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Represents a local 3D coordinate frame for spline-based projectile movement.
  * Establishes three orthonormal axes:
- * - X-axis: perpendicular to the target direction (horizontal deflection)
+ * - X-axis: perpendicular to the entity direction (horizontal deflection)
  * - Y-axis: vertical axis (height deviation)
- * - Z-axis: direction toward target (along the primary path)
+ * - Z-axis: direction toward entity (along the primary path)
  */
 public class CurveFrame {
     private final Vec3 originX;  // Right vector (perpendicular to path)
     private final Vec3 originY;  // Up vector (vertical)
-    private final Vec3 originZ;  // Forward vector (toward target)
+    private final Vec3 originZ;  // Forward vector (toward entity)
 
     /**
-     * Constructs a CurveFrame from shooter position to target position.
+     * Constructs a CurveFrame from shooter position to entity position.
      * 
      * @param shooterPos Starting position of the projectile
      * @param targetPos Target position
@@ -37,7 +37,7 @@ public class CurveFrame {
      * 
      * @param offsetX Offset along the X-axis (perpendicular to path)
      * @param offsetY Offset along the Y-axis (vertical)
-     * @param offsetZ Offset along the Z-axis (toward target)
+     * @param offsetZ Offset along the Z-axis (toward entity)
      * @return The offset as a Vec3 in world coordinates
      */
     public Vec3 toWorldCoordinates(double offsetX, double offsetY, double offsetZ) {
@@ -47,7 +47,7 @@ public class CurveFrame {
     }
 
     /**
-     * Gets the X-axis (perpendicular to target direction).
+     * Gets the X-axis (perpendicular to entity direction).
      */
     public Vec3 getXAxis() {
         return this.originX;
@@ -61,7 +61,7 @@ public class CurveFrame {
     }
 
     /**
-     * Gets the Z-axis (toward target).
+     * Gets the Z-axis (toward entity).
      */
     public Vec3 getZAxis() {
         return this.originZ;

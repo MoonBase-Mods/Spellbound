@@ -44,6 +44,7 @@ public record ApplySpellModifier(
         if (AbstractSpell.checkForCounterMagic(caster) && buffCategory == BuffCategory.HARMFUL)
             return;
 
+        int id = source != null ? source.getId() : 0;
         SkillBuff<?> skillBuff = new SkillBuff<>(new PseudoSkillProvider(Optional.empty(), location), location, buffCategory, SkillBuff.SPELL_MODIFIER, modifier);
         var handler = SpellUtil.getSpellHandler(caster);
         int i = Math.round(Mth.randomBetween(caster.getRandom(), this.minDuration, this.maxDuration) * 20.0F);

@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.tree.SkillNode;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -70,6 +71,9 @@ public class UpgradeWidget {
         var component = skill.getDescription().withStyle(Style.EMPTY.withColor(this.color));
         if (!this.skillDetails.isEmpty())
             component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
+
+        if (skill.inTestingPhase())
+            component.append("\n\n").append(Component.translatable("tooltip.skill.testing").withStyle(ChatFormatting.RED));
 
         return font.split(component, 120);
     }
@@ -140,12 +144,13 @@ public class UpgradeWidget {
     }
 
     public void drawHover(GuiGraphics guiGraphics, int x, int y, float fade, int width, int height) {
+        Skill skill = this.getSkill();
         this.showDetails = !this.skillDetails.isEmpty() && Screen.hasShiftDown();
         List<FormattedCharSequence> tooltip = this.getDescription();
         boolean flag = width + x + this.x + this.width + 30 >= this.window.getScreen().width;
         boolean flag1 = 115 - y - this.y - 30 <= 6 + tooltip.size() * 9;
         var holder = SpellUtil.getSkills(this.minecraft.player);
-        boolean flag2 = holder.hasSkill(getSkill());
+        boolean flag2 = holder.hasSkill(skill);
         ResourceLocation box = flag2 ? UNLOCKED : LOCKED;
 
         int i = this.width;

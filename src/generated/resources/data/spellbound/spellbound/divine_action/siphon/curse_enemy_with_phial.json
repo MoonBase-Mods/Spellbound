@@ -1,0 +1,32 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "curse_enemy_with_phial": {
+      "conditions": {
+        "damage": {
+          "type": {
+            "direct_entity": {
+              "type": "spellbound:phial"
+            }
+          }
+        }
+      },
+      "trigger": "spellbound:player_hurt_entity"
+    }
+  },
+  "requirements": [
+    [
+      "curse_enemy_with_phial"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:curse_enemy_with_phial",
+      "spellbound:curse_enemy_with_phial_lore"
+    ],
+    "judgement_granted": -1,
+    "spells": [
+      "spellbound:siphon"
+    ]
+  }
+}

@@ -274,8 +274,8 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
             this.updateInterval = updateInterval;
             return this;
         }
-        public Builder<T> hasLayer() {
-            this.hasLayer = true;
+        public Builder<T> spellLayer(BiFunction<SpellContext, T, ResourceLocation> spellLayer) {
+            this.spellLayer = spellLayer;
             return this;
         }
 

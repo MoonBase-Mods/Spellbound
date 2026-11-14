@@ -89,6 +89,10 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         return new Imbuement(this.spellInstance, this.instance, charges, this.glint);
     }
 
+    public boolean outOfCharge() {
+        return this.charges == 0;
+    }
+
     /*public static boolean hasImbuement(Imbuement imbuement, ItemStack stack) {
         Imbuement other = stack.get(SBData.IMBUEMENT);
         return other != null && imbuement.spellInstance == other.spellInstance;

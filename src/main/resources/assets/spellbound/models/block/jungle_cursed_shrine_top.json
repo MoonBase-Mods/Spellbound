@@ -1,0 +1,6 @@
+{
+  "parent": "spellbound:block/sandstone_divine_shrine_top",
+  "textures": {
+    "0": "spellbound:block/jungle_cursed_shrine_block"
+  }
+}

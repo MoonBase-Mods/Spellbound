@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.common.magic.api.events.IncomingDamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
@@ -33,6 +34,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -42,6 +44,9 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -51,6 +56,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
@@ -96,6 +102,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     @Nullable
     private Entity cachedTarget;
     private int cachedTargetTimer;
+    public long parryTick;
 
     //TEMPORARY
     public Vec3 handPos;
@@ -205,6 +212,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         }
 
         this.sync();
+        this.skillHolder.sync();
+        this.effectManager.sync();
+        this.upgradeTree.refreshTree(player);
     }
 
     public double getMana() {
@@ -534,8 +544,14 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         skillBuff.addBuff(source, this.caster);
         this.skillBuffs.put(skillBuff, duration);
 
-        if (this.caster instanceof Player player)
-            PayloadHandler.updateSkillBuff((ServerPlayer) player, skillBuff, ticks, false);
+        if (this.caster instanceof ServerPlayer player) {
+            SBTriggers.RECEIVED_SKILL_BUFF.get().trigger(player, skillBuff, source);
+            if (source.is(player)) {
+                SBTriggers.BUFF_SELF.get().trigger(player, skillBuff, source);
+            }
+
+            PayloadHandler.updateSkillBuff( player, skillBuff, ticks, false);
+        }
     }
 
     public void removeSkillBuff(SkillBuff<?> skillBuff) {
@@ -624,8 +640,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Updates the cached target entity by performing a raycast.
-     * The target remains cached for 1/2 second (10 ticks) unless a new target is found.
+     * Updates the cached entity entity by performing a raycast.
+     * The entity remains cached for 1/2 second (10 ticks) unless a new entity is found.
      */
     private void updateTargetEntity() {
         if (this.caster instanceof Player) {
@@ -646,8 +662,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Gets the currently cached target entity.
-     * @return The cached target entity, or null if no target is found
+     * Gets the currently cached entity entity.
+     * @return The cached entity entity, or null if no entity is found
      */
     @Nullable
     public Entity getTargetEntity() {
@@ -655,9 +671,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Gets the target entity using a raycast.
+     * Gets the entity entity using a raycast.
      * @param range The maximum range to search for entities
-     * @return The target entity, or null if none found
+     * @return The entity entity, or null if none found
      */
     @Nullable
     private Entity getTargetEntity(double range) {
@@ -752,6 +768,28 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
     public boolean isFeared() {
         return this.caster.hasEffect(SBEffects.FEAR);
+    }
+
+    public void handleMagicShield(LivingIncomingDamageEvent event) {
+        DamageSource source = event.getSource();
+        Entity entity = source.getDirectEntity();
+        boolean parrySuccess = false;
+        if (entity instanceof Projectile projectile && Math.abs(this.parryTick - caster.level().getGameTime()) < 8) {
+            projectile.setOwner(caster);
+            projectile.setData(SBData.DEFLECTED, true);
+
+            double factor = -1;
+            if (projectile instanceof AbstractArrow) {
+                factor = 5;
+            }
+
+            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(factor));
+            parrySuccess = true;
+        }
+
+        /*if (parrySuccess) {
+            event.setCanceled(true);
+        }*/
     }
 
     /**

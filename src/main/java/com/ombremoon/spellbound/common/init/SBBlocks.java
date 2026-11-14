@@ -11,6 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -42,6 +43,15 @@ public class SBBlocks {
                                 int age = state.getValue(ArcanthusCropBlock.AGE);
                                 return age * 5 / maxAge;
                             })
+            )
+    );
+    public static final Supplier<Block> MANA_SIPHON = registerBlock(
+            "mana_siphon", () -> new ManaSiphonBlock(blockProperties()
+                    .mapColor(MapColor.COLOR_RED)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(ManaSiphonBlock.ACTIVE) ? 7 : 0)
+                    .strength(5.0F, 1200.0F)
             )
     );
     public static final Supplier<Block> RUINED_BRICKS = registerBlock(

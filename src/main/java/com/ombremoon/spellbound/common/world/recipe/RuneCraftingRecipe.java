@@ -12,6 +12,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -43,8 +44,13 @@ public class RuneCraftingRecipe implements Recipe<RuneCraftingInput> {
 
     @Override
     public ItemStack assemble(RuneCraftingInput input, HolderLookup.Provider registries) {
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack assemble(HolderLookup.Provider registries, ResourceLocation name) {
         ItemStack chalk = this.getResultItem(registries);
-        chalk.set(SBData.RUNE_EFFECTS, List.of(this.effect));
+        EffectHolder namedEffect = this.effect.named(name);
+        chalk.set(SBData.RUNE_EFFECTS, List.of(namedEffect));
         return chalk;
     }
 

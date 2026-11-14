@@ -2,25 +2,17 @@ package com.ombremoon.spellbound.common.magic.acquisition.guides.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionCriterion;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.CuredZombieVillagerTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SimpleTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
-import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class LearnSpellTrigger extends SimpleTrigger<LearnSpellTrigger.Instance> {
 

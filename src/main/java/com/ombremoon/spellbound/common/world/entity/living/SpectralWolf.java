@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.entity.living;
 
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
@@ -40,10 +41,15 @@ public class SpectralWolf extends SummonedWolf {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, source, f);
         }
 
-        if (spell != null) {
+        if (spell != null && entity instanceof LivingEntity living) {
             SpellContext context = spell.getContext();
-            if (context.hasSkill(SBSkills.BLOOD_SCENT) && entity instanceof LivingEntity living && living.getHealth() <= living.getMaxHealth() * 0.5) {
+            if (context.hasSkill(SBSkills.BLOOD_SCENT) && living.getHealth() <= living.getMaxHealth() * 0.5) {
                 f *= 1.5F;
+            }
+
+            if (context.hasSkill(SBSkills.SHARP_CLAWS)) {
+                var effects = SpellUtil.getSpellEffects(living);
+                effects.incrementBuildEffects(EffectManager.Effect.BLOOD, 10 + context.getSpellLevel());
             }
         }
 

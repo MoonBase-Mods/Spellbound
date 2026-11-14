@@ -18,9 +18,11 @@ import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.FXEmitter;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import net.minecraft.ChatFormatting;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -39,15 +41,20 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -57,6 +64,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.awt.print.Book;
+import java.util.List;
 import java.util.Map;
 
 public class RenderUtil {
@@ -147,6 +155,13 @@ public class RenderUtil {
         double d0 = pMouseX - (double)(leftPos + pX);
         double d1 = pMouseY - (double)(topPos + pY);
         return d0 >= 0 && d1 >= 0 && d0 < pWidth && d1 < pHeight;
+    }
+
+    public static void renderJudgementTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        Player player = Minecraft.getInstance().player;
+        EffectManager effects = SpellUtil.getSpellEffects(player);
+        float judgement = effects.getJudgement();
+        tooltipComponents.add(Component.translatable("divine.judgement").append(Component.literal(String.valueOf(judgement)).withStyle(judgement < 0 ? ChatFormatting.RED : ChatFormatting.YELLOW)));
     }
 
     public static void openWorkbench() {
