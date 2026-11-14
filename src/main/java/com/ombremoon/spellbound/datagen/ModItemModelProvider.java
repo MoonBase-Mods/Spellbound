@@ -49,6 +49,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel((SBBlocks.RUNED_COPPER_PILLAR));
         simpleGeneratedModel((SBBlocks.RUNED_END_PILLAR));
         simpleGeneratedModel((SBBlocks.RUNED_STONE_PILLAR));
+        //simpleGeneratedModel((SBBlocks.MANA_SIPHON));
 
 
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
