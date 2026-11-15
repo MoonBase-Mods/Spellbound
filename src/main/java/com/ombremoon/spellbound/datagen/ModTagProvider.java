@@ -212,7 +212,7 @@ public class ModTagProvider {
                             SBPaintingVariants.SUMMON,
                             SBPaintingVariants.TRANSFIG,
                             SBPaintingVariants.VALKYR,
-                            SBPaintingVariants.TERROR_OF_THE_SKY,
+                            SBPaintingVariants.JUSTICE_FROM_ABOVE,
                             SBPaintingVariants.INSIDE_MEMORIES,
                             SBPaintingVariants.FORGOTTEN_MEMORIES,
                             SBPaintingVariants.WITCH_HOMEWORKS,

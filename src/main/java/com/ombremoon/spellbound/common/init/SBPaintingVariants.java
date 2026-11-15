@@ -24,7 +24,7 @@ public interface SBPaintingVariants {
     ResourceKey<PaintingVariant> SUMMON = create("summon");
     ResourceKey<PaintingVariant> TRANSFIG = create("transfig");
     ResourceKey<PaintingVariant> VALKYR = create("valkyr");
-    ResourceKey<PaintingVariant> TERROR_OF_THE_SKY = create("terror_of_the_sky");
+    ResourceKey<PaintingVariant> JUSTICE_FROM_ABOVE = create("justice_from_above");
     ResourceKey<PaintingVariant> INSIDE_MEMORIES = create("inside_memories");
     ResourceKey<PaintingVariant> FORGOTTEN_MEMORIES = create("forgotten_memories");
     ResourceKey<PaintingVariant> WITCH_HOMEWORKS = create("witch_homeworks");
@@ -73,7 +73,7 @@ public interface SBPaintingVariants {
         register(context, SUMMON, 1, 1);
         register(context, TRANSFIG, 1, 1);
         register(context, VALKYR, 2, 2);
-        register(context, TERROR_OF_THE_SKY, 2, 2);
+        register(context, JUSTICE_FROM_ABOVE, 2, 2);
         register(context, INSIDE_MEMORIES, 2, 2);
         register(context, FORGOTTEN_MEMORIES, 1, 2);
         register(context, WITCH_HOMEWORKS, 1, 1);
