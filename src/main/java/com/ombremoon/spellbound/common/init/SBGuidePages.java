@@ -1,7 +1,5 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.client.gui.guide.elements.GuideMultiBlockElement;
-import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
@@ -28,10 +26,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Struct;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -134,12 +130,15 @@ public interface SBGuidePages {
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
     ResourceKey<GuideBookPage> DECEPTION_DESCRIPTION = key("deception_description");
+    ResourceKey<GuideBookPage> PUZZLE_DUNGEONS = key("puzzle_dungeons");
+    ResourceKey<GuideBookPage> DARK_ALTAR = key("dark_altar");
     ResourceKey<GuideBookPage> FLICKER = key("flicker");
     ResourceKey<GuideBookPage> SHADOW_VEIL = key("shadow_veil");
     ResourceKey<GuideBookPage> CURSED_RUNE = key("cursed_rune");
     ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond");
     ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic");
     ResourceKey<GuideBookPage> NIGHTBLADE = key("nightblade");
+    ResourceKey<GuideBookPage> ALTAR_RECIPES_1 = key("altar_recipes_1");
 
     //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
@@ -539,36 +538,6 @@ public interface SBGuidePages {
                         new TextEntry(translatable("guide.transfiguration.rune_extended"), PAGE_TWO_START_X, 110)
                 )
         );
-//        createDescriptionAndImages(
-//                context,
-//                TRANSFIG_RITUALS,
-//                TRANSFIG_DESCRIPTION,
-//                Book.TRANSFIG,
-//                translatable("guide.transfiguration.rituals_cont"),
-//                null,
-//                false,
-//                List.of(
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier1.png"), 9, 37, 70, 70, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier2.png"), 60, 110, 70, 70, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier3.png"), PAGE_TWO_START_X + 9, 9, 100, 100, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/pedestal.png"), PAGE_TWO_START_X + 9, 111, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/gui/books/images/display.png"), PAGE_TWO_START_X + 9, 130, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_1.png"), 95, 50, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_5.png"), 124, 64, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_17.png"), 103, 83, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_4.png"), 15, 125, 16, 16, false), //8, 21 -- 14, 19
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_22.png"), 38, 139, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_19.png"), 4, 148, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_13.png"), 284, 25, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_6.png"), 294, 52, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_18.png"), 304, 75, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_15.png"), 284, 75, 16, 16, false),
-//                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_26.png"), 304, 25, 16, 16, false)
-//                ),
-//                new TextEntry(translatable("guide.transfiguration.pedestal_legend"), PAGE_TWO_START_X + 31, 115),
-//                new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
-//                new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
-//        );
         createDescriptionWithRecipeAndItem(
                 context,
                 TRANSFIG_RITUAL_ITEMS_1,
@@ -826,9 +795,9 @@ public interface SBGuidePages {
                 HEALING_TOUCH,
                 SBSpells.HEALING_TOUCH,
                 false,
-                new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 5, 24000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
-                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.USE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
+                new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 2, 6000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
+                new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 1, 6000, 0, Ingredient.of(SBItems.BLESSED_BANDAGES.get())),
+                new ItemActionEntry(SBDivineActions.USE_DIVINE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 1, 6000, 10, Ingredient.of(SBItems.DIVINE_PHIAL.get()))
         );
         createDivineSpellPage(context, BLESSING, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.BLESSING, 0);
         createDivineActionPage(
@@ -836,18 +805,32 @@ public interface SBGuidePages {
                 BLESSING_ACTIONS,
                 BLESSING,
                 SBSpells.BLESSING,
-                false,
-                new ItemActionEntry(SBDivineActions.CURE_ZOMBIE_VILLAGER, SBPageScraps.CURE_VILLAGER, SBPageScraps.CURE_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.ZOMBIE_VILLAGER_SPAWN_EGG))
+                true,
+                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 1, 6000, 0, Ingredient.of(SBBlocks.PLAINS_DIVINE_SHRINE.get())),
+                new ItemActionEntry(SBDivineActions.CURE_ZOMBIE_VILLAGER, SBPageScraps.CURE_VILLAGER, SBPageScraps.CURE_VILLAGER_LORE, 2, 6000, 10, Ingredient.of(Items.ZOMBIE_VILLAGER_SPAWN_EGG)),
+                new ItemActionEntry(SBDivineActions.BESTOW_CHARM, SBPageScraps.BESTOW_CHARM, SBPageScraps.BESTOW_CHARM_LORE, 1, 6000, 15, Ingredient.of(SBItems.DIVINE_CHARM.get()))
         );
         createDivineSpellPage(context, SMITE, BLESSING_ACTIONS, DIVINE_BOOK, SBSpells.SMITE, 0);
-        createDivineSpellPage(context, SIPHON, SMITE, DIVINE_BOOK, SBSpells.SIPHON, 0);
+        createDivineActionPage(
+                context,
+                SMITE_ACTIONS,
+                SMITE,
+                SBSpells.SMITE,
+                false,
+                new ItemActionEntry(SBDivineActions.ANOINT_WEAPON, SBPageScraps.ANOINT_WEAPON, SBPageScraps.ANOINT_WEAPON_LORE, 1, 6000, 0, Ingredient.of(Items.GOLDEN_SWORD)),
+                new ItemActionEntry(SBDivineActions.DEFLECT_UNDEAD_ARROW, SBPageScraps.DEFLECT_UNDEAD_ARROW, SBPageScraps.DEFLECT_UNDEAD_ARROW_LORE, 1, 6000, 10, Ingredient.of(SBItems.MAGIC_SHIELD.get())),
+                new ItemActionEntry(SBDivineActions.CURSE_WEAPON, SBPageScraps.CURSE_WEAPON, SBPageScraps.CURSE_WEAPON_LORE, -1, 6000, 15, Ingredient.of(Items.OMINOUS_BOTTLE))
+        );
+        createDivineSpellPage(context, SIPHON, SMITE_ACTIONS, DIVINE_BOOK, SBSpells.SIPHON, 0);
         createDivineActionPage(
                 context,
                 SIPHON_ACTIONS,
                 SIPHON,
                 SBSpells.SIPHON,
-                false,
-                new ItemActionEntry(SBDivineActions.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.IRON_AXE))
+                true,
+                new ItemActionEntry(SBDivineActions.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL_LORE, -1, 6000, 0, Ingredient.of(SBItems.CURSED_PHIAL.get())),
+                new ItemActionEntry(SBDivineActions.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON_LORE, -1, 6000, 10, Ingredient.of(SBBlocks.MANA_SIPHON.get())),
+                new ItemActionEntry(SBDivineActions.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE_LORE, -1, 6000, 15, Ingredient.of(Items.IRON_AXE))
         );
         createDivineSpellPage(context, HEALING_BLOSSOM, SIPHON_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(
@@ -866,22 +849,47 @@ public interface SBGuidePages {
         //Deception
         createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
                 new ContentsEntry(translatable("spellbound.path.deception"), DECEPTION_DESCRIPTION),
+                new ContentsEntry(translatable("guide.deception.puzzle_dungeons"), PUZZLE_DUNGEONS),
+                new ContentsEntry(translatable("guide.deception.dark_altar"), DARK_ALTAR),
                 new ContentsEntry(translatable("guide.general.novice_spells"), FLICKER),
                 new ContentsEntry(translatable("guide.general.apprentice_spells"), null),
                 new ContentsEntry(translatable("guide.general.adept_spells"), SHADOWBOND),
                 new ContentsEntry(translatable("guide.general.expert_spells"), null),
                 new ContentsEntry(translatable("guide.general.master_spells"), null));
-        createDescription(context,
+        createDescriptionAndItems(
+                context,
                 DECEPTION_DESCRIPTION,
                 DECEPTION_COVER_PAGE,
                 Book.DECEPTION,
                 translatable("spellbound.path.deception"),
-                translatable("guide.deception.acquisition"),
+                translatable("guide.deception.broker_riddles"),
                 false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.DUNGEON_KEY.get()), PAGE_TWO_START_X, 120, false)
+                ),
                 new TextEntry(translatable("guide.deception.description1"), 35),
                 new TextEntry(translatable("guide.deception.description2"), 120),
-                new TextEntry(translatable("guide.deception.acquisition1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.deception.acquisition2"), PAGE_TWO_START_X, 90));
+                new TextEntry(translatable("guide.deception.broker_riddles1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.deception.broker_riddles2"), PAGE_TWO_START_X, 100));
+        createDescriptionWithRecipeAndItem(
+                context,
+                PUZZLE_DUNGEONS,
+                DECEPTION_DESCRIPTION,
+                Book.DECEPTION,
+                translatable("guide.deception.puzzle_dungeons"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("arcane_eye"), 0, 100),
+                        new RecipeEntry(loc("dungeon_door"), PAGE_TWO_START_X + 65, 15)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.ARCANE_EYE.get()), 67, 100, false),
+                        new ItemEntry(Ingredient.of(SBBlocks.DUNGEON_DOOR.get()), PAGE_TWO_START_X - 20, 15, false)
+                ),
+                new TextEntry(translatable("guide.deception.arcane_eyes"), 0, 35),
+                new TextEntry(translatable("guide.deception.dungeon_door"), PAGE_TWO_START_X, 115)
+        );
         createSpellPage(context, FLICKER, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.FLICKER);
         createSpellPage(context, SHADOW_VEIL, FLICKER, Book.DECEPTION, SBSpells.SHADOW_VEIL);
         createSpellPage(context, CURSED_RUNE, SHADOW_VEIL, Book.DECEPTION, SBSpells.CURSED_RUNE);
@@ -1879,7 +1887,7 @@ public interface SBGuidePages {
                             .of()
                             .addTooltip(translatable(action + ".name").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE))
                             .addTooltip(literal(""))
-                            .addTooltip(translatable("divine_action.judgement").append(positiveJudgement ? literal("+" + judgement).withStyle(ChatFormatting.DARK_GREEN) : literal(Integer.toString(judgement)).withStyle(ChatFormatting.DARK_RED)))
+                            .addTooltip(translatable("divine.judgement").append(positiveJudgement ? literal("+" + judgement).withStyle(ChatFormatting.DARK_GREEN) : literal(Integer.toString(judgement)).withStyle(ChatFormatting.DARK_RED)))
                             .addTooltip(translatable("divine_action.cooldown", Integer.toString(entry.cooldown())))
                             .position(0, yPos)
                             .dimensions(155, 40)

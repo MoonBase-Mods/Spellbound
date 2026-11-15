@@ -1,0 +1,36 @@
+{
+  "criteria": {
+    "kill_undead_with_holy_damage": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#minecraft:undead"
+            }
+          }
+        ],
+        "killing_blow": {
+          "tags": [
+            {
+              "expected": true,
+              "id": "spellbound:holy_damage"
+            }
+          ]
+        }
+      },
+      "trigger": "spellbound:player_kill"
+    }
+  },
+  "requirements": [
+    [
+      "kill_undead_with_holy_damage"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:anoint_weapon_lore"
+    ]
+  }
+}

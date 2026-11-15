@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "acquired_magic_shield": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:magic_shield"
+          }
+        ]
+      },
+      "trigger": "spellbound:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "acquired_magic_shield"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:deflect_undead_arrow_lore"
+    ]
+  }
+}

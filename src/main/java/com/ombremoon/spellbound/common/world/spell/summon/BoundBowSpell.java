@@ -165,9 +165,4 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
     public void incrementShotsFired() {
         this.shotCount++;
     }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
-    }
 }

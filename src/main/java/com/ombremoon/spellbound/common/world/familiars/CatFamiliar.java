@@ -59,7 +59,7 @@ public class CatFamiliar extends Familiar<CatEntity> {
         );
 
         for (LivingEntity entity : entities) {
-            if (entity.hasEffect(SBEffects.BLOOD_LOSS)) {
+            if (entity.hasEffect(SBEffects.BLEED)) {
                 addSkillBuff(
                         handler.getOwner(),
                         SBAffinities.BLOOD_MAGIC,

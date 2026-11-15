@@ -1,0 +1,259 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 4
+      },
+      "translation": {
+        "extra": [
+          {
+            "translate": "spells.spellbound.smite"
+          }
+        ],
+        "translate": "guide.divine.divine_actions"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:anoint_weapon"
+      },
+      "position": {
+        "yOffset": 40
+      },
+      "translation": {
+        "translate": "divine_action.smite.anoint_weapon"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 40
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "smite.anoint_weapon.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "minecraft:golden_sword"
+        }
+      ],
+      "position": {
+        "xOffset": 74,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:deflect_undead_arrow"
+      },
+      "position": {
+        "xOffset": 54,
+        "yOffset": 93
+      },
+      "translation": {
+        "translate": "divine_action.smite.deflect_undead_arrow"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 93
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "smite.deflect_undead_arrow.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "spellbound:magic_shield"
+        }
+      ],
+      "position": {
+        "xOffset": -26,
+        "yOffset": 64
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:curse_weapon"
+      },
+      "position": {
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "divine_action.smite.curse_weapon"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 150
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "smite.curse_weapon.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_red",
+              "text": "-1"
+            }
+          ],
+          "translate": "divine.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "6000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0,
+        "tooltip": false
+      },
+      "item": [
+        {
+          "item": "minecraft:ominous_bottle"
+        }
+      ],
+      "position": {
+        "xOffset": 74,
+        "yOffset": 110
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "bullet_point": "",
+        "maxColumns": 3,
+        "rowGap": 55
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "smite.anoint_weapon.lore"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:anoint_weapon_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "smite.deflect_undead_arrow.lore"
+          },
+          "extraOffset": 10,
+          "not_added": false,
+          "scrap": "spellbound:deflect_undead_arrow_lore",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "smite.curse_weapon.lore"
+          },
+          "extraOffset": 15,
+          "not_added": false,
+          "scrap": "spellbound:curse_weapon_lore",
+          "target_page": "spellbound:default"
+        }
+      ],
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:smite"
+}

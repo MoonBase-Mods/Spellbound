@@ -329,9 +329,4 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
     protected boolean shouldRender(SpellContext context) {
         return this.isChoice(SBSkills.GLACIAL_VOLLEY) || this.isChoice(SBSkills.ICY_JAVELIN) || this.isChoice(SBSkills.HAIL_STRIKE);
     }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
-    }
 }

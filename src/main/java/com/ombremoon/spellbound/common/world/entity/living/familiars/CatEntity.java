@@ -6,14 +6,7 @@ import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
-import com.ombremoon.spellbound.common.world.entity.ai.DelayedLeapAtTarget;
 import com.ombremoon.spellbound.util.SpellUtil;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
@@ -24,13 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.SequentialBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.LeapAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.util.BrainUtils;
 
 public class CatEntity extends SBFamiliarEntity {
     private boolean canPounce = false;
@@ -89,7 +80,7 @@ public class CatEntity extends SBFamiliarEntity {
     public float modifyDamage(Entity target, float attackDamage, Familiar<?> familiar, FamiliarHandler familiarHandler) {
         if (familiar == null || !(target instanceof LivingEntity livingTarget)) return attackDamage;
 
-        if (familiar.hasAffinity(familiarHandler, SBAffinities.BLOOD_THIRSTY) && livingTarget.hasEffect(SBEffects.BLOOD_LOSS))
+        if (familiar.hasAffinity(familiarHandler, SBAffinities.BLOOD_THIRSTY) && livingTarget.hasEffect(SBEffects.BLEED))
             attackDamage *= 1.1f;
 
         return attackDamage;
@@ -100,7 +91,7 @@ public class CatEntity extends SBFamiliarEntity {
         if (!(getSummoner() instanceof LivingEntity summoner) || getFamiliar() == null) return super.getDamageSource(sources);
 
         if (getFamiliar().hasAffinity(SpellUtil.getFamiliarHandler(summoner), SBAffinities.SHARPENED_CLAWS))
-            return sources.source(SBDamageTypes.BLOOD_LOSS);
+            return sources.source(SBDamageTypes.BLEED);
 
         return super.getDamageSource(sources);
     }

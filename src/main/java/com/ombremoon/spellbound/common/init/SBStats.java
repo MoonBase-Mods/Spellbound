@@ -14,6 +14,7 @@ public class SBStats {
 
     public static final Supplier<ResourceLocation> SPELLS_LEARNED = registerStat("spells_learned");
     public static final Supplier<ResourceLocation> SPELLS_CAST = registerStat("spells_cast");
+    public static final Supplier<ResourceLocation> WEAPONS_IMBUED = registerStat("weapons_imbued");
     public static final Supplier<ResourceLocation> INTERACT_WITH_BENCH = registerStat("interact_with_bench");
     public static final Supplier<ResourceLocation> INTERACT_WITH_DARK_ALTAR = registerStat("interact_with_dark_altar");
 

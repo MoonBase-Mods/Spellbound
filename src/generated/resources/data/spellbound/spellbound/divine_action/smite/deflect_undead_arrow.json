@@ -1,0 +1,34 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "deflect_undead_arrow": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:skeleton"
+            }
+          }
+        ]
+      },
+      "trigger": "spellbound:deflect_and_hit_projectile"
+    }
+  },
+  "requirements": [
+    [
+      "deflect_undead_arrow"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:deflect_undead_arrow",
+      "spellbound:deflect_undead_arrow_lore"
+    ],
+    "judgement_granted": 1,
+    "spells": [
+      "spellbound:smite"
+    ]
+  }
+}

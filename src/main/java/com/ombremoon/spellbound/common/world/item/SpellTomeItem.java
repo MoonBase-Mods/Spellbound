@@ -71,7 +71,7 @@ public class SpellTomeItem extends Item {
         tooltipComponents.add(spell.getName().withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.empty());
 
-        if (/*!CommonClass.isDevEnv() && */spell.inTestingPhase()) {
+        if (spell.inTestingPhase()) {
             tooltipComponents.add(Component.translatable("tooltip.spelltome.testing").withStyle(ChatFormatting.RED));
             return;
         }

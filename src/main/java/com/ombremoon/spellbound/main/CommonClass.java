@@ -28,6 +28,7 @@ public class CommonClass {
         SBEffects.register(modEventBus);
         SBEntities.register(modEventBus);
         SBEntityDataSerializers.register(modEventBus);
+        SBEntitySubPredicates.register(modEventBus);
         SBFamiliars.register();
         SBFeatures.register(modEventBus);
         SBFluids.register(modEventBus);

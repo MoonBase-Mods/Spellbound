@@ -1,10 +1,16 @@
 {
   "variants": {
-    "center=true": {
+    "center=true,cursed=false": {
       "model": "spellbound:block/jungle_divine_shrine_bottom"
     },
-    "center=false": {
+    "center=false,cursed=false": {
       "model": "spellbound:block/jungle_divine_shrine_top"
+    },
+    "center=true,cursed=true": {
+      "model": "spellbound:block/jungle_divine_shrine_bottom"
+    },
+    "center=false,cursed=true": {
+      "model": "spellbound:block/jungle_cursed_shrine_top"
     }
   }
 }

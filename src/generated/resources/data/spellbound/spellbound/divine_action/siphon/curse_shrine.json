@@ -1,0 +1,23 @@
+{
+  "cooldown": 6000,
+  "criteria": {
+    "curse_shrine": {
+      "trigger": "spellbound:curse_shrine"
+    }
+  },
+  "requirements": [
+    [
+      "curse_shrine"
+    ]
+  ],
+  "rewards": {
+    "book_scraps": [
+      "spellbound:curse_shrine",
+      "spellbound:curse_shrine_lore"
+    ],
+    "judgement_granted": -1,
+    "spells": [
+      "spellbound:siphon"
+    ]
+  }
+}

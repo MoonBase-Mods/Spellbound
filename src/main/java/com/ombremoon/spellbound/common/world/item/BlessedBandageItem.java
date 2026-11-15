@@ -27,13 +27,15 @@ public class BlessedBandageItem extends Item {
             CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, stack);
         }
 
-        if (!level.isClientSide) {
-            livingEntity.heal(4.0F);
-        }
+        if (livingEntity.getHealth() < livingEntity.getMaxHealth()) {
+            if (!level.isClientSide) {
+                livingEntity.heal(4.0F);
+            }
 
-        if (player != null) {
-            player.awardStat(Stats.ITEM_USED.get(this));
-            stack.consume(1, player);
+            if (player != null) {
+                player.awardStat(Stats.ITEM_USED.get(this));
+                stack.consume(1, player);
+            }
         }
 
         return stack;

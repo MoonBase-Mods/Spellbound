@@ -11,8 +11,10 @@ import net.minecraft.world.level.block.Block;
 
 public class SBTags {
     public static class DamageTypes {
+        public static final TagKey<DamageType> SPELLBOUND_DAMAGE = tag("spellbound_damage");
         public static final TagKey<DamageType> SPELL_DAMAGE = tag("spell_damage");
         public static final TagKey<DamageType> PHYSICAL_DAMAGE = tag("physical_damage");
+        public static final TagKey<DamageType> HOLY_DAMAGE = tag("holy_damage");
 
         private static TagKey<DamageType> tag(String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, CommonClass.customLocation(name));

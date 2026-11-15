@@ -1,16 +1,11 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.mojang.datafixers.types.templates.Sum;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
-import com.ombremoon.spellbound.common.init.SBEntities;
-import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.DamageInstance;
+import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
-import com.ombremoon.spellbound.common.magic.api.RadialSpell;
-import com.ombremoon.spellbound.common.magic.api.SummonSpell;
+import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -25,8 +20,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableInt;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, ChargeableSpell {
     private static final ResourceLocation LONE_WOLF_ATTACK = CommonClass.customLocation("lone_wolf_attack");
@@ -45,6 +38,7 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
 
                     return (!context.isChoice(SBSkills.LONE_WOLF) && !context.isChoice(SBSkills.FENRIR)) || summonWolfPackSpell.hasFilledSoulShard(context);
                 })
+                .spellLayer((context, spell) -> spell.isChoice(SBSkills.LONE_WOLF) ? CommonClass.customLocation("lone_wolf") : null)
                 .duration(2400)
                 .isSummonChoice();
     }
@@ -98,6 +92,9 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(LONE_WOLF_FALL, 2, AttributeModifier.Operation.ADD_VALUE))
                 );
+
+                Imbuement imbuement = Imbuement.create(this, DamageInstance.of(SBDamageTypes.BLEED, potencyWithLevel(3F)), -1);
+                caster.setData(SBData.ENTITY_IMBUEMENT, imbuement);
             } else if (context.isChoice(SBSkills.FENRIR) && this.hasFilledSoulShard(context)) {
 
             } else {
@@ -163,10 +160,5 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
     @Override
     public boolean canCharge(SpellContext context) {
         return context.getSpellLevel() > 0 && !this.hasSummonChoice(context) && !context.isChoice(SBSkills.LONE_WOLF) && !context.isChoice(SBSkills.FENRIR);
-    }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
     }
 }

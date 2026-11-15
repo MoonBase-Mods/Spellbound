@@ -1,14 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
-import com.lowdragmc.lowdraglib2.LDLib2;
-import com.lowdragmc.lowdraglib2.editor.resource.FilePath;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.lowdragmc.photon.client.gameobject.emitter.data.number.NumberFunction3;
-import com.ombremoon.spellbound.client.photon.converter.ConfigBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
-import com.ombremoon.spellbound.client.photon.data.MaterialBuilder;
-import com.ombremoon.spellbound.client.photon.data.MaterialSettingBuilder;
-import com.ombremoon.spellbound.client.photon.data.ParticleRendererBuilder;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -19,7 +12,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -35,8 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class SmiteSpell extends ImbuementSpell {
@@ -104,7 +94,7 @@ public class SmiteSpell extends ImbuementSpell {
                         SpellEventListener.Events.INCOMING_DAMAGE,
                         GOLDEN_PARRY,
                         incomingDamage -> {
-                            Entity source = incomingDamage.getSource().getDirectEntity();
+                            Entity source = incomingDamage.getSource().getEntity();
                             boolean parrySuccess = false;
                             if (source instanceof LivingEntity living && Math.abs(this.parryTick - living.getData(SBData.ATTACK_START)) < 8) {
                                 living.knockback(0.4, caster.getX() - living.getX(), caster.getZ() - living.getZ());
@@ -306,11 +296,6 @@ public class SmiteSpell extends ImbuementSpell {
                 new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(BLACK_BLADE_DEBUFF, healthDebuff, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                 200
         );
-    }
-
-    @Override
-    public boolean inTestingPhase() {
-        return true;
     }
 }
 

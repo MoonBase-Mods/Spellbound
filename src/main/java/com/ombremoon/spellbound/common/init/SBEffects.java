@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.world.effect.*;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -23,7 +22,7 @@ public class SBEffects {
     public static final Holder<MobEffect> FROZEN = EFFECTS.register("frozen", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> DISCHARGE = EFFECTS.register("discharge", () -> new DischargeEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> DISEASE = EFFECTS.register("disease", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
-    public static final Holder<MobEffect> BLOOD_LOSS = EFFECTS.register("blood_loss", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
+    public static final Holder<MobEffect> BLEED = EFFECTS.register("bleed", () -> new BleedEffect(MobEffectCategory.HARMFUL, 8889187));
 
     //Crowd Control
     public static final Holder<MobEffect> ROOTED = EFFECTS.register("rooted", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));

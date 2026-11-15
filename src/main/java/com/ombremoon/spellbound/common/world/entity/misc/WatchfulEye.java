@@ -118,7 +118,7 @@ public class WatchfulEye extends SBLivingEntity {
         protected boolean checkExtraStartConditions(ServerLevel level, WatchfulEye entity) {
             this.target = BrainUtils.getTargetOfEntity(entity);
 
-            return this.target != null && !this.target.isInvisible() && !this.target.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && entity.getSensing().hasLineOfSight(this.target)*/;
+            return this.target != null && !this.target.isInvisible() && !this.target.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && entity.getSensing().hasLineOfSight(this.entity)*/;
         }
 
         @Override

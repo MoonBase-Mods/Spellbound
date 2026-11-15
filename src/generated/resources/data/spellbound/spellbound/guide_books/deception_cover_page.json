@@ -78,6 +78,24 @@
         },
         {
           "component": {
+            "translate": "guide.deception.puzzle_dungeons"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:puzzle_dungeons"
+        },
+        {
+          "component": {
+            "translate": "guide.deception.dark_altar"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:dark_altar"
+        },
+        {
+          "component": {
             "translate": "guide.general.novice_spells"
           },
           "extraOffset": 0,
