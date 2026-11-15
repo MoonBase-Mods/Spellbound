@@ -42,13 +42,14 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
-        simpleGeneratedModel(SBBlocks.DUNGEON_DOOR);
-        simpleGeneratedModel(SBBlocks.ARCANE_CHALKBOARD);
-        simpleGeneratedModel(SBBlocks.ARCANE_CANDLE);
-        simpleGeneratedModel(SBBlocks.STAR_MAP);
-        simpleGeneratedModel(SBBlocks.RUNED_COPPER_PILLAR);
-        simpleGeneratedModel(SBBlocks.RUNED_END_PILLAR);
-        simpleGeneratedModel(SBBlocks.RUNED_STONE_PILLAR);
+        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
+        simpleGeneratedModel((SBBlocks.ARCANE_CHALKBOARD));
+        simpleGeneratedModel((SBBlocks.ARCANE_CANDLE));
+        simpleGeneratedModel((SBBlocks.STAR_MAP));
+        simpleGeneratedModel((SBBlocks.RUNED_COPPER_PILLAR));
+        simpleGeneratedModel((SBBlocks.RUNED_END_PILLAR));
+        simpleGeneratedModel((SBBlocks.RUNED_STONE_PILLAR));
+        //simpleGeneratedModel((SBBlocks.MANA_SIPHON));
 
 
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
