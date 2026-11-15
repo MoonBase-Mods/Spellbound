@@ -620,7 +620,11 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.deception.broker_riddles2", "This will be tricky... He's told me the spells are locked in alternate dimensions. If I had the keys, I could access them, but I must solve his riddles first.");
         add("guide.deception.puzzle_dungeons", "Puzzle Dungeons");
         add("guide.deception.arcane_eyes", "To see what's hidden and access the inaccessible, I need a new set of eyes. Not only is this a necessary step to acquire new spells, but can be useful in locating hidden magic.");
-        add("guide.deception.dungeon_door", "The Broker told me I can use the keys he gave me on this door to access new spells. Unfortunately, he also warned these dungeons house unique puzzles that must be solved before the spells are granted");
+        add("guide.deception.dungeon_door", "The Broker told me I can use the keys he gave me on this door to access new spells. Unfortunately, he also warned these dungeons house unique puzzles that must be solved before the spells are granted.");
+        add("guide.deception.dark_altar", "Dark Altar");
+        add("guide.deception.dark_altar_decsription", "I keep finding these strange altars in the dungeons. I couldn't take them with me, so I decided to make one myself. I wonder what this thing is used for.");
+        add("guide.deception.runic_chalk1", "It would seem that besides providing spells, the altar can be used to imbue power into chalk? With the right configuration of items, I can turn my words into runes of power.");
+        add("guide.deception.runic_chalk2", "After various trials and experiments, I've determined the words of power can be transferred from one piece of chalk to the next. At max, a piece of chalk can hold 5 words of varying effects. This needs to be studied further.");
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.FLICKER.get(),
                 "I don't always have a means to attack or defend myself. Sometimes I just need a way to dodge and get out of the way!",

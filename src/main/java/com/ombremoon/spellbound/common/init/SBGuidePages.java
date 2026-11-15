@@ -844,8 +844,6 @@ public interface SBGuidePages {
                 new ItemActionEntry(SBDivineActions.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE_LORE, 15, 6000, 35, Ingredient.of(Items.WITHER_ROSE))
         );
 
-        //NEED ACTIONPAGE
-
         //Deception
         createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
                 new ContentsEntry(translatable("spellbound.path.deception"), DECEPTION_DESCRIPTION),
@@ -890,7 +888,25 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.deception.arcane_eyes"), 0, 35),
                 new TextEntry(translatable("guide.deception.dungeon_door"), PAGE_TWO_START_X, 115)
         );
-        createSpellPage(context, FLICKER, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.FLICKER);
+        createDescriptionWithRecipeAndItem(
+                context,
+                DARK_ALTAR,
+                PUZZLE_DUNGEONS,
+                Book.DECEPTION,
+                translatable("guide.deception.dark_altar"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("dark_altar"), 0, 100)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBBlocks.DARK_ALTAR.get()), 67, 100, false)
+                ),
+                new TextEntry(translatable("guide.deception.dark_altar_decsription"), 0, 35),
+                new TextEntry(translatable("guide.deception.runic_chalk1"), PAGE_TWO_START_X, 20),
+                new TextEntry(translatable("guide.deception.runic_chalk2"), PAGE_TWO_START_X, 100)
+        );
+        createSpellPage(context, FLICKER, DARK_ALTAR, Book.DECEPTION, SBSpells.FLICKER);
         createSpellPage(context, SHADOW_VEIL, FLICKER, Book.DECEPTION, SBSpells.SHADOW_VEIL);
         createSpellPage(context, CURSED_RUNE, SHADOW_VEIL, Book.DECEPTION, SBSpells.CURSED_RUNE);
         createSpellPage(context, NIGHTBLADE, CURSED_RUNE, Book.DECEPTION, SBSpells.NIGHTBLADE);
@@ -1775,72 +1791,6 @@ public interface SBGuidePages {
         );
     }
 
-    private static void createStructurePage(
-            BootstrapContext<GuideBookPage> context,
-            Book book,
-            ResourceKey<GuideBookPage> currentPage,
-            ResourceKey<GuideBookPage> prevPage,
-            @Nullable Component title,
-            @Nullable Component secondTitle,
-            boolean doubleTitle,
-            List<StructureEntry> structures,
-            List<TextEntry> text
-    ) {
-        PageBuilder builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage);
-
-        if (title != null) {
-            builder.addElements(
-                    PageBuilder.Text
-                            .of(title)
-                            .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
-                            .bold()
-                            .centered()
-                            .build(),
-                    PageBuilder.SpellBorder
-                            .of(book.getPath())
-                            .setPosition(0, 0)
-                            .build()
-            );
-        }
-
-        if (secondTitle != null) {
-            builder.addElements(
-                    PageBuilder.Text
-                            .of(secondTitle)
-                            .position(PAGE_TWO_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
-                            .bold()
-                            .centered()
-                            .build(),
-                    PageBuilder.SpellBorder
-                            .of(book.getPath())
-                            .setPosition(PAGE_TWO_START_X, 0)
-                            .build()
-            );
-        }
-
-        for (var entry : text) {
-            builder.addElements(
-                    PageBuilder.Text
-                            .of(entry.text)
-                            .position(entry.xPos, entry.yPos)
-                            .maxLineLength(entry.lineLength)
-                            .build()
-            );
-        }
-
-        for (var structure : structures) {
-            builder.addElements(
-                    PageBuilder.Multiblock.of(structure.structure(), structure.isMultiblock())
-                            .setPos(structure.xPos, structure.yPos)
-                            .setDetailedScale(structure.detailedScale)
-                            .setScale(structure.scale)
-                            .build()
-            );
-        }
-
-        register(context, currentPage, builder);
-    }
-
     private static <T extends AbstractSpell> void createDivineActionPage(
             BootstrapContext<GuideBookPage> context,
             ResourceKey<GuideBookPage> currentPage,
@@ -1950,6 +1900,129 @@ public interface SBGuidePages {
         register(context, currentPage, builder);
     }
 
+    private static void createRuneCraftingPage(BootstrapContext<GuideBookPage> context,
+                                         ResourceKey<GuideBookPage> currentPage,
+                                         ResourceKey<GuideBookPage> prevPage,
+                                         ResourceKey<TransfigurationRitual> key,
+                                         int activationTime,
+                                         int duration,
+                                         RitualTier tier
+    ) {
+        register(
+                context,
+                currentPage,
+                PageBuilder
+                        .forBook(TRANSFIG_BOOK)
+                        .setPreviousPage(prevPage)
+                        .addElements(
+                                PageBuilder.Text
+                                        .ofTranslatable("ritual.spellbound." + key.location().getPath())
+                                        .position(PAGE_START_CENTER_X, PAGE_START_DOUBLE_Y)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.SpellBorder
+                                        .of(SpellPath.TRANSFIGURATION)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("ritual.spellbound." + key.location().getPath() + ".description")
+                                        .position(0, 35)
+                                        .italic()
+                                        .build(),
+                                PageBuilder.SpellBorder
+                                        .of(SpellPath.TRANSFIGURATION)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofLiteral("-------------------------")
+                                        .position(-5, 55)
+                                        .italic()
+                                        .build(),
+                                PageBuilder.TextList
+                                        .of()
+                                        .addEntry(translatable("spellbound.ritual.tier_" + tier.name))
+                                        .addEntry(translatable("spellbound.ritual.activation_time", Integer.toString(activationTime)))
+                                        .addEntry(duration > 0 ? translatable("spellbound.ritual.duration", Integer.toString(duration)) : translatable("spellbound.ritual.duration_not_applicable"))
+                                        .position(10, 65)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("spellbound.ritual.materials")
+                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                        .centered()
+                                        .underline()
+                                        .build(),
+                                PageBuilder.RitualRenderer
+                                        .of(key)
+                                        .build()
+                        )
+        );
+    }
+
+    private static void createStructurePage(
+            BootstrapContext<GuideBookPage> context,
+            Book book,
+            ResourceKey<GuideBookPage> currentPage,
+            ResourceKey<GuideBookPage> prevPage,
+            @Nullable Component title,
+            @Nullable Component secondTitle,
+            boolean doubleTitle,
+            List<StructureEntry> structures,
+            List<TextEntry> text
+    ) {
+        PageBuilder builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage);
+
+        if (title != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(title)
+                            .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(0, 0)
+                            .build()
+            );
+        }
+
+        if (secondTitle != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(secondTitle)
+                            .position(PAGE_TWO_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(PAGE_TWO_START_X, 0)
+                            .build()
+            );
+        }
+
+        for (var entry : text) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(entry.text)
+                            .position(entry.xPos, entry.yPos)
+                            .maxLineLength(entry.lineLength)
+                            .build()
+            );
+        }
+
+        for (var structure : structures) {
+            builder.addElements(
+                    PageBuilder.Multiblock.of(structure.structure(), structure.isMultiblock())
+                            .setPos(structure.xPos, structure.yPos)
+                            .setDetailedScale(structure.detailedScale)
+                            .setScale(structure.scale)
+                            .build()
+            );
+        }
+
+        register(context, currentPage, builder);
+    }
+
     private static ItemLike blockToItem(Supplier<Block> block) {
         return blockToItem(block.get());
     }
@@ -2031,6 +2104,13 @@ public interface SBGuidePages {
 
         ImageEntryWithScale(ResourceLocation texture) {
             this(texture, 0);
+        }
+    }
+
+    record RecipeEntry(ResourceLocation recipe, int xPos, int yPos) {
+
+        RecipeEntry(ResourceLocation recipe, int yPos) {
+            this(recipe, 0, yPos);
         }
     }
 
