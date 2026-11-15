@@ -161,9 +161,7 @@ public class HolyWaterCauldronBlock extends LayeredCauldronBlock {
                     weapon.value(),
                     (state, level, pos, player, hand, stack) -> {
                         Imbuement imbuement = stack.get(SBData.IMBUEMENT);
-                        if (!stack.is(SBTags.Items.IMBUEABLE)) {
-                            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                        } else if (imbuement != null && !imbuement.canImbueStack(stack)) {
+                        if (imbuement != null && !imbuement.canImbueStack(stack)) {
                             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                         } else {
                             if (!level.isClientSide) {
