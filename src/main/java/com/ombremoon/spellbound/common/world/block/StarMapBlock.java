@@ -58,6 +58,8 @@ public class StarMapBlock extends Block {
     public enum StarmapType implements StringRepresentable {
         FORNAX("fornax"),
         HOROLOGIUM("horologium"),
+        AEVITAS("aevitas"),
+        EVORSIO("evorsio"),
         VICIO("vicio");
 
         public static final Codec<StarmapType> CODEC = StringRepresentable.fromEnum(StarmapType::values);
