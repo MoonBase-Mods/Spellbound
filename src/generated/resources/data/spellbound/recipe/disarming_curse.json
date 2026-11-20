@@ -1,0 +1,28 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "effect": {
+      "type": "spellbound:disarm_effect"
+    },
+    "effect_duration": 1,
+    "tick_provider": {
+      "type": "spellbound:at_tick",
+      "tick": 0
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:slime_ball"
+    },
+    {
+      "item": "minecraft:slime_ball"
+    },
+    {
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    }
+  ]
+}

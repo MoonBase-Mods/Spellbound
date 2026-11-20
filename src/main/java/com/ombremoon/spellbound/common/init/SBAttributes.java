@@ -17,8 +17,8 @@ public class SBAttributes {
     public static Holder<Attribute> CAST_SPEED = register("cast_speed", 1.0, 0.1, 2.0);
 
     //Mana
-    public static Holder<Attribute> MANA_REGEN = register("mana_regen", 1d, 0d, 100d);
-    public static Holder<Attribute> MAX_MANA = register("max_mana", 100d, 100d, 5000d);
+    public static Holder<Attribute> MANA_REGEN = register("mana_regen", 2.0, 0.0, 1024.0);
+    public static Holder<Attribute> MAX_MANA = register("max_mana", 100.0, 0.0, 2048.0);
 
     public static Holder<Attribute> ATTACK_POWER = register("attack_power", 1, 0, 1024);
 

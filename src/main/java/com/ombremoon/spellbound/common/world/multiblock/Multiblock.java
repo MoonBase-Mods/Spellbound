@@ -49,7 +49,7 @@ public abstract class Multiblock implements Loggable {
     private final int height;
     private final int depth;
     private final MultiblockIndex activeIndex;
-    private final List<MultiblockIndex> partPositions;
+    protected final List<MultiblockIndex> partPositions;
 
     protected Multiblock(MultiblockStructure structure) {
         this.structure = structure;
@@ -73,8 +73,8 @@ public abstract class Multiblock implements Loggable {
 
     public abstract MultiblockSerializer<?> getSerializer();
 
-    public void onActivate(Player player, Level level, MultiblockPattern pattern) {
-
+    public boolean onActivate(Player player, Level level, MultiblockPattern pattern) {
+        return true;
     }
 
     public void onRemoved(Player player, Level level, MultiblockPattern pattern) {
@@ -131,8 +131,7 @@ public abstract class Multiblock implements Loggable {
             if (pattern != null) {
                 player.sendSystemMessage(Component.literal("Pattern Found"));
                 pattern.assignMultiblock(level);
-                this.onActivate(player, level, pattern);
-                return true;
+                return this.onActivate(player, level, pattern);
             }
         }
         return false;

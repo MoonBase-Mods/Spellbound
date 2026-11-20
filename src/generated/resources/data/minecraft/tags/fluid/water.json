@@ -1,6 +1,8 @@
 {
   "values": [
     "spellbound:holy_water",
-    "spellbound:flowing_holy_water"
+    "spellbound:flowing_holy_water",
+    "spellbound:cursed_water",
+    "spellbound:flowing_cursed_water"
   ]
 }

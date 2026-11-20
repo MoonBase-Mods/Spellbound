@@ -1,0 +1,154 @@
+{
+	"format_version": "26.3",
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "spellbound:item/magic_shield_3d",
+		"particle": "spellbound:item/magic_shield_3d"
+	},
+	"elements": [
+		{
+			"from": [7.5, 6, 6],
+			"to": [8.5, 10, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0.5, 0, 1, 2], "texture": "#0"},
+				"east": {"uv": [5, 10.5, 3.5, 12.5], "texture": "#0"},
+				"south": {"uv": [1, 11.5, 1.5, 13.5], "texture": "#0"},
+				"west": {"uv": [3.5, 10.5, 5, 12.5], "texture": "#0"},
+				"up": {"uv": [1, 11.5, 1.5, 13], "texture": "#0"},
+				"down": {"uv": [1, 11.5, 1.5, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 0, 5],
+			"to": [14, 16, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 8], "texture": "#0"},
+				"east": {"uv": [0, 8, 0.5, 16], "texture": "#0"},
+				"south": {"uv": [6, 0, 0, 8], "texture": "#0"},
+				"west": {"uv": [0.5, 8, 1, 16], "texture": "#0"},
+				"up": {"uv": [11, 8, 5, 8.5], "texture": "#0"},
+				"down": {"uv": [11, 8.5, 5, 9], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 6, 4],
+			"to": [10, 10, 5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 3, 4, 5], "texture": "#0"},
+				"east": {"uv": [8, 9.5, 8.5, 11.5], "texture": "#0"},
+				"south": {"uv": [3, 8, 5, 10], "texture": "#0"},
+				"west": {"uv": [8.5, 9.5, 9, 11.5], "texture": "#0"},
+				"up": {"uv": [11, 8, 13, 8.5], "texture": "#0"},
+				"down": {"uv": [11, 8.5, 13, 9], "texture": "#0"}
+			}
+		},
+		{
+			"from": [12.12752, 12.12752, 5.501],
+			"to": [15.12552, 15.12552, 5.499],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 9, 6.5, 10.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"south": {"uv": [6.5, 9, 5, 10.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"up": {"uv": [0, 0, 1.5, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 1.5, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.81382, 0.81382, 5.501],
+			"to": [3.81182, 3.81182, 5.499],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 10.5, 6.5, 12], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"south": {"uv": [6.5, 10.5, 5, 12], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"up": {"uv": [0, 0, 1.5, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 1.5, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [10.71331, 2.22803, 5.501],
+			"to": [13.71131, 5.22603, 5.499],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6.5, 9, 8, 10.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"south": {"uv": [8, 9, 6.5, 10.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"up": {"uv": [0, 0, 1.5, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 1.5, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2.22803, 10.71331, 5.501],
+			"to": [5.22603, 13.71131, 5.499],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6.5, 10.5, 8, 12], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"south": {"uv": [8, 10.5, 6.5, 12], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 1.5], "texture": "#0"},
+				"up": {"uv": [0, 0, 1.5, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 1.5, 0], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -90, 0],
+			"translation": [0.25, -2, 3.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, -90, 0],
+			"translation": [0.25, -2, 3.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 0, -5],
+			"translation": [0, -4, 2.75],
+			"scale": [1.25, 1.25, 1.25]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 0, -5],
+			"translation": [0, -4, 2.75],
+			"scale": [1.25, 1.25, 1.25]
+		},
+		"ground": {
+			"translation": [0, 1.75, 0],
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"fixed": {
+			"translation": [0, 0, 0.25],
+			"scale": [0.76, 0.76, 0.76]
+		}
+	},
+	"groups": [
+		{
+			"name": "handle",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0]
+		},
+		{
+			"name": "plate",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [1, 2, 3, 4, 5, 6]
+		}
+	],
+	"overrides": [
+		{
+			"predicate": {
+				"spellbound:blocking": 1
+			},
+			"model": "spellbound:item/magic_shield_blocking"
+		}
+	]
+}

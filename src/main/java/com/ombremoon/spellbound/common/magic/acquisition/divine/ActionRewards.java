@@ -67,38 +67,42 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
                 .create(LootContextParamSets.ADVANCEMENT_REWARD);
         boolean flag = false;
         var effects = SpellUtil.getSpellEffects(player);
-        Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
+        Pair<BlockPos, BlockState> blockPair = DivineShrineBlock.getNearestShrine(player);
         float judgementGranted = this.judgementGranted;
 
-        ResourceLocation fx = DivineShrineBlock.DIVINE_FX;
-        SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
+        if (blockPair != null) {
+            BlockState blockState = blockPair.getSecond();
+            ResourceLocation fx = DivineShrineBlock.DIVINE_FX;
+            SoundEvent sound = SpellboundSounds.DIVINE_ACTION.get();
+            boolean cursed = false;
 
-        if (judgementGranted < 0){
-            fx = DivineShrineBlock.CURSED_FX;
-            sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
-        }
+            if (judgementGranted < 0) {
+                fx = DivineShrineBlock.CURSED_FX;
+                sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
+                cursed = true;
+            }
 
-        if (blockState != null && blockState.getSecond().getValue(DivineShrineBlock.ACTIVE)) {
-            boolean spellFlag = false;
-            BlockPos pos = blockState.getFirst();
-            if (this.hasSufficientJudgement(effects)) {
+            if (blockState.getValue(DivineShrineBlock.ACTIVE) && blockState.getValue(DivineShrineBlock.CURSED) == cursed && this.hasSufficientJudgement(effects)) {
+                boolean spellFlag = false;
+                BlockPos pos = blockPair.getFirst();
                 for (ResourceLocation location : this.spells) {
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
                         ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
-                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockPair.getFirst().above()), itemStack);
                         spellFlag = true;
                     }
                 }
-            }
 
-            if (spellFlag) {
-                float volume = 0.4F + level.random.nextFloat() * 0.3F;
-                float pitch = 1.0F + level.random.nextFloat() * 0.2F;
-                RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(fx, pos)
-                        .setOffset(0, -0.49, 0));
 
-                level.playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);
+                if (spellFlag) {
+                    float volume = 0.4F + level.random.nextFloat() * 0.3F;
+                    float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+                    RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(fx, pos)
+                            .setOffset(0, -0.49, 0));
+
+                    level.playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);
+                }
             }
         }
 

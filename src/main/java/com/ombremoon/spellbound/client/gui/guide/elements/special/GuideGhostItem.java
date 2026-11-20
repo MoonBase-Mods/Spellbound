@@ -29,6 +29,6 @@ public class GuideGhostItem {
     }
 
     public ItemStack getItem(int tickCount) {
-        return this.getItem(tickCount, 60.0F);
+        return this.getItem(tickCount, 180.0F);
     }
 }

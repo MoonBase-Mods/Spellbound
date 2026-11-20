@@ -294,7 +294,7 @@ public class SBSkills {
             createProvider("bound_bow", "ice_arrow"),
             createProvider("bound_bow", "shock_arrow"));
     public static final Holder<Skill> MYSTIC_MARKSMAN = registerSkill("mystic_marksman", -50, 100, preReqs(SPECTRAL_VOLLEY, QUICKDRAW));
-    public static final Holder<Skill> BOUND_ARROW = registerSkill("bound_arrow", -50, 150, preReqs(MYSTIC_MARKSMAN));
+    public static final Holder<Skill> BOUND_ARROW = registerSkill("bound_arrow", -50, 150, preReqs(MYSTIC_MARKSMAN), true);
     public static final Holder<Skill> ARCHERY_PROWESS = registerSkill("archery_prowess", 50, 100, preReqs(PIERCING_SHOT, INFUSED_SHOT));
     public static final Holder<Skill> WRAITH_SHOT = registerSkill("wraith_shot", 50, 150, preReqs(ARCHERY_PROWESS));
     public static final Holder<Skill> HEATSEEKER = registerSkill("heatseeker", 0, 200, preReqs(BOUND_ARROW, WRAITH_SHOT));

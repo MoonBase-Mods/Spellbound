@@ -22,6 +22,7 @@ public class MagicEffectInstance {
     private static final Logger LOGGER = Constants.LOG;
     private final EffectHolder effect;
     private int tickCount;
+    private boolean initialized;
     private UUID effectSourceId;
     private LootContext context;
 
@@ -32,6 +33,7 @@ public class MagicEffectInstance {
     public void initializeEffect(@Nullable Entity source) {
         this.tickCount = 0;
         this.effectSourceId = source != null ? source.getUUID() : null;
+        this.initialized = true;
     }
 
     public boolean attemptToActivateOrRemoveEffect(ServerLevel level, int tier, LivingEntity caster, BlockPos centerPos, @Nullable Multiblock.MultiblockPattern pattern) {
@@ -40,6 +42,7 @@ public class MagicEffectInstance {
             return false;
         }
 
+        Constants.LOG.info("{}", tickCount);
         if (!this.effect.hasComponents() && this.isValid(level, tier, caster, centerPos, pattern)) {
             this.effect.effect().onActivated(level, tier, level.getEntity(this.effectSourceId), caster, centerPos, pattern);
         }
@@ -111,5 +114,9 @@ public class MagicEffectInstance {
 
     public EffectHolder getEffect() {
         return this.effect;
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
     }
 }

@@ -1,0 +1,49 @@
+{
+  "definition": {
+    "duration": 1,
+    "mana_cost": 100,
+    "mastery_requirement": "novice",
+    "path_xp": 10,
+    "tier": 1
+  },
+  "effects": [
+    {
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_item",
+        "item": "spellbound:flux_shard"
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "spellbound:magic_shard"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "spellbound:magic_shard"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "spellbound:magic_shard"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "spellbound:magic_shard"
+      }
+    }
+  ]
+}

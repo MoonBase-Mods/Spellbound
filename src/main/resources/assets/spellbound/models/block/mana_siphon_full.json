@@ -1,0 +1,10 @@
+{
+  "parent": "spellbound:block/mana_siphon",
+  "textures": {
+    "east": "spellbound:block/mana_siphon_4",
+    "north": "spellbound:block/mana_siphon_4",
+    "south": "spellbound:block/mana_siphon_4",
+    "up": "spellbound:block/mana_siphon_top_full",
+    "west": "spellbound:block/mana_siphon_4"
+  }
+}

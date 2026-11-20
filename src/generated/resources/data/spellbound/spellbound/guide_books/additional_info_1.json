@@ -1,0 +1,91 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.additional_info"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.magic_shield"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.basic.mana_siphon"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "yOffset": 100
+      },
+      "recipe": "spellbound:magic_shield"
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 237,
+        "yOffset": 35
+      },
+      "recipe": "spellbound:mana_siphon"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:magic_shield"
+        }
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 100
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:mana_siphon"
+        }
+      ],
+      "position": {
+        "xOffset": 152,
+        "yOffset": 35
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:skills"
+}

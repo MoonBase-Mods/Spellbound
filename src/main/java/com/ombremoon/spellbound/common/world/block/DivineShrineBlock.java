@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.world.item.PhialItem;
@@ -23,6 +24,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -81,6 +84,24 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
             level.setBlock(pos, state.setValue(ACTIVE, false), 3);
             ResourceLocation activeFX = state.getValue(CURSED) ? CURSED_ACTIVE_FX : DIVINE_ACTIVE_FX;
             RenderUtil.removeBlockEffect(level, pos, activeFX);
+        }
+    }
+
+    @Override
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ACTIVE)) {
+            boolean flag = state.getValue(CURSED);
+            var blocks = BlockPos.betweenClosed(pos.offset(-3, -1, -3), pos.offset(3, 0, 3));
+            for (BlockPos blockPos : blocks) {
+                BlockState blockState = level.getBlockState(blockPos);
+                if (blockState.is(Blocks.WATER) && level.getFluidState(blockPos).isSource()) {
+                    level.setBlock(blockPos, flag ? SBBlocks.CURSED_WATER.get().defaultBlockState() :  SBBlocks.HOLY_WATER.get().defaultBlockState(), 3);
+                } else if (blockState.is(Blocks.WATER_CAULDRON)) {
+                    BlockState cauldron = flag ? SBBlocks.CURSED_WATER_CAULDRON.get().defaultBlockState() : SBBlocks.HOLY_WATER_CAULDRON.get().defaultBlockState();
+                    cauldron.setValue(LayeredCauldronBlock.LEVEL, blockState.getValue(LayeredCauldronBlock.LEVEL));
+                    level.setBlock(blockPos, cauldron, 3);
+                }
+            }
         }
     }
 

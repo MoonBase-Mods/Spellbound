@@ -117,7 +117,7 @@ public class ModLangProvider extends LanguageProvider {
         guideContents();
         affinityDescriptions();
         riddleDescriptions();
-        runeNames();
+        runeEntries();
 
         add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
         add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
@@ -535,12 +535,13 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.divine.divine_temple", "Divine Temples");
         add("guide.divine.divine_temple1", "I have discovered these mysterious, looming structures along my travels. Scattered across the lands are Divine Temples, ancient structures built to worship the Divine.");
         add("guide.divine.valkyr1", "They are not abandoned. Each is protected by a Valkyr, a sentinel of steel and light.");
-        add("guide.divine.valkyr2", "I realized my safety hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
+        add("guide.divine.valkyr2", "I realized my safet    `y hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
         add("guide.divine.divine_shrine", "The Divine Shrine");
         add("guide.divine.divine_shrine1", "The Divine Shrine is the heart of this magic, yet it functions unlike any other altar I have encountered. It does not desire materials; it desires proof.");
         add("guide.divine.divine_shrine2", "I have learned that spells are not made, but granted. To acquire them, I must perform specific Divine Actions within the Shrine's presence.");
         add("guide.divine.divine_action1", "Guarded by the Valkyr, the Shrine is bound to the temple. Should I attempt to mine or displace the altar, the Valkyr’s wrath will be immediate. I may use the Shrine where it stands, but I am forbidden from taking it.");
         add("guide.divine.divine_action2", "Like the Valkyr, the shrine too seems to measure my Judgement. If my Judgement does not meet the specific requirement for a spell, the altar remains dormant—\ndenying me the power until my nature aligns with its intent.");
+        add("guide.divine.activate_shrine", "Like most things in this realm, the shrine reacts to Magic Essence. Spells cannot be granted nor will the world around me change unless I provide the proper offering.");
 
         add("guide.divine.divine_actions", "Divine Actions:\n");
         add("healing_touch.heal_mob_to_full.name", "Shepherd");
@@ -625,6 +626,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.deception.dark_altar_decsription", "I keep finding these strange altars in the dungeons. I couldn't take them with me, so I decided to make one myself. I wonder what this thing is used for.");
         add("guide.deception.runic_chalk1", "It would seem that besides providing spells, the altar can be used to imbue power into chalk? With the right configuration of items, I can turn my words into runes of power.");
         add("guide.deception.runic_chalk2", "After various trials and experiments, I've determined the words of power can be transferred from one piece of chalk to the next. At max, a piece of chalk can hold 5 words of varying effects. This needs to be studied further.");
+        add("guide.deception.rune_recipes", "Dark Altar Recipes");
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.FLICKER.get(),
                 "I don't always have a means to attack or defend myself. Sometimes I just need a way to dodge and get out of the way!",
@@ -1127,9 +1129,27 @@ public class ModLangProvider extends LanguageProvider {
         addRiddleTooltip(SBSpells.CURSED_RUNE, "§oI am a rock of purest white\nYet cast no spark when in a fight\nI shatter against the armor plate\nUsed in a war devoid of hate\nBut hold me tight within your grasp\nAnd I turn to tears at the very last§r");
     }
 
-    protected void runeNames() {
+    protected void runeEntries() {
         add("rune.spellbound.curse", "Minor Harm Curse");
+        add("rune.spellbound.curse.description", "Target takes 2 magic damage");
+        add("rune.spellbound.mage_wreck", "Mage Wreck Curse");
+        add("rune.spellbound.mage_wreck.description", "Drains 4 mana from the target per second");
+        add("rune.spellbound.disarming_curse", "Disarming Curse");
+        add("rune.spellbound.disarming_curse.description", "Disarms the target");
+        add("rune.spellbound.mirror_curse", "Mirror Curse");
+        add("rune.spellbound.mirror_curse.description", "Summons a Doppelgänger of the target");
+        add("rune.spellbound.pain_curse", "Curse of Pain");
+        add("rune.spellbound.pain_curse.description", "Target takes +10% physical damage");
+        add("rune.spellbound.silent_curse", "Curse of Silence");
+        add("rune.spellbound.silent_curse.description", "Silences the target for 3 seconds");
+        add("rune.spellbound.vanishing_curse", "Vanishing Curse");
+        add("rune.spellbound.vanishing_curse.description", "Teleports the target away");
+        add("rune.spellbound.weakness_curse", "Curse of Weakness");
+        add("rune.spellbound.weakness_curse.description", "Target deals -10% physical damage");
+        add("rune.spellbound.susceptibility_curse", "Curse of Susceptibility");
+        add("rune.spellbound.susceptibility_curse.description", "Target takes +10% spell damage");
         add("rune.spellbound.tanglefoot", "Tanglefoot Curse");
+        add("rune.spellbound.tanglefoot.description", "Target is rooted for 3 seconds");
     }
 
 

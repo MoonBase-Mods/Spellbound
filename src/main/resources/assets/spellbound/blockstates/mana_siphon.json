@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "level=0": {
+      "model": "spellbound:block/mana_siphon"
+    },
+    "level=1": {
+      "model": "spellbound:block/mana_siphon_1"
+    },
+    "level=2": {
+      "model": "spellbound:block/mana_siphon_2"
+    },
+    "level=3": {
+      "model": "spellbound:block/mana_siphon_3"
+    },
+    "level=4": {
+      "model": "spellbound:block/mana_siphon_full"
+    }
+  }
+}

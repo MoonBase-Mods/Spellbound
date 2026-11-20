@@ -1,0 +1,112 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 4
+      },
+      "translation": {
+        "translate": "rune.spellbound.susceptibility_curse"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "rune.spellbound.susceptibility_curse.description"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "xOffset": -5,
+        "yOffset": 55
+      },
+      "translation": "-------------------------"
+    },
+    {
+      "type": "spellbound:rune_crafting",
+      "leftPage": true,
+      "ritual": "spellbound:susceptibility_curse"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 4
+      },
+      "translation": {
+        "translate": "rune.spellbound.tanglefoot"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "rune.spellbound.tanglefoot.description"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "xOffset": 167,
+        "yOffset": 55
+      },
+      "translation": "-------------------------"
+    },
+    {
+      "type": "spellbound:rune_crafting",
+      "leftPage": false,
+      "ritual": "spellbound:tanglefoot"
+    }
+  ],
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:altar_recipes_4"
+}

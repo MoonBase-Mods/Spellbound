@@ -138,6 +138,15 @@
           "not_added": true,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
+        },
+        {
+          "component": {
+            "translate": "guide.deception.rune_recipes"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:altar_recipes_1"
         }
       ],
       "position": {

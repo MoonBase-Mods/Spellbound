@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMult
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -24,9 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.slf4j.Logger;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public final class RitualInstance {
     private static final Logger LOGGER = Constants.LOG;
@@ -68,6 +67,7 @@ public final class RitualInstance {
             return;
         }
 
+        Set<MagicEffectInstance> removedEffects = new ObjectOpenHashSet<>();
         if (this.startTicks < ritual.getStartupTime()) {
             this.startTicks++;
         } else {
@@ -86,13 +86,17 @@ public final class RitualInstance {
                 }
 
                 for (LivingEntity entity : list) {
-                    if (this.startTicks == ritual.getStartupTime() || !effect.hasSource()) {
-                        effect.initializeEffect(player);
+                    if (!effect.isInitialized()) {
+                        effect.initializeEffect(entity);
                     }
 
-                    effect.attemptToActivateOrRemoveEffect(level, ritual.definition().tier(), entity, this.blockPos, this.pattern);
+                    if (!effect.attemptToActivateOrRemoveEffect(level, ritual.definition().tier(), entity, this.blockPos, this.pattern)) {
+                        removedEffects.add(effect);
+                    }
                 }
             }
+
+            this.magicEffects.removeAll(removedEffects);
             this.ticks++;
         }
     }

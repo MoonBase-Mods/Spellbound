@@ -1,0 +1,94 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.deception.puzzle_dungeons"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.deception.arcane_eyes"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "guide.deception.dungeon_door"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "swindler",
+      "position": {
+        "yOffset": 100
+      },
+      "recipe": "spellbound:arcane_eye"
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "swindler",
+      "position": {
+        "xOffset": 237,
+        "yOffset": 15
+      },
+      "recipe": "spellbound:dungeon_door"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:arcane_eye"
+        }
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 100
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:dungeon_door"
+        }
+      ],
+      "position": {
+        "xOffset": 152,
+        "yOffset": 15
+      }
+    }
+  ],
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:deception_description"
+}
