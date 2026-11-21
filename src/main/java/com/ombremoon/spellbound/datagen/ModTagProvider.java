@@ -133,6 +133,10 @@ public class ModTagProvider {
 
             populateTag(net.minecraft.tags.BlockTags.NEEDS_STONE_TOOL,
                     SBBlocks.RUNED_COPPER_PILLAR.get());
+
+            populateTag(net.minecraft.tags.BlockTags.CAULDRONS,
+                    SBBlocks.HOLY_WATER_CAULDRON.get(),
+                    SBBlocks.CURSED_WATER_CAULDRON.get());
         }
 
         public void populateTag(TagKey<Block> tag, Block... blocks){
@@ -254,7 +258,9 @@ public class ModTagProvider {
         protected void addTags(HolderLookup.Provider provider) {
             populateTag(net.minecraft.tags.FluidTags.WATER,
                     SBFluids.HOLY_WATER.get(),
-                    SBFluids.FLOWING_HOLY_WATER.get());
+                    SBFluids.FLOWING_HOLY_WATER.get(),
+                    SBFluids.CURSED_WATER.get(),
+                    SBFluids.FLOWING_CURSED_WATER.get());
         }
 
         public void populateTag(TagKey<Fluid> tag, Fluid... fluids){

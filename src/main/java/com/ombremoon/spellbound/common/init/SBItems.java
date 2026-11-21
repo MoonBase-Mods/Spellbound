@@ -72,18 +72,19 @@ public class SBItems {
     public static final Supplier<Item> RITUAL_TALISMAN = registerItem("ritual_talisman", () -> new RitualTalismanItem(getItemProperties().durability(25)), true, true);
     public static final Supplier<Item> MANA_TEAR = registerItem("mana_tear", () -> new ManaTearItem(getItemProperties()));
     public static final Supplier<Item> MANA_BOTTLE = registerItem("mana_bottle", () -> new ManaBottle(getItemProperties()));
-    public static final Supplier<Item> MAGIC_SHIELD = registerItem("magic_shield", () -> new MagicShieldItem(getItemProperties().durability(336)));
+    public static final Supplier<Item> MAGIC_SHIELD = registerItem("magic_shield", () -> new MagicShieldItem(getItemProperties().durability(336)), true);
     public static final Supplier<Item> CHALK = registerItem("chalk", () -> new ChalkItem(getItemProperties().stacksTo(16)));
     public static final Supplier<Item> SPIRIT_WHISTLE = registerItem("spirit_whistle",  () -> new SpiritWhistleItem(getItemProperties().component(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD)), true);
     public static final Supplier<Item> ARCANE_EYE = registerItem("arcane_eye",  () -> new ArcaneEyeItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> DUNGEON_KEY = registerItem("dungeon_key",  () -> new DungeonKeyItem(getItemProperties().stacksTo(1)));
-    public static final Supplier<Item> BOUND_BOW = registerItem("bound_bow",  () -> new BoundBowItem(getItemProperties().stacksTo(1)), true);
+    public static final Supplier<Item> BOUND_BOW = registerItem("bound_bow",  () -> new BoundBowItem(getItemProperties().stacksTo(1)), true, true);
     public static final Supplier<Item> STAR_MAP = registerItem("star_map", StarmapBlockItem::new, true, true);
 
     public static final Supplier<Item> DIVINE_PHIAL = registerItem("divine_phial", () -> new PhialItem(PhialItem.PhialType.DIVINE, getItemProperties()));
     public static final Supplier<Item> CURSED_PHIAL = registerItem("cursed_phial", () -> new PhialItem(PhialItem.PhialType.CURSED, getItemProperties()));
     public static final Supplier<Item> TEAR_OF_THE_ECLIPSE = registerItem("tear_of_the_eclipse", () -> new PhialItem(PhialItem.PhialType.ECLIPSE, getItemProperties()));
     public static final Supplier<Item> HOLY_WATER_BUCKET = registerItem("holy_water_bucket", () -> new BucketItem(SBFluids.HOLY_WATER.get(), getItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final Supplier<Item> CURSED_WATER_BUCKET = registerItem("cursed_water_bucket", () -> new BucketItem(SBFluids.CURSED_WATER.get(), getItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Supplier<Item> BLESSED_BANDAGES = registerItem("blessed_bandages", () -> new BlessedBandageItem(getItemProperties().stacksTo(16)));
     public static final Supplier<Item> DIVINE_CHARM = registerItem("divine_charm", () -> new Item(getItemProperties().stacksTo(1)) {
 

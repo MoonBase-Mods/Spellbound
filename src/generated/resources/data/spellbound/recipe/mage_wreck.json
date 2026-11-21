@@ -1,0 +1,31 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "effect": {
+      "type": "spellbound:set_resource",
+      "amount": -4.0,
+      "operation": "add",
+      "resource": "mana"
+    },
+    "effect_duration": 200,
+    "tick_provider": {
+      "type": "spellbound:for_every_tick",
+      "interval": 10
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:soul_sand"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "spellbound:magic_essence"
+    }
+  ]
+}

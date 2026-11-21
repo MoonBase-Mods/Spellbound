@@ -4,9 +4,11 @@ import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +41,9 @@ public class FamiliarList {
     }
 
     public void setDisplayedFamiliars(SpellMastery mastery) {
+        Player player = this.minecraft.player;
         this.scrollIndex = 0;
-        boolean locked = this.screen.getFamiliarHandler().getSpellHandler().getSkillHolder().getMastery(SpellPath.SUMMONS).ordinal() < mastery.ordinal();
+        boolean locked = SpellUtil.getSkills(player).getMastery(SpellPath.SUMMONS).ordinal() < mastery.ordinal();
         this.widgets = new ArrayList<>();
         for (var familiar : FamiliarHandler.getMasterySortedFamiliars(mastery)) {
             this.widgets.add(new FamiliarWidget(this, familiar, locked));

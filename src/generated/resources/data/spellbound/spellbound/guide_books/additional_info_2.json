@@ -1,0 +1,50 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.additional_info"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.mana_bottle"
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:mana_bottle"
+        }
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 100
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:additional_info_1"
+}

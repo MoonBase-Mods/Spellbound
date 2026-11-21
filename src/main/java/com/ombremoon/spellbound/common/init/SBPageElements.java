@@ -30,6 +30,7 @@ public class SBPageElements {
     public static final Supplier<MapCodec<? extends IPageElement>> TEXT_LIST = PAGE_ELEMENTS.register("text_list", () -> GuideTextListElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> SPELL_BORDER = PAGE_ELEMENTS.register("spell_border", () -> GuideSpellBorderElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> RITUAL = PAGE_ELEMENTS.register("ritual", () -> TransfigurationRitualElement.CODEC);
+    public static final Supplier<MapCodec<? extends IPageElement>> RUNE_CRAFTING = PAGE_ELEMENTS.register("rune_crafting", () -> RuneCraftingElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> EQUIPMENT = PAGE_ELEMENTS.register("equipment", () -> GuideEquipmentElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> STRUCTURE = PAGE_ELEMENTS.register("structure", () -> GuideMultiBlockElement.CODEC);
 

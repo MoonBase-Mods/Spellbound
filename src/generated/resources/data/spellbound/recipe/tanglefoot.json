@@ -18,16 +18,16 @@
   },
   "ingredients": [
     {
-      "item": "minecraft:oak_log"
+      "item": "minecraft:cobweb"
     },
     {
-      "item": "minecraft:oak_slab"
+      "item": "minecraft:cobweb"
     },
     {
-      "item": "minecraft:oak_planks"
+      "item": "minecraft:slime_ball"
     },
     {
-      "item": "minecraft:oak_fence"
+      "item": "minecraft:leather_boots"
     }
   ]
 }

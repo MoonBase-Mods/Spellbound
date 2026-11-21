@@ -30,6 +30,7 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
     ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
+    ResourceKey<TransfigurationRitual> CREATE_FLUX_SHARD = key("create_flux_shard");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
         register(
@@ -242,6 +243,23 @@ public interface SBRituals {
                         .withEffect(
                                 EffectHolder.simple(
                                         new CreateItem(SBItems.CREATIONIST_STAFF.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
+        register(context,
+                CREATE_FLUX_SHARD,
+                TransfigurationRitual.ritual(1, 1, 10, 100, SpellMastery.NOVICE)
+                        .requires(Ingredient.of(SBTags.Items.MAGIC_SHARD))
+                        .requires(Ingredient.of(SBTags.Items.MAGIC_SHARD))
+                        .requires(Ingredient.of(SBTags.Items.MAGIC_SHARD))
+                        .requires(Ingredient.of(SBTags.Items.MAGIC_SHARD))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.FLUX_SHARD.get()),
                                         Optional.empty(),
                                         new TickProvider.AtTick(0),
                                         BuffCategory.NEUTRAL,

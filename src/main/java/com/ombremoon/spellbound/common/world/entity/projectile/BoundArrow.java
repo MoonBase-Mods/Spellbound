@@ -90,7 +90,8 @@ public class BoundArrow extends AbstractArrow implements FXEmitter {
         if (this.firstTick) {
             this.firstTick = false;
             if (this.level().isClientSide) {
-                this.addFX(EffectBuilder.Entity.of(CommonClass.customLocation("ice_trail"), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                ArrowVariant variant = this.getVariant();
+                this.addFX(EffectBuilder.Entity.of(CommonClass.customLocation(variant.name + "_trail"), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                         .setRotation(180, 90, 0));
             }
         }
@@ -303,18 +304,20 @@ public class BoundArrow extends AbstractArrow implements FXEmitter {
     }
 
     public enum ArrowVariant {
-        MAGIC("bound", SBDamageTypes.SB_GENERIC),
-        FIRE("fire", SBDamageTypes.RUIN_FIRE),
-        ICE("ice", SBDamageTypes.RUIN_FROST),
-        SHOCK("shock", SBDamageTypes.RUIN_SHOCK);
+        MAGIC("bound", SBDamageTypes.SB_GENERIC, 0.15625F),
+        FIRE("fire", SBDamageTypes.RUIN_FIRE, 0.40625F),
+        ICE("ice", SBDamageTypes.RUIN_FROST, 0.21875F),
+        SHOCK("shock", SBDamageTypes.RUIN_SHOCK, 0.15625F);
 
         public static StreamCodec<RegistryFriendlyByteBuf, ArrowVariant> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(ArrowVariant.class);
         private final String name;
         private final ResourceKey<DamageType> damageType;
+        private final float uvOffset;
 
-        ArrowVariant(String name, ResourceKey<DamageType> damageType) {
+        ArrowVariant(String name, ResourceKey<DamageType> damageType, float uvOffset) {
             this.name = name;
             this.damageType = damageType;
+            this.uvOffset = uvOffset;
         }
 
         public String getName() {
@@ -323,6 +326,10 @@ public class BoundArrow extends AbstractArrow implements FXEmitter {
 
         public ResourceKey<DamageType> getDamageType() {
             return this.damageType;
+        }
+
+        public float getUvOffset() {
+            return this.uvOffset;
         }
     }
 }

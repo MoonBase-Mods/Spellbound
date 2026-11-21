@@ -49,8 +49,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel((SBBlocks.RUNED_COPPER_PILLAR));
         simpleGeneratedModel((SBBlocks.RUNED_END_PILLAR));
         simpleGeneratedModel((SBBlocks.RUNED_STONE_PILLAR));
-        //simpleGeneratedModel((SBBlocks.MANA_SIPHON));
-
 
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
         simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
@@ -82,8 +80,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel((SBItems.TEAR_OF_THE_ECLIPSE));
         simpleGeneratedModel((SBItems.BLESSED_BANDAGES));
         simpleGeneratedModel((SBItems.HOLY_WATER_BUCKET));
+        simpleGeneratedModel((SBItems.CURSED_WATER_BUCKET));
         simpleGeneratedModel((SBItems.DIVINE_CHARM));
-        simpleGeneratedModel((SBItems.MAGIC_SHIELD));
 
         simpleGeneratedModel(SBItems.DECEPTION_BOOK);
         simpleGeneratedModel(SBItems.DIVINE_BOOK);

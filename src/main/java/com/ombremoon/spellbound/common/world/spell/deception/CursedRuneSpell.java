@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.EntityResource;
 import com.ombremoon.spellbound.common.world.entity.spell.CursedRune;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.FluidPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -135,9 +136,9 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
             );
             if (this.isChoice(SBSkills.MAGE_WRECK)) {
                 effect = EffectHolder.simple(
-                        new SetResource(EntityResource.MANA, potency(-5), EntityResource.Operation.ADD),
+                        new SetResource(EntityResource.MANA, potency(-4), EntityResource.Operation.ADD),
                         Optional.empty(),
-                        new TickProvider.ForEveryTick(20),
+                        new TickProvider.ForEveryTick(10),
                         BuffCategory.HARMFUL,
                         200
                 );

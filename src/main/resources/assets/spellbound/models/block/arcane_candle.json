@@ -4,7 +4,8 @@
 	"texture_size": [32, 32],
 	"render_type": "cutout",
 	"textures": {
-		"1": "spellbound:block/arcane_candle"
+		"1": "spellbound:block/arcane_candle",
+		"particle": "spellbound:block/arcane_candle"
 	},
 	"elements": [
 		{

@@ -116,7 +116,7 @@ public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
 
     public static <T> boolean hasRule(ServerLevel level, RuleType<T> rule, @Nullable T exception) {
         PuzzleDungeonData data = PuzzleDungeonData.get(level);
-        if (isDungeon(level) && data.currentDungeon!= null) {
+        if (isDungeon(level) && data.currentDungeon != null) {
             return testRuleExceptions(data.currentDungeon, rule, exception);
         }
 

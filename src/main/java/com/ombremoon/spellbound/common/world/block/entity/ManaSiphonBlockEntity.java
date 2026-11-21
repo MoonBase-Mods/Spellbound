@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.block.entity;
 
 import com.ombremoon.spellbound.common.init.SBBlockEntities;
 import com.ombremoon.spellbound.common.world.block.ManaSiphonBlock;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -37,7 +38,7 @@ public class ManaSiphonBlockEntity extends BlockEntity {
             entity.activeTime--;
         }
 
-        if (entity.isActive() && entity.canSiphonMana() && entity.activeTime % 100 == 0) {
+        if (entity.isActive() && entity.canSiphonMana() && entity.activeTime % 10 == 0) {
             AABB aabb = new AABB(pos).inflate(5);
             Player player = level.getPlayerByUUID(entity.owner);
             for (LivingEntity livingEntity : level.getEntitiesOfClass(LivingEntity.class, aabb)) {
@@ -46,8 +47,9 @@ public class ManaSiphonBlockEntity extends BlockEntity {
 
                 var handler = SpellUtil.getSpellHandler(livingEntity);
                 float mana = (float) handler.getMana();
-                if (mana > 0) {
-                    entity.siphonMana(1);
+                float f = Math.min((float) (2.0F + handler.getMaxMana() * 0.02), mana);
+                if (mana > 0 && handler.consumeMana(f)) {
+                    entity.siphonMana(state, level, pos, f);
                     flag1 = true;
                 }
             }
@@ -68,8 +70,9 @@ public class ManaSiphonBlockEntity extends BlockEntity {
         return this.storedMana < this.maxMana;
     }
 
-    public void siphonMana(float amount) {
+    public void siphonMana(BlockState state, Level level, BlockPos pos, float amount) {
         this.storedMana = Mth.clamp(this.storedMana + amount, 0, this.maxMana);
+        this.updateManaState(state, level, pos);
         this.markUpdated();
     }
 
@@ -77,11 +80,12 @@ public class ManaSiphonBlockEntity extends BlockEntity {
         return this.storedMana;
     }
 
-    public boolean increaseManaStorage(float amount) {
+    public boolean increaseManaStorage(BlockState state, Level level, BlockPos pos, float amount) {
         if (this.maxMana >= 1000)
             return false;
 
         this.maxMana = Mth.clamp(this.maxMana + amount, 0, 1000);
+        this.updateManaState(state, level, pos);
         this.markUpdated();
         return true;
     }
@@ -90,10 +94,26 @@ public class ManaSiphonBlockEntity extends BlockEntity {
         return this.maxMana;
     }
 
-    public void activateSiphon(Player player) {
+    public void activateSiphon(Player player, BlockState state, Level level, BlockPos pos) {
         this.owner = player.getUUID();
         this.activeTime = 2400;
         this.markUpdated();
+    }
+
+    private void updateManaState(BlockState state, Level level, BlockPos pos) {
+        float f = this.storedMana / this.maxMana;
+        int i = 0;
+        if (f >= 1.0F) {
+            i = 4;
+        } else if (f >= 0.75F) {
+            i = 3;
+        } else if (f > 0.5F) {
+            i = 2;
+        } else if (f > 0) {
+            i = 1;
+        }
+
+        level.setBlock(pos, state.setValue(ManaSiphonBlock.LEVEL, i), 3);
     }
 
     public boolean isOwner(Player player) {

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
+    "*": {
+      "item": "minecraft:hopper"
+    },
+    "C": {
+      "item": "minecraft:cauldron"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "S": {
+      "item": "minecraft:soul_sand"
+    },
+    "^": {
+      "item": "minecraft:tinted_glass"
+    }
+  },
+  "pattern": [
+    "^#^",
+    "S*S",
+    "OCO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:mana_siphon"
+  }
+}

@@ -127,6 +127,15 @@
           "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:skills"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.additional_info"
+          },
+          "extraOffset": 0,
+          "not_added": false,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:additional_info_1"
         }
       ],
       "position": {
