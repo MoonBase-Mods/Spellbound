@@ -1,6 +1,7 @@
 {
   "parent": "spellbound:block/runed_pillar_bottom",
   "textures": {
-    "1": "spellbound:block/runed_copper_pillar"
+    "1": "spellbound:block/runed_copper_pillar",
+    "particle": "block/copper_block"
   }
 }

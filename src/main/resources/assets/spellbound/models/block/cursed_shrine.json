@@ -3,7 +3,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "spellbound:block/sandstone_cursed_shrine_block",
+		"0": "spellbound:block/jungle_cursed_shrine_block",
 		"particle": "#0"
 	},
 	"elements": [

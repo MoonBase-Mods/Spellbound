@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.mixin;
 
-import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -19,9 +18,7 @@ public abstract class SlotMixin {
 
     @Inject(method = "mayPickup", at = @At("RETURN"), cancellable = true)
     private void disableImbuementPickup(Player player, CallbackInfoReturnable<Boolean> cir) {
-        ItemStack stack = this.getItem();
-        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
-        if (imbuement != null && imbuement.spellInstance().isPresent()) {
+        if (Imbuement.slotLocked(this.getItem())) {
             cir.setReturnValue(false);
         }
     }

@@ -180,12 +180,6 @@ public class ModTagProvider {
                     .addTags(Tags.DamageTypes.IS_MAGIC,
                             SBTags.DamageTypes.SPELLBOUND_DAMAGE);
 
-            this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN)
-                    .add(SBDamageTypes.SB_GENERIC)
-                    .add(SBDamageTypes.RUIN_FIRE)
-                    .add(SBDamageTypes.RUIN_FROST)
-                    .add(SBDamageTypes.RUIN_SHOCK);
-
             this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_SHIELD)
                     .addTags(SBTags.DamageTypes.SPELLBOUND_DAMAGE)
                     .add(SBDamageTypes.BLEED);

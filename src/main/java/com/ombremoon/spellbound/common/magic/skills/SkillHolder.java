@@ -187,6 +187,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public boolean canUnlockSkill(Skill skill) {
+        if (skill.inTestingPhase()) return false;
         var spellType = skill.getSpell();
         if (hasSkill(skill)) return false;
         if (skill.isRoot() || skill.getPrereqs() == null) return false;

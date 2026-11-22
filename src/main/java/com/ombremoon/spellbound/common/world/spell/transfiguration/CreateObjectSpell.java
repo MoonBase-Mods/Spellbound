@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -57,7 +58,23 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.CREATE_OBJECT,
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.DURATION.tooltip(this.getDuration()));
+        this.addSkillDetails(SBSkills.LUMBERJACK,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.EXCAVATOR,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.HARVESTER,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.KNIGHT,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.ADVENTURER,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.SCOUT,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.LASTING_PROVISIONS,
+                SkillTooltip.MODIFY_DURATION.tooltip(250F));
     }
 
     @Override

@@ -52,6 +52,11 @@ public class NightbladeSpell extends ImbuementSpell {
     }
 
     @Override
+    public void registerSkillTooltips() {
+
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
         super.onSpellStart(context);
         LivingEntity caster = context.getCaster();
@@ -188,11 +193,6 @@ public class NightbladeSpell extends ImbuementSpell {
 
     @Override
     protected void onUseImbuement(SpellContext context) {
-
-    }
-
-    @Override
-    public void registerSkillTooltips() {
 
     }
 

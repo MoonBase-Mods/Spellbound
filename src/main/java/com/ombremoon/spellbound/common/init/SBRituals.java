@@ -9,11 +9,14 @@ import com.ombremoon.spellbound.common.magic.effects.types.CreateItem;
 import com.ombremoon.spellbound.common.magic.effects.types.CreateSpellTome;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import java.util.Optional;
 
@@ -30,6 +33,8 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
     ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
+    ResourceKey<TransfigurationRitual> CREATE_TIER_TWO_TALISMAN = key("create_tier_two_talisman");
+    ResourceKey<TransfigurationRitual> CREATE_TIER_THREE_TALISMAN = key("create_tier_three_talisman");
     ResourceKey<TransfigurationRitual> CREATE_FLUX_SHARD = key("create_flux_shard");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
@@ -160,6 +165,37 @@ public interface SBRituals {
                         .withEffect(
                                 EffectHolder.simple(
                                         new CreateItem(SBItems.MANA_TEAR.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
+
+        register(context,
+                CREATE_TIER_TWO_TALISMAN,
+                TransfigurationRitual.ritual(1, 15, SpellMastery.NOVICE)
+                        .requires(Ingredient.of(SBItems.RITUAL_TALISMAN.get()), 4)
+                        .withEffect(
+                                EffectHolder.simple(
+                                        CreateItem.withData(SBItems.RITUAL_TALISMAN.get(), TypedDataComponent.createUnchecked(SBData.TALISMAN_RINGS.get(), 2)),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
+
+        register(context,
+                CREATE_TIER_THREE_TALISMAN,
+                TransfigurationRitual.ritual(2, 25, SpellMastery.ADEPT)
+                        .requires(Ingredient.of(SBItems.RITUAL_TALISMAN.get()), 8)
+                        .requires(DataComponentIngredient.of(true, SBData.TALISMAN_RINGS.get(), 2, SBItems.RITUAL_TALISMAN.get()), 4)
+                        .withEffect(
+                                EffectHolder.simple(
+                                        CreateItem.withData(SBItems.RITUAL_TALISMAN.get(), TypedDataComponent.createUnchecked(SBData.TALISMAN_RINGS.get(), 2)),
                                         Optional.empty(),
                                         new TickProvider.AtTick(0),
                                         BuffCategory.NEUTRAL,

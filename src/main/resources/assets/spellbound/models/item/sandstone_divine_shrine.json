@@ -1,11 +1,3 @@
 {
-  "parent": "spellbound:block/sandstone_divine_shrine",
-  "overrides": [
-    {
-      "predicate": {
-        "spellbound:cursed": 1
-      },
-      "model": "spellbound:item/bound_bow_pulling_0"
-    }
-  ]
+  "parent": "spellbound:block/sandstone_divine_shrine"
 }
