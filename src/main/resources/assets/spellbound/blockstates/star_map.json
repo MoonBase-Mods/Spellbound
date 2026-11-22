@@ -46,6 +46,38 @@
     "facing=west,type=vicio": {
       "model": "spellbound:block/star_map/vicio",
       "y": 270
+    },
+
+    "facing=east,type=aevitas": {
+      "model": "spellbound:block/star_map/aevitas",
+      "y": 90
+    },
+    "facing=north,type=aevitas": {
+      "model": "spellbound:block/star_map/aevitas"
+    },
+    "facing=south,type=aevitas": {
+      "model": "spellbound:block/star_map/aevitas",
+      "y": 180
+    },
+    "facing=west,type=aevitas": {
+      "model": "spellbound:block/star_map/aevitas",
+      "y": 270
+    },
+
+    "facing=east,type=evorsio": {
+      "model": "spellbound:block/star_map/evorsio",
+      "y": 90
+    },
+    "facing=north,type=evorsio": {
+      "model": "spellbound:block/star_map/evorsio"
+    },
+    "facing=south,type=evorsio": {
+      "model": "spellbound:block/star_map/evorsio",
+      "y": 180
+    },
+    "facing=west,type=evorsio": {
+      "model": "spellbound:block/star_map/evorsio",
+      "y": 270
     }
   }
 }
