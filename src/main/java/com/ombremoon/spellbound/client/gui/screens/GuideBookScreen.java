@@ -193,6 +193,7 @@ public class GuideBookScreen extends Screen {
     public void onClose() {
         super.onClose();
         ElementRenderDispatcher.resetElements();
+        ElementRenderDispatcher.closeElements(this.pages.get(currentPage).elements());
         var lastPage = minecraft.player.getData(SBData.BOOK_LAST_PAGE.get());
         lastPage.put(this.bookId, currentPage);
         minecraft.player.setData(SBData.BOOK_LAST_PAGE, lastPage);

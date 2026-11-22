@@ -214,10 +214,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
 
-        if (!this.receivedBook && !inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance())) {
-            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
-            this.receivedBook = true;
+        if (!this.receivedBook) {
+            if (!inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance()))
+                player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
         }
+        this.receivedBook = true;
 
         this.sync();
         this.skillHolder.sync();

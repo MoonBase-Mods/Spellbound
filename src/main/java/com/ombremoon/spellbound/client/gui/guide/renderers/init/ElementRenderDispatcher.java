@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -30,6 +31,12 @@ public class ElementRenderDispatcher {
         }
 
         RENDER_DATA = new HashMap<>();
+    }
+
+    public static <T extends IPageElement, C extends IPageElementRenderer<T>> void closeElements(List<T> elements) {
+        for (var element : elements) {
+            ((C) REGISTER.get(element.getClass())).onClose();
+        }
     }
 
     public static Object getData(IPageElement element, String key) {
