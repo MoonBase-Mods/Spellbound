@@ -89,4 +89,8 @@ public interface IPageElementRenderer<T extends IPageElement> extends Loggable {
 
         return Ingredient.of(list.stream());
     }
+
+    default void onClose() {
+
+    }
 }
