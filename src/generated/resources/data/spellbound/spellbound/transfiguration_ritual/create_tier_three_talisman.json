@@ -1,0 +1,45 @@
+{
+  "definition": {
+    "duration": 1,
+    "mana_cost": 20,
+    "mastery_requirement": "adept",
+    "path_xp": 25,
+    "tier": 2
+  },
+  "effects": [
+    {
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_item",
+        "data": {
+          "spellbound:talisman_rings": 2
+        },
+        "item": "spellbound:ritual_talisman"
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "count": 8,
+      "ingredient": {
+        "item": "spellbound:ritual_talisman"
+      }
+    },
+    {
+      "count": 4,
+      "ingredient": {
+        "type": "neoforge:components",
+        "components": {
+          "spellbound:talisman_rings": 2
+        },
+        "items": "spellbound:ritual_talisman",
+        "strict": true
+      }
+    }
+  ]
+}

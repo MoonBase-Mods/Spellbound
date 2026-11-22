@@ -1,6 +1,7 @@
 {
   "parent": "spellbound:block/sandstone_divine_shrine_top",
   "textures": {
-    "0": "spellbound:block/jungle_divine_shrine_block"
+    "0": "spellbound:block/jungle_divine_shrine_block",
+    "particle": "block/packed_mud"
   }
 }

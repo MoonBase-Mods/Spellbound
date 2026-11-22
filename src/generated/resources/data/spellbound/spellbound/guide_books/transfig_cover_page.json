@@ -96,30 +96,12 @@
         },
         {
           "component": {
-            "translate": "guide.transfiguration.armor_recipe"
+            "translate": "guide.transfiguration.general_rituals"
           },
           "extraOffset": 0,
           "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:transfig_helmet_ritual"
-        },
-        {
-          "component": {
-            "translate": "guide.transfiguration.staff_recipe"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_staff_ritual"
-        },
-        {
-          "component": {
-            "translate": "guide.transfigurations.mana_tear"
-          },
-          "extraOffset": 0,
-          "not_added": false,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:mana_tear_ritual"
         },
         {
           "component": {

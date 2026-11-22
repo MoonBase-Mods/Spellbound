@@ -14,6 +14,7 @@ import software.bernie.geckolib.animation.*;
 
 public class IceBolt extends SpellProjectile<IceBoltSpell> {
     private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(IceBolt.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SPLIT = SynchedEntityData.defineId(IceBolt.class, EntityDataSerializers.BOOLEAN);
 
     public IceBolt(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
@@ -23,6 +24,7 @@ public class IceBolt extends SpellProjectile<IceBoltSpell> {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SIZE, 1);
+        builder.define(SPLIT, false);
     }
 
     @Override
@@ -36,6 +38,14 @@ public class IceBolt extends SpellProjectile<IceBoltSpell> {
 
     public void setSize(int size) {
         this.entityData.set(SIZE, size);
+    }
+
+    public boolean isSplit() {
+        return this.entityData.get(SPLIT);
+    }
+
+    public void split() {
+        this.entityData.set(SPLIT, true);
     }
 
     @Override

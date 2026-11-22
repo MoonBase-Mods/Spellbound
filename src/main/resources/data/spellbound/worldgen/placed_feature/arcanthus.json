@@ -6,24 +6,12 @@
     },
     {
       "type": "minecraft:heightmap",
-      "heightmap": "MOTION_BLOCKING"
+      "heightmap": "WORLD_SURFACE_WG"
     },
-    {
-      "type": "minecraft:count",
-      "count": {
-        "type": "minecraft:clamped",
-        "max_inclusive": 3,
-        "min_inclusive": 0,
-        "source": {
-          "type": "minecraft:uniform",
-          "max_inclusive": 3,
-          "min_inclusive": -1
-        }
-      }
-    },
+
     {
       "type": "minecraft:rarity_filter",
-      "chance": 15
+      "chance": 30
     }
   ]
 }

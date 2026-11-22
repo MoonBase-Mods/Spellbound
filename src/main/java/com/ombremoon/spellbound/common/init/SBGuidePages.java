@@ -81,6 +81,8 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> TRANSFIG_BOOTS_RITUAL = key("transfig_boots_ritual");
     ResourceKey<GuideBookPage> TRANSFIG_STAFF_RITUAL = key("transfig_staff_ritual");
     ResourceKey<GuideBookPage> MANA_TEAR_RITUAL = key("mana_tear_ritual");
+    ResourceKey<GuideBookPage> TIER_TWO_TALISMAN_RITUAL = key("tier_two_talisman_ritual");
+    ResourceKey<GuideBookPage> TIER_THREE_TALISMAN_RITUAL = key("tier_three_talisman_ritual");
     ResourceKey<GuideBookPage> FLUX_SHARD_CHARM = key("flux_shard_charm");
     ResourceKey<GuideBookPage> STRIDE = key("stride");
     ResourceKey<GuideBookPage> DOLPHINS_FIN = key("dolphins_fin");
@@ -117,9 +119,10 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> DIVINE_JUDGEMENT = key("divine_judgement");
     ResourceKey<GuideBookPage> DIVINE_TEMPLE_VALKYR = key("temple_and_valkyr");
     ResourceKey<GuideBookPage> DIVINE_SHRINE = key("divine_shrine");
-    ResourceKey<GuideBookPage> DIVINE_SHRINE_1 = key("divine_shrine_1");
-    ResourceKey<GuideBookPage> DIVINE_ITEMS_1 = key("divine_description"); //Ambrosia, Holy Water, Blessed Bandages, Divine Phial
-    ResourceKey<GuideBookPage> DIVINE_ITEMS_2 = key("divine_description"); //Ambrosia, Holy Water, Blessed Bandages, Divine Phial
+    ResourceKey<GuideBookPage> DIVINE_SHRINE_1 = key("divine_shrine_cont");
+    ResourceKey<GuideBookPage> HOLY_WATER = key("holy_water");
+    ResourceKey<GuideBookPage> DIVINE_ITEMS_1 = key("divine_items_1");
+    ResourceKey<GuideBookPage> DIVINE_ITEMS_2 = key("divine_description"); //Ambrosia Water, Blessed Bandages
     ResourceKey<GuideBookPage> DIVINE_ARMOR_STAFF = key("divine_description"); //Armor & Staff
     ResourceKey<GuideBookPage> DIViNE_SHARDS_CHARM = key("divine_description"); //Holy & Corrupted Shards
     ResourceKey<GuideBookPage> HEALING_TOUCH = key("healing_touch");
@@ -158,6 +161,7 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("spellbound_description");
     ResourceKey<GuideBookPage> SPELL_PATHS = key("spellbound_paths");
     ResourceKey<GuideBookPage> GENERAL_ITEMS = key("general_items");
+    ResourceKey<GuideBookPage> GENERAL_ITEMS_1 = key("general_items_1");
     ResourceKey<GuideBookPage> WORKBENCH = key("magis_workbench");
     ResourceKey<GuideBookPage> BOOK_RECIPES = key("book_recipes");
     ResourceKey<GuideBookPage> BOOK_RECIPES_CONT = key("book_recipes_cont");
@@ -259,16 +263,37 @@ public interface SBGuidePages {
                 null,
                 false,
                 List.of(
-                        new RecipeEntry(loc("magic_essence"), PAGE_TWO_START_X + 16, 111)
+                        new RecipeEntry(loc("magic_essence"), PAGE_TWO_START_X + 16, 66)
                 ),
                 List.of(
                         new ItemEntry(Ingredient.of(blockToItem(SBBlocks.ARCANTHUS)), 84, 27, false),
-                        new ItemEntry(Ingredient.of(SBItems.MANA_TEAR.get()), -39, 105, false),
-                        new ItemEntry(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 234, 95, false)
+                        new ItemEntry(Ingredient.of(SBItems.MANA_TEAR.get()), -39, 95, false),
+                        new ItemEntry(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 234, 50, false),
+                        new ItemEntry(Ingredient.of(SBItems.MANA_BOTTLE.get()), PAGE_TWO_START_X - 30, 120, false)
                 ),
                 new TextEntry(translatable("guide.basic.arcanthus"), 0, 30, 115),
-                new TextEntry(translatable("guide.basic.mana_tear"), 29, 120, 130),
-                new TextEntry(translatable("guide.basic.magic_essence"), PAGE_TWO_START_X, 35)
+                new TextEntry(translatable("guide.basic.mana_tear"), 30, 115, 130),
+                new TextEntry(translatable("guide.basic.magic_essence"), PAGE_TWO_START_X, 10),
+                new TextEntry(translatable("guide.basic.mana_bottle"), PAGE_TWO_START_X + 50, 130, 100)
+        );
+        createDescriptionWithRecipeAndItem(
+                context,
+                GENERAL_ITEMS_1,
+                GENERAL_ITEMS,
+                Book.SPELLBOUND,
+                translatable("guide.basic.general_items_cont"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("magic_shield"), 65, 35),
+                        new RecipeEntry(loc("mana_siphon"), PAGE_TWO_START_X, 95)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.MAGIC_SHIELD.get()), -20, 35, false),
+                        new ItemEntry(Ingredient.of(SBBlocks.MANA_SIPHON.get()), 239, 95, false)
+                ),
+                new TextEntry(translatable("guide.basic.magic_shield"), 0, 125),
+                new TextEntry(translatable("guide.basic.mana_siphon"), PAGE_TWO_START_X, 35)
         );
         createDescriptionWithRecipeAndImage(
                 context,
@@ -350,7 +375,7 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.basic.spell_broker"), 35),
                 new TextEntry(translatable("guide.basic.spell_broker1"), 0, 85, 75),
                 new TextEntry(translatable("guide.basic.page_scraps1"), PAGE_TWO_START_X, 30),
-                new TextEntry(translatable("guide.basic.page_scraps2"), PAGE_TWO_START_X + 25, 90, 130),
+                new TextEntry(translatable("guide.basic.page_scraps2"), PAGE_TWO_START_X + 25, 88, 130),
                 new TextEntry(translatable("guide.basic.page_scraps3"), PAGE_TWO_START_X, 135, 130)
         );
         createDescriptionAndItems(
@@ -547,9 +572,7 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.transfiguration.description"), TRANSFIG_DESCRIPTION),
                 new ContentsEntry(translatable("guide.transfiguration.blocks"), TRANSFIG_RITUAL_ITEMS_1),
                 new ContentsEntry(translatable("guide.general.path_items"), TRANSFIG_ARMOR_STAFF),
-                new ContentsEntry(translatable("guide.transfiguration.armor_recipe"), TRANSFIG_HELM_RITUAL),
-                new ContentsEntry(translatable("guide.transfiguration.staff_recipe"), TRANSFIG_STAFF_RITUAL),
-                new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL),
+                new ContentsEntry(translatable("guide.transfiguration.general_rituals"), TRANSFIG_HELM_RITUAL),
                 new ContentsEntry(translatable("guide.general.novice_spells"), STRIDE),
                 new ContentsEntry(translatable("guide.general.apprentice_spells"), null),
                 new ContentsEntry(translatable("guide.general.adept_spells"), SHADOW_GATE),
@@ -651,19 +674,21 @@ public interface SBGuidePages {
         createRitualPage(context, TRANSFIG_LEGS_RITUAL, TRANSFIG_CHEST_RITUAL, SBRituals.CREATE_TRANSFIG_LEGS, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_BOOTS_RITUAL, TRANSFIG_LEGS_RITUAL, SBRituals.CREATE_TRANSFIG_BOOTS, 5, 0, RitualTier.ONE);
         createRitualPage(context, TRANSFIG_STAFF_RITUAL, TRANSFIG_BOOTS_RITUAL, SBRituals.CREATE_TRANSFIG_STAVE, 5, 0, RitualTier.ONE);
-        createRitualPage(context, MANA_TEAR_RITUAL, TRANSFIG_STAFF_RITUAL, SBRituals.CREATE_MANA_TEAR, 10, 0, RitualTier.ONE);
-        createSpellPage(context, STRIDE, MANA_TEAR_RITUAL, Book.TRANSFIG, SBSpells.STRIDE);
+        createRitualPage(context, MANA_TEAR_RITUAL, TRANSFIG_STAFF_RITUAL, SBRituals.CREATE_MANA_TEAR, 5, 0, RitualTier.ONE);
+        createRitualPage(context, TIER_TWO_TALISMAN_RITUAL, MANA_TEAR_RITUAL, SBRituals.CREATE_TIER_TWO_TALISMAN, 5, 0, RitualTier.ONE);
+        createRitualPage(context, TIER_THREE_TALISMAN_RITUAL, TIER_TWO_TALISMAN_RITUAL, SBRituals.CREATE_TIER_THREE_TALISMAN, 10, 0, RitualTier.TWO);
+        createSpellPage(context, STRIDE, TIER_THREE_TALISMAN_RITUAL, Book.TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_RITUAL, STRIDE, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
         createSpellPage(context, DOLPHINS_FIN, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.DOLPHINS_FIN);
         createRitualPage(context, DOLPHINS_FIN_RITUAL, DOLPHINS_FIN, SBRituals.CREATE_DOLPHINS_FIN, 5, 0, RitualTier.ONE);
         createSpellPage(context, COBBLED_HIDE, DOLPHINS_FIN_RITUAL, Book.TRANSFIG, SBSpells.COBBLED_HIDE);
         createRitualPage(context, COBBLED_HIDE_RITUAL, COBBLED_HIDE, SBRituals.CREATE_COBBLED_HIDE, 5, 0, RitualTier.ONE);
         createSpellPage(context, CREATE_OBJECT, COBBLED_HIDE_RITUAL, Book.TRANSFIG, SBSpells.CREATE_OBJECT);
-        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 10, 0, RitualTier.ONE);
+        createRitualPage(context, CREATE_OBJECT_RITUAL, CREATE_OBJECT, SBRituals.CREATE_CREATE_OBJECT, 5, 0, RitualTier.ONE);
         createSpellPage(context, SHADOW_GATE, CREATE_OBJECT_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
-        createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
+        createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 5, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
-        createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
+        createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 5, 0, RitualTier.TWO);
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
@@ -835,7 +860,59 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.divine.divine_action1"), PAGE_TWO_START_X, 10),
                 new TextEntry(translatable("guide.divine.divine_action2"), PAGE_TWO_START_X, 90)
         );
-        createDivineSpellPage(context, HEALING_TOUCH, DIVINE_SHRINE, DIVINE_BOOK, SBSpells.HEALING_TOUCH, 0);
+        createDescriptionAndItems(
+                context,
+                DIVINE_SHRINE_1,
+                DIVINE_SHRINE,
+                Book.DIVINE,
+                translatable("guide.divine.divine_shrine_cont"),
+                translatable("guide.divine.cursed_shrine"),
+                false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), -8, 70, false),
+                        new ItemEntry(Ingredient.of(SBBlocks.SANDSTONE_DIVINE_SHRINE.get()), 56, 70, false),
+                        new ItemEntry(Ingredient.of(SBBlocks.CURSED_SHRINE.get()), PAGE_TWO_START_X + 24, 110, false)
+                ),
+                new TextEntry(translatable("guide.divine.activate_shrine1"), 0, 35),
+                new TextEntry(translatable("guide.divine.activate_shrine2"), 0, 140),
+                new TextEntry(translatable("guide.divine.cursed_shrine1"), PAGE_TWO_START_X, 35)
+        );
+        createDescriptionAndItems(
+                context,
+                HOLY_WATER,
+                DIVINE_SHRINE_1,
+                Book.DIVINE,
+                translatable("guide.divine.holy_water"),
+                null,
+                false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.HOLY_WATER_BUCKET.get()), -25, 100, false),
+                        new ItemEntry(Ingredient.of(Items.OMINOUS_BOTTLE), PAGE_TWO_START_X + 76, -15, false)
+                ),
+                new TextEntry(translatable("guide.divine.holy_water1"), 0, 35),
+                new TextEntry(translatable("guide.divine.holy_water2"), 55, 130, 100),
+                new TextEntry(translatable("guide.divine.holy_water3"), PAGE_TWO_START_X, 10, 100),
+                new TextEntry(translatable("guide.divine.holy_water4"), PAGE_TWO_START_X, 70)
+        );
+        createDescriptionAndItems(
+                context,
+                DIVINE_ITEMS_1,
+                HOLY_WATER,
+                Book.DIVINE,
+                translatable("guide.divine.divine_phial"),
+                translatable("guide.divine.blessed_bandages"),
+                false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.DIVINE_PHIAL.get()), 24, 110, false),
+                        new ItemEntry(Ingredient.of(Items.LEATHER), PAGE_TWO_START_X - 8, 70, false),
+                        new ItemEntry(Ingredient.of(SBItems.BLESSED_BANDAGES.get()), PAGE_TWO_START_X + 56, 70, false)
+                ),
+                new TextEntry(translatable("guide.divine.divine_phial1"), 0, 35),
+                new TextEntry(translatable("guide.divine.divine_phial2"), 0, 95),
+                new TextEntry(translatable("guide.divine.blessed_bandages1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.divine.blessed_bandages2"), PAGE_TWO_START_X, 140)
+        );
+        createDivineSpellPage(context, HEALING_TOUCH, DIVINE_ITEMS_1, DIVINE_BOOK, SBSpells.HEALING_TOUCH, 0);
         createDivineActionPage(
                 context,
                 HEALING_TOUCH_ACTIONS,
@@ -877,8 +954,7 @@ public interface SBGuidePages {
                 true,
                 new ItemActionEntry(SBDivineActions.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL, SBPageScraps.CURSE_ENEMY_WITH_PHIAL_LORE, -1, 6000, 0, Ingredient.of(SBItems.CURSED_PHIAL.get())),
                 new ItemActionEntry(SBDivineActions.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON, SBPageScraps.USE_HALF_FILLED_SIPHON_LORE, -1, 6000, 10, Ingredient.of(SBBlocks.MANA_SIPHON.get())),
-//                new ItemActionEntry(SBDivineActions.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE_LORE, -1, 6000, 15, DataComponentIngredient.of(true, DataComponentPredicate.builder().expect(SBData.CURSED.get(), true).build(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get()))
-                new ItemActionEntry(SBDivineActions.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE_LORE, -1, 6000, 15, Ingredient.of(SBBlocks.JUNGLE_DIVINE_SHRINE.get()))
+                new ItemActionEntry(SBDivineActions.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE, SBPageScraps.CURSE_SHRINE_LORE, -1, 6000, 15, Ingredient.of(SBBlocks.CURSED_SHRINE.get()))
         );
         createDivineSpellPage(context, HEALING_BLOSSOM, SIPHON_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(
@@ -912,12 +988,12 @@ public interface SBGuidePages {
                 translatable("guide.deception.broker_riddles"),
                 false,
                 List.of(
-                        new ItemEntry(Ingredient.of(SBItems.DUNGEON_KEY.get()), PAGE_TWO_START_X, 120, false)
+                        new ItemEntry(Ingredient.of(SBItems.DUNGEON_KEY.get()), PAGE_TWO_START_X + 24, 70, false)
                 ),
                 new TextEntry(translatable("guide.deception.description1"), 35),
                 new TextEntry(translatable("guide.deception.description2"), 120),
                 new TextEntry(translatable("guide.deception.broker_riddles1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.deception.broker_riddles2"), PAGE_TWO_START_X, 100));
+                new TextEntry(translatable("guide.deception.broker_riddles2"), PAGE_TWO_START_X, 140));
         createDescriptionWithRecipeAndItem(
                 context,
                 PUZZLE_DUNGEONS,

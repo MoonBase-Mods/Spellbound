@@ -189,4 +189,11 @@ public class GuideMultiBlockRenderer implements IPageElementRenderer<GuideMultiB
                 Component.translatable("guide.element.multiblock.open"),
                 mouseX, mouseY);
     }
+
+    @Override
+    public void onClose() {
+        IPageElementRenderer.super.onClose();
+
+        this.isDetailed = false;
+    }
 }

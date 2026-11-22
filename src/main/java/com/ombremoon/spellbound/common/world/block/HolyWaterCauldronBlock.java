@@ -135,6 +135,25 @@ public class HolyWaterCauldronBlock extends LayeredCauldronBlock {
                 }
         );
         map.put(
+                Items.OMINOUS_BOTTLE,
+                (state, level, pos, player, hand, stack) -> {
+                    if (!level.isClientSide) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            SBTriggers.USE_HOLY_CAULDRON.get().trigger(serverPlayer, stack, PhialItem.PhialType.DIVINE);
+                        }
+
+                        player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                        player.awardStat(Stats.USE_CAULDRON);
+                        player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                        level.setBlockAndUpdate(pos, SBBlocks.CURSED_WATER_CAULDRON.get().defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, state.getValue(LayeredCauldronBlock.LEVEL)));
+                        level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
+                    }
+
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                }
+        );
+        map.put(
                 Items.LEATHER,
                 (state, level, pos, player, hand, stack) -> {
                     if (!level.isClientSide) {

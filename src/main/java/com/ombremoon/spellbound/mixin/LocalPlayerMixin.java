@@ -45,9 +45,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void dropMixin(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
-        ItemStack stack = this.getMainHandItem();
-        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
-        if (imbuement != null && imbuement.spellInstance().isPresent()) {
+        if (Imbuement.slotLocked(this.getMainHandItem())) {
             cir.setReturnValue(false);
         }
     }

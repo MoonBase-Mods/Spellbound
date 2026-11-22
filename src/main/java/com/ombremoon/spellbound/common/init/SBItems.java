@@ -186,8 +186,8 @@ public class SBItems {
         return item;
     }
 
-    public static Supplier<Item> registerBlockItem(String name, DeferredBlock<? extends Block> block) {
-        Supplier<Item> item = ITEMS.register(name, () -> new BlockItem(block.get(), getItemProperties()));
+    public static Supplier<Item> registerBlockItem(String name, DeferredBlock<? extends Block> block, boolean excludeTab) {
+        Supplier<Item> item = registerItem(name, () -> new BlockItem(block.get(), getItemProperties()), true, excludeTab);
         BLOCK_ITEM_LIST.add(item);
         return item;
     }
@@ -198,10 +198,6 @@ public class SBItems {
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
-//        if (CommonClass.isDevEnv()) {
-//            ITEMS.register("debug", () -> new DebugItem(getItemProperties()));
-//        }
-
         CREATIVE_MODE_TABS.register(modEventBus);
     }
 }

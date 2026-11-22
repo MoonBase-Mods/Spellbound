@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.client.gui.guide.renderers;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideTextElement;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -26,8 +28,8 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
 
         boolean visible = isVisible(element.extras().pageScrap());
         Style style = Style.EMPTY;
-        style = style.applyFormat(visible ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED);
 
+        style = style.withObfuscated(!visible);
         style = style.withBold(element.extras().bold());
         style = style.withItalic(element.extras().italic());
         style = style.withUnderlined(element.extras().underline());

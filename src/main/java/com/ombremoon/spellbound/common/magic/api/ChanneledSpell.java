@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class ChanneledSpell extends AnimatedSpell {
-    protected int manaTickCost;
+    protected float manaTickCost;
     protected Function<SpellContext, SpellAnimation> channelAnimation;
     protected SpellAnimation channelStopAnimation;
 
@@ -34,8 +34,12 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         this.channelStopAnimation = builder.channelStopAnimation;
     }
 
-    public int getManaTickCost() {
+    public float getManaTickCost(SpellContext context) {
         return this.manaTickCost;
+    }
+
+    public float getManaTickCost() {
+        return this.getManaTickCost(this.getCurrentContext());
     }
 
     @Override
@@ -51,7 +55,6 @@ public abstract class ChanneledSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellTick(SpellContext context) {
-        super.onSpellTick(context);
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         if (!caster.level().isClientSide) {
@@ -83,7 +86,7 @@ public abstract class ChanneledSpell extends AnimatedSpell {
     }
 
     public static class Builder<T extends ChanneledSpell> extends AnimatedSpell.Builder<T> {
-        protected int manaTickCost;
+        protected float manaTickCost = 5;
         protected Function<SpellContext, SpellAnimation> channelAnimation;
         protected SpellAnimation channelStopAnimation;
 
@@ -96,7 +99,7 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> manaTickCost(int fpTickCost) {
+        public Builder<T> manaTickCost(float fpTickCost) {
             this.manaTickCost = fpTickCost;
             return this;
         }

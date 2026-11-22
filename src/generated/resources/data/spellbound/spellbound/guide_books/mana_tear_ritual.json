@@ -65,7 +65,7 @@
           "component": {
             "translate": "spellbound.ritual.activation_time",
             "with": [
-              "10"
+              "5"
             ]
           },
           "extraOffset": 0,

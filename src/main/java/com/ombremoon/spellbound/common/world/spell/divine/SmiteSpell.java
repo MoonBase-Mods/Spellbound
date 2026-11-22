@@ -213,7 +213,7 @@ public class SmiteSpell extends ImbuementSpell {
                 this.consumeMana(caster, 10);
                 this.addCooldown(SBSkills.SACRED_BLADE, 20);
             } else if (context.isChoice(SBSkills.PRAYERFUL_STRIKE) && context.hasSkillReady(SBSkills.PRAYERFUL_STRIKE)) {
-                var entities = this.getNearbyEntities(2);
+                var entities = this.getNearbyEntities(2, living -> !this.isCaster(living));
                 for (LivingEntity entity : entities) {
                     if (!this.isChoice(SBSkills.BLACK_BLADE)) {
                         if (this.getAttackPredicate().test(entity) && entity.getType().is(EntityTypeTags.UNDEAD)) {
@@ -228,7 +228,8 @@ public class SmiteSpell extends ImbuementSpell {
                     }
                 }
 
-                if (context.hasSkill(SBSkills.GOLDEN_LAND)) {
+                log(entities);
+                if (context.hasSkill(SBSkills.GOLDEN_LAND) && !entities.isEmpty()) {
                     float radius = 1.5F;
                     Vec3 origin = caster.position();
                     float yaw = caster.getYRot();

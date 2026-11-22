@@ -380,10 +380,6 @@ public class ClientEvents {
                 (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F
         );
 
-        ItemProperties.register(SBBlocks.SANDSTONE_DIVINE_SHRINE.get().asItem(), CommonClass.customLocation("cursed"),
-                (stack, level, entity, seed) -> stack.getOrDefault(SBData.CURSED, false) ? 1.0F : 0.0F
-        );
-
         ItemProperties.register(SBItems.BOUND_BOW.get(), CommonClass.customLocation("pulling"),
                 (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F
         );

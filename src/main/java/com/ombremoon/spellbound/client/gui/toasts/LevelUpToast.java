@@ -43,7 +43,7 @@ public class LevelUpToast implements Toast {
                 this.width(), this.height());
 
         String popupText = this.spell == null
-                ? Component.translatable(PATH_TRANS, this.path.getSerializedName(), Integer.toString(this.level)).getString()
+                ? Component.translatable(PATH_TRANS, this.path.getSerializedName().substring(0, 1).toUpperCase() + this.path.getSerializedName().substring(1), Integer.toString(this.level)).getString()
                 :  Component.translatable(SPELL_TRANS, this.spell.createSpell().getName(), Integer.toString(this.level)).getString();
         int lettersRevealed = Math.clamp(timeVisible / 120, 0, popupText.length());
         MutableComponent comp = Component.translatable(popupText.substring(0, lettersRevealed))

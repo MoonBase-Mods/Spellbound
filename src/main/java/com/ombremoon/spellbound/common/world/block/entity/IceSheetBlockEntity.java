@@ -3,9 +3,15 @@ package com.ombremoon.spellbound.common.world.block.entity;
 import com.ombremoon.spellbound.client.photon.EffectCache;
 import com.ombremoon.spellbound.client.photon.FXEmitter;
 import com.ombremoon.spellbound.common.init.SBBlockEntities;
+import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
+import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceSkateSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -13,8 +19,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -78,11 +87,23 @@ public class IceSheetBlockEntity extends BlockEntity implements FXEmitter {
             Player player = level.getPlayerByUUID(this.spellOwner);
             if (player != null && !entity.is(player)) {
                 IceSkateSpell spell = this.createSpell(player);
-                if (spell != null && entity instanceof LivingEntity livingEntity && this.harmful) {
-                    livingEntity.setIsInPowderSnow(true);
-                    if (!player.level().isClientSide && this.canFreeze) {
+                if (!level.isClientSide && spell != null && entity instanceof LivingEntity livingEntity && livingEntity.tickCount % 20 == 0) {
+                    SpellContext context = spell.getContext();
+                    if (this.harmful && spell.hurt(livingEntity, 1.0F) && this.canFreeze) {
                         var effects = SpellUtil.getSpellEffects(livingEntity);
-                        effects.incrementBuildEffects(EffectManager.Effect.FROST, 1);
+                        effects.incrementBuildEffects(EffectManager.Effect.FROST, spell.potency(5));
+                    }
+
+                    if (SpellUtil.IS_ALLIED.test(livingEntity, player) && context.hasSkill(SBSkills.SNOW_BOOTS)) {
+                        spell.addSkillBuff(
+                                livingEntity,
+                                SBSkills.SNOW_BOOTS,
+                                IceSkateSpell.SNOW_BOOTS,
+                                BuffCategory.BENEFICIAL,
+                                SkillBuff.ATTRIBUTE_MODIFIER,
+                                new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(IceSkateSpell.SNOW_BOOTS, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                40
+                        );
                     }
                 }
             }

@@ -197,9 +197,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
 
-//        if (!this.isClientSide() && this.caster instanceof Chicken && this.caster.tickCount % 20 == 0) {
-//            log(this.getMaxMana());
-//        }
+        if (/*!this.isClientSide() && */this.caster instanceof Player/* && this.caster.tickCount % 20 == 0*/) {
+//            this.caster.setIsInPowderSnow(true);
+//            this.caster.setTicksFrozen(this.caster.getTicksRequiredToFreeze());
+//            this.caster.setIsInPowderSnow(true);
+        }
     }
 
     public void onPlayerSpawn(Player player) {
@@ -212,10 +214,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
 
-        if (!this.receivedBook && !inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance())) {
-            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
-            this.receivedBook = true;
+        if (!this.receivedBook) {
+            if (!inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance()))
+                player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
         }
+        this.receivedBook = true;
 
         this.sync();
         this.skillHolder.sync();

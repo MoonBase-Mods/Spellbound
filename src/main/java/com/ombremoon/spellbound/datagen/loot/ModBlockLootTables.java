@@ -61,7 +61,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.SUMMON_STONE.get());
         this.dropSelf(SBBlocks.CRACKED_SUMMON_STONE.get());
         this.dropSelf(SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get());
-        this.dropSelf(SBBlocks.PLAINS_DIVINE_SHRINE.get());
+        this.multiBlockDropSelf(SBBlocks.PLAINS_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.JUNGLE_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.VALKYR_STATUE.get());

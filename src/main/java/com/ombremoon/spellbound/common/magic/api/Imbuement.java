@@ -93,6 +93,11 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         return this.charges == 0;
     }
 
+    public static boolean slotLocked(ItemStack stack) {
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        return imbuement != null && imbuement.spellInstance().isPresent();
+    }
+
     /*public static boolean hasImbuement(Imbuement imbuement, ItemStack stack) {
         Imbuement other = stack.get(SBData.IMBUEMENT);
         return other != null && imbuement.spellInstance == other.spellInstance;

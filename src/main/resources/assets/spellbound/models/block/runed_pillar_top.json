@@ -3,7 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "spellbound:block/runed_stone_pillar"
+		"1": "spellbound:block/runed_stone_pillar",
+		"particle": "block/stone_bricks"
 	},
 	"elements": [
 		{

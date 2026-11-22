@@ -69,13 +69,14 @@ public class UpgradeWidget {
 
     private List<FormattedCharSequence> createSkillDescription(Font font, Skill skill) {
         var component = skill.getDescription().withStyle(Style.EMPTY.withColor(this.color));
-        if (!this.skillDetails.isEmpty())
-            component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
-
-        if (skill.inTestingPhase())
+        if (skill.inTestingPhase()) {
             component.append("\n\n").append(Component.translatable("tooltip.skill.testing").withStyle(ChatFormatting.RED));
+        } else if (!this.skillDetails.isEmpty()) {
+            component.append("\n\n").append(Component.translatable("spellbound.skill_tooltip.more_details"));
+        }
 
         return font.split(component, 120);
+
     }
 
     private List<FormattedCharSequence> createSkillTooltip(Font font, Skill skill) {

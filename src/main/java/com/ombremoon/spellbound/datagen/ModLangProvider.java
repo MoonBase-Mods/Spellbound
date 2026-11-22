@@ -251,6 +251,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.arcanthus", "A magical flower found in flower fields, §lArcanthus§r is the primal way for a Magi to introduce itself to this world of magic. It is used to craft §omagic essence§r.");
         add("guide.basic.magic_essence", "§lMagic Essence§r is the core of all magic items in this world, it utilizes the magical properties of §oArcanthus§r to enhance its host object or perform powerful rituals.");
         add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana required significantly increases. §lMana Tears§r are the way to permanently increase your §omana reserves.§r");
+        add("guide.basic.mana_bottle", "When low on mana, §lBottles o' Mana§r are a quick way to replenish it. These can be found around the world or collected from §oMana Siphons.§r");
+        add("guide.basic.general_items_cont", "General Items Cont.");
+        add("guide.basic.magic_shield", "A regular shield is not enough to mitigate the damage from magic. With a Magic Shield, Magi can not only block spell damage, but §odeflect projectiles§r if timed properly.");
+        add("guide.basic.mana_siphon", "§lMana Siphons§r collect mana from nearby entities when activated with §oMagic Essence.§r Mana stored can be collected directly or in §oBottles o' Mana§r");
         add("guide.basic.workbench1", "A §lMagi's Workbench§r it's the most important tool for spell growth. There you can §oview, swap out, and §lupgrade§r your spells as you progress through the world.");
         add("guide.basic.book_recipes", "Book Recipes");
         add("guide.basic.book_recipes_cont", "Book Recipes Cont.");
@@ -362,9 +366,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.description", "Transfiguration & Rituals");
         add("guide.transfiguration.blocks", "Ritual Blocks");
         add("guide.transfiguration.items", "Ritual Items");
-        add("guide.transfiguration.armor_recipe", "Apparel Ritual");
-        add("guide.transfiguration.staff_recipe", "Staff Ritual");
-        add("guide.transfigurations.mana_tear", "Mana Tear Ritual");
+        add("guide.transfiguration.general_rituals", "General Rituals");
+//        add("guide.transfiguration.armor_recipe", "Apparel Ritual");
+//        add("guide.transfiguration.staff_recipe", "Staff Ritual");
+//        add("guide.transfigurations.mana_tear", "Mana Tear Ritual");
 
         add("spellbound.ritual.tier_one", "Tier: 1");
         add("spellbound.ritual.tier_two", "Tier: 2");
@@ -421,12 +426,16 @@ public class ModLangProvider extends LanguageProvider {
         add("ritual.spellbound.create_transfig_leggings", "Create Item:\nCreationist Leggings");
         add("ritual.spellbound.create_transfig_boots", "Create Item:\nCreationist Boots");
         add("ritual.spellbound.create_transfig_stave", "Create Item:\nCreationist Staff");
+        add("ritual.spellbound.create_tier_two_talisman", "Create Item:\nTier Two Talisman");
+        add("ritual.spellbound.create_tier_three_talisman", "Create Item:\nTier Three Talisman");
 
         add("ritual.spellbound.create_transfig_helmet.description", "Creates a Creationist Helmet");
         add("ritual.spellbound.create_transfig_chestplate.description", "Creates a Creationist Chestplate");
         add("ritual.spellbound.create_transfig_leggings.description", "Creates Creationist Leggings");
         add("ritual.spellbound.create_transfig_boots.description", "Creates Creationist Boots");
         add("ritual.spellbound.create_transfig_stave.description", "Creates a Creationist Staff");
+        add("ritual.spellbound.create_tier_two_talisman.description", "Creates a Tier 2 Ritual Talisman");
+        add("ritual.spellbound.create_tier_three_talisman.description", "Creates a Tier 3 Ritual Talisman");
 
         add("ritual.spellbound.create_mana_tear", "Create Item:\nMana Tear");
         add("ritual.spellbound.create_mana_tear.description", "Creates a Mana Tear");
@@ -535,13 +544,28 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.divine.divine_temple", "Divine Temples");
         add("guide.divine.divine_temple1", "I have discovered these mysterious, looming structures along my travels. Scattered across the lands are Divine Temples, ancient structures built to worship the Divine.");
         add("guide.divine.valkyr1", "They are not abandoned. Each is protected by a Valkyr, a sentinel of steel and light.");
-        add("guide.divine.valkyr2", "I realized my safet    `y hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
+        add("guide.divine.valkyr2", "I realized my safety hung by a thread. These guardians serve the balance of Judgement. To the righteous, they are silent watchers. But had I approached with a heart stained by cruelty, I have no doubt the Valkyr would have cut me down the moment I crossed the threshold.");
         add("guide.divine.divine_shrine", "The Divine Shrine");
         add("guide.divine.divine_shrine1", "The Divine Shrine is the heart of this magic, yet it functions unlike any other altar I have encountered. It does not desire materials; it desires proof.");
         add("guide.divine.divine_shrine2", "I have learned that spells are not made, but granted. To acquire them, I must perform specific Divine Actions within the Shrine's presence.");
         add("guide.divine.divine_action1", "Guarded by the Valkyr, the Shrine is bound to the temple. Should I attempt to mine or displace the altar, the Valkyr’s wrath will be immediate. I may use the Shrine where it stands, but I am forbidden from taking it.");
         add("guide.divine.divine_action2", "Like the Valkyr, the shrine too seems to measure my Judgement. If my Judgement does not meet the specific requirement for a spell, the altar remains dormant—\ndenying me the power until my nature aligns with its intent.");
-        add("guide.divine.activate_shrine", "Like most things in this realm, the shrine reacts to Magic Essence. Spells cannot be granted nor will the world around me change unless I provide the proper offering.");
+        add("guide.divine.divine_shrine_cont", "Divine Shrine Cont.");
+        add("guide.divine.activate_shrine1", "Like most things in this realm, the shrine reacts to Magic Essence. Spells cannot be granted nor will the world around me change unless I provide the proper offering.");
+        add("guide.divine.activate_shrine2", "The shimmering light tells me that this is working. I'll need a steady supply of Arcanthus to ensure my labor is rewarded.");
+        add("guide.divine.cursed_shrine", "The Cursed Shrine");
+        add("guide.divine.cursed_shrine1", "No matter how hard I try, the Divine Shrine won't grant me the powers I seek. It will only aid those who follow the path of light. To become stronger along the path of darkness, I'll need to find a way to curse the shrine. But how?");
+        add("guide.divine.holy_water", "Holy Water");
+        add("guide.divine.holy_water1", "While it may remain in my possession, the Shrine reacts to more than just me. The whole world around me can sense the Shrine's blessing. In fact, some blessed water may come in handy on the road ahead.");
+        add("guide.divine.holy_water2", "If I wait just long enough, I know I'll be able to get this to work.");
+        add("guide.divine.holy_water3", "I can sense a dark energy emanating out of this bottle I picked up from a Pillager.");
+        add("guide.divine.holy_water4", "One thing that's for sure is this is completely rejected by the Divine. I had better keep it far away from my cauldron of blessed water, lest it corrupt the entire basin.");
+        add("guide.divine.divine_phial", "Divine Phial");
+        add("guide.divine.divine_phial1", "I collected some of the Holy Water I made in a bottle. I discovered that when coated in this liquid, my Divine spells grow a bit stronger.");
+        add("guide.divine.divine_phial2", "With this portable phial of Holy Water, I'm sure I can find many other uses on my journey.");
+        add("guide.divine.blessed_bandages", "Blessed Bandages");
+        add("guide.divine.blessed_bandages1", "By coating a piece of leather in Holy Water, it becomes a simple but effective first aid. Now I can mend wounds on the move regardless of my mana capacity.");
+        add("guide.divine.blessed_bandages2", "I believe there are more uses for these bandages. I'll have to do more research before I can determine what those are.");
 
         add("guide.divine.divine_actions", "Divine Actions:\n");
         add("healing_touch.heal_mob_to_full.name", "Shepherd");
@@ -618,7 +642,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.deception.description1", "Deceit, trickery, fraud... All words of power to fool those who would doubt you. Using this path of magic I will twist what people see, manipulating what they understand as truth.");
         add("guide.deception.description2", "This discipline demands a new kind of sight—one that sees through the world's lies to weave falsehoods of my own");
         add("guide.deception.broker_riddles1", "That magic merchant I found in the tower, he's gatekeeping access to all these spells! Luckily enough, he seems reasonable enough to negotiate with.");
-        add("guide.deception.broker_riddles2", "This will be tricky... He's told me the spells are locked in alternate dimensions. If I had the keys, I could access them, but I must solve his riddles first.");
+        add("guide.deception.broker_riddles2", "This will be tricky... He's told me the spells are locked in alternate dimensions. If I had the keys, I could access them.");
         add("guide.deception.puzzle_dungeons", "Puzzle Dungeons");
         add("guide.deception.arcane_eyes", "To see what's hidden and access the inaccessible, I need a new set of eyes. Not only is this a necessary step to acquire new spells, but can be useful in locating hidden magic.");
         add("guide.deception.dungeon_door", "The Broker told me I can use the keys he gave me on this door to access new spells. Unfortunately, he also warned these dungeons house unique puzzles that must be solved before the spells are granted.");
@@ -702,6 +726,9 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.fire_build_up", "%s Fire Build Up");
         add("spellbound.skill_tooltip.frost_build_up", "%s Frost Build Up");
         add("spellbound.skill_tooltip.shock_build_up", "%s Shock Build Up");
+        add("spellbound.skill_tooltip.fire_build_up_per_charge", "%s Fire Build Up per Charge");
+        add("spellbound.skill_tooltip.frost_build_up_per_charge", "%s Frost Build Up per Charge");
+        add("spellbound.skill_tooltip.shock_build_up_per_charge", "%s Shock Build Up per Charge");
         add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
         add("spellbound.skill_tooltip.target_damage", "%s%% Target Damage");
         add("spellbound.skill_tooltip.target_physical_damage", "%s%% Target Physical Damage");
@@ -721,6 +748,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.physical_damage_redux", "%s%% Physical Damage Reduction");
         add("spellbound.skill_tooltip.spell_damage_redux", "%s%% Spell Damage Reduction");
         add("spellbound.skill_tooltip.projectile_damage_redux", "%s%% Projectile Damage Reduction");
+        add("spellbound.skill_tooltip.pierce_count", "Pierce Level %s");
         add("spellbound.skill_tooltip.hp_threshold", "%s%% HP Threshold");
         add("spellbound.skill_tooltip.mob_effect", "Applies ");
         add("spellbound.skill_tooltip.spell", "Casts ");
@@ -742,6 +770,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.farmer_villager", "Increase Crop Yields");
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
+        add("spellbound.skill_tooltip.modify_skate_speed", "%s%% Skate Speed");
 
         /* TEMPLATE
         addSkillTooltip(SBSkills., "");
@@ -779,7 +808,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.JET_STABILIZATION, "Flame Jet can be cast while walking or sprinting.");
         addSkillTooltip(SBSkills.TURBULENCE_STREAM, "If Flame Jet is recast within a short duration, its range is increased.");
         addSkillTooltip(SBSkills.AFTERSHOCK_COMPRESSION, "If Flame Jet is recast within a short duration, its damage is increased.");
-        addSkillTooltip(SBSkills.IRON_MAN, "Consume a Smoldering Shard. Flame Jet can be channeled to continuously propel the caster.");
+        addSkillTooltip(SBSkills.IRON_MAN, "Cast with a Smoldering Shard. Flame Jet can be channeled to continuously propel the caster.");
 
         addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a beam of fire that deals continuous damage.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
@@ -806,7 +835,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.HAIL_STRIKE, "Ice Bolts rain down from the target location.");
         addSkillTooltip(SBSkills.CHILLING_AFTERMATH, "Enemies struck with any variant of Ice Bolt are afflicted with a lingering frost, temporarily reducing cast speed.");
         addSkillTooltip(SBSkills.SHATTERING_IMPACT, "Each Ice Bolt has increased Frost build up.");
-        addSkillTooltip(SBSkills.FROSTBITE_SYNERGY, "Enemies affected by slows or any frost effect take 25% more damage from Ice Bolt.");
+        addSkillTooltip(SBSkills.FROSTBITE_SYNERGY, "Enemies affected by slows or any frost effect take additional damage from Ice Bolt.");
         addSkillTooltip(SBSkills.WINTER_IS_COMING, "Each successful strike with Ice Bolt stacks the slowing effect.");
         addSkillTooltip(SBSkills.FROST_PIERCER, "All variants of Ice Bolt pierce through enemies.");
 
@@ -815,7 +844,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.ICE_CLEATS, "Colliding with a mob while skating deals frost damage.");
         addSkillTooltip(SBSkills.FROZEN_FEET, "Enemies who stand on the ice take continuous frost damage each second.");
         addSkillTooltip(SBSkills.ICE_SNARE, "Enemies who stand on the ice trail take additional frost build up.");
-        addSkillTooltip(SBSkills.SNOW_BOOTS, "Allies walking over the ice trail gain half the movement benefits and are immune to sliding.");
+        addSkillTooltip(SBSkills.SNOW_BOOTS, "Allies walking over the ice trail gain additional movement speed and are immune to sliding.");
         addSkillTooltip(SBSkills.KINETIC_FLOW, "Continuously skating temporarily grants the caster potency for Ice spells.");
         addSkillTooltip(SBSkills.SHARDS_OF_MOMENTUM, "When the spell ends, send out a cone of Ice Bolts towards the caster's look direction.");
         addSkillTooltip(SBSkills.CRYSTAL_CLEATS, "Gain additional frost build up and slow on the caster's next melee hit while skating.");
@@ -980,15 +1009,27 @@ public class ModLangProvider extends LanguageProvider {
 
         addSkillTooltip(SBSkills.BOUND_BOW, "Creates a magic bow. The bow generates arrows at the cost of mana.");
         addSkillTooltip(SBSkills.QUICKDRAW, "Bound Bow draw speed is increased.");
-        addSkillTooltip(SBSkills.SPECTRAL_VOLLEY, "Shots are split into ");
-        addSkillTooltip(SBSkills.PIERCING_SHOT, "");
-        addSkillTooltip(SBSkills.INFUSED_SHOT, "");
-        addSkillTooltip(SBSkills.MYSTIC_MARKSMAN, "");
-        addSkillTooltip(SBSkills.BOUND_ARROW, "");
-        addSkillTooltip(SBSkills.ARCHERY_PROWESS, "");
-        addSkillTooltip(SBSkills.WRAITH_SHOT, "");
-        addSkillTooltip(SBSkills.HEATSEEKER, "");
-        addSkillTooltip(SBSkills.BOUND_MARKSMAN, "");
+        addSkillTooltip(SBSkills.SPECTRAL_VOLLEY, "Shots are split into multiple arrows.");
+        addSkillTooltip(SBSkills.PIERCING_SHOT, "Arrows can pierce through enemies.");
+        addSkillTooltip(SBSkills.INFUSED_SHOT, "Arrows now deal damage based on the chose Ruin type.");
+        addSkillTooltip(SBSkills.MYSTIC_MARKSMAN, "Bound Bow no longer costs mana to shoot arrows.");
+        addSkillTooltip(SBSkills.BOUND_ARROW, "Hitting a target marks them temporarily. If killed while marked, a dormant Soul Shard is filled in the caster's inventory.");
+        addSkillTooltip(SBSkills.ARCHERY_PROWESS, "Every third shot is a guaranteed critical hit.");
+        addSkillTooltip(SBSkills.WRAITH_SHOT, "Arrows can phase through blocks.");
+        addSkillTooltip(SBSkills.HEATSEEKER, "Arrows will home on to targets.");
+        addSkillTooltip(SBSkills.BOUND_MARKSMAN, "Instead of summoning a bow, summon a Marksman who gains all the previous benefits from the bow.");
+
+        addSkillTooltip(SBSkills.SUMMON_WOLF_PACK, "Summons a Spectral Wolf");
+        addSkillTooltip(SBSkills.HELLHOUND, "Summons Hellhounds from the Nether that are immune to fire and deal Fire damage");
+        addSkillTooltip(SBSkills.SHADOW_WOLF, "Summons Shadow Wolves that teleport around their target while attacking.");
+        addSkillTooltip(SBSkills.BLOOD_SCENT, "Wolves do more damage to targets less than half health.");
+        addSkillTooltip(SBSkills.THICK_FUR, "Wolves have more health and damage resistance when in their proper environment.");
+        addSkillTooltip(SBSkills.PACK_LEADER, "One of the summoned wolves is larger and has more HP. All summoned wolves deal more damage until the Alpha is killed.");
+        addSkillTooltip(SBSkills.SHARP_CLAWS, "Spectral Wolves cause Bleed build-up.");
+        addSkillTooltip(SBSkills.BRIMSTONE, "When a Hellhound dies, it explodes, dealing Fire damage to nearby enemies.");
+        addSkillTooltip(SBSkills.ASSASSINATE, "The Shadow Wolf silences targets while in the dark.");
+        addSkillTooltip(SBSkills.LONE_WOLF, "Cast with a filled Soul Shard. Instead of summoning wolves, the caster channels the spirit of the best, gaining increased movement speed, jump height, and strength. Unarmed attacks cause Bleed build-up.");
+        addSkillTooltip(SBSkills.FENRIR, "Cast with a filled Soul Shard. Summons the giant wolf Fenrir");
 
         addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
@@ -1050,6 +1091,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.CONSECRATED_PRESENCE, "Allies within a short distance of a blessed entity receive half the benefits.");
         addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the entity takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
 
+        addSkillTooltip(SBSkills.SMITE, "The caster imbues their weapon with light Divine energy, dealing extra damage to undead.");
+        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby undead.");
+        addSkillTooltip(SBSkills.SACRED_BLADE, "Fire off a golden blade projectile from the weapon.");
+        addSkillTooltip(SBSkills.GOLDEN_PARRY, "Weapon gains the ability to parry melee hits/projectiles and gains increased knockback.");
+        addSkillTooltip(SBSkills.OATHSWORN, "Increases the buff duration.");
+        addSkillTooltip(SBSkills.GOLDEN_LAND, "Performing Prayerful Strike releases a blast of Divine energy that coalesces into golden darts that home onto nearby enemies.");
+        addSkillTooltip(SBSkills.SHARDS_OF_PURITY, "Each dart from Golden Land applies a damage debuff to targets");
+        addSkillTooltip(SBSkills.BLESSED_ARC, "The blade now travels faster and is bigger");
+        addSkillTooltip(SBSkills.REFLECTIVE_JUDGEMENT, "After a successful parry, the parried enemy takes increased damage from the caster's next strike. Projectiles are reflected back at the target.");
+        addSkillTooltip(SBSkills.SACRED_PARRY, "After a successful parry, the caster will automatically counterattack with Sacred Blade.");
+        addSkillTooltip(SBSkills.BLACK_BLADE, "Imbue the weapon with dark Divine energy. The weapon now scales with negative judgement and all upgrades affect all entities. Strikes reduce target's max HP for a short duration.");
+
         addSkillTooltip(SBSkills.SIPHON, "Channel on to link to a entity. While linked, the caster gains a portion of the entity's health.");
         addSkillTooltip(SBSkills.GRIM_REACH, "Doubles the link range");
         addSkillTooltip(SBSkills.GLUTTONY, "If the caster is at full health, the spell restores hunger instead.");
@@ -1097,6 +1150,30 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.CURSE_OF_SUSCEPTIBILITY, "The entity takes extra magic damage.");
         addSkillTooltip(SBSkills.TANGLEFOOT_CURSE, "The entity is rooted.");
         addSkillTooltip(SBSkills.HIDDEN_RUNE, "The Rune is invisible to everyone but the caster.");
+
+        addSkillTooltip(SBSkills.SHADOW_VEIL, "Creates a mist of shadows. Enemies caught in the mist are blinded.");
+        addSkillTooltip(SBSkills.DARK_SHROUD, "Increases the veil's duration.");
+        addSkillTooltip(SBSkills.EXPANDING_SHADOWS, "Increases the veil's radius.");
+        addSkillTooltip(SBSkills.IN_THE_SHADOWS, "Allies gain invisibility periodically inside the veil.");
+        addSkillTooltip(SBSkills.HIDDEN_WOUNDS, "Player enemies in the mist have their health and hunger hidden.");
+        addSkillTooltip(SBSkills.DECEPTIVE_ECHOES, "Enemies in the mist occasionally hear fake mob sounds.");
+        addSkillTooltip(SBSkills.WEIGHTED_VEIL, "Projectiles fired into the veil quickly lose the momentum.");
+        addSkillTooltip(SBSkills.SAPPING_FEAR, "If enemies remain in the veil for half its duration, they get feared.");
+        addSkillTooltip(SBSkills.CLOUDED_SENSES, "Enemies in the veil have a chance to \"miss\" any attack.");
+        addSkillTooltip(SBSkills.DEEP_NIGHT, "Allies remain invisible while inside the veil.");
+        addSkillTooltip(SBSkills.SHADOW_DOMAIN, "Enemies caught in the veil cannot leave the veil until the spell ends.");
+
+        addSkillTooltip(SBSkills.NIGHTBLADE, "Imbues the weapon in the caster's main hand with shadow magic, granting the next melee attack bonus magic damage. The spell ends upon hitting an enemy.");
+        addSkillTooltip(SBSkills.LINGERING_EDGE, "The imbuement lasts for more hits.");
+        addSkillTooltip(SBSkills.UNEXPECTED, "If the caster attacks an enemy from behind, the bonus damage is doubled.");
+        addSkillTooltip(SBSkills.NUMBING_POISON, "Enemies hit by Nightblade are greatly slowed.");
+        addSkillTooltip(SBSkills.VAMPIRIC_BLADE, "The caster heals for a portion of the bonus damage dealt by Nightblade.");
+        addSkillTooltip(SBSkills.EVASIVE_STANCE, "The caster will dodge the first attack from an enemy after activating Nightblade.");
+        addSkillTooltip(SBSkills.MUFFLE, "Enemies hit by Nightblade are Silenced.");
+        addSkillTooltip(SBSkills.UMBRAL_SIGHT, "While Nightblade is active, the caster gains Night Vision.");
+        addSkillTooltip(SBSkills.ASSASSINS_BOUNTY, "If an enemy is killed in darkness, from behind, with a critical hit, they drop a Fool's Shard.");
+        addSkillTooltip(SBSkills.SMOKE_BOMB, "Upon hitting an enemy, a Shadow Veil is created.");
+        addSkillTooltip(SBSkills.THROAT_SLIT, "Cast with a Fool's Shard. The next attack is guaranteed to be a critical hit and apply Bleed.");
 
         addSkillTooltip(SBSkills.SHADOWBOND, "Caster and entity gain invisibility. When the invisibility is broken, the caster and entity swap places.");
         addSkillTooltip(SBSkills.EVERLASTING_BOND, "Increases the duration of invisibility.");
