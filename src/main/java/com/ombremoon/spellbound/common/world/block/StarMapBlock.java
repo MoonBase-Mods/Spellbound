@@ -1,17 +1,23 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.init.SBData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +46,13 @@ public class StarMapBlock extends Block {
             case SOUTH -> SOUTH_AABB;
             default -> NORTH_AABB;
         };
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        var stack = new ItemStack(this.asItem());
+        stack.set(SBData.STARMAP_TYPE, state.getValue(TYPE));
+        return stack;
     }
 
     @Override
