@@ -19,10 +19,10 @@ import org.jetbrains.annotations.Nullable;
 public class StarMapBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<StarmapType> TYPE = EnumProperty.create("type", StarmapType.class);
-    protected static final VoxelShape NORTH_AABB = Block.box(0.0F, 0.0F, 0.0F, 16.0F, 15.0F, 2.0F);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0F, 0.0F, 0.0F, 16.0F, 15.0F, 2.0F);
     protected static final VoxelShape EAST_AABB = Block.box(0.0F, 0.0F, 0.0F, 2.0F, 15.0F, 16.0F);
     protected static final VoxelShape WEST_AABB = Block.box(14.0F, 0.0F, 0.0F, 16.0F, 15.0F, 16.0F);
-    protected static final VoxelShape SOUTH_AABB = Block.box(0.0F, 0.0F, 14.0F, 16.0F, 15.0F, 16.0F);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0F, 0.0F, 14.0F, 16.0F, 15.0F, 16.0F);
 
     public StarMapBlock() {
         super(BlockBehaviour.Properties.of().noOcclusion());
