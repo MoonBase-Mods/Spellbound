@@ -1,0 +1,79 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.deception.dark_altar"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.deception.dark_altar_decsription"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 20
+      },
+      "translation": {
+        "translate": "guide.deception.runic_chalk1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 100
+      },
+      "translation": {
+        "translate": "guide.deception.runic_chalk2"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "swindler",
+      "position": {
+        "yOffset": 100
+      },
+      "recipe": "spellbound:dark_altar"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:dark_altar"
+        }
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 100
+      }
+    }
+  ],
+  "id": "spellbound:swindlers_guide",
+  "insertAfter": "spellbound:puzzle_dungeons"
+}

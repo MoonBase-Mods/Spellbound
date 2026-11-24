@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
+    "*": {
+      "item": "minecraft:purple_carpet"
+    },
+    "S": {
+      "item": "minecraft:deepslate"
+    },
+    "^": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "*^*",
+    "S#S",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:dark_altar"
+  }
+}
