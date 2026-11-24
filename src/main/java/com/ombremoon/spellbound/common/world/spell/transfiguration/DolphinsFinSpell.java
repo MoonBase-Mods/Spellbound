@@ -357,7 +357,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                         this.kelpVeilTicks++;
                         if (this.kelpVeilTicks >= 40 && !context.hasSkillBuff(SBSkills.KELP_VEIL)) {
                             int duration = this.getRemainingTime();
-                            if (!caster.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+                            if (!handler.isInvisible()) {
                                 this.addSkillBuff(
                                         caster,
                                         SBSkills.KELP_VEIL,

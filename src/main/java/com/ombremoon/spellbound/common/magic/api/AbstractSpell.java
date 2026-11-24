@@ -1761,6 +1761,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 this.endFirstSpell();
             }
 
+            if (caster.hasEffect(SBEffects.BLEED)) {
+                caster.hurt(SpellUtil.damageSource(level, SBDamageTypes.BLEED, null, null), caster.getMaxHealth() * 0.05F);
+            }
+
             CompoundTag initTag = this.initTag(false);
             PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);

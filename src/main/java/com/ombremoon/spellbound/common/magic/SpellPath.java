@@ -14,7 +14,7 @@ public enum SpellPath implements StringRepresentable {
     FROST(0x4F9CC8, true, "frost", EffectManager.Effect.FROST, 2),
     SHOCK(0x9543C9, true, "shock", EffectManager.Effect.SHOCK, 2),
     DARK_DIVINE(0xD4AF37, true, "dark_divine", EffectManager.Effect.DISEASE, 1),
-    BLOOD(0x8b0000, true, "blood", EffectManager.Effect.BLOOD, 3);
+    BLOOD(0x8b0000, true, "blood", EffectManager.Effect.BLEED, 3);
 
     public static final Codec<SpellPath> CODEC = StringRepresentable.fromEnum(SpellPath::values);
     private final int color;

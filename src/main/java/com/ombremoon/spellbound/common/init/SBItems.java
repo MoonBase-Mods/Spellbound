@@ -123,7 +123,7 @@ public class SBItems {
                         }
                         SBSpells.SPELL_TYPES.getEntries().forEach((registryObject) -> {
                             SpellType<?> spellType = registryObject.get();
-                            if (spellType.isEmpty() || (!CommonClass.isDevEnv() && spellType.createSpell().inTestingPhase()))
+                            if (spellType.isEmpty())
                                 return;
 
                             output.accept(SpellTomeItem.createWithSpell(spellType));
