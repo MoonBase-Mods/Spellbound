@@ -209,6 +209,8 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
         add("guide.element.multiblock.open", "Click to open Multiblock inspector.");
         add("guide.general.path_items", "Path Items");
+        add("guide.basic.locked_book", "Discover this book to unlock the shortcut.");
+        add("guide.basic.open_book", "Open %1$s");
 
         basicContents();
         ruinContents();
