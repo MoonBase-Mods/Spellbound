@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -47,7 +48,7 @@ public class SBBlocks {
     );
     public static final Supplier<Block> MANA_SIPHON = registerBlock(
             "mana_siphon", () -> new ManaSiphonBlock(blockProperties()
-                    .mapColor(MapColor.COLOR_RED)
+                    .mapColor(MapColor.COLOR_BLUE)
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> state.getValue(ManaSiphonBlock.ACTIVE) ? 7 : 0)
@@ -258,9 +259,10 @@ public class SBBlocks {
                             .noOcclusion()
             )
     );
-    public static final Supplier<Block> SANDSTONE_DIVINE_SHRINE = registerBlock("sandstone_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
-    public static final Supplier<Block> PLAINS_DIVINE_SHRINE = registerBlock("plains_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
-    public static final Supplier<Block> JUNGLE_DIVINE_SHRINE = registerBlock("jungle_divine_shrine", () -> new DivineShrineBlock(blockProperties()));
+    public static final Supplier<Block> SANDSTONE_DIVINE_SHRINE = registerBlock("sandstone_divine_shrine", () -> new DivineShrineBlock(blockProperties().randomTicks()));
+    public static final Supplier<Block> PLAINS_DIVINE_SHRINE = registerBlock("plains_divine_shrine", () -> new DivineShrineBlock(blockProperties().randomTicks()));
+    public static final Supplier<Block> JUNGLE_DIVINE_SHRINE = registerBlock("jungle_divine_shrine", () -> new DivineShrineBlock(blockProperties().randomTicks()));
+    public static final Supplier<Block> CURSED_SHRINE = registerBlock("cursed_shrine", () -> new DivineShrineBlock(blockProperties().noLootTable()), true, true);
     public static final Supplier<Block> VALKYR_STATUE = registerBlock("valkyr_statue", () -> new ValkyrStatueBlock(blockProperties().noOcclusion().strength(5f)));
     public static final Supplier<LiquidBlock> HOLY_WATER = registerBlock(
             "holy_water", () -> new LiquidBlock(
@@ -277,7 +279,22 @@ public class SBBlocks {
                             .sound(SoundType.EMPTY)
             ), false
     );
+    public static final Supplier<LiquidBlock> CURSED_WATER = registerBlock(
+            "cursed_water", () -> new LiquidBlock(
+                    SBFluids.CURSED_WATER.get(),
+                    blockProperties()
+                            .mapColor(MapColor.COLOR_PURPLE)
+                            .replaceable()
+                            .noCollission()
+                            .strength(100.0F)
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()
+                            .liquid()
+                            .sound(SoundType.EMPTY)
+            ), false
+    );
     public static final Supplier<Block> HOLY_WATER_CAULDRON = registerBlock("holy_water_cauldron", () -> new HolyWaterCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON).lightLevel(state -> 10)), false);
+    public static final Supplier<Block> CURSED_WATER_CAULDRON = registerBlock("cursed_water_cauldron", () -> new CursedWaterCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)), false);
 
     public static final Supplier<Block> GREEN_SPORE_BLOCK = registerBlock("green_spore_block", () -> new SporeBlock(blockProperties()));
     public static final Supplier<Block> GREEN_SPORE_SLAB = registerBlock("green_spore_slab", () -> new SporeSlabBlock(blockProperties()));
@@ -324,7 +341,7 @@ public class SBBlocks {
     public static final Supplier<Block> RUNED_STONE_PILLAR = registerBlock("runed_stone_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
     public static final Supplier<Block> RUNED_END_PILLAR = registerBlock("runed_end_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_STONE)));
     public static final Supplier<Block> RUNED_COPPER_PILLAR = registerBlock("runed_copper_pillar", () -> new RunedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK)));
-    public static final Supplier<Block> ARCANE_CANDLE = registerBlock("arcane_candle", () -> new Block(blockProperties().mapColor(MapColor.SAND).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(state -> 3).pushReaction(PushReaction.DESTROY)));
+    public static final Supplier<Block> ARCANE_CANDLE = registerBlock("arcane_candle", () -> new Block(blockProperties().mapColor(MapColor.SAND).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(state -> 14).pushReaction(PushReaction.DESTROY)));
     public static final Supplier<Block> ARCANE_CHALKBOARD = registerBlock("arcane_chalkboard", ChalkBoardBlock::new);
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
@@ -357,9 +374,13 @@ public class SBBlocks {
     }
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block, boolean registerItem) {
+        return registerBlock(name, block, registerItem, false);
+    }
+
+    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block, boolean registerItem, boolean excludeTab) {
         DeferredBlock<T> deferredBlock = BLOCKS.register(name, block);
         if (registerItem)
-            SBItems.registerBlockItem(name, deferredBlock);
+            SBItems.registerBlockItem(name, deferredBlock, excludeTab);
 
         return deferredBlock;
     }

@@ -3,19 +3,25 @@ package com.ombremoon.spellbound.datagen;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
+import com.ombremoon.spellbound.common.magic.effects.RangeProvider;
 import com.ombremoon.spellbound.common.magic.effects.TickProvider;
-import com.ombremoon.spellbound.common.magic.effects.types.ApplyMobEffect;
-import com.ombremoon.spellbound.common.magic.effects.types.DamageEntity;
+import com.ombremoon.spellbound.common.magic.effects.types.*;
+import com.ombremoon.spellbound.common.world.EntityResource;
 import com.ombremoon.spellbound.common.world.recipe.RuneCraftingRecipeBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.predicates.DamageSourceCondition;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.Optional;
@@ -214,22 +220,19 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("SSS")
                 .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.MANA_SIPHON.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('^', Items.TINTED_GLASS)
+                .define('*', Items.HOPPER)
+                .define('S', Items.SOUL_SAND)
+                .define('O', Items.OBSIDIAN)
+                .define('C', Items.CAULDRON)
+                .pattern("^#^")
+                .pattern("S*S")
+                .pattern("OCO")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
 
-
-        RuneCraftingRecipeBuilder.createRune(
-                EffectHolder.simple(
-                        new ApplyMobEffect(HolderSet.direct(SBEffects.ROOTED), 3, 3, 0, 0),
-                        Optional.empty(),
-                        new TickProvider.AtTick(0),
-                        BuffCategory.HARMFUL,
-                        1
-                )
-        )
-                .requires(Items.OAK_LOG)
-                .requires(Items.OAK_SLAB)
-                .requires(Items.OAK_PLANKS)
-                .requires(Items.OAK_FENCE)
-                .save(output, CommonClass.customLocation("tanglefoot"));
         RuneCraftingRecipeBuilder.createRune(
                 EffectHolder.simple(
                         new DamageEntity(SBDamageTypes.SB_GENERIC, 2),
@@ -239,10 +242,160 @@ public class ModRecipeProvider extends RecipeProvider {
                         1
                 )
         )
-                .requires(Items.SUGAR)
-                .requires(Items.SUGAR)
-                .requires(Items.SUGAR)
-                .requires(Items.SUGAR)
+                .requires(Items.FERMENTED_SPIDER_EYE)
+                .requires(Items.FERMENTED_SPIDER_EYE)
+                .requires(Items.GUNPOWDER)
+                .requires(Items.GUNPOWDER)
                 .save(output, CommonClass.customLocation("curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new SetResource(EntityResource.MANA, -4, EntityResource.Operation.ADD),
+                        Optional.empty(),
+                        new TickProvider.ForEveryTick(10),
+                        BuffCategory.HARMFUL,
+                        200
+                )
+        )
+                .requires(Items.SOUL_SAND)
+                .requires(Items.LAPIS_LAZULI)
+                .requires(Items.AMETHYST_SHARD)
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .save(output, CommonClass.customLocation("mage_wreck"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new DisarmEffect(),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.SLIME_BALL)
+                .requires(Items.SLIME_BALL)
+                .requires(Items.IRON_NUGGET)
+                .requires(Items.PHANTOM_MEMBRANE)
+                .save(output, CommonClass.customLocation("disarming_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new SummonDoppelganger(),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.GLASS_PANE)
+                .requires(Items.ECHO_SHARD)
+                .requires(Items.ENDER_PEARL)
+                .requires(Items.GLOW_INK_SAC)
+                .save(output, CommonClass.customLocation("mirror_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.withComponents(
+                        new ModifyDamage(0.25F, EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
+                        Optional.of(
+                                DamageSourceCondition.hasDamageSource(
+                                        DamageSourcePredicate.Builder.damageType().tag(
+                                                TagPredicate.isNot(SBTags.DamageTypes.SPELL_DAMAGE)
+                                        )
+                                ).build()
+                        ),
+                        new TickProvider.NoTick(),
+                        DataComponentMap.builder()
+                                .set(SBData.PRE_DAMAGE, EnchantmentTarget.VICTIM),
+                        BuffCategory.HARMFUL,
+                        200
+                )
+        )
+                .requires(Items.BONE)
+                .requires(Items.BONE)
+                .requires(Items.FLINT)
+                .requires(Items.FLINT)
+                .save(output, CommonClass.customLocation("pain_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new ApplyMobEffect(HolderSet.direct(SBEffects.SILENCED), 3, 3, 0, 0),
+                        Optional.empty(),
+                        new TickProvider.EveryTick(),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.WHITE_WOOL)
+                .requires(Items.STRING)
+                .requires(Items.FERMENTED_SPIDER_EYE)
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .save(output, CommonClass.customLocation("silent_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new TeleportEntity(new RangeProvider(10.0F, 20.0F, 1.0F, 5.0F), false),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.CHORUS_FRUIT)
+                .requires(Items.CHORUS_FRUIT)
+                .requires(Items.ENDER_PEARL)
+                .requires(Items.FEATHER)
+                .save(output, CommonClass.customLocation("vanishing_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.withComponents(
+                        new ModifyDamage(-0.1F, EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
+                        Optional.of(
+                                DamageSourceCondition.hasDamageSource(
+                                        DamageSourcePredicate.Builder.damageType().tag(
+                                                TagPredicate.isNot(SBTags.DamageTypes.SPELL_DAMAGE)
+                                        )
+                                ).build()
+                        ),
+                        new TickProvider.NoTick(),
+                        DataComponentMap.builder()
+                                .set(SBData.PRE_ATTACK, EnchantmentTarget.ATTACKER),
+                        BuffCategory.HARMFUL,
+                        200
+                )
+        )
+                .requires(Items.FERMENTED_SPIDER_EYE)
+                .requires(Items.FERMENTED_SPIDER_EYE)
+                .requires(Items.BROWN_MUSHROOM)
+                .requires(Items.BROWN_MUSHROOM)
+                .save(output, CommonClass.customLocation("weakness_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.withComponents(
+                        new ModifyDamage(0.1F, EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
+                        Optional.of(
+                                DamageSourceCondition.hasDamageSource(
+                                        DamageSourcePredicate.Builder.damageType().tag(
+                                                TagPredicate.is(SBTags.DamageTypes.SPELL_DAMAGE)
+                                        )
+                                ).build()
+                        ),
+                        new TickProvider.NoTick(),
+                        DataComponentMap.builder()
+                                .set(SBData.PRE_DAMAGE, EnchantmentTarget.VICTIM),
+                        BuffCategory.HARMFUL,
+                        200
+                )
+        )
+                .requires(Items.AMETHYST_SHARD)
+                .requires(Items.GLOWSTONE_DUST)
+                .requires(Items.REDSTONE)
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .save(output, CommonClass.customLocation("susceptibility_curse"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new ApplyMobEffect(HolderSet.direct(SBEffects.ROOTED), 3, 3, 0, 0),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.COBWEB)
+                .requires(Items.COBWEB)
+                .requires(Items.SLIME_BALL)
+                .requires(Items.LEATHER_BOOTS)
+                .save(output, CommonClass.customLocation("tanglefoot"));
     }
 }

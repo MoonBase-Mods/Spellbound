@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.world.block.entity.DarkAltarBlockEntity;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import com.ombremoon.spellbound.common.init.SBBlockEntities;
@@ -61,7 +62,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof TransfigurationDisplayBlockEntity display) {
-            if (stack.isEmpty()) {
+            if (stack.isEmpty() || Imbuement.slotLocked(stack)) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             } else if (!display.currentItem.isEmpty()) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

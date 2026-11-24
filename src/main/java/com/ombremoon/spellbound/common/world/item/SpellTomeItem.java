@@ -31,19 +31,26 @@ public class SpellTomeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        SpellType<?> spell = itemStack.get(SBData.SPELL_TYPE_COMPONENT);
+        SpellType<?> spellType = itemStack.get(SBData.SPELL_TYPE_COMPONENT);
+        if (spellType == null)
+            return InteractionResultHolder.fail(itemStack);
+
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(player);
-            if (handler.getSpellList().contains(spell)) {
+            if (handler.getSpellList().contains(spellType)) {
                 player.displayClientMessage(Component.translatable("chat.spelltome.awardxp"), true);
-                SpellUtil.getSkills(player).awardSpellXp(spell, 10);
+                SpellUtil.getSkills(player).awardSpellXp(spellType, 10);
                 if (!player.getAbilities().instabuild)
                     itemStack.shrink(1);
                 return InteractionResultHolder.fail(itemStack);
             }
 
-            player.displayClientMessage(Component.translatable("chat.spelltome.spellunlocked").append(spell.createSpell().getName()), true);
-            handler.learnSpell(spell);
+            AbstractSpell spell = spellType.createSpell();
+            if (!spell.inTestingPhase())
+                return InteractionResultHolder.fail(itemStack);
+
+            player.displayClientMessage(Component.translatable("chat.spelltome.spellunlocked").append(spell.getName()), true);
+            handler.learnSpell(spellType);
             if (!player.getAbilities().instabuild)
                 itemStack.shrink(1);
         }

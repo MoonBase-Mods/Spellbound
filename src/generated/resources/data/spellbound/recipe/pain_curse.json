@@ -1,0 +1,43 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "components": {
+      "spellbound:pre_damage": "victim"
+    },
+    "effect": {
+      "type": "spellbound:modify_damage",
+      "amount": 0.25,
+      "operation": "add_multiplied_total"
+    },
+    "effect_duration": 200,
+    "requirement": {
+      "condition": "minecraft:damage_source_properties",
+      "predicate": {
+        "tags": [
+          {
+            "expected": false,
+            "id": "spellbound:spell_damage"
+          }
+        ]
+      }
+    },
+    "tick_provider": {
+      "type": "spellbound:no_tick"
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:bone"
+    },
+    {
+      "item": "minecraft:bone"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:flint"
+    }
+  ]
+}

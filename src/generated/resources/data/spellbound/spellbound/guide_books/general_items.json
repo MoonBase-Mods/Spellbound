@@ -37,8 +37,8 @@
         "maxLineLength": 130
       },
       "position": {
-        "xOffset": 29,
-        "yOffset": 120
+        "xOffset": 30,
+        "yOffset": 115
       },
       "translation": {
         "translate": "guide.basic.mana_tear"
@@ -48,17 +48,30 @@
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 35
+        "yOffset": 10
       },
       "translation": {
         "translate": "guide.basic.magic_essence"
       }
     },
     {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100
+      },
+      "position": {
+        "xOffset": 222,
+        "yOffset": 130
+      },
+      "translation": {
+        "translate": "guide.basic.mana_bottle"
+      }
+    },
+    {
       "type": "spellbound:recipe",
       "position": {
         "xOffset": 188,
-        "yOffset": 111
+        "yOffset": 66
       },
       "recipe": "spellbound:magic_essence"
     },
@@ -91,7 +104,7 @@
       ],
       "position": {
         "xOffset": -39,
-        "yOffset": 105
+        "yOffset": 95
       }
     },
     {
@@ -107,7 +120,23 @@
       ],
       "position": {
         "xOffset": 234,
-        "yOffset": 95
+        "yOffset": 50
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:mana_bottle"
+        }
+      ],
+      "position": {
+        "xOffset": 142,
+        "yOffset": 120
       }
     }
   ],

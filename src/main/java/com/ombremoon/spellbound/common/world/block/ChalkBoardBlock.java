@@ -27,8 +27,10 @@ import java.util.List;
 
 public class ChalkBoardBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    protected static final VoxelShape NORTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)9.0F, (double)16.0F, (double)16.0F, (double)10.0F);
-    protected static final VoxelShape EAST_AABB = Block.box((double)9.0F, (double)0.0F, (double)0.0F, (double)10.0F, (double)16.0F, (double)16.0F);
+    protected static final VoxelShape SOUTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)0.0F, (double)16.0F, (double)16.0F, (double)1.0F);
+    protected static final VoxelShape NORTH_AABB = Block.box((double)0.0F, (double)0.0F, (double)15.0F, (double)16.0F, (double)16.0F, (double)16.0F);
+    protected static final VoxelShape EAST_AABB = Block.box((double)0.0F, (double)0.0F, (double)0.0F, (double)1.0F, (double)16.0F, (double)16.0F);
+    protected static final VoxelShape WEST_AABB = Block.box((double)15.0F, (double)0.0F, (double)0.0F, (double)16.0F, (double)16.0F, (double)16.0F);
 
     public ChalkBoardBlock() {
         super(BlockBehaviour.Properties.of().noOcclusion());
@@ -40,7 +42,9 @@ public class ChalkBoardBlock extends Block {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
-            case EAST, WEST -> EAST_AABB;
+            case EAST -> EAST_AABB;
+            case WEST -> WEST_AABB;
+            case SOUTH -> SOUTH_AABB;
             default -> NORTH_AABB;
         };
     }

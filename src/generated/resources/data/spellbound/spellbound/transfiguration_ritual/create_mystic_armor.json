@@ -1,6 +1,7 @@
 {
   "definition": {
     "duration": 1,
+    "mana_cost": 20,
     "mastery_requirement": "novice",
     "path_xp": 10,
     "tier": 2

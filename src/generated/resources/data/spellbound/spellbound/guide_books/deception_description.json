@@ -75,7 +75,7 @@
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 90
+        "yOffset": 140
       },
       "translation": {
         "translate": "guide.deception.broker_riddles2"
@@ -84,6 +84,7 @@
     {
       "type": "spellbound:item",
       "extras": {
+        "disableBackground": true,
         "scale": 2.0
       },
       "item": [
@@ -92,8 +93,8 @@
         }
       ],
       "position": {
-        "xOffset": 172,
-        "yOffset": 120
+        "xOffset": 196,
+        "yOffset": 70
       }
     }
   ],

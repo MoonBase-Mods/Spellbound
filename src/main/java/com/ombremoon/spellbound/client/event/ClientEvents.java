@@ -31,6 +31,7 @@ import com.ombremoon.spellbound.client.renderer.layer.SpellCastRenderLayer;
 import com.ombremoon.spellbound.client.renderer.types.*;
 import com.ombremoon.spellbound.client.shader.SBShaders;
 import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -41,6 +42,7 @@ import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
 import com.ombremoon.spellbound.common.world.item.WhistleMaterial;
+import com.ombremoon.spellbound.common.world.spell.summon.BoundBowSpell;
 import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -77,6 +79,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -203,6 +206,15 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) ->  level != null && pos != null && level.getBlockEntity(pos) instanceof RuneBlockEntity runeBlock ? runeBlock.getData(SBData.RUNE_COLOR.get()) : -1, SBBlocks.RUNE.get());
+
+        event.register(
+                (state, level, pos, tintIndex) -> level != null && pos != null ? 0xFFD700 : -1,
+                SBBlocks.HOLY_WATER_CAULDRON.get()
+        );
+        event.register(
+                (state, level, pos, tintIndex) -> level != null && pos != null ? Color.MAGENTA.darker(2.5F).argbInt() : -1,
+                SBBlocks.CURSED_WATER_CAULDRON.get()
+        );
     }
 
     @SubscribeEvent
@@ -218,10 +230,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerFluidType(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER = CommonClass.customLocation("textures/misc/under_holy_water.png");
-            private static final ResourceLocation HOLY_WATER_STILL = CommonClass.customLocation("block/holy_water_still");
-            private static final ResourceLocation HOLY_WATER_FLOW = CommonClass.customLocation("block/holy_water_flow");
-            private static final ResourceLocation HOLY_WATER_OVERLAY = CommonClass.customLocation("block/holy_water_overlay");
+            private static final ResourceLocation UNDERWATER = CommonClass.customLocation("textures/misc/holy_water_overlay.png");
+            private static final ResourceLocation HOLY_WATER_STILL = ResourceLocation.withDefaultNamespace("block/water_still");
+            private static final ResourceLocation HOLY_WATER_FLOW = ResourceLocation.withDefaultNamespace("block/water_flow");
+            private static final ResourceLocation HOLY_WATER_OVERLAY = ResourceLocation.withDefaultNamespace("block/water_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {
@@ -250,9 +262,46 @@ public class ClientEvents {
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return this.getTintColor() | 0xFF000000;
+                return this.getTintColor();
             }
         }, SBFluids.HOLY_WATER_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            private static final ResourceLocation UNDERWATER = CommonClass.customLocation("textures/misc/cursed_water_overlay.png");
+            private static final ResourceLocation CURSED_WATER_STILL = ResourceLocation.withDefaultNamespace("block/water_still");
+            private static final ResourceLocation CURSED_WATER_FLOW = ResourceLocation.withDefaultNamespace("block/water_flow");
+            private static final ResourceLocation CURSED_WATER_OVERLAY = ResourceLocation.withDefaultNamespace("block/water_overlay");
+
+            @Override
+            public ResourceLocation getStillTexture() {
+                return CURSED_WATER_STILL;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return CURSED_WATER_FLOW;
+            }
+
+            @Override
+            public @Nullable ResourceLocation getOverlayTexture() {
+                return CURSED_WATER_OVERLAY;
+            }
+
+            @Override
+            public @Nullable ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return UNDERWATER;
+            }
+
+            @Override
+            public int getTintColor() {
+                return Color.MAGENTA.darker(2.5F).argbInt();
+            }
+
+            @Override
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                return this.getTintColor();
+            }
+        }, SBFluids.CURSED_WATER_TYPE.get());
     }
 
     @SubscribeEvent
@@ -327,6 +376,30 @@ public class ClientEvents {
             return 0.0F;
         });
 
+        ItemProperties.register(SBItems.MAGIC_SHIELD.get(), CommonClass.customLocation("blocking"),
+                (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F
+        );
+
+        ItemProperties.register(SBItems.BOUND_BOW.get(), CommonClass.customLocation("pulling"),
+                (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F
+        );
+
+        ItemProperties.register(SBItems.BOUND_BOW.get(), CommonClass.customLocation("pull"), (stack, level, entity, seed) -> {
+            if (entity == null) {
+                return 0.0F;
+            }
+
+            var handler = SpellUtil.getSpellHandler(entity);
+            BoundBowSpell spell = handler.getSpell(SBSpells.BOUND_BOW.get());
+            if (spell == null) {
+                return 0.0F;
+            } else {
+                SpellContext context = spell.getContext();
+                float f = context.hasSkill(SBSkills.QUICKDRAW) ? 10.0F : 20.0F;
+                return entity.getUseItem() != stack ? 0.0F : (float)(stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / f;
+            }
+        });
+
         ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("stone"),
                 (stack, level, entity, seed) -> stack.getOrDefault(SBData.WHISTLE_MATERIAL, WhistleMaterial.WOOD) == WhistleMaterial.STONE ? 1.0F : 0.0F);
         ItemProperties.register(SBItems.SPIRIT_WHISTLE.get(), CommonClass.customLocation("bone"),
@@ -350,6 +423,7 @@ public class ClientEvents {
         ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
         ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
         ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
+        ElementRenderDispatcher.register(RuneCraftingElement.class, new GuideRuneCraftingRenderer());
         ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
         ElementRenderDispatcher.register(GuideMultiBlockElement.class, new GuideMultiBlockRenderer());
     }
@@ -401,6 +475,20 @@ public class ClientEvents {
                     SpellUtil.cycleSpells(handler, selectedSpell);
                     PayloadHandler.setSpell(selectedSpell);
                 }
+                if (cycleChoiceDown && selectedSpell.getRootSkill().isRadial()) {
+                    if (handler.getSpellList().isEmpty()) return;
+                    if (handler.isCasting()) {
+                        AbstractSpell spell = handler.getCurrentlyCastSpell();
+                        spell.resetCast(handler);
+                    }
+
+                    KeyBinds.getSpellCastMapping().setDown(false);
+                    SpellUtil.cycleChoices(skills, skills.getChoice(selectedSpell));
+                }
+            } else {
+                if (handler.isChargingOrChannelling())
+                    return;
+
                 if (cycleChoiceDown && selectedSpell.getRootSkill().isRadial()) {
                     if (handler.getSpellList().isEmpty()) return;
                     if (handler.isCasting()) {

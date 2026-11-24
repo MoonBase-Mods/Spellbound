@@ -42,14 +42,13 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
         simpleGeneratedModel(SBBlocks.VALKYR_STATUE);
-        simpleGeneratedModel(SBBlocks.DUNGEON_DOOR);
-        simpleGeneratedModel(SBBlocks.ARCANE_CHALKBOARD);
-        simpleGeneratedModel(SBBlocks.ARCANE_CANDLE);
-        simpleGeneratedModel(SBBlocks.STAR_MAP);
-        simpleGeneratedModel(SBBlocks.RUNED_COPPER_PILLAR);
-        simpleGeneratedModel(SBBlocks.RUNED_END_PILLAR);
-        simpleGeneratedModel(SBBlocks.RUNED_STONE_PILLAR);
-
+        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
+        simpleGeneratedModel((SBBlocks.ARCANE_CHALKBOARD));
+        simpleGeneratedModel((SBBlocks.ARCANE_CANDLE));
+        simpleGeneratedModel((SBBlocks.STAR_MAP));
+        simpleGeneratedModel((SBBlocks.RUNED_COPPER_PILLAR));
+        simpleGeneratedModel((SBBlocks.RUNED_END_PILLAR));
+        simpleGeneratedModel((SBBlocks.RUNED_STONE_PILLAR));
 
         simpleGeneratedModel(SBItems.CREATIONIST_BOOTS);
         simpleGeneratedModel(SBItems.CREATIONIST_CHESTPLATE);
@@ -81,8 +80,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel((SBItems.TEAR_OF_THE_ECLIPSE));
         simpleGeneratedModel((SBItems.BLESSED_BANDAGES));
         simpleGeneratedModel((SBItems.HOLY_WATER_BUCKET));
+        simpleGeneratedModel((SBItems.CURSED_WATER_BUCKET));
         simpleGeneratedModel((SBItems.DIVINE_CHARM));
-        simpleGeneratedModel((SBItems.MAGIC_SHIELD));
 
         simpleGeneratedModel(SBItems.DECEPTION_BOOK);
         simpleGeneratedModel(SBItems.DIVINE_BOOK);

@@ -7,7 +7,10 @@ import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.world.block.entity.ManaSiphonBlockEntity;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +36,11 @@ import org.jetbrains.annotations.Nullable;
 public class ManaSiphonBlock extends BaseEntityBlock {
     public static final MapCodec<ManaSiphonBlock> CODEC = simpleCodec(ManaSiphonBlock::new);
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 4);
 
     public ManaSiphonBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(ACTIVE, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ACTIVE, false).setValue(LEVEL, 0));
     }
 
     @Override
@@ -51,17 +56,18 @@ public class ManaSiphonBlock extends BaseEntityBlock {
             if (!level.isClientSide) {
                 if (itemStack.is(SBItems.MAGIC_ESSENCE.get()) && !state.getValue(ACTIVE)) {
                     level.setBlock(pos, state.setValue(ACTIVE, true), 3);
-                    siphon.activateSiphon(player);
+                    siphon.activateSiphon(player, state, level, pos);
                     return ItemInteractionResult.SUCCESS;
                 } else if (itemStack.is(SBItems.MANA_BOTTLE.get()) && siphon.canSiphonMana()) {
-                    siphon.siphonMana(10);
+                    siphon.siphonMana(state, level, pos, 10);
                     itemStack.consume(1, player);
                     return ItemInteractionResult.SUCCESS;
-                } else if (itemStack.is(SBItems.MANA_TEAR.get()) && siphon.increaseManaStorage(100)) {
+                } else if (itemStack.is(SBItems.MANA_TEAR.get()) && siphon.increaseManaStorage(state, level, pos, 100)) {
                     itemStack.consume(1, player);
                     return ItemInteractionResult.SUCCESS;
                 } else if (itemStack.is(Items.GLASS_BOTTLE) && siphon.getStoredMana() >= 10) {
                     player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(SBItems.MANA_BOTTLE.get())));
+                    siphon.siphonMana(state, level, pos, -10);
                     return ItemInteractionResult.SUCCESS;
                 }
             }
@@ -78,7 +84,7 @@ public class ManaSiphonBlock extends BaseEntityBlock {
                 var handler = SpellUtil.getSpellHandler(player);
                 float siphonedMana = (float) Math.min(handler.getMaxMana() - handler.getMana(), siphon.getStoredMana());
                 handler.awardMana(siphonedMana);
-                siphon.siphonMana(-siphonedMana);
+                siphon.siphonMana(state, level, pos, -siphonedMana);
 
                 if (siphonedMana >= siphon.getMaxMana() / 2 && player instanceof ServerPlayer serverPlayer) {
                     SBTriggers.USE_HALF_FILLED_SIPHON.get().trigger(serverPlayer);
@@ -89,6 +95,26 @@ public class ManaSiphonBlock extends BaseEntityBlock {
         }
 
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ACTIVE)) {
+            double d0 = pos.getX() + 0.5;
+            double d1 = pos.getY();
+            double d2 = pos.getZ() + 0.5;
+
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                Direction.Axis axis = direction.getAxis();
+                double d3 = 0.52;
+                double d4 = random.nextDouble() - 0.5;
+                double d5 = axis == Direction.Axis.X ? (double) direction.getStepX() * d3 : d4;
+                double d6 = random.nextDouble() * 6.0 / 16.0;
+                double d7 = axis == Direction.Axis.Z ? (double) direction.getStepZ() * d3 : d4;
+                level.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
+                level.addParticle(ParticleTypes.SCULK_SOUL, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
+            }
+        }
     }
 
     @Override
@@ -109,7 +135,7 @@ public class ManaSiphonBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(ACTIVE);
+        builder.add(ACTIVE, LEVEL);
     }
 
     @Override

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "spellbound:block/mana_siphon_bottom",
+    "east": "spellbound:block/mana_siphon_0",
+    "north": "spellbound:block/mana_siphon_0",
+    "particle": "spellbound:block/mana_siphon_0",
+    "south": "spellbound:block/mana_siphon_0",
+    "up": "spellbound:block/mana_siphon_top",
+    "west": "spellbound:block/mana_siphon_0"
+  }
+}

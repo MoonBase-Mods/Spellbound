@@ -99,9 +99,6 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
             this.findTarget(smiteSpell);
         }
 
-        if (this.tickCount % 20 == 0)
-            log(this.targetHit);
-
         if (this.targetHit) {
             this.tickDespawn();
         }

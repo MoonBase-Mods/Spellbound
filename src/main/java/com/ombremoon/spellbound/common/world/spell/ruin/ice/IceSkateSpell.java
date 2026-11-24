@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBEntities;
@@ -11,20 +13,27 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.block.entity.IceSheetBlockEntity;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,9 +41,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import org.w3c.dom.Attr;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class IceSkateSpell extends ChanneledSpell {
     private static final ResourceLocation ICE_SKATE_BUFF = CommonClass.customLocation("ice_skate_buff");
+    public static final ResourceLocation SNOW_BOOTS = CommonClass.customLocation("snow_boots");
     private static final ResourceLocation KINETIC_FLOW = CommonClass.customLocation("kinetic_flow");
     private static final ResourceLocation CRYSTAL_CLEATS = CommonClass.customLocation("crystal_cleats");
     private static final ResourceLocation CRYSTAL_CLEATS_SLOW = CommonClass.customLocation("crystal_cleats_slow");
@@ -96,7 +110,35 @@ public class IceSkateSpell extends ChanneledSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.ICE_SKATE,
+                SkillTooltip.MANA_TICK_COST.tooltip(this.getManaTickCost()),
+                SkillTooltip.CHANNELED.tooltip());
+        this.addSkillDetails(SBSkills.FRICTIONLESS,
+                MODIFY_SPEED.tooltip(5F));
+        this.addSkillDetails(SBSkills.ICE_CLEATS,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(1.5F))));
+        this.addSkillDetails(SBSkills.FROZEN_FEET,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(1F))),
+                SkillTooltip.PROC_DURATION.tooltip(20));
+        this.addSkillDetails(SBSkills.ICE_SNARE,
+                SkillTooltip.FROST_BUILD_UP.tooltip(potency(5F)),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.SNOW_BOOTS,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(SNOW_BOOTS, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(40));
+        this.addSkillDetails(SBSkills.KINETIC_FLOW,
+                SkillTooltip.POTENCY.tooltip(20F));
+        this.addSkillDetails(SBSkills.SHARDS_OF_MOMENTUM,
+                SkillTooltip.PROJECTILE_COUNT.tooltip(8));
+        this.addSkillDetails(SBSkills.CRYSTAL_CLEATS,
+                SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CRYSTAL_CLEATS, -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(40),
+                SkillTooltip.FROST_BUILD_UP_PER_CHARGE.tooltip(potency(5F)),
+                SkillTooltip.PROC_DURATION.tooltip(20),
+                SkillTooltip.MAX_CHARGES.tooltip(5),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.ICE_BRIDGE,
+                SkillTooltip.EFFECT_DURATION.tooltip(60));
     }
 
     @Override
@@ -130,7 +172,7 @@ public class IceSkateSpell extends ChanneledSpell {
                         SpellEventListener.Events.DEALT_DAMAGE_POST,
                         CRYSTAL_CLEATS,
                         post -> {
-                            int cleatCharges = this.movementTicks / 5;
+                            int cleatCharges = Math.min(this.movementTicks / 20, 5);
                             LivingEntity target = post.getTarget();
                             if (cleatCharges > 0 && target != null) {
                                 this.addSkillBuff(
@@ -144,7 +186,7 @@ public class IceSkateSpell extends ChanneledSpell {
                                 );
 
                                 var effects = SpellUtil.getSpellEffects(target);
-                                effects.incrementBuildEffects(EffectManager.Effect.FROST, 5 * cleatCharges);
+                                effects.incrementBuildEffects(EffectManager.Effect.FROST, potency(5) * cleatCharges);
                             }
                             this.removeSkillBuff(caster, SBSkills.CRYSTAL_CLEATS);
                         });
@@ -278,4 +320,21 @@ public class IceSkateSpell extends ChanneledSpell {
         float startOffset = -totalSpread / 2.0F;
         return startAngle + startOffset + (i * spread);
     }
+
+    public static SkillTooltip<Float> MODIFY_SPEED = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.modify_skate_speed", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }

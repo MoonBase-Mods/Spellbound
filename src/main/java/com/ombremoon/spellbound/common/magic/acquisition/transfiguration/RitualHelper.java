@@ -98,7 +98,6 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
     }
 
     public static TransfigurationRitual getRitualFor(ResourceKey<TransfigurationRitual> ritual) {
-//        Constants.LOG.info("{}", RITUALS);
         return RITUALS.get(ritual.location());
     }
 

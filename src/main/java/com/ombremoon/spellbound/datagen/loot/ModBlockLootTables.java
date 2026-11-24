@@ -61,7 +61,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.SUMMON_STONE.get());
         this.dropSelf(SBBlocks.CRACKED_SUMMON_STONE.get());
         this.dropSelf(SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get());
-        this.dropSelf(SBBlocks.PLAINS_DIVINE_SHRINE.get());
+        this.multiBlockDropSelf(SBBlocks.PLAINS_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.JUNGLE_DIVINE_SHRINE.get());
         this.multiBlockDropSelf(SBBlocks.VALKYR_STATUE.get());
@@ -82,6 +82,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(SBBlocks.ARCANE_CANDLE.get());
         this.dropSelf(SBBlocks.ARCANE_CHALKBOARD.get());
         this.dropOther(SBBlocks.HOLY_WATER_CAULDRON.get(), Blocks.CAULDRON);
+        this.dropOther(SBBlocks.CURSED_WATER_CAULDRON.get(), Blocks.CAULDRON);
         this.dropSelf(SBBlocks.MANA_SIPHON.get());
 
         //ARCANTHUS

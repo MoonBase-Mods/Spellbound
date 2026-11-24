@@ -19,6 +19,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
+import com.ombremoon.spellbound.common.world.block.CursedWaterCauldronBlock;
 import com.ombremoon.spellbound.common.world.block.HolyWaterCauldronBlock;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
@@ -119,8 +120,6 @@ public class NeoForgeEvents {
             Level level = livingEntity.level();
             var handler = SpellUtil.getSpellHandler(livingEntity);
             handler.initData(livingEntity);
-            SpellUtil.getFamiliarHandler(livingEntity);
-            handler.initData(livingEntity);
 
             if (livingEntity instanceof Player player) {
                 if (!level.isClientSide) {
@@ -194,26 +193,28 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent event) {
         HolyWaterCauldronBlock.createInteractions();
+        CursedWaterCauldronBlock.createInteractions();
     }
 
     @SubscribeEvent
     public static void onPostEntityTick(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof LivingEntity entity) {
+            Level level = entity.level();
             var handler = SpellUtil.getSpellHandler(entity);
             handler.tick();
             SpellUtil.getFamiliarHandler(entity).tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
-                status.tick(entity.tickCount);
+                status.tick();
 
             if (entity instanceof Player player) {
-                if (player.tickCount % 20 == 0) {
+                if (player.tickCount % 20 == 0 && level.getGameTime() - handler.lastCastTick >= 60) {
                     double mana = handler.getMana();
                     double maxMana = handler.getMaxMana();
                     if (mana < maxMana) {
-                        double regen = handler.getManaRegen();
-                        handler.awardMana((float) regen);
+                        float regen = (float) handler.getManaRegen();
+                        handler.awardMana((float) (regen + maxMana * 0.02F));
                     }
                 }
 
@@ -706,6 +707,7 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onRegisterCauldronFluidContent(RegisterCauldronFluidContentEvent event) {
         event.register(SBBlocks.HOLY_WATER_CAULDRON.get(), SBFluids.HOLY_WATER.get(), FluidType.BUCKET_VOLUME, LayeredCauldronBlock.LEVEL);
+        event.register(SBBlocks.CURSED_WATER_CAULDRON.get(), SBFluids.CURSED_WATER.get(), FluidType.BUCKET_VOLUME, LayeredCauldronBlock.LEVEL);
     }
 
     @SubscribeEvent

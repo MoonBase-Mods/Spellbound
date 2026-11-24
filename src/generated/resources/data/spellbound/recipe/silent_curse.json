@@ -1,0 +1,32 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "effect": {
+      "type": "spellbound:apply_mob_effect",
+      "max_amplifier": 0,
+      "max_duration": 3,
+      "min_amplifier": 0,
+      "min_duration": 3,
+      "to_apply": "spellbound:silenced"
+    },
+    "effect_duration": 1,
+    "tick_provider": {
+      "type": "spellbound:every_tick"
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:white_wool"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "spellbound:magic_essence"
+    }
+  ]
+}

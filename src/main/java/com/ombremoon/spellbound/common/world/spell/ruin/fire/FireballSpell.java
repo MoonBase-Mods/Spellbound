@@ -82,6 +82,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                 SkillTooltip.FLAT_DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, 1.0F)),
                 SkillTooltip.FLAT_RADIUS_PER_CHARGE.tooltip(1.0F),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
+                SkillTooltip.CHARGE_DURATION.tooltip(60),
                 SkillTooltip.CHOICE.tooltip(),
                 SkillTooltip.CHARGED.tooltip()
         );

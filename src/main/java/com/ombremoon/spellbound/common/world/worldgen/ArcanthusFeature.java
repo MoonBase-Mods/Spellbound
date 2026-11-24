@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.worldgen;
 import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBTags;
+import com.ombremoon.spellbound.common.world.block.ArcanthusCropBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -33,6 +34,7 @@ public class ArcanthusFeature extends Feature<ArcanthusConfig> {
         for (int k = 0; k < config.spreadWidth * config.spreadWidth && j < config.count; k++) {
             BlockPos pos = origin.offset(random.nextInt(config.spreadWidth) - random.nextInt(config.spreadWidth), random.nextInt(config.spreadHeight) - random.nextInt(config.spreadHeight), random.nextInt(config.spreadWidth) - random.nextInt(config.spreadWidth));
             BlockState state = SBBlocks.ARCANTHUS.get().defaultBlockState();
+            state = state.setValue(ArcanthusCropBlock.AGE, random.nextInt(0, ArcanthusCropBlock.MAX_AGE));
             if (level.isEmptyBlock(pos) && pos.getY() > level.getMinBuildHeight() && state.canSurvive(level, pos) && level.getBlockState(pos.below()).is(SBTags.Blocks.ARCANTHUS_GROWTH_BLOCKS)) {
                 level.setBlock(pos, state, 2);
                 j++;

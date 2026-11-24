@@ -133,6 +133,10 @@ public class ModTagProvider {
 
             populateTag(net.minecraft.tags.BlockTags.NEEDS_STONE_TOOL,
                     SBBlocks.RUNED_COPPER_PILLAR.get());
+
+            populateTag(net.minecraft.tags.BlockTags.CAULDRONS,
+                    SBBlocks.HOLY_WATER_CAULDRON.get(),
+                    SBBlocks.CURSED_WATER_CAULDRON.get());
         }
 
         public void populateTag(TagKey<Block> tag, Block... blocks){
@@ -176,12 +180,6 @@ public class ModTagProvider {
                     .addTags(Tags.DamageTypes.IS_MAGIC,
                             SBTags.DamageTypes.SPELLBOUND_DAMAGE);
 
-            this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_COOLDOWN)
-                    .add(SBDamageTypes.SB_GENERIC)
-                    .add(SBDamageTypes.RUIN_FIRE)
-                    .add(SBDamageTypes.RUIN_FROST)
-                    .add(SBDamageTypes.RUIN_SHOCK);
-
             this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_SHIELD)
                     .addTags(SBTags.DamageTypes.SPELLBOUND_DAMAGE)
                     .add(SBDamageTypes.BLEED);
@@ -202,21 +200,45 @@ public class ModTagProvider {
                     .add(
                             SBPaintingVariants.DECEPTION,
                             SBPaintingVariants.DIVINE,
-                            SBPaintingVariants.FIRE,
-                            SBPaintingVariants.FISH,
-                            SBPaintingVariants.FROG,
-                            SBPaintingVariants.NUN,
+                            SBPaintingVariants.ON_FIRE,
+                            SBPaintingVariants.UNDER_THE_SEA,
+                            SBPaintingVariants.PARALLEL_DECISIONS,
+                            SBPaintingVariants.BLESSED_IS_SHE,
                             SBPaintingVariants.RUIN,
-                            SBPaintingVariants.SNOWY_LAMPION,
-                            SBPaintingVariants.STRIX,
+                            SBPaintingVariants.GAZES_IN_WHITE,
+                            SBPaintingVariants.GHOST_FEATHER,
                             SBPaintingVariants.SUMMON,
                             SBPaintingVariants.TRANSFIG,
                             SBPaintingVariants.VALKYR,
-                            SBPaintingVariants.VALKYR2,
-                            SBPaintingVariants.VILLAGE,
-                            SBPaintingVariants.WITCH,
-                            SBPaintingVariants.WITCH2,
-                            SBPaintingVariants.FENRIR
+                            SBPaintingVariants.JUSTICE_FROM_ABOVE,
+                            SBPaintingVariants.INSIDE_MEMORIES,
+                            SBPaintingVariants.FORGOTTEN_MEMORIES,
+                            SBPaintingVariants.WITCH_HOMEWORKS,
+                            SBPaintingVariants.A_WOLF_LAMENT,
+
+                            SBPaintingVariants.LA_SENTENZA,
+                            SBPaintingVariants.SHARED_DREAMS,
+                            SBPaintingVariants.ANOTHER_BEGINNING,
+                            SBPaintingVariants.ANOTHER_STORY,
+                            SBPaintingVariants.ANOTHER_STORY_DOWN,
+                            SBPaintingVariants.BENEATH_EMOTIONS,
+                            SBPaintingVariants.BENEATH_EMOTIONS_DOWN,
+                            SBPaintingVariants.BENEATH_ILLUSIONS,
+                            SBPaintingVariants.SCRAPS_FROM_AFAR1,
+                            SBPaintingVariants.SCRAPS_FROM_AFAR2,
+                            SBPaintingVariants.SCRAPS_FROM_AFAR3,
+                            SBPaintingVariants.SCRAPS_FROM_AFAR4,
+                            SBPaintingVariants.FALSE_STEPS,
+                            SBPaintingVariants.FLOATING_POINT,
+                            SBPaintingVariants.KNUCKLE_VELVET,
+                            SBPaintingVariants.MONDADLER,
+                            SBPaintingVariants.LOST_HOME,
+                            SBPaintingVariants.MOUNTAIN_TOP,
+                            SBPaintingVariants.PEAK,
+                            SBPaintingVariants.REMNANT,
+                            SBPaintingVariants.ROOM,
+                            SBPaintingVariants.UNKNOWN_SKY,
+                            SBPaintingVariants.UNYIELDING_PAST
                     );
         }
     }
@@ -230,7 +252,9 @@ public class ModTagProvider {
         protected void addTags(HolderLookup.Provider provider) {
             populateTag(net.minecraft.tags.FluidTags.WATER,
                     SBFluids.HOLY_WATER.get(),
-                    SBFluids.FLOWING_HOLY_WATER.get());
+                    SBFluids.FLOWING_HOLY_WATER.get(),
+                    SBFluids.CURSED_WATER.get(),
+                    SBFluids.FLOWING_CURSED_WATER.get());
         }
 
         public void populateTag(TagKey<Fluid> tag, Fluid... fluids){

@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.api.events.IncomingDamageEvent;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.player.Inventory;
@@ -77,6 +79,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private SkillHolder skillHolder;
     private EffectManager effectManager;
     private UpgradeTree upgradeTree;
+    private FamiliarHandler familiars;
     private PlayerSpellActions divineActions;
     protected boolean castMode;
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
@@ -136,11 +139,14 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.listener = new SpellEventListener(caster);
         this.skillHolder = SpellUtil.getSkills(this.caster);
         this.skillHolder.init(caster);
-        this.effectManager = SpellUtil.getSpellEffects(this.caster);
+        this.effectManager = SpellUtil.getSpellEffects(caster);
         this.effectManager.init(caster);
         this.upgradeTree = this.caster.getData(SBData.UPGRADE_TREE);
+        this.familiars = SpellUtil.getFamiliarHandler(caster);
+        this.familiars.init(caster, this);
         this.glowEntities.clear();
         this.skillBuffs.forEach((skillBuff, integer) -> this.removeSkillBuff(skillBuff));
+        caster.setData(SBData.MANA, this.getMaxMana());
 
         if (!this.isClientSide()) {
             this.getSpellActions();
@@ -191,9 +197,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
 
-        /*if (!this.isClientSide() && this.caster instanceof Player && this.caster.tickCount % 20 == 0) {
-            log(this.skillHolder.getModifiers());
-        }*/
+        if (/*!this.isClientSide() && */this.caster instanceof Player/* && this.caster.tickCount % 20 == 0*/) {
+//            this.caster.setIsInPowderSnow(true);
+//            this.caster.setTicksFrozen(this.caster.getTicksRequiredToFreeze());
+//            this.caster.setIsInPowderSnow(true);
+        }
     }
 
     public void onPlayerSpawn(Player player) {
@@ -206,10 +214,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             }
         }
 
-        if (!this.receivedBook && !inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance())) {
-            player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
-            this.receivedBook = true;
+        if (!this.receivedBook) {
+            if (!inventory.add(SBItems.STARTER_BOOK.get().getDefaultInstance()))
+                player.drop(SBItems.STARTER_BOOK.get().getDefaultInstance(), false);
         }
+        this.receivedBook = true;
 
         this.sync();
         this.skillHolder.sync();

@@ -49,11 +49,9 @@ public class SpellCastEvents {
 
             if (spellType == null) return;
 
-            if (handler.inCastMode()) {
-                if (KeyBinds.getSpellCastMapping().isDown()) {
-                    event.setSwingHand(false);
-                    event.setCanceled(true);
-                }
+            if (handler.inCastMode() && KeyBinds.getSpellCastMapping().isDown()) {
+                event.setSwingHand(false);
+                event.setCanceled(true);
             }
         }
     }

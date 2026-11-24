@@ -1,0 +1,103 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.divine.holy_water"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.divine.holy_water1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100
+      },
+      "position": {
+        "xOffset": 55,
+        "yOffset": 130
+      },
+      "translation": {
+        "translate": "guide.divine.holy_water2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100
+      },
+      "position": {
+        "xOffset": 172,
+        "yOffset": 10
+      },
+      "translation": {
+        "translate": "guide.divine.holy_water3"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 70
+      },
+      "translation": {
+        "translate": "guide.divine.holy_water4"
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:holy_water_bucket"
+        }
+      ],
+      "position": {
+        "xOffset": -25,
+        "yOffset": 100
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "minecraft:ominous_bottle"
+        }
+      ],
+      "position": {
+        "xOffset": 248,
+        "yOffset": -15
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:divine_shrine_cont"
+}

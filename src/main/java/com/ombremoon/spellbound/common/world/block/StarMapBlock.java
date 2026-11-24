@@ -1,17 +1,23 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.init.SBData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -19,8 +25,10 @@ import org.jetbrains.annotations.Nullable;
 public class StarMapBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<StarmapType> TYPE = EnumProperty.create("type", StarmapType.class);
-    protected static final VoxelShape NORTH_AABB = Block.box(0.0F, 0.0F, 7.0F, 16.0F, 15.0F, 9.0F);
-    protected static final VoxelShape EAST_AABB = Block.box(7.0F, 0.0F, 0.0F, 9.0F, 15.0F, 16.0F);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0F, 0.0F, 0.0F, 16.0F, 15.0F, 2.0F);
+    protected static final VoxelShape EAST_AABB = Block.box(0.0F, 0.0F, 0.0F, 2.0F, 15.0F, 16.0F);
+    protected static final VoxelShape WEST_AABB = Block.box(14.0F, 0.0F, 0.0F, 16.0F, 15.0F, 16.0F);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0F, 0.0F, 14.0F, 16.0F, 15.0F, 16.0F);
 
     public StarMapBlock() {
         super(BlockBehaviour.Properties.of().noOcclusion());
@@ -33,9 +41,18 @@ public class StarMapBlock extends Block {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
-            case EAST, WEST -> EAST_AABB;
+            case EAST -> EAST_AABB;
+            case WEST -> WEST_AABB;
+            case SOUTH -> SOUTH_AABB;
             default -> NORTH_AABB;
         };
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        var stack = new ItemStack(this.asItem());
+        stack.set(SBData.STARMAP_TYPE, state.getValue(TYPE));
+        return stack;
     }
 
     @Override
@@ -58,6 +75,8 @@ public class StarMapBlock extends Block {
     public enum StarmapType implements StringRepresentable {
         FORNAX("fornax"),
         HOROLOGIUM("horologium"),
+        AEVITAS("aevitas"),
+        EVORSIO("evorsio"),
         VICIO("vicio");
 
         public static final Codec<StarmapType> CODEC = StringRepresentable.fromEnum(StarmapType::values);

@@ -114,12 +114,16 @@ public class TransfigurationRitual {
         return this.startupTime;
     }
 
-    public static Builder ritual(int tier, int duration, int pathXP, SpellMastery mastery) {
-        return new Builder(new RitualDefinition(tier, duration, pathXP, mastery));
+    public static Builder ritual(int tier, int duration, int pathXP, int manaCost, SpellMastery mastery) {
+        return new Builder(new RitualDefinition(tier, duration, pathXP, manaCost, mastery));
+    }
+
+    public static Builder ritual(int tier, int pathXP, int manaCost, SpellMastery mastery) {
+        return ritual(tier, DEFAULT_RITUAL_DURATION, pathXP, manaCost, mastery);
     }
 
     public static Builder ritual(int tier, int pathXP, SpellMastery mastery) {
-        return ritual(tier, DEFAULT_RITUAL_DURATION, pathXP, mastery);
+        return ritual(tier, pathXP, 20, mastery);
     }
 
     public static class Builder {
@@ -150,12 +154,13 @@ public class TransfigurationRitual {
         }
     }
 
-    public record RitualDefinition(int tier, int duration, int pathXP, SpellMastery mastery) {
+    public record RitualDefinition(int tier, int duration, int pathXP, int manaCost, SpellMastery mastery) {
         public static final MapCodec<RitualDefinition> CODEC = RecordCodecBuilder.mapCodec(
                 p_344890_ -> p_344890_.group(
                                 ExtraCodecs.intRange(1, 3).fieldOf("tier").forGetter(RitualDefinition::tier),
                                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(RitualDefinition::duration),
                                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("path_xp").forGetter(RitualDefinition::pathXP),
+                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("mana_cost").forGetter(RitualDefinition::manaCost),
                                 SpellMastery.CODEC.fieldOf("mastery_requirement").forGetter(RitualDefinition::mastery)
                         )
                         .apply(p_344890_, RitualDefinition::new)

@@ -1,0 +1,43 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "components": {
+      "spellbound:pre_attack": "attacker"
+    },
+    "effect": {
+      "type": "spellbound:modify_damage",
+      "amount": -0.1,
+      "operation": "add_multiplied_total"
+    },
+    "effect_duration": 200,
+    "requirement": {
+      "condition": "minecraft:damage_source_properties",
+      "predicate": {
+        "tags": [
+          {
+            "expected": false,
+            "id": "spellbound:spell_damage"
+          }
+        ]
+      }
+    },
+    "tick_provider": {
+      "type": "spellbound:no_tick"
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    }
+  ]
+}

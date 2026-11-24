@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "minecraft:block/stone"
+    "particle": "block/stone"
   }
 }

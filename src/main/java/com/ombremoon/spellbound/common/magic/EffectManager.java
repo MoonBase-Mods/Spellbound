@@ -39,6 +39,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     public static final int MIN_JUDGEMENT = -100;
     private LivingEntity livingEntity;
     private final Map<Effect, Float> buildUp = new HashMap<>();
+    private final Map<Effect, Integer> buildUpTick = new HashMap<>();
     private final List<MagicEffectInstance> magicEffects = new ObjectArrayList<>();
     private float judgement;
 
@@ -115,6 +116,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         }
 
         this.buildUp.put(effect, progress);
+        this.buildUpTick.put(effect, this.livingEntity.tickCount);
         if (progress >= 100.0F) {
             tryApplyEffect(effect);
             this.buildUp.put(effect, 0.0F);
@@ -123,13 +125,12 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
 
     private float calculateBuildUp(Effect effect, float amount) {
         var skills = SpellUtil.getSkills(this.livingEntity);
-//        float resistance = effect != null ? 1.0F - effect.getEntityResistance(this.livingEntity) : 0.0F;
+        float resistance = effect != null ? 1.0F - effect.getEntityResistance(this.livingEntity) : 1.0F;
 
         SpellPath path = effect.getPath();
         float pathAmount = path != null ? 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(path)) : 1.0F;
         float ruinPathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN));
-//        return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
-        return amount * 2.0F * pathAmount * ruinPathAmount;
+        return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
     }
 
     public void addMagicEffect(EffectHolder effect, @Nullable Entity source) {
@@ -184,19 +185,17 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
 
     /**
      * Ticks the build up effects, decreasing the progress by 1 per second
-     * @param tickCount the tick count of the entity currently ticking
      */
     @ApiStatus.Internal
-    public void tick(int tickCount) {
+    public void tick() {
         if (livingEntity == null)
             throw new RuntimeException("Status Effects not initialised.");
 
-        if (tickCount % 40 == 0) {
-            this.buildUp.forEach((effect, amount) -> {
-                if (amount > 0)
-                    this.buildUp.replace(effect, amount - 1);
-            });
-        }
+        this.buildUp.forEach((effect, amount) -> {
+            int i = this.buildUpTick.computeIfAbsent(effect, effect1 -> livingEntity.tickCount);
+            if (this.livingEntity.tickCount - i > 60 && this.livingEntity.tickCount % 20 == 0 && amount > 0)
+                this.buildUp.replace(effect, amount - 5);
+        });
 
         if (!this.livingEntity.level().isClientSide) {
             this.magicEffects.removeIf(effectHolder -> !effectHolder.attemptToActivateOrRemoveEffect((ServerLevel) this.livingEntity.level(), 0, this.livingEntity, this.livingEntity.blockPosition(), null));
@@ -286,14 +285,13 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100),
         BLOOD(SpellPath.BLOOD, SBEffects.BLEED, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLEED, 100);
 
-        @Nullable
         private final SpellPath path;
         private final Holder<MobEffect> mobEffect;
         private final Holder<Attribute> resistance;
         private final ResourceKey<DamageType> damageType;
         private final int duration;
 
-        Effect(@Nullable SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
+        Effect(SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
             this.path = path;
             this.mobEffect = mobEffect;
             this.resistance = resistance;
@@ -301,7 +299,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
             this.duration = duration;
         }
 
-        public @Nullable SpellPath getPath() {
+        public SpellPath getPath() {
             return this.path;
         }
 

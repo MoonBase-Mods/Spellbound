@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualH
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualInstance;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
+import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,15 +77,33 @@ public class TransfigurationMultiblock extends StandardMultiblock {
     }
 
     @Override
-    public void onActivate(Player player, Level level, MultiblockPattern pattern) {
+    public boolean onActivate(Player player, Level level, MultiblockPattern pattern) {
+        var handler = SpellUtil.getSpellHandler(player);
         BlockPos pedestal = this.getPedestalPosition(pattern);
         List<ItemStack> items = this.createItemList(level, pattern);
         Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(this, items, this.rings);
         if (optional.isPresent() && !level.isClientSide) {
             TransfigurationRitual ritual = optional.get();
-            RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern, this.rings));
-        } else {
-            clearMultiblock(player, level, pattern);
+            if (handler.consumeMana(ritual.definition().manaCost())) {
+                RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern, this.rings));
+                return true;
+            }
+        }
+
+        deactivateDisplays(level, pattern);
+        clearMultiblock(player, level, pattern);
+        return false;
+    }
+
+    private void deactivateDisplays(Level level, MultiblockPattern pattern) {
+        for (MultiblockIndex currentIndex : this.partPositions) {
+            BlockPos currentPos = currentIndex.toPos(pattern.facing(), pattern.frontBottomLeft());
+            BlockEntity blockEntity = level.getBlockEntity(currentPos);
+            if (blockEntity instanceof TransfigurationDisplayBlockEntity display) {
+                BlockState state = blockEntity.getBlockState();
+                display.active = false;
+                level.sendBlockUpdated(currentPos, state, state, 3);
+            }
         }
     }
 

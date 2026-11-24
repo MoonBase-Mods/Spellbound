@@ -1654,33 +1654,33 @@ public class PageBuilder {
         }
     }
 
-    //Builder for GuideRitualRenderer
-    public static class RuneRecipe implements PageBuilderType {
+    //Builder for GuideRuneCraftingRenderer
+    public static class RuneCraftingRenderer implements PageBuilderType {
         private ResourceLocation recipe;
         private boolean leftPage = false;
 
         /**
          * Creates a new builder for a RitualRenderer element
-         * @param ritual the ritual for items to render from
+         * @param recipe the recipe for items to render from
          * @return new RitualRenderer builder
          */
-        public static RitualRenderer of(ResourceKey<TransfigurationRitual> ritual) {
-            RitualRenderer builder = new RitualRenderer();
-            return builder.createRitual(ritual);
+        public static RuneCraftingRenderer of(ResourceLocation recipe) {
+            RuneCraftingRenderer builder = new RuneCraftingRenderer();
+            return builder.withRecipe(recipe);
         }
 
-        private RitualRenderer createRitual(ResourceKey<TransfigurationRitual> ritual) {
-            this.ritual = ritual;
+        private RuneCraftingRenderer withRecipe(ResourceLocation recipe) {
+            this.recipe = recipe;
             return this;
         }
 
-        public RitualRenderer leftPage() {
+        public RuneCraftingRenderer leftPage() {
             this.leftPage = true;
             return this;
         }
 
-        public TransfigurationRitualElement build() {
-            return new TransfigurationRitualElement(this.ritual, this.leftPage);
+        public RuneCraftingElement build() {
+            return new RuneCraftingElement(this.recipe, this.leftPage);
         }
     }
 

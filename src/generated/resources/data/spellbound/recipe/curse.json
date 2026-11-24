@@ -15,16 +15,16 @@
   },
   "ingredients": [
     {
-      "item": "minecraft:sugar"
+      "item": "minecraft:fermented_spider_eye"
     },
     {
-      "item": "minecraft:sugar"
+      "item": "minecraft:fermented_spider_eye"
     },
     {
-      "item": "minecraft:sugar"
+      "item": "minecraft:gunpowder"
     },
     {
-      "item": "minecraft:sugar"
+      "item": "minecraft:gunpowder"
     }
   ]
 }

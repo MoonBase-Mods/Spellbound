@@ -189,7 +189,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 SkillTooltip.COOLDOWN.tooltip(40)
         );
         this.addSkillDetails(SBSkills.IRON_MAN,
-                SkillTooltip.MANA_TICK_COST.tooltip(-5),
+                SkillTooltip.MANA_TICK_COST.tooltip(-5F),
                 SkillTooltip.DURATION.tooltip(100),
                 SkillTooltip.CHOICE.tooltip(),
                 SkillTooltip.CHANNELED.tooltip(),

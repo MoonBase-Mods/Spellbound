@@ -45,14 +45,42 @@ public class SBFluids {
                     return super.canConvertToSource(state, reader, pos);
                 }
             });
+    public static final Supplier<FluidType> CURSED_WATER_TYPE = FLUID_TYPES.register(
+            "cursed_water",
+            location -> new FluidType(FluidType.Properties.create()
+                    .descriptionId(Util.makeDescriptionId("fluid", location))
+                    .fallDistanceModifier(0F)
+                    .canExtinguish(true)
+                    .canConvertToSource(true)
+                    .supportsBoating(true)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BOTTLE_EMPTY)
+                    .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+                    .canHydrate(true)) {
+                @Override
+                public boolean canConvertToSource(FluidState state, LevelReader reader, BlockPos pos) {
+                    if (reader instanceof Level level) {
+                        return level.getGameRules().getBoolean(GameRules.RULE_WATER_SOURCE_CONVERSION);
+                    }
+
+                    return super.canConvertToSource(state, reader, pos);
+                }
+            });
 
 
     public static final Supplier<FlowingFluid> HOLY_WATER = registerFluid("holy_water", () -> new BaseFlowingFluid.Source(SBFluids.HOLY_WATER_PROPERTIES));
     public static final Supplier<FlowingFluid> FLOWING_HOLY_WATER = registerFluid("flowing_holy_water", () -> new BaseFlowingFluid.Flowing(SBFluids.HOLY_WATER_PROPERTIES));
 
+    public static final Supplier<FlowingFluid> CURSED_WATER = registerFluid("cursed_water", () -> new BaseFlowingFluid.Source(SBFluids.CURSED_WATER_PROPERTIES));
+    public static final Supplier<FlowingFluid> FLOWING_CURSED_WATER = registerFluid("flowing_cursed_water", () -> new BaseFlowingFluid.Flowing(SBFluids.CURSED_WATER_PROPERTIES));
+
     public static final BaseFlowingFluid.Properties HOLY_WATER_PROPERTIES = new BaseFlowingFluid.Properties(HOLY_WATER_TYPE, HOLY_WATER, FLOWING_HOLY_WATER)
             .bucket(SBItems.HOLY_WATER_BUCKET)
             .block(SBBlocks.HOLY_WATER)
+            .explosionResistance(100);
+    public static final BaseFlowingFluid.Properties CURSED_WATER_PROPERTIES = new BaseFlowingFluid.Properties(CURSED_WATER_TYPE, CURSED_WATER, FLOWING_CURSED_WATER)
+            .bucket(SBItems.CURSED_WATER_BUCKET)
+            .block(SBBlocks.CURSED_WATER)
             .explosionResistance(100);
 
     public static <T extends Fluid> Supplier<T> registerFluid(String name, Supplier<T> fluid) {

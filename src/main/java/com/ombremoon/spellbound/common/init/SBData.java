@@ -179,6 +179,8 @@ public class SBData {
             builder -> builder.persistent(ResourceKey.codec(Keys.PUZZLE_CONFIG)).networkSynchronized(ResourceKey.streamCodec(Keys.PUZZLE_CONFIG)));
     public static final Supplier<DataComponentType<Boolean>> ENCRYPTED_KEY = COMPONENT_TYPES.registerComponentType("encrypted_key",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final Supplier<DataComponentType<Boolean>> CURSED = COMPONENT_TYPES.registerComponentType("cursed",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
     public static final Supplier<DataComponentType<List<EffectHolder>>> RUNE_EFFECTS = COMPONENT_TYPES.registerComponentType("rune_effects",
             builder -> builder.persistent(EffectHolder.CODEC.listOf()).networkSynchronized(EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<SatchelContents>> SATCHEL_CONTENTS = COMPONENT_TYPES.registerComponentType("satchel_contents",
