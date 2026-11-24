@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -278,20 +279,23 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         this.judgement = tag.getFloat("Judgement");
     }
 
-    public enum Effect {
-        FIRE(SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE, 20),
-        FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
-        SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100),
-        DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100),
-        BLOOD(SpellPath.BLOOD, SBEffects.BLEED, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLEED, 100);
+    public enum Effect implements StringRepresentable {
+        FIRE("fire", SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE, 20),
+        FROST("frost", SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
+        SHOCK("shock", SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100),
+        DISEASE("disease", SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100),
+        BLEED("bleed", SpellPath.BLOOD, SBEffects.BLEED, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLEED, 100);
 
+        public static final StringRepresentable.EnumCodec<Effect> CODEC = StringRepresentable.fromEnum(Effect::values);
+        private final String name;
         private final SpellPath path;
         private final Holder<MobEffect> mobEffect;
         private final Holder<Attribute> resistance;
         private final ResourceKey<DamageType> damageType;
         private final int duration;
 
-        Effect(SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
+        Effect(String name, SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
+            this.name = name;
             this.path = path;
             this.mobEffect = mobEffect;
             this.resistance = resistance;
@@ -334,6 +338,11 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
          */
         public float getEntityResistance(LivingEntity entity) {
             return entity.getAttribute(resistance) != null ? (float) entity.getAttribute(resistance).getValue() : 0.0F;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
         }
     }
 }

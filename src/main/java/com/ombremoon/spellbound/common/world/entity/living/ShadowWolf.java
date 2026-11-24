@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.entity.living;
 
+import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -57,7 +59,9 @@ public class ShadowWolf extends SummonedWolf {
     public boolean doHurtTarget(Entity entity) {
         float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         AbstractSpell spell = SpellUtil.getActiveSpell(this);
-        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this));
+        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this))
+                .addDamageInstance(DamageInstance.ofType(SBDamageTypes.SB_GENERIC));
+
         if (this.level() instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, source, f);
         }

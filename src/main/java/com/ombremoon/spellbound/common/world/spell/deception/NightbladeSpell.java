@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
@@ -12,6 +13,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
@@ -36,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 public class NightbladeSpell extends ImbuementSpell {
     private static final ResourceLocation NIGHTBLADE_PRE = CommonClass.customLocation("nightblade_pre");
     private static final ResourceLocation NIGHTBLADE_POST = CommonClass.customLocation("nightblade_post");
+    private static final ResourceLocation THROAT_SLIT = CommonClass.customLocation("throat_slit");
     private static final ResourceLocation NUMBING_POISON = CommonClass.customLocation("numbing_poison");
     private static final ResourceLocation EVASIVE_STANCE = CommonClass.customLocation("evasive_stance");
     private static final ResourceLocation MUFFLE = CommonClass.customLocation("muffle");
@@ -53,7 +56,33 @@ public class NightbladeSpell extends ImbuementSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.NIGHTBLADE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, potency(3.0F + this.level() * 0.5F))),
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.MAX_CHARGES.tooltip(1),
+                SkillTooltip.WEAPON_IMBUEMENT.tooltip());
+        this.addSkillDetails(SBSkills.LINGERING_EDGE,
+                SkillTooltip.MAX_CHARGES.tooltip(3));
+        this.addSkillDetails(SBSkills.UNEXPECTED,
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, 50F)));
+        this.addSkillDetails(SBSkills.NUMBING_POISON,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(NUMBING_POISON, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(60));
+        this.addSkillDetails(SBSkills.VAMPIRIC_BLADE,
+                SkillTooltip.LIFESTEAL.tooltip(50F));
+        this.addSkillDetails(SBSkills.EVASIVE_STANCE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.DODGE_CHANCE, new AttributeModifier(EVASIVE_STANCE, 1.0, AttributeModifier.Operation.ADD_VALUE))));
+        this.addSkillDetails(SBSkills.MUFFLE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
+                SkillTooltip.EFFECT_DURATION.tooltip(60));
+        this.addSkillDetails(SBSkills.UMBRAL_SIGHT,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.NIGHT_VISION));
+        this.addSkillDetails(SBSkills.THROAT_SLIT,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.BLEED),
+                SkillTooltip.EFFECT_DURATION.tooltip(100),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.CATALYST.tooltip(SBItems.FOOL_SHARD.get()));
     }
 
     @Override
@@ -81,10 +110,17 @@ public class NightbladeSpell extends ImbuementSpell {
                             if (context.hasSkill(SBSkills.THROAT_SLIT) ) {
                                 pre.setNewDamage(pre.getOriginalDamage() * 1.5F);
 
-                                //TODO: ADD BLEED
-
-                                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("nightblade_bleed"),
-                                        pre.getTarget().getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.2, 0));
+                                this.addSkillBuff(
+                                        target,
+                                        SBSkills.THROAT_SLIT,
+                                        THROAT_SLIT,
+                                        BuffCategory.HARMFUL,
+                                        SkillBuff.MOB_EFFECT,
+                                        new MobEffectInstance(SBEffects.BLEED, 100),
+                                        100
+                                );
+                                this.triggerSpellFX(EffectData.DeadEntity.of(CommonClass.customLocation("nightblade_bleed"), target.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                        .setOffset(0, -0.2, 0));
                             }
                         }
                     }

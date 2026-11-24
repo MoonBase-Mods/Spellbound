@@ -723,6 +723,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.random_mana", "%s-%s Mana");
         add("spellbound.skill_tooltip.max_health_damage", "%s%% Max Health Damage");
         add("spellbound.skill_tooltip.damage_reflection", "%s%% Damage Reflection");
+        add("spellbound.skill_tooltip.dodge_chance", "%s%% Damage Reflection");
         add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
         add("spellbound.skill_tooltip.fire_build_up", "%s Fire Build Up");
         add("spellbound.skill_tooltip.frost_build_up", "%s Frost Build Up");
@@ -748,6 +749,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.knockback", "%s Knockback Strength");
         add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
         add("spellbound.skill_tooltip.projectile_count", "%s Projectile Count");
+        add("spellbound.skill_tooltip.projectile_speed", "%s%% Projectile Speed");
         add("spellbound.skill_tooltip.random_projectile_count", "+%s-%s Projectile Count");
         add("spellbound.skill_tooltip.projectile_count_per_charge", "%s Projectile Count per Charge");
         add("spellbound.skill_tooltip.damage_redux", "%s%% Damage Reduction");
@@ -760,7 +762,10 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.spell", "Casts ");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
         add("spellbound.skill_tooltip.choice", "Choice Upgrade");
+        add("spellbound.skill_tooltip.weapon_imbuement", "Weapon Imbuement");
+        add("spellbound.skill_tooltip.body_imbuement", "Body Imbuement");
         add("spellbound.skill_tooltip.requires", "Requires ");
+        add("spellbound.skill_tooltip.requires_lvl", "Requires Lvl ");
         add("spellbound.skill_tooltip.cast_scales", "Max Cast Scales with Level");
         add("spellbound.skill_tooltip.condition", "If ");
         add("spellbound.skill_tooltip.channeled", "Channeled Cast");
