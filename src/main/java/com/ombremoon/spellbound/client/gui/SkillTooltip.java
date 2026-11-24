@@ -840,6 +840,23 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Float> DODGE_CHANCE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.dodge_chance", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
     public static SkillTooltip<Float> ALLY_RANGE = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
@@ -1231,6 +1248,23 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Float> PROJECTILE_SPEED = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.projectile_speed", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
     public static SkillTooltip<IntIntPair> RANDOM_PROJECTILE_COUNT = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(IntIntPair arg, Supplier<DataComponentType<Unit>> component) {
@@ -1385,6 +1419,23 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Unit> WEAPON_IMBUEMENT = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.weapon_imbuement").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                }
+            };
+        }
+    };
+
     public static SkillTooltip<Item> CATALYST = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Item arg, Supplier<DataComponentType<Unit>> component) {
@@ -1414,6 +1465,23 @@ public abstract class SkillTooltip<T> {
                 @Override
                 public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
                     tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.requires").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC).append(Component.translatable(arg.value().getNameId()).withStyle(ChatFormatting.BLUE)));
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Integer> LEVEL_REQ = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Integer arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.requires_lvl", arg).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
                 }
             };
         }

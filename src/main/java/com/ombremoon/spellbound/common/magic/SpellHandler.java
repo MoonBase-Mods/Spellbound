@@ -37,6 +37,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -623,6 +624,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
                 .map(TypedDataComponent::value)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public boolean isInvisible() {
+        return !this.caster.hasEffect(MobEffects.INVISIBILITY) && !caster.hasEffect(SBEffects.MAGI_INVISIBILITY);
     }
 
     public void applyFearEffect(LivingEntity target, Vec3 source, int ticks) {
