@@ -449,6 +449,23 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Float> MODIFY_OVERALL_DAMAGE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.modify_overall_damage", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
     public static SkillTooltip<Float> MODIFY_DURATION = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
@@ -1051,6 +1068,74 @@ public abstract class SkillTooltip<T> {
                 @Override
                 public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
                     tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.target_cast_chance", sign(arg)).withStyle(invertedColor(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> MAGIC_RESIST = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.magic_resist", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> FIRE_RESIST = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.fire_resist", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> FROST_RESIST = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.frost_resist", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> SHOCK_RESIST = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.shock_resist", sign(arg)).withStyle(color(arg))));
                 }
 
                 @Override

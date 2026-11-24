@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
@@ -22,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, ChargeableSpell {
+    private static final ResourceLocation THICK_FUR = CommonClass.customLocation("thick_fur");
     private static final ResourceLocation LONE_WOLF_ATTACK = CommonClass.customLocation("lone_wolf_attack");
     private static final ResourceLocation LONE_WOLF_SPEED = CommonClass.customLocation("lone_wolf_speed");
     private static final ResourceLocation LONE_WOLF_JUMP = CommonClass.customLocation("lone_wolf_jump");
@@ -49,7 +51,26 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SUMMON_WOLF_PACK);
+        this.addSkillDetails(SBSkills.BLOOD_SCENT,
+                SkillTooltip.MODIFY_OVERALL_DAMAGE.tooltip(50F));
+        this.addSkillDetails(SBSkills.THICK_FUR,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(THICK_FUR, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(THICK_FUR, 5, AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.MAGIC_RESIST.tooltip(50F),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.HELLHOUND, SkillTooltip.FIRE_RESIST.tooltip(50F))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.SUMMON_WOLF_PACK, SkillTooltip.FROST_RESIST.tooltip(50F))
+                ));
+        this.addSkillDetails(SBSkills.PACK_LEADER,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(THICK_FUR, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))));
+        this.addSkillDetails(SBSkills.SHARP_CLAWS);
+        this.addSkillDetails(SBSkills.BRIMSTONE);
+        this.addSkillDetails(SBSkills.ASSASSINATE);
+        this.addSkillDetails(SBSkills.LONE_WOLF);
+        this.addSkillDetails(SBSkills.FENRIR);
     }
 
     @Override

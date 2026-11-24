@@ -700,6 +700,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
         add("spellbound.skill_tooltip.max_charges", "%s Charges");
         add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
+        add("spellbound.skill_tooltip.modify_overall_damage", "%s%% Damage");
         add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
         add("spellbound.skill_tooltip.modify_mana_cost", "%s%% Mana Cost");
         add("spellbound.skill_tooltip.modify_radius", "%s%% Radius");
@@ -735,6 +736,11 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.target_spell_damage", "%s%% Target Spell Damage");
         add("spellbound.skill_tooltip.target_spell_potency", "%s%% Target Spell Potency");
         add("spellbound.skill_tooltip.target_cast_chance", "%s%% Target Cast Chance");
+        add("spellbound.skill_tooltip.magic_resist", "%s%% Magic Resistance");
+        add("spellbound.skill_tooltip.fire_resist", "%s%% Fire Resistance");
+        add("spellbound.skill_tooltip.frost_resist", "%s%% Frost Resistance");
+        add("spellbound.skill_tooltip.shock_resist", "%s%% Shock Resistance");
+        add("spellbound.skill_tooltip.target_magic_resist", "%s%% Magic Resist on Target");
         add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
         add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
         add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
@@ -771,6 +777,8 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
         add("spellbound.skill_tooltip.modify_skate_speed", "%s%% Skate Speed");
+        add("spellbound.skill_tooltip.arrow_cost", "%s Arrow Mana Cost");
+        add("spellbound.skill_tooltip.draw_speed", "%s%% Draw Speed");
 
         /* TEMPLATE
         addSkillTooltip(SBSkills., "");
