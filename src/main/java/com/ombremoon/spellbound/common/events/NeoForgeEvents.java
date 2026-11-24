@@ -5,6 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
@@ -86,6 +87,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
@@ -135,6 +137,7 @@ public class NeoForgeEvents {
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         PayloadHandler.sendGuideBooks(serverPlayer);
+                        PayloadHandler.sendRituals(serverPlayer);
 
                         if (!PuzzleDungeonData.isDungeon(level) && serverPlayer.getData(SBData.NO_FLY_DUNGEON)) {
                             serverPlayer.setData(SBData.NO_FLY_DUNGEON, false);
@@ -373,7 +376,9 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onPickupItemPost(ItemEntityPickupEvent.Post event) {
-        unlockBooks(event.getOriginalStack(), event.getPlayer());
+        SpellboundToasts toast = unlockBooks(event.getOriginalStack(), event.getPlayer());
+        if (toast != null)
+            PayloadHandler.sendBookToast((ServerPlayer) event.getPlayer(), toast);
     }
 
     @SubscribeEvent
@@ -381,19 +386,23 @@ public class NeoForgeEvents {
         unlockBooks(event.getCrafting(), event.getEntity());
     }
 
-    private static void unlockBooks(ItemStack stack, Player player) {
+    //If book is unlocked, returns the toast, null otherwise
+    @Nullable
+    private static SpellboundToasts unlockBooks(ItemStack stack, Player player) {
         if (stack.getItem() instanceof GuideBookItem item) {
             Supplier<AttachmentType<Boolean>> attachment = item.getBookAttachment();
             boolean acquiredBook = player.getData(attachment);
             if (acquiredBook)
-                return;
+                return null;
 
             player.setData(attachment, true);
 
             if (player.level().isClientSide) {
                 RenderUtil.sendBookToast(item.getBookToast());
             }
+            return item.getBookToast();
         }
+        return null;
     }
 
     @SubscribeEvent

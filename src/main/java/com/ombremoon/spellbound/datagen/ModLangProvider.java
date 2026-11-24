@@ -132,6 +132,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.toast.spell_level_up", "%s has reached Level %s");
         add("spellbound.toast.path_level_up", "%s path has reached Level %s");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
+        add("spellbound.toast.book_acquired", "New book acquired");
 
         add("spellbound.familiar_type.utility", "Utility");
         add("spellbound.familiar_type.hybrid", "Hybrid");

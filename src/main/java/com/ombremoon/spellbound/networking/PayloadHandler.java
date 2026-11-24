@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
@@ -63,8 +64,16 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer(player, new ImportStructurePayload(info));
     }
 
+    public static void sendBookToast(ServerPlayer player, SpellboundToasts toast) {
+        PacketDistributor.sendToPlayer(player, new BookToastPayload(toast.ordinal()));
+    }
+
     public static void sendGuideBooks(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
+    }
+
+    public static void sendRituals(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, RitualHelper.getClientboundPayload());
     }
 
     public static void equipFamiliar(FamiliarHolder<?, ?> familiar) {
@@ -551,6 +560,16 @@ public class PayloadHandler {
                 ImportStructurePayload.TYPE,
                 ImportStructurePayload.STREAM_CODEC,
                 ImportStructurePayload::handle
+        );
+        registrar.playToClient(
+                BookToastPayload.TYPE,
+                BookToastPayload.STREAM_CODEC,
+                BookToastPayload::handle
+        );
+        registrar.playToClient(
+                SendRitualsPayload.TYPE,
+                SendRitualsPayload.STREAM_CODEC,
+                SendRitualsPayload::handle
         );
     }
 }
