@@ -96,6 +96,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
         this.addSkillDetails(SBSkills.STEP_INTO_SHADOW,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
                 SkillTooltip.EFFECT_DURATION.tooltip(80),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
         );
         this.addSkillDetails(SBSkills.BLINDING_MIRAGE,

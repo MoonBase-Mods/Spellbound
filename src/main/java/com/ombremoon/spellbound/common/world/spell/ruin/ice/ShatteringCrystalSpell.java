@@ -85,15 +85,11 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage())),
                 SkillTooltip.EXPLOSION_RADIUS.tooltip(4F),
                 SkillTooltip.PROC_RANGE.tooltip(4F),
-                SkillTooltip.CAST_SCALES.tooltip()
-        );
+                SkillTooltip.CAST_SCALES.tooltip());
         this.addSkillDetails(SBSkills.ICE_SHARD, SkillTooltip.COOLDOWN.tooltip(24000));
         this.addSkillDetails(SBSkills.FRIGID_BLAST,
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FRIGID_BLAST, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                ),
-                SkillTooltip.EFFECT_DURATION.tooltip(100)
-        );
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FRIGID_BLAST, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.FROZEN_SHRAPNEL,
                 SkillTooltip.RANDOM_PROJECTILE_COUNT.tooltip(IntIntPair.of(6, 12)),
                 SkillTooltip.RANDOM_DAMAGE.tooltip(Pair.of(
@@ -104,24 +100,23 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
         this.addSkillDetails(SBSkills.HYPOTHERMIA,
                 SkillTooltip.TARGET_ICE_RESIST.tooltip(-10F),
                 SkillTooltip.EFFECT_DURATION.tooltip(200),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
+                SkillTooltip.POTENCY_SCALING.tooltip());
         this.addSkillDetails(SBSkills.CRYSTAL_ECHO,
-                SkillTooltip.DURATION.tooltip(200)
-        );
+                SkillTooltip.DURATION.tooltip(200));
         this.addSkillDetails(SBSkills.CHILL,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, this.getModifiedDamage(this.getBaseDamage() / 2))),
-                SkillTooltip.PROC_DURATION.tooltip(20)
-        );
+                SkillTooltip.PROC_DURATION.tooltip(20));
+        this.addSkillDetails(SBSkills.THIN_ICE,
+                SkillTooltip.RADIUS.tooltip(4F));
+        this.addSkillDetails(SBSkills.CHAOTIC_SHATTER,
+                SkillTooltip.RADIUS.tooltip(4F));
         this.addSkillDetails(SBSkills.LINGERING_FROST,
                 SkillTooltip.FROST_BUILD_UP.tooltip(34F),
-                SkillTooltip.DURATION.tooltip(200)
-        );
+                SkillTooltip.DURATION.tooltip(200));
         this.addSkillDetails(SBSkills.GLACIAL_IMPACT,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.FROZEN),
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.PERMAFROST),
-                SkillTooltip.CATALYST.tooltip(SBItems.FROZEN_SHARD.get())
-        );
+                SkillTooltip.CATALYST.tooltip(SBItems.FROZEN_SHARD.get()));
     }
 
     @Override

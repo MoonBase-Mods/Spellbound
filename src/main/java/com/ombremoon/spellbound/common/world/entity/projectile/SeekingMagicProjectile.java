@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.entity.projectile;
 
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBEntities;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -162,7 +163,7 @@ public class SeekingMagicProjectile extends Arrow {
             }
 
             var effectManager = SpellUtil.getSpellEffects(entity);
-            EffectManager.Effect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
+            BuildUpEffect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
 
             if (effect != null)
                 effectManager.incrementBuildEffects(effect, damage);

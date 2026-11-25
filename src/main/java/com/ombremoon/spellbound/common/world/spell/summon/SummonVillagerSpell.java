@@ -85,34 +85,21 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
                 SkillTooltip.CHOICE.tooltip(),
                 SkillTooltip.CHARGED.tooltip(),
-                SkillTooltip.CAST_SCALES.tooltip()
-        );
+                SkillTooltip.CAST_SCALES.tooltip());
         this.addSkillDetails(SBSkills.FARMER_VILLAGER,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.LIBRARIAN_VILLAGER,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.TOOLSMITH_VILLAGER,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.CARTOGRAPHER_VILLAGER,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.CLERIC_VILLAGER,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.EXTENDED_SERVICE,
-                SkillTooltip.MODIFY_DURATION.tooltip(50F)
-        );
+                SkillTooltip.MODIFY_DURATION.tooltip(50F));
         this.addSkillDetails(SBSkills.LOYAL_PROTECTOR,
-                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get())
-        );
+                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get()));
         this.addSkillDetails(SBSkills.SHOW_ME_THE_ROPES,
                 SkillTooltip.CONDITION.tooltip(
                         new SkillTooltip.UnlockedTooltip(SBSkills.FARMER_VILLAGER, INCREASE_CROP_YIELD.tooltip())

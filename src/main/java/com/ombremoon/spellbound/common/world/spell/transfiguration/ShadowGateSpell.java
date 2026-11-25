@@ -91,6 +91,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                 SkillTooltip.HP_THRESHOLD.tooltip(50F),
                 SkillTooltip.EFFECT_DURATION.tooltip(100),
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
         );
         this.addSkillDetails(SBSkills.QUICK_RECHARGE,

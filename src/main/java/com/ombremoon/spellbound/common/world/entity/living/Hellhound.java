@@ -59,7 +59,7 @@ public class Hellhound extends SummonedWolf {
 
         Entity entity1 = this.level().getEntity(this.getPackLeaderId());
         if (entity1 instanceof Hellhound alpha && alpha.isAlive()) {
-            f *= 1.5F;
+            f *= 1.25F;
         }
 
         if (this.isPackLeader()) {

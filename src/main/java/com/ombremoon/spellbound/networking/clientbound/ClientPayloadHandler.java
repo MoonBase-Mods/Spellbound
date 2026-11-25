@@ -10,6 +10,9 @@ import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHolder;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
@@ -36,6 +39,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -384,6 +389,19 @@ public class ClientPayloadHandler {
     public static void handGuideBooks(SendGuideBooksPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             GuideBookManager.registerGuideBooks(payload.pages(), payload.pageIndex());
+        });
+    }
+
+    public static void handleUpdateRituals(UpdateRitualsPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            RitualHelper.RITUAL_LIST = payload.rituals();
+
+            Map<ResourceLocation, TransfigurationRitual> map = new HashMap<>();
+            for (RitualHolder holder : payload.rituals()) {
+                map.put(holder.id(), holder.ritual());
+            }
+
+            RitualHelper.RITUALS = map;
         });
     }
 

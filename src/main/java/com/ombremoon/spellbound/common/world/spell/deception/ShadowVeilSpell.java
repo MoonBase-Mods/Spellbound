@@ -56,8 +56,8 @@ public class ShadowVeilSpell extends AnimatedSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.SHADOW_VEIL,
-                SkillTooltip.RADIUS.tooltip(2.25F),
                 SkillTooltip.MOB_EFFECT.tooltip(MobEffects.BLINDNESS),
+                SkillTooltip.RADIUS.tooltip(2.25F),
                 SkillTooltip.DURATION.tooltip(this.getDuration()),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()));
         this.addSkillDetails(SBSkills.DARK_SHROUD,
@@ -78,7 +78,7 @@ public class ShadowVeilSpell extends AnimatedSpell {
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.FEAR),
                 SkillTooltip.EFFECT_DURATION.tooltip(40));
         this.addSkillDetails(SBSkills.CLOUDED_SENSES,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.DODGE_CHANCE, new AttributeModifier(CLOUDED_SENSES, 0.25, AttributeModifier.Operation.ADD_VALUE))));
+                SkillTooltip.DODGE_CHANCE.tooltip(25F));
         this.addSkillDetails(SBSkills.DEEP_NIGHT,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
                 SkillTooltip.NEW_LINE.tooltip(),

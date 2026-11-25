@@ -72,12 +72,14 @@ public class NightbladeSpell extends ImbuementSpell {
         this.addSkillDetails(SBSkills.VAMPIRIC_BLADE,
                 SkillTooltip.LIFESTEAL.tooltip(50F));
         this.addSkillDetails(SBSkills.EVASIVE_STANCE,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.DODGE_CHANCE, new AttributeModifier(EVASIVE_STANCE, 1.0, AttributeModifier.Operation.ADD_VALUE))));
+                SkillTooltip.DODGE_CHANCE.tooltip(100F));
         this.addSkillDetails(SBSkills.MUFFLE,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
                 SkillTooltip.EFFECT_DURATION.tooltip(60));
         this.addSkillDetails(SBSkills.UMBRAL_SIGHT,
                 SkillTooltip.MOB_EFFECT.tooltip(MobEffects.NIGHT_VISION));
+        this.addSkillDetails(SBSkills.SMOKE_BOMB,
+                SkillTooltip.SPELL.tooltip(SBSpells.SHADOW_VEIL.get()));
         this.addSkillDetails(SBSkills.THROAT_SLIT,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.BLEED),
                 SkillTooltip.EFFECT_DURATION.tooltip(100),

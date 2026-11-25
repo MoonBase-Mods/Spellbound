@@ -66,7 +66,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.tslat.smartbrainlib.util.RandomUtil;
@@ -922,14 +921,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param effect The effect type
      * @param amount The amount of damage dealt
      */
-    public void incrementEffect(LivingEntity targetEntity, EffectManager.Effect effect, float amount) {
+    public void incrementEffect(LivingEntity targetEntity, BuildUpEffect effect, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
         effects.incrementBuildEffects(effect, amount);
     }
 
     protected void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> key, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
-        EffectManager.Effect effect = effects.getEffectFromDamageType(key);
+        BuildUpEffect effect = effects.getEffectFromDamageType(key);
 
         if (effect == null)
             return;
@@ -1152,7 +1151,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public float potencyWithLevel(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
-        return initialAmount * getModifier(ModifierType.POTENCY, livingEntity, target) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
+        return potency(livingEntity, target, initialAmount) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
     }
 
     public float potencyWithLevel(LivingEntity target, float initialAmount) {

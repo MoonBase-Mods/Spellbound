@@ -429,38 +429,6 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.basic.conditional_skills"), PAGE_TWO_START_X, 49),
                 new TextEntry(translatable("guide.basic.choice_skills"), PAGE_TWO_START_X, 79)
         );
-        createDescriptionWithRecipeAndItem(
-                context,
-                ADDITIONAL_INFO_1,
-                SKILLS,
-                Book.SPELLBOUND,
-                translatable("guide.basic.additional_info"),
-                null,
-                false,
-                List.of(
-                        new RecipeEntry(loc("magic_shield"), 0, 100),
-                        new RecipeEntry(loc("mana_siphon"), PAGE_TWO_START_X + 65, 35)
-                ),
-                List.of(
-                        new ItemEntry(Ingredient.of(SBItems.MAGIC_SHIELD.get()), 67, 100, false),
-                        new ItemEntry(Ingredient.of(SBBlocks.MANA_SIPHON.get()), PAGE_TWO_START_X - 20, 35, false)
-                ),
-                new TextEntry(translatable("guide.basic.magic_shield"), 0, 35),
-                new TextEntry(translatable("guide.basic.mana_siphon"), PAGE_TWO_START_X, 125)
-        );
-        createDescriptionAndItems(
-                context,
-                ADDITIONAL_INFO_2,
-                ADDITIONAL_INFO_1,
-                Book.SPELLBOUND,
-                translatable("guide.basic.additional_info"),
-                null,
-                false,
-                List.of(
-                        new ItemEntry(Ingredient.of(SBItems.MANA_BOTTLE.get()), 67, 100, false)
-                ),
-                new TextEntry(translatable("guide.basic.mana_bottle"), 0, 35)
-        );
 
         //Ruin
         createCoverPage(context, RUIN_BOOK, RUIN_COVER_PAGE, SpellPath.RUIN,

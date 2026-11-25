@@ -54,6 +54,40 @@ public class StrideSpell extends AnimatedSpell {
     }
 
     @Override
+    public void registerSkillTooltips() {
+        this.addSkillDetails(SBSkills.STRIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.DURATION.tooltip(600),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.QUICK_SPRINT,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.EFFECT_DURATION.tooltip(200),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.GALLOPING_STRIDE,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.FLEETFOOTED,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.RANGE.tooltip(5F),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.GALLOPING_STRIDE, SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))))
+                ),
+                SkillTooltip.POTENCY_SCALING.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SUREFOOTED,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(SUREFOOTED, 0.4, AttributeModifier.Operation.ADD_VALUE))));
+        this.addSkillDetails(SBSkills.ENDURANCE,
+                SkillTooltip.MODIFY_DURATION.tooltip(100F));
+        this.addSkillDetails(SBSkills.MOMENTUM,
+                SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, potency(0.04F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.MAX_CHARGES.tooltip(5),
+                SkillTooltip.POTENCY_SCALING.tooltip());
+        this.addSkillDetails(SBSkills.STAMPEDE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))),
+                SkillTooltip.KNOCKBACK.tooltip(0.4F));
+    }
+
+    @Override
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
@@ -88,47 +122,6 @@ public class StrideSpell extends AnimatedSpell {
                 SoundSource.PLAYERS, volume, pitch);
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SPEED.get(),
                 SoundSource.PLAYERS, volume*0.3F, pitch);
-    }
-
-    @Override
-    public void registerSkillTooltips() {
-        this.addSkillDetails(SBSkills.STRIDE,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.DURATION.tooltip(600),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
-        this.addSkillDetails(SBSkills.QUICK_SPRINT,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.EFFECT_DURATION.tooltip(200),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
-        this.addSkillDetails(SBSkills.GALLOPING_STRIDE,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
-        this.addSkillDetails(SBSkills.FLEETFOOTED,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.25F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.RANGE.tooltip(5F),
-                SkillTooltip.CONDITION.tooltip(
-                        new SkillTooltip.UnlockedTooltip(SBSkills.GALLOPING_STRIDE, SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(1.5F * 0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))))
-                ),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
-        this.addSkillDetails(SBSkills.SUREFOOTED,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(SUREFOOTED, 0.4, AttributeModifier.Operation.ADD_VALUE)))
-        );
-        this.addSkillDetails(SBSkills.ENDURANCE,
-                SkillTooltip.MODIFY_DURATION.tooltip(100F)
-        );
-        this.addSkillDetails(SBSkills.MOMENTUM,
-                SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, potency(0.04F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.MAX_CHARGES.tooltip(5),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
-        this.addSkillDetails(SBSkills.STAMPEDE,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))),
-                SkillTooltip.KNOCKBACK.tooltip(0.4F)
-        );
     }
 
     @Override

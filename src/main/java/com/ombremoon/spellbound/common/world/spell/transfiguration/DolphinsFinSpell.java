@@ -94,61 +94,44 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.DOLPHINS_FIN,
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                ),
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(Attributes.WATER_MOVEMENT_EFFICIENCY, new AttributeModifier(DOLPHINS_FIN_MOVEMENT, 0.5F, AttributeModifier.Operation.ADD_VALUE))
-                ),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.WATER_MOVEMENT_EFFICIENCY, new AttributeModifier(DOLPHINS_FIN_MOVEMENT, 0.5F, AttributeModifier.Operation.ADD_VALUE))),
                 WATER_SLOWDOWN.tooltip(-90F),
                 SkillTooltip.POTENCY_SCALING.tooltip(),
-                SkillTooltip.CHOICE.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.MERMAIDS_TAIL,
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, potency(0.75F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                ),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, potency(0.75F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 WATER_SLOWDOWN.tooltip(-96F),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
+                SkillTooltip.POTENCY_SCALING.tooltip());
         this.addSkillDetails(SBSkills.SHARK_ATTACK,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2.0F))),
-                SkillTooltip.KNOCKBACK.tooltip(1F)
-        );
+                SkillTooltip.KNOCKBACK.tooltip(1F));
         this.addSkillDetails(SBSkills.ECHOLOCATION,
                 SkillTooltip.RADIUS.tooltip(potency(25F)),
                 SkillTooltip.POTENCY_SCALING.tooltip(),
-                SkillTooltip.CHOICE.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.POD_LEADER, SkillTooltip.ALLY_RANGE.tooltip(5.0F));
         this.addSkillDetails(SBSkills.SLIPSTREAM,
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(POD_LEADER, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                ),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(POD_LEADER, potency(0.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.PROC_DURATION.tooltip(60),
                 SkillTooltip.EFFECT_DURATION.tooltip(200),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
+                SkillTooltip.POTENCY_SCALING.tooltip());
         this.addSkillDetails(SBSkills.SONAR_BLAST,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2.0F))
-                ),
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2.0F))),
                 SkillTooltip.KNOCKBACK.tooltip(2.5F),
-                SkillTooltip.CHOICE.tooltip()
-        );
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.AQUATIC_DASH,
+                SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.KELP_VEIL,
                 SkillTooltip.PROC_DURATION.tooltip(40),
                 SkillTooltip.EFFECT_DURATION.tooltip(60),
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
-                SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
-        );
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.INVISIBILITY_NO_STACK.tooltip());
         this.addSkillDetails(SBSkills.HAMMERHEAD,
-                SkillTooltip.ATTRIBUTE.tooltip(
-                        new ModifierData(Attributes.SUBMERGED_MINING_SPEED, new AttributeModifier(HAMMERHEAD, 0.8F, AttributeModifier.Operation.ADD_VALUE))
-                )
-        );
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.SUBMERGED_MINING_SPEED, new AttributeModifier(HAMMERHEAD, 0.8F, AttributeModifier.Operation.ADD_VALUE))));
         this.addSkillDetails(SBSkills.OCEAN_DWELLER,
-                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.WATER_BREATHING)
-        );
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.WATER_BREATHING));
     }
 
     @Override

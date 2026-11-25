@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
@@ -12,13 +13,16 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.EntityUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -31,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class SmiteSpell extends ImbuementSpell {
     private static final ResourceLocation GOLDEN_PARRY = CommonClass.customLocation("golden_parry");
+    public static final ResourceLocation SHARDS_OF_PURITY = CommonClass.customLocation("shards_of_purity");
     private static final ResourceLocation REFLECTIVE_JUDGEMENT = CommonClass.customLocation("reflective_judgement");
     private static final ResourceLocation BLACK_BLADE = CommonClass.customLocation("black_blade");
     private static final ResourceLocation BLACK_BLADE_DEBUFF = CommonClass.customLocation("black_blade_debuff");
@@ -59,7 +64,67 @@ public class SmiteSpell extends ImbuementSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SMITE,
+                SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, potency(3F))),
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.PRAYERFUL_STRIKE,
+                SkillTooltip.RADIUS.tooltip(2F),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.SMITE,
+                                SkillTooltip.HEAL.tooltip(this.getModifiedHeal(3F)),
+                                SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, this.getModifiedDamage(3F)))
+                        )
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.BLACK_BLADE, SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))))
+                ),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.SACRED_BLADE,
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.SMITE, SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, this.getModifiedDamage(3F))))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.BLACK_BLADE, SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))))
+                ),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.GOLDEN_PARRY,
+                SkillTooltip.KNOCKBACK.tooltip(0.4F),
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.OATHSWORN,
+                SkillTooltip.MODIFY_DURATION.tooltip(100F));
+        this.addSkillDetails(SBSkills.GOLDEN_LAND,
+                SkillTooltip.PROJECTILE_COUNT.tooltip(5),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.SMITE, SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, this.getModifiedDamage(3F))))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.BLACK_BLADE, SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))))
+                )
+        );
+        this.addSkillDetails(SBSkills.SHARDS_OF_PURITY,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(SBAttributes.ATTACK_POWER, new AttributeModifier(SHARDS_OF_PURITY, -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.MAX_STACKS.tooltip(5));
+        this.addSkillDetails(SBSkills.BLESSED_ARC,
+                SkillTooltip.PROJECTILE_SPEED.tooltip(100F),
+                SkillTooltip.PROJECTILE_SIZE.tooltip(3F));
+        this.addSkillDetails(SBSkills.REFLECTIVE_JUDGEMENT,
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.PHYSICAL, 20F)));
+        this.addSkillDetails(SBSkills.SACRED_PARRY,
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.SKILL.tooltip(SBSkills.SACRED_BLADE),
+                SkillTooltip.SKILL.tooltip(SBSkills.GOLDEN_PARRY));
+        this.addSkillDetails(SBSkills.BLACK_BLADE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(3F))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(BLACK_BLADE_DEBUFF, -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.MAX_STACKS.tooltip(5),
+                SkillTooltip.EFFECT_DURATION.tooltip(200),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.LEVEL_REQ.tooltip(5),
+                SkillTooltip.NO_BOSS_EFFECT.tooltip());
     }
 
     @Override
@@ -121,7 +186,7 @@ public class SmiteSpell extends ImbuementSpell {
                                             REFLECTIVE_JUDGEMENT,
                                             pre -> {
                                                 Entity sourceEntity = pre.getSource().getEntity();
-                                                if (sourceEntity != null && sourceEntity.is(caster)) {
+                                                if (sourceEntity != null && sourceEntity.is(caster) && pre.getSource().is(DamageTypes.PLAYER_ATTACK)) {
                                                     pre.setNewDamage(pre.getOriginalDamage() * 1.2F);
                                                     this.removeSkillBuff(living, SBSkills.REFLECTIVE_JUDGEMENT);
                                                 }
@@ -217,7 +282,7 @@ public class SmiteSpell extends ImbuementSpell {
                 for (LivingEntity entity : entities) {
                     if (!this.isChoice(SBSkills.BLACK_BLADE)) {
                         if (this.getAttackPredicate().test(entity) && entity.getType().is(EntityTypeTags.UNDEAD)) {
-                            this.hurt(entity, SBDamageTypes.SB_GENERIC, 3F);
+                            this.hurt(entity, SBDamageTypes.HOLY, 3F);
                         } else if (this.getAllyPredicate().test(entity) && !entity.is(caster)) {
                             this.heal(entity, 3F);
                         }
@@ -228,7 +293,6 @@ public class SmiteSpell extends ImbuementSpell {
                     }
                 }
 
-                log(entities);
                 if (context.hasSkill(SBSkills.GOLDEN_LAND) && !entities.isEmpty()) {
                     float radius = 1.5F;
                     Vec3 origin = caster.position();
@@ -281,6 +345,9 @@ public class SmiteSpell extends ImbuementSpell {
     }
 
     public void addBlackBladeDebuff(LivingEntity target) {
+        if (EntityUtil.isBoss(target))
+            return;
+
         var handler = SpellUtil.getSpellHandler(target);
         var optional = handler.getSkillBuff(SBSkills.BLACK_BLADE.value());
         double healthDebuff = -0.05;

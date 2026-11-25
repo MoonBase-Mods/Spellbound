@@ -91,7 +91,9 @@ public class StormRiftSpell extends AnimatedSpell {
                 SkillTooltip.DURATION.tooltip(500)
         );
         this.addSkillDetails(SBSkills.DISPLACEMENT_FIELD,
-                SkillTooltip.RADIUS.tooltip(10.0F)
+                SkillTooltip.RADIUS.tooltip(10.0F),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.NO_BOSS_EFFECT.tooltip()
         );
         this.addSkillDetails(SBSkills.STORM_FURY,
                 SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 100F))

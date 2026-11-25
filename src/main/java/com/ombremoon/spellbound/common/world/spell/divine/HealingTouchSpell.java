@@ -3,26 +3,23 @@ package com.ombremoon.spellbound.common.world.spell.divine;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
-import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBEffects;
+import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.ConfigHandler;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -142,7 +139,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                         CONVALESCENCE,
                         post -> {
                             if (post.getSource().getEntity() instanceof LivingEntity attacker) {
-                                this.incrementEffect(attacker, EffectManager.Effect.DISEASE, potency(7));
+                                this.incrementEffect(attacker, BuildUpEffect.DISEASE, potency(7));
                             }
                         }
                 );

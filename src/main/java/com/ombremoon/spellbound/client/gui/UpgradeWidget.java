@@ -146,7 +146,7 @@ public class UpgradeWidget {
 
     public void drawHover(GuiGraphics guiGraphics, int x, int y, float fade, int width, int height) {
         Skill skill = this.getSkill();
-        this.showDetails = !this.skillDetails.isEmpty() && Screen.hasShiftDown();
+        this.showDetails = !skill.inTestingPhase() && !this.skillDetails.isEmpty() && Screen.hasShiftDown();
         List<FormattedCharSequence> tooltip = this.getDescription();
         boolean flag = width + x + this.x + this.width + 30 >= this.window.getScreen().width;
         boolean flag1 = 115 - y - this.y - 30 <= 6 + tooltip.size() * 9;

@@ -8,7 +8,7 @@ import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
@@ -41,7 +41,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import org.w3c.dom.Attr;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -112,6 +111,8 @@ public class IceSkateSpell extends ChanneledSpell {
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.ICE_SKATE,
                 SkillTooltip.MANA_TICK_COST.tooltip(this.getManaTickCost()),
+                SkillTooltip.RADIUS.tooltip(3F),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.CHANNELED.tooltip());
         this.addSkillDetails(SBSkills.FRICTIONLESS,
                 MODIFY_SPEED.tooltip(5F));
@@ -127,16 +128,18 @@ public class IceSkateSpell extends ChanneledSpell {
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(SNOW_BOOTS, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.EFFECT_DURATION.tooltip(40));
         this.addSkillDetails(SBSkills.KINETIC_FLOW,
-                SkillTooltip.POTENCY.tooltip(20F));
+                SkillTooltip.POTENCY.tooltip(20F),
+                SkillTooltip.PROC_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.SHARDS_OF_MOMENTUM,
+                SkillTooltip.SPELL.tooltip(SBSpells.ICE_BOLT.get()),
                 SkillTooltip.PROJECTILE_COUNT.tooltip(8));
         this.addSkillDetails(SBSkills.CRYSTAL_CLEATS,
                 SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CRYSTAL_CLEATS, -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.EFFECT_DURATION.tooltip(40),
                 SkillTooltip.FROST_BUILD_UP_PER_CHARGE.tooltip(potency(5F)),
+                SkillTooltip.POTENCY_SCALING.tooltip(),
                 SkillTooltip.PROC_DURATION.tooltip(20),
-                SkillTooltip.MAX_CHARGES.tooltip(5),
-                SkillTooltip.POTENCY_SCALING.tooltip());
+                SkillTooltip.MAX_CHARGES.tooltip(5));
         this.addSkillDetails(SBSkills.ICE_BRIDGE,
                 SkillTooltip.EFFECT_DURATION.tooltip(60));
     }
@@ -186,7 +189,7 @@ public class IceSkateSpell extends ChanneledSpell {
                                 );
 
                                 var effects = SpellUtil.getSpellEffects(target);
-                                effects.incrementBuildEffects(EffectManager.Effect.FROST, potency(5) * cleatCharges);
+                                effects.incrementBuildEffects(BuildUpEffect.FROST, potency(5) * cleatCharges);
                             }
                             this.removeSkillBuff(caster, SBSkills.CRYSTAL_CLEATS);
                         });

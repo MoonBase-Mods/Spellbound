@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -53,7 +54,7 @@ public class SpectralWolf extends SummonedWolf {
 
             if (context.hasSkill(SBSkills.SHARP_CLAWS)) {
                 var effects = SpellUtil.getSpellEffects(living);
-                effects.incrementBuildEffects(EffectManager.Effect.BLEED, 10 + context.getSpellLevel());
+                effects.incrementBuildEffects(BuildUpEffect.BLEED, 7 + context.getSpellLevel());
             }
         }
 

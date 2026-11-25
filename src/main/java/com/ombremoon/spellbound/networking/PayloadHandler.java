@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHolder;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
@@ -65,6 +66,10 @@ public class PayloadHandler {
 
     public static void sendGuideBooks(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
+    }
+
+    public static void updateRituals(ServerPlayer player, List<RitualHolder> rituals) {
+        PacketDistributor.sendToPlayer(player, new UpdateRitualsPayload(rituals));
     }
 
     public static void equipFamiliar(FamiliarHolder<?, ?> familiar) {
@@ -520,6 +525,11 @@ public class PayloadHandler {
                 SendGuideBooksPayload.TYPE,
                 SendGuideBooksPayload.STREAM_CODEC,
                 ClientPayloadHandler::handGuideBooks
+        );
+        registrar.playToClient(
+                UpdateRitualsPayload.TYPE,
+                UpdateRitualsPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateRituals
         );
         registrar.playToClient(
                 SpellDimensionDebugPayload.TYPE,

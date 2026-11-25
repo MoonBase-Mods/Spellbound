@@ -144,11 +144,13 @@ public class ModLangProvider extends LanguageProvider {
         add("tooltip.spelltome.testing", "DO NOT USE. This spell is WIP and may change.");
         add("tooltip.skill.testing", "DO NOT USE. This skill is WIP and may change.");
 
+        add("spellbound.default_damage", "Damage");
         add("spellbound.sb_generic", "Magic Damage");
         add("spellbound.physical_damage", "Physical Damage");
         add("spellbound.ruin_fire", "Fire Damage");
         add("spellbound.ruin_frost", "Frost Damage");
         add("spellbound.ruin_shock", "Shock Damage");
+        add("spellbound.holy", "Holy Damage");
 
         add("spellbound.path.level", "Lvl");
 
@@ -699,6 +701,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.proc_range", "%s Proc Range");
         add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
         add("spellbound.skill_tooltip.max_charges", "%s Charges");
+        add("spellbound.skill_tooltip.max_stacks", "%s Stacks");
         add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
         add("spellbound.skill_tooltip.modify_overall_damage", "%s%% Damage");
         add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
@@ -707,6 +710,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.modify_range", "%s%% Range");
         add("spellbound.skill_tooltip.modify_spell_xp", "%s%% Spell XP");
         add("spellbound.skill_tooltip.health_to_damage", "%s%% Health to Damage");
+        add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
         add("spellbound.skill_tooltip.mana_to_health", "%s%% Mana to Health");
         add("spellbound.skill_tooltip.health_to_mana", "%s%% Health to Mana");
         add("spellbound.skill_tooltip.percent_damage_per_charge", "%s%% %s per Charge");
@@ -723,15 +727,17 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.random_mana", "%s-%s Mana");
         add("spellbound.skill_tooltip.max_health_damage", "%s%% Max Health Damage");
         add("spellbound.skill_tooltip.damage_reflection", "%s%% Damage Reflection");
-        add("spellbound.skill_tooltip.dodge_chance", "%s%% Damage Reflection");
+        add("spellbound.skill_tooltip.dodge_chance", "%s%% Dodge Chance");
         add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
         add("spellbound.skill_tooltip.fire_build_up", "%s Fire Build Up");
         add("spellbound.skill_tooltip.frost_build_up", "%s Frost Build Up");
         add("spellbound.skill_tooltip.shock_build_up", "%s Shock Build Up");
+        add("spellbound.skill_tooltip.bleed_build_up", "%s Bleed Build Up");
+        add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
         add("spellbound.skill_tooltip.fire_build_up_per_charge", "%s Fire Build Up per Charge");
         add("spellbound.skill_tooltip.frost_build_up_per_charge", "%s Frost Build Up per Charge");
         add("spellbound.skill_tooltip.shock_build_up_per_charge", "%s Shock Build Up per Charge");
-        add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
+        add("spellbound.skill_tooltip.damage_to_undead", "%s %s to Undead");
         add("spellbound.skill_tooltip.target_damage", "%s%% Target Damage");
         add("spellbound.skill_tooltip.target_physical_damage", "%s%% Target Physical Damage");
         add("spellbound.skill_tooltip.target_spell_damage", "%s%% Target Spell Damage");
@@ -750,8 +756,10 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
         add("spellbound.skill_tooltip.projectile_count", "%s Projectile Count");
         add("spellbound.skill_tooltip.projectile_speed", "%s%% Projectile Speed");
+        add("spellbound.skill_tooltip.projectile_size", "%sx Projectile Size");
         add("spellbound.skill_tooltip.random_projectile_count", "+%s-%s Projectile Count");
         add("spellbound.skill_tooltip.projectile_count_per_charge", "%s Projectile Count per Charge");
+        add("spellbound.skill_tooltip.projectile_size_per_charge", "%sx Projectile Size per Charge");
         add("spellbound.skill_tooltip.damage_redux", "%s%% Damage Reduction");
         add("spellbound.skill_tooltip.physical_damage_redux", "%s%% Physical Damage Reduction");
         add("spellbound.skill_tooltip.spell_damage_redux", "%s%% Spell Damage Reduction");
@@ -765,13 +773,15 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.weapon_imbuement", "Weapon Imbuement");
         add("spellbound.skill_tooltip.body_imbuement", "Body Imbuement");
         add("spellbound.skill_tooltip.requires", "Requires ");
-        add("spellbound.skill_tooltip.requires_lvl", "Requires Lvl ");
+        add("spellbound.skill_tooltip.requires_lvl", "Requires Lvl %s");
         add("spellbound.skill_tooltip.cast_scales", "Max Cast Scales with Level");
         add("spellbound.skill_tooltip.condition", "If ");
         add("spellbound.skill_tooltip.channeled", "Channeled Cast");
         add("spellbound.skill_tooltip.charged", "Charged Cast");
+        add("spellbound.skill_tooltip.no_boss_effect", "Does Not Affect Bosses");
         add("spellbound.skill_tooltip.invisibility_no_stack", "Invisibility Does Not Stack");
         add("spellbound.skill_tooltip.invisibility_override", "Overrides Invisibility");
+        add("spellbound.skill_tooltip.effect_stacks", "Overrides Invisibility");
         add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
         add("spellbound.skill_tooltip.burning_adhesive", "%s Damage to Armor");
         add("spellbound.skill_tooltip.molten_core", "%s%% Damage per Pierce");
@@ -1056,18 +1066,6 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
         addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
-/*        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
-        addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
-        addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
-        addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
-        addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
-        addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a entity dies to a mushroom, the spell temporarily gains potency.");
-        addSkillTooltip(SBSkills.SYNTHESIS, "If a entity dies to a mushroom, the casting cost of the spell is temporarily decreased.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
-        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");*/
-
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
         addSkillTooltip(SBSkills.FERAL_FURY, "In cat form, the spirit gains increase attack damage and speed.");
@@ -1105,7 +1103,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the entity takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
 
         addSkillTooltip(SBSkills.SMITE, "The caster imbues their weapon with light Divine energy, dealing extra damage to undead.");
-        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby undead.");
+        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby undead and healing allies.");
         addSkillTooltip(SBSkills.SACRED_BLADE, "Fire off a golden blade projectile from the weapon.");
         addSkillTooltip(SBSkills.GOLDEN_PARRY, "Weapon gains the ability to parry melee hits/projectiles and gains increased knockback.");
         addSkillTooltip(SBSkills.OATHSWORN, "Increases the buff duration.");

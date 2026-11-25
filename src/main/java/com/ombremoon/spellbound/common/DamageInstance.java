@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -41,10 +42,10 @@ public record DamageInstance(ResourceKey<DamageType> damageType, float amount, O
         return DamageInstance.of(damageType, 0.0F);
     }
 
-    public record BuildUp(EffectManager.Effect effect, float amount) {
+    public record BuildUp(BuildUpEffect effect, float amount) {
         public static final Codec<BuildUp> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        EffectManager.Effect.CODEC.fieldOf("effet").forGetter(BuildUp::effect),
+                        BuildUpEffect.CODEC.fieldOf("effect").forGetter(BuildUp::effect),
                         Codec.FLOAT.fieldOf("amount").forGetter(BuildUp::amount)
                 ).apply(instance, BuildUp::new)
         );

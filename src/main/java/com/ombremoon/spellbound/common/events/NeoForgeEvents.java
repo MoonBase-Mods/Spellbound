@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
@@ -135,6 +136,7 @@ public class NeoForgeEvents {
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         PayloadHandler.sendGuideBooks(serverPlayer);
+                        PayloadHandler.updateRituals(serverPlayer, RitualHelper.getRituals());
 
                         if (!PuzzleDungeonData.isDungeon(level) && serverPlayer.getData(SBData.NO_FLY_DUNGEON)) {
                             serverPlayer.setData(SBData.NO_FLY_DUNGEON, false);

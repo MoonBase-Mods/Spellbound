@@ -215,7 +215,7 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
             return new SkillTooltipProvider() {
                 @Override
                 public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.arrow_cost", sign(arg)).withStyle(invertedColor(arg))));
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.draw_speed", sign(arg)).withStyle(invertedColor(arg))));
                 }
 
                 @Override
