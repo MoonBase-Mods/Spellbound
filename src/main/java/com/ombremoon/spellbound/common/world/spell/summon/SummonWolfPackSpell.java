@@ -12,6 +12,8 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.world.entity.living.SummonedWolf;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -95,6 +97,12 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
 
                 Imbuement imbuement = Imbuement.create(this, DamageInstance.of(SBDamageTypes.BLEED, potencyWithLevel(3F)), -1);
                 caster.setData(SBData.ENTITY_IMBUEMENT, imbuement);
+                this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("lone_wolf_cast"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, -0.5, 0));
+                level.playSound(null, context.getCaster().blockPosition(), SoundEvents.WOLF_HOWL,
+                        SoundSource.PLAYERS,0.5F + level.random.nextFloat() * 0.3F, 0.8F + level.random.nextFloat() * 0.3F);
+
+
             } else if (context.isChoice(SBSkills.FENRIR) && this.hasFilledSoulShard(context)) {
 
             } else {
@@ -128,6 +136,8 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
 
                     this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("summon_general"), spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                             .setOffset(0, -0.5, 0));
+                    level.playSound(null, context.getCaster().blockPosition(), SoundEvents.WOLF_AMBIENT,
+                            SoundSource.PLAYERS,0.5F + level.random.nextFloat() * 0.3F, 0.8F + level.random.nextFloat() * 0.3F);
                 }
             }
         }
