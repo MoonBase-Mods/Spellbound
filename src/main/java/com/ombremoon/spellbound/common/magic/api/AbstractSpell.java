@@ -396,9 +396,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return The spells sub path
      */
     public SpellPath getSubPath() {
-        if (this.spellType.getPath() != SpellPath.RUIN || this.spellType.getPath().isSubPath())
-            return null;
-
         return this.spellType().getSubPath();
     }
 
@@ -449,8 +446,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.context.getSkills().getSpellLevel(this.spellType);
     }
 
-    public int getSpellNumberCap(SpellContext context) {
-        return context.getSpellLevel() + 1;
+    public int getSpellNumberCap() {
+        return this.context.getSpellLevel() + 1;
     }
 
     /**
@@ -774,6 +771,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             this.incrementEffect(targetEntity, damageType, damageAfterResistance);
         }
+
         return flag;
     }
 
@@ -923,7 +921,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public void incrementEffect(LivingEntity targetEntity, BuildUpEffect effect, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
-        effects.incrementBuildEffects(effect, amount);
+        effects.incrementBuildEffects(this.caster, effect, amount);
     }
 
     protected void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> key, float amount) {
@@ -1751,7 +1749,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 return;
             }
 
-            int spellCap = this.getSpellNumberCap(this.context);
+            int spellCap = this.getSpellNumberCap();
             if (!this.fullRecast && this.hasSummonStaffBuff(this.context))
                 spellCap++;
 

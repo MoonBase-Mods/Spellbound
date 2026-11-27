@@ -1505,6 +1505,23 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Integer> MAX_CASTS = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Integer arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.max_casts", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
     public static SkillTooltip<ModifierData> ATTRIBUTE = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(ModifierData arg, Supplier<DataComponentType<Unit>> component) {
@@ -1603,6 +1620,23 @@ public abstract class SkillTooltip<T> {
                 @Override
                 public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
                     tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.weapon_imbuement").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Unit> BODY_IMBUEMENT = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.body_imbuement").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
                 }
             };
         }

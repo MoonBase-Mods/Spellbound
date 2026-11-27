@@ -44,6 +44,10 @@ public enum SpellPath implements StringRepresentable {
         return this.isSubPath;
     }
 
+    public boolean isRuin() {
+        return this == FIRE || this == FROST || this == SHOCK;
+    }
+
     public boolean isDivine() {
         return this == DIVINE || this == DARK_DIVINE;
     }

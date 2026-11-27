@@ -29,6 +29,11 @@ public class KeyBinds {
         return minecraft.options.keyUse;
     }
 
+    public static KeyMapping getAttackMapping() {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.options.keyAttack;
+    }
+
     public static KeyMapping getUpMapping() {
         Minecraft minecraft = Minecraft.getInstance();
         return minecraft.options.keyUp;

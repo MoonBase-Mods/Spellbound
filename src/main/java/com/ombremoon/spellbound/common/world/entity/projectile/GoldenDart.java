@@ -112,8 +112,8 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
             this.setHomingTarget(target);
             this.setSplineController(SplineController.createSpline(this.getSummoner().position(), target.position())
                     .addControlPoint(0.005, new Vec3(RandomUtil.randomValueBetween(-0.02, 0.02), RandomUtil.randomValueBetween(0, 0.02), RandomUtil.randomValueBetween(0.02, 0.05))));
-        } else if (this.getSummoner() instanceof LivingEntity living) {
-            this.setHomingTarget(living);
+        } else {
+            this.discard();
         }
     }
 

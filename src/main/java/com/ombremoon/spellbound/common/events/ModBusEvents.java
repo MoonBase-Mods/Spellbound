@@ -118,6 +118,7 @@ public class ModBusEvents {
         magicEntity(entityType, 100, event);
         event.add(entityType, SBAttributes.CAST_RANGE);
         event.add(entityType, SBAttributes.CAST_SPEED);
+        event.add(entityType, SBAttributes.DODGE_CHANCE);
     }
 
     @SubscribeEvent

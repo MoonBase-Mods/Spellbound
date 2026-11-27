@@ -314,20 +314,4 @@ public class RenderUtil {
             emitter.addFX(builder);
         }
     }
-
-    public static void triggerEntityEffect(Entity entity, EffectData builder) {
-        PayloadHandler.triggerEntityFx(entity, builder);
-    }
-
-    public static void removeEntityEffect(Entity entity, ResourceLocation effect) {
-        PayloadHandler.removeEntityFX(entity, effect);
-    }
-
-    public static void triggerBlockEffect(ServerLevel level, BlockPos pos, EffectData builder) {
-        PayloadHandler.triggerBlockFx(level, pos, builder);
-    }
-
-    public static void removeBlockEffect(ServerLevel level, BlockPos pos, ResourceLocation effect) {
-        PayloadHandler.removeBlockFX(level, pos, effect);
-    }
 }

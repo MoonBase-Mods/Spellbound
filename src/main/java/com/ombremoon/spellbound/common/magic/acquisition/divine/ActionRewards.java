@@ -98,7 +98,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
                 if (spellFlag) {
                     float volume = 0.4F + level.random.nextFloat() * 0.3F;
                     float pitch = 1.0F + level.random.nextFloat() * 0.2F;
-                    RenderUtil.triggerBlockEffect(level, pos, EffectData.Block.of(fx, pos)
+                    SpellUtil.triggerBlockEffect(level, pos, EffectData.Block.of(fx, pos)
                             .setOffset(0, -0.49, 0));
 
                     level.playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, pitch);

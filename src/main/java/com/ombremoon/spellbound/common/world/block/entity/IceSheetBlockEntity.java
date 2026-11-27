@@ -89,7 +89,7 @@ public class IceSheetBlockEntity extends BlockEntity implements FXEmitter {
                     SpellContext context = spell.getContext();
                     if (this.harmful && spell.hurt(livingEntity, 1.0F) && this.canFreeze) {
                         var effects = SpellUtil.getSpellEffects(livingEntity);
-                        effects.incrementBuildEffects(BuildUpEffect.FROST, spell.potency(5));
+                        effects.incrementBuildEffects(player, BuildUpEffect.FROST, spell.potency(5));
                     }
 
                     if (SpellUtil.IS_ALLIED.test(livingEntity, player) && context.hasSkill(SBSkills.SNOW_BOOTS)) {

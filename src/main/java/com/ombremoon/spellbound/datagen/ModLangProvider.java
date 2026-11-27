@@ -6,7 +6,9 @@ import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
+import com.ombremoon.spellbound.common.magic.skills.PseudoSkillProvider;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.world.item.ChalkItem;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
@@ -81,7 +83,15 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void skillLang(DeferredHolder<Skill, ? extends Skill> entry) {
-        add(entry.get().getNameId(), checkReplace(entry));
+        Skill skill = entry.get();
+        add(skill.getNameId(), checkReplace(entry));
+
+        for (SkillProvider provider : skill.getPseudoChoices()) {
+            if (provider instanceof PseudoSkillProvider pseudo) {
+                ResourceLocation location = pseudo.location();
+                add("skill." + location.getNamespace() + "." + location.getPath(), checkReplace(location));
+            }
+        }
     }
 
     protected void attributeLang(DeferredHolder<Attribute,? extends Attribute> entry) {
@@ -258,7 +268,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana required significantly increases. §lMana Tears§r are the way to permanently increase your §omana reserves.§r");
         add("guide.basic.mana_bottle", "When low on mana, §lBottles o' Mana§r are a quick way to replenish it. These can be found around the world or collected from §oMana Siphons.§r");
         add("guide.basic.general_items_cont", "General Items Cont.");
-        add("guide.basic.magic_shield", "A regular shield is not enough to mitigate the damage from magic. With a Magic Shield, Magi can not only block spell damage, but §odeflect projectiles§r if timed properly.");
+        add("guide.basic.magic_shield", "A regular shield is not enough to mitigate the damage from magic. With a Magic Shield, Magi can not only block spell damage, but §odeflect projectiles§r if timed properly in the offhand.");
         add("guide.basic.mana_siphon", "§lMana Siphons§r collect mana from nearby entities when activated with §oMagic Essence.§r Mana stored can be collected directly or in §oBottles o' Mana§r");
         add("guide.basic.workbench1", "A §lMagi's Workbench§r it's the most important tool for spell growth. There you can §oview, swap out, and §lupgrade§r your spells as you progress through the world.");
         add("guide.basic.book_recipes", "Book Recipes");
@@ -769,6 +779,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.projectile_damage_redux", "%s%% Projectile Damage Reduction");
         add("spellbound.skill_tooltip.pierce_count", "Pierce Level %s");
         add("spellbound.skill_tooltip.hp_threshold", "%s%% HP Threshold");
+        add("spellbound.skill_tooltip.max_casts", "%s Casts");
         add("spellbound.skill_tooltip.mob_effect", "Applies ");
         add("spellbound.skill_tooltip.spell", "Casts ");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
@@ -985,7 +996,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
         addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
-        addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
+        addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
         addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed.");
         addSkillTooltip(SBSkills.SHADOW_ESCAPE, "When the caster enters the portal at low health, they gain invisibility after exiting.");

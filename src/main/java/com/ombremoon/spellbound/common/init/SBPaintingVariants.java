@@ -32,6 +32,8 @@ public interface SBPaintingVariants {
 
     //ResourceKey<PaintingVariant> x = create("");
     //You know I love you Ombre, and you love me for all these paintings no one asked for
+
+    //Lmao, at least someone is doing it -Ombre
     ResourceKey<PaintingVariant> LA_SENTENZA = create("la_sentenza");
     ResourceKey<PaintingVariant> SHARED_DREAMS = create("shared_dreams");
 

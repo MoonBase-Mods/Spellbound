@@ -68,9 +68,11 @@ public class SmiteSpell extends ImbuementSpell {
                 SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, potency(3F))),
                 SkillTooltip.DURATION.tooltip(this.getDuration()),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
-                SkillTooltip.CHOICE.tooltip());
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.WEAPON_IMBUEMENT.tooltip());
         this.addSkillDetails(SBSkills.PRAYERFUL_STRIKE,
                 SkillTooltip.RADIUS.tooltip(2F),
+                SkillTooltip.COOLDOWN.tooltip(60),
                 SkillTooltip.CONDITION.tooltip(
                         new SkillTooltip.UnlockedTooltip(SBSkills.SMITE,
                                 SkillTooltip.HEAL.tooltip(this.getModifiedHeal(3F)),
@@ -83,6 +85,7 @@ public class SmiteSpell extends ImbuementSpell {
                 SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.SACRED_BLADE,
+                SkillTooltip.COOLDOWN.tooltip(20),
                 SkillTooltip.CONDITION.tooltip(
                         new SkillTooltip.UnlockedTooltip(SBSkills.SMITE, SkillTooltip.DAMAGE_TO_UNDEAD.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.HOLY, this.getModifiedDamage(3F))))
                 ),
@@ -279,21 +282,24 @@ public class SmiteSpell extends ImbuementSpell {
                 this.addCooldown(SBSkills.SACRED_BLADE, 20);
             } else if (context.isChoice(SBSkills.PRAYERFUL_STRIKE) && context.hasSkillReady(SBSkills.PRAYERFUL_STRIKE)) {
                 var entities = this.getNearbyEntities(2, living -> !this.isCaster(living));
+                boolean flag = false;
                 for (LivingEntity entity : entities) {
                     if (!this.isChoice(SBSkills.BLACK_BLADE)) {
                         if (this.getAttackPredicate().test(entity) && entity.getType().is(EntityTypeTags.UNDEAD)) {
                             this.hurt(entity, SBDamageTypes.HOLY, 3F);
+                            flag = true;
                         } else if (this.getAllyPredicate().test(entity) && !entity.is(caster)) {
                             this.heal(entity, 3F);
                         }
                     } else {
                         if (this.hurt(entity, SBDamageTypes.SB_GENERIC, 3F)) {
                             this.addBlackBladeDebuff(entity);
+                            flag = true;
                         }
                     }
                 }
 
-                if (context.hasSkill(SBSkills.GOLDEN_LAND) && !entities.isEmpty()) {
+                if (context.hasSkill(SBSkills.GOLDEN_LAND) && flag) {
                     float radius = 1.5F;
                     Vec3 origin = caster.position();
                     float yaw = caster.getYRot();

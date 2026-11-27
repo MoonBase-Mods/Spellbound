@@ -137,7 +137,7 @@ public class ShadowVeilSpell extends AnimatedSpell {
         return context.hasSkill(SBSkills.DARK_SHROUD) ? 300 : super.getDuration(context);
     }
 
-    public void addVeilEffects(SpellContext context, LivingEntity entity, ShadowVeil veil) {
+    public void addVeilEffects(SpellContext context, LivingEntity entity) {
         LivingEntity caster = context.getCaster();
         var targetHandler = SpellUtil.getSpellHandler(entity);
         if (SpellUtil.CAN_ATTACK_ENTITY.test(caster, entity)) {

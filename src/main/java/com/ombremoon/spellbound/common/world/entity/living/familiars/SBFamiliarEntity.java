@@ -237,7 +237,7 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
                 BuildUpEffect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
 
                 if (effect != null)
-                    effectManager.incrementBuildEffects(effect, f);
+                    effectManager.incrementBuildEffects(this, effect, f);
             }
             float f1 = this.getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {

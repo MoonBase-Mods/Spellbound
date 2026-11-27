@@ -56,7 +56,7 @@ public class SpellDamageSource extends DamageSource {
     }
 
     public void modifyDamage(LivingDamageEvent.Pre event) {
-        float damage = event.getNewDamage();
+        float damage = event.getOriginalDamage();
         LivingEntity entity = event.getEntity();
         for (DamageInstance instance : this.extraDamage) {
             var optional = instance.exclusiveTo();
@@ -71,7 +71,7 @@ public class SpellDamageSource extends DamageSource {
                 if (instance.additionalBuildUp().isPresent()) {
                     var buildUp = instance.additionalBuildUp().get();
                     var effects = SpellUtil.getSpellEffects(entity);
-                    effects.incrementBuildEffects(buildUp.effect(), buildUp.amount());
+                    effects.incrementBuildEffects(this.getEntity() instanceof LivingEntity livingEntity ? livingEntity : null, buildUp.effect(), buildUp.amount());
                 }
             }
         }

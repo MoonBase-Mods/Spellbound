@@ -155,6 +155,14 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (this.isTrading()) {
+            this.navigation.stop();
+        }
+    }
+
+    @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
     }

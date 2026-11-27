@@ -166,7 +166,7 @@ public class SeekingMagicProjectile extends Arrow {
             BuildUpEffect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
 
             if (effect != null)
-                effectManager.incrementBuildEffects(effect, damage);
+                effectManager.incrementBuildEffects(this.getOwner(), effect, damage);
 
             entity.knockback((0.5F), Mth.sin(this.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(this.getYRot() * ((float)Math.PI / 180F))));
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, (double)1.0F, 0.6));

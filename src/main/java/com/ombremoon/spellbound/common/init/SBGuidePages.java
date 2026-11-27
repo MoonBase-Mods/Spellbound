@@ -1437,7 +1437,6 @@ public interface SBGuidePages {
                                         .addEntry(translatable("guide.general.path_items"), PATH_ITEMS)
                                         .addEntry(translatable("guide.basic.spells"), SPELLS)
                                         .addEntry(translatable("guide.basic.skills"), SKILLS)
-                                        .addEntry(translatable("guide.basic.additional_info"), ADDITIONAL_INFO_1)
                                         .build(),
 
                                 PageBuilder.SpellBorder

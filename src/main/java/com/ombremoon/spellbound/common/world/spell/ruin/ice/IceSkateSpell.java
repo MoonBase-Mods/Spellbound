@@ -189,7 +189,7 @@ public class IceSkateSpell extends ChanneledSpell {
                                 );
 
                                 var effects = SpellUtil.getSpellEffects(target);
-                                effects.incrementBuildEffects(BuildUpEffect.FROST, potency(5) * cleatCharges);
+                                effects.incrementBuildEffects(caster, BuildUpEffect.FROST, potency(5) * cleatCharges);
                             }
                             this.removeSkillBuff(caster, SBSkills.CRYSTAL_CLEATS);
                         });

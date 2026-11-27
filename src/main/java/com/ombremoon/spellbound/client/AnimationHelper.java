@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.client;
 
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -36,7 +35,7 @@ public class AnimationHelper {
     }
 
     public static void tick(AbstractClientPlayer player) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.SPELL_CAST_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.ACTION_ANIMATION);
         if (spellController != null) {
             if (!spellController.isActive() && spellController.getModifierCount() > 0) {
                 spellController.removeAllModifiers();
@@ -44,7 +43,7 @@ public class AnimationHelper {
                 player.setYBodyRot(player.getYHeadRot());
                 PayloadHandler.updateRotation(player.yBodyRot);
                 var handler = SpellUtil.getSpellHandler(player);
-                SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.SPELL_CAST_ANIMATION);
+                SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.ACTION_ANIMATION);
                 if (animation != null && isAnimationPlaying(spellController, animation) && animation.stationary())
                     handler.setStationaryTicks(1);
             }

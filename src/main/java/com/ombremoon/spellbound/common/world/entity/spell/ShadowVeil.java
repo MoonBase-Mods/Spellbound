@@ -81,7 +81,7 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
                 List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, veilBox);
                 for (LivingEntity living : list) {
                     int id = living.getId();
-                    if (this.veilAttendees.containsKey(id)) {
+                    if (this.veilAttendees.containsKey(id) && SpellUtil.CAN_ATTACK_ENTITY.test(caster, living)) {
                         if (context.hasSkill(SBSkills.SAPPING_FEAR) && !this.fearedEntities.contains(id) && living.tickCount >= this.veilAttendees.get(id) + this.spell.getDuration() / 2) {
                             var handler = context.getSpellHandler();
                             handler.applyFearEffect(living, 40);
@@ -89,7 +89,7 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
                         }
                     } else {
                         this.veilAttendees.put(living.getId(), living.tickCount);
-                        this.spell.addVeilEffects(context, living, this);
+                        this.spell.addVeilEffects(context, living);
                     }
                 }
 
@@ -117,14 +117,14 @@ public class ShadowVeil extends VFXSpellEntity<ShadowVeilSpell> {
                         }
                     }
 
-                    if (entity instanceof LivingEntity living && !toRemove.contains(i)) {
+                    if (entity instanceof LivingEntity living && !toRemove.contains(i) && SpellUtil.CAN_ATTACK_ENTITY.test(caster, living)) {
                         this.spell.tickVeilEffects(context, living, this);
 
-                        if (context.hasSkill(SBSkills.DECEPTIVE_ECHOES)) {
+                        if (context.hasSkill(SBSkills.DECEPTIVE_ECHOES) && this.tickCount % (this.random.nextInt(100) + 100) == 0) {
                             this.playRandomMobSound(living);
                         }
 
-                        if (context.hasSkill(SBSkills.SHADOW_DOMAIN) && entity instanceof LivingEntity && SpellUtil.CAN_ATTACK_ENTITY.test(caster, living)) {
+                        if (context.hasSkill(SBSkills.SHADOW_DOMAIN) && entity instanceof LivingEntity) {
                             knockbackEntityIntoVeil(living, veilBox);
                         }
                     }

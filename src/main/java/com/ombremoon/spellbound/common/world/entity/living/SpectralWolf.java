@@ -54,7 +54,7 @@ public class SpectralWolf extends SummonedWolf {
 
             if (context.hasSkill(SBSkills.SHARP_CLAWS)) {
                 var effects = SpellUtil.getSpellEffects(living);
-                effects.incrementBuildEffects(BuildUpEffect.BLEED, 7 + context.getSpellLevel());
+                effects.incrementBuildEffects(this, BuildUpEffect.BLEED, 7 + context.getSpellLevel());
             }
         }
 

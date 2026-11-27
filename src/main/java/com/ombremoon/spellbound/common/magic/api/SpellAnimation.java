@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record SpellAnimation(ResourceLocation animation, Type type, boolean stationary, boolean canPlayAnotherAnimation) {
-    public static final ResourceLocation SPELL_CAST_ANIMATION = CommonClass.customLocation("spell_cast");
+    public static final ResourceLocation ACTION_ANIMATION = CommonClass.customLocation("action");
     public static final ResourceLocation MOVEMENT_ANIMATION = CommonClass.customLocation("movement");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SpellAnimation> STREAM_CODEC = StreamCodec.composite(
@@ -31,8 +31,8 @@ public record SpellAnimation(ResourceLocation animation, Type type, boolean stat
     }
 
     public enum Type {
-        CAST(true, SPELL_CAST_ANIMATION),
-        CHANNEL(true, SPELL_CAST_ANIMATION),
+        CAST(true, ACTION_ANIMATION),
+        CHANNEL(true, ACTION_ANIMATION),
         MOVEMENT(false, MOVEMENT_ANIMATION);
 
         private final boolean stationary;

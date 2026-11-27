@@ -184,6 +184,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.DIVINE_CHARM.get())
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('D', Items.DIAMOND)
+                .define('^', Items.GOLD_INGOT)
+                .pattern("#^#")
+                .pattern("^D^")
+                .pattern("#^#")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.ARCANE_EYE.get())
                 .define('#', SBItems.MAGIC_ESSENCE.get())
                 .define('*', Items.ENDER_PEARL)

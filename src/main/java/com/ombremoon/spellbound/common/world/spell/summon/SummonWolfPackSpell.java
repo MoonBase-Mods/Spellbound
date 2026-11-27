@@ -86,12 +86,17 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
                 SkillTooltip.EFFECT_DURATION.tooltip(60));
         this.addSkillDetails(SBSkills.LONE_WOLF,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, 3.0, AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, potency(3.0F), AttributeModifier.Operation.ADD_VALUE))),
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(LONE_WOLF_SPEED, 0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.JUMP_STRENGTH, new AttributeModifier(LONE_WOLF_JUMP, 0.35, AttributeModifier.Operation.ADD_VALUE))),
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(LONE_WOLF_FALL, 2, AttributeModifier.Operation.ADD_VALUE))),
                 SkillTooltip.BLEED_BUILD_UP.tooltip(this.getModifiedDamage(3) + potency(3F)),
-                SkillTooltip.POTENCY_SCALING.tooltip());
+                SkillTooltip.POTENCY_SCALING.tooltip(),
+                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get()),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.BODY_IMBUEMENT.tooltip());
+        this.addSkillDetails(SBSkills.FENRIR,
+                SkillTooltip.CHOICE.tooltip());
     }
 
     @Override
@@ -108,7 +113,7 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                         LONE_WOLF_ATTACK,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
-                        new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, 3.0, AttributeModifier.Operation.ADD_VALUE))
+                        new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, potency(3.0F), AttributeModifier.Operation.ADD_VALUE))
                 );
                 this.addSkillBuff(
                         caster,

@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.world.item.PhialItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -65,8 +66,9 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
             if (!level.isClientSide) {
                 level.setBlock(center, blockState.setValue(ACTIVE, true), 3);
                 ResourceLocation fx = blockState.getValue(CURSED) ? CURSED_ACTIVE_FX : DIVINE_ACTIVE_FX;
-                RenderUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
+                SpellUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
                         .setOffset(0, -0.49, 0));
+                stack.consume(1, player);
             }
 
             level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -83,7 +85,7 @@ public class DivineShrineBlock extends AbstractMultiBlock implements IPreviewabl
         if (state.getValue(ACTIVE)) {
             level.setBlock(pos, state.setValue(ACTIVE, false), 3);
             ResourceLocation activeFX = state.getValue(CURSED) ? CURSED_ACTIVE_FX : DIVINE_ACTIVE_FX;
-            RenderUtil.removeBlockEffect(level, pos, activeFX);
+            SpellUtil.removeBlockEffect(level, pos, activeFX);
         }
     }
 

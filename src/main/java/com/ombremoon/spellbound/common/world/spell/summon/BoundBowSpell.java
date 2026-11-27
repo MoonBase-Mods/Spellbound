@@ -70,7 +70,9 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
                 SkillTooltip.DURATION.tooltip(this.getDuration()),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
                 ARROW_COST.tooltip(7F),
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, potencyWithLevel(2F))));
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, potencyWithLevel(2F))),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.WEAPON_IMBUEMENT.tooltip());
         this.addSkillDetails(SBSkills.QUICKDRAW,
                 DRAW_SPEED.tooltip(-50F));
         this.addSkillDetails(SBSkills.SPECTRAL_VOLLEY,

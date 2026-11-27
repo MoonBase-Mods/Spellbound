@@ -124,16 +124,14 @@ public abstract class Multiblock implements Loggable {
     }
 
     public boolean tryCreateMultiblock(Level level, Player player, BlockPos blockPos, Direction facing) {
-        player.sendSystemMessage(Component.literal("Checking For Assignment"));
         if (!this.checkForMultiblock(level, blockPos)) {
             Multiblock.MultiblockPattern pattern = this.findPattern(level, blockPos, facing);
-            player.sendSystemMessage(Component.literal("Checking For Pattern"));
             if (pattern != null) {
-                player.sendSystemMessage(Component.literal("Pattern Found"));
                 pattern.assignMultiblock(level);
                 return this.onActivate(player, level, pattern);
             }
         }
+
         return false;
     }
 

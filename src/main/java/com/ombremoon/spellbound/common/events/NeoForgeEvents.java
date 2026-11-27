@@ -54,14 +54,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
@@ -152,23 +150,44 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onPlayerLeaveWorld(EntityLeaveLevelEvent event) {
         Level level = event.getLevel();
-        if (event.getEntity() instanceof Player player && !level.isClientSide) {
-            ServerLevel serverLevel = (ServerLevel) level;
-            var handler = SpellUtil.getSpellHandler(player);
-            handler.endSpells();
-            var famHandler = SpellUtil.getFamiliarHandler(player);
-            if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
+        if (!level.isClientSide) {
+            if (event.getEntity() instanceof Player player) {
+                ServerLevel serverLevel = (ServerLevel) level;
+                var handler = SpellUtil.getSpellHandler(player);
+                handler.endSpells();
+                var famHandler = SpellUtil.getFamiliarHandler(player);
+                if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
 
-            if (ArenaSavedData.isArena(serverLevel)) {
-                ArenaSavedData data = ArenaSavedData.get(serverLevel);
-                if (handler.isArenaOwner(data.getCurrentId())) {
-                    data.destroyDimension(serverLevel);
+                if (ArenaSavedData.isArena(serverLevel)) {
+                    ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                    if (handler.isArenaOwner(data.getCurrentId())) {
+                        data.destroyDimension(serverLevel);
+                    }
                 }
-            }
 
-            if (PuzzleDungeonData.isDungeon(serverLevel)) {
-                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
-                puzzle.destroyDimension(serverLevel);
+                if (PuzzleDungeonData.isDungeon(serverLevel)) {
+                    PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                    puzzle.destroyDimension(serverLevel);
+                }
+            } else if (event.getEntity() instanceof LivingEntity livingEntity && SpellUtil.isSummon(livingEntity) && livingEntity.isAlive()) {
+                Entity entity = SpellUtil.getOwner(livingEntity);
+                if (!(entity instanceof LivingEntity owner))
+                    return;
+
+                var handler = SpellUtil.getSpellHandler(owner);
+                AbstractSpell spell;
+                if (livingEntity instanceof ISpellEntity<?> spellEntity) {
+                    spell = spellEntity.getOrCreateSpell();
+                } else {
+                    SpellType<?> spellType = SBSpells.REGISTRY.get(livingEntity.getData(SBData.SPELL_TYPE));
+                    int id = livingEntity.getData(SBData.SPELL_ID);
+                    spell = handler.getSpell(spellType, id);
+                }
+
+                if (spell instanceof SummonSpell summonSpell) {
+                    summonSpell.onMobRemoved(livingEntity, spell.getContext(), null, Entity.RemovalReason.CHANGED_DIMENSION);
+                    summonSpell.removeSummon(livingEntity);
+                }
             }
         }
     }
@@ -225,8 +244,11 @@ public class NeoForgeEvents {
                 }
 
                 if (player.level().isClientSide) {
-                    if (player.tickCount % 60 == 0) GuideBlockAndTintGetter.tickStructureCache();
-                    SpellCastEvents.chargeOrChannelSpell(event);
+                    if (player.tickCount % 60 == 0) {
+                        GuideBlockAndTintGetter.tickStructureCache();
+                    }
+
+                    SpellCastEvents.handleClientActionTick(event);
                 }
 
             }
@@ -602,10 +624,11 @@ public class NeoForgeEvents {
 
             AttributeInstance dodgeChance = livingEntity.getAttribute(SBAttributes.DODGE_CHANCE);
             if (EventFactory.onLivingDodge(livingEntity, event.getContainer()) && dodgeChance != null && level.random.nextDouble() <= dodgeChance.getValue()) {
-                RenderUtil.triggerEntityEffect(
+                SpellUtil.triggerEntityEffect(
                         livingEntity,
                         EffectData.Entity.of(CommonClass.customLocation("evasive_stance"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                 .setOffset(0, -0.3, 0)
+                                .setAllowMulti(true)
                 );
 
                 event.setCanceled(true);

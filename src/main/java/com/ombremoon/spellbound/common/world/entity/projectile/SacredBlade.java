@@ -37,10 +37,10 @@ public class SacredBlade extends VFXSpellProjectile<SmiteSpell> {
 
     @Override
     protected EffectBuilder<?> getEffect() {
-        return SacredBladeEffect.SacredBladeBuilder.of(this.getId());
-        /*EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+//        return SacredBladeEffect.SacredBladeBuilder.of(this.getId());
+        return EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                 .setOffset(0.5, -0.25, 0)
-                .setRotation(180, 180, 0);*/
+                .setRotation(this.getXRot(), this.getYRot(), 0);
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,6 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
+import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 import net.nikdo53.tinymultiblocklib.components.SharedStatePropertiesBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +68,7 @@ public class ValkyrStatueBlock extends AbstractMultiBlock implements IPreviewabl
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable AbstractMultiBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ValkyrBlockEntity(pos, state);
     }
 
@@ -79,6 +81,17 @@ public class ValkyrStatueBlock extends AbstractMultiBlock implements IPreviewabl
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POSE);
+    }
+
+    @Override
+    public BlockState getDefaultStateForPreviews(BlockState state, BlockPlaceContext blockPlaceContext) {
+        Direction direction = blockPlaceContext.getHorizontalDirection();
+        return IPreviewableMultiblock.super.getDefaultStateForPreviews(state, blockPlaceContext).setValue(FACING, direction.getOpposite());
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        return getStateForPlacementHelper(context, context.getHorizontalDirection().getOpposite());
     }
 
     @Override

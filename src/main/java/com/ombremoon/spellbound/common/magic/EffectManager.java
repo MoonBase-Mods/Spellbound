@@ -100,12 +100,12 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
      * @param effect The type of effect to buildup
      * @param amount amount to increase the build up by
      */
-    public void incrementBuildEffects(BuildUpEffect effect, float amount) {
+    public void incrementBuildEffects(@Nullable LivingEntity source, BuildUpEffect effect, float amount) {
         if (this.livingEntity.hasEffect(effect.getEffect()))
             return;
 
         Float progress = this.buildUp.get(effect);
-        float buildUpAmount = this.calculateBuildUp(effect, amount);
+        float buildUpAmount = this.calculateBuildUp(source, effect, amount);
         if (progress != null) {
             progress = Math.clamp(progress + buildUpAmount, 0.0F, 100.0F);
         } else {
@@ -120,14 +120,19 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         }
     }
 
-    private float calculateBuildUp(BuildUpEffect effect, float amount) {
-        var skills = SpellUtil.getSkills(this.livingEntity);
-        float resistance = effect != null ? 1.0F - effect.getEntityResistance(this.livingEntity) : 1.0F;
+    private float calculateBuildUp(@Nullable LivingEntity source, BuildUpEffect effect, float amount) {
+        float resistance = 1.0F - effect.getEntityResistance(this.livingEntity);
+        if (source == null)
+            return amount * 2.0F * resistance;
 
+        var skills = SpellUtil.getSkills(source);
         SpellPath path = effect.getPath();
-        float pathAmount = path != null ? 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(path)) : 1.0F;
-        float ruinPathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN));
-        return amount * 2.0F * resistance * pathAmount * ruinPathAmount;
+        float pathAmount = 1.0F + (PATH_BUILD_UP_MODIFIER * skills.getPathLevel(path));
+        float ruinPathAmount = 1.0F;
+//        if (path.isRuin())
+//            ruinPathAmount += PATH_BUILD_UP_MODIFIER * skills.getPathLevel(SpellPath.RUIN);
+
+        return amount * 1.5F * resistance * pathAmount * ruinPathAmount;
     }
 
     public void addMagicEffect(EffectHolder effect, @Nullable Entity source) {
@@ -191,7 +196,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         this.buildUp.forEach((effect, amount) -> {
             int i = this.buildUpTick.computeIfAbsent(effect, effect1 -> livingEntity.tickCount);
             if (this.livingEntity.tickCount - i > 60 && this.livingEntity.tickCount % 20 == 0 && amount > 0)
-                this.buildUp.replace(effect, amount - 5);
+                this.buildUp.replace(effect, Math.max(0, amount - 5));
         });
 
         if (!this.livingEntity.level().isClientSide) {

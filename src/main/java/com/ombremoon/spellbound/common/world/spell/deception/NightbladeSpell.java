@@ -61,6 +61,7 @@ public class NightbladeSpell extends ImbuementSpell {
                 SkillTooltip.DURATION.tooltip(this.getDuration()),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
                 SkillTooltip.MAX_CHARGES.tooltip(1),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.WEAPON_IMBUEMENT.tooltip());
         this.addSkillDetails(SBSkills.LINGERING_EDGE,
                 SkillTooltip.MAX_CHARGES.tooltip(3));

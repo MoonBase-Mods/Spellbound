@@ -299,7 +299,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
                         if (context.hasSkill(SBSkills.SHATTERING_IMPACT)) {
                             var effects = SpellUtil.getSpellEffects(livingEntity);
-                            effects.incrementBuildEffects(BuildUpEffect.FROST, potency(5));
+                            effects.incrementBuildEffects(context.getCaster(), BuildUpEffect.FROST, potency(5));
                         }
 
                         if (bolt.getPierceLevel() <= 0) {

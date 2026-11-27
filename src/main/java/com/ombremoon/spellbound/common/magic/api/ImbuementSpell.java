@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.util.RenderUtil;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -189,11 +190,11 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     }
 
     protected void triggerImbuementEffect(LivingEntity caster, EffectData effect) {
-        RenderUtil.triggerEntityEffect(caster, effect);
+        SpellUtil.triggerEntityEffect(caster, effect);
     }
 
     protected void removeImbuementEffect(LivingEntity caster, ResourceLocation effect) {
-        RenderUtil.removeEntityEffect(caster, effect);
+        SpellUtil.removeEntityEffect(caster, effect);
     }
 
     public static class Builder<T extends ImbuementSpell> extends AnimatedSpell.Builder<T> {
