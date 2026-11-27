@@ -27,7 +27,7 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
-public class SpellCastEvents {
+public class PlayerInputActionEvents {
     private static boolean wasCastKeyPressed = false;
 
     @SubscribeEvent
@@ -54,7 +54,16 @@ public class SpellCastEvents {
         }
     }
 
-    public static void handleClientActionTick(EntityTickEvent.Post event) {
+    public static void handleSpellboundKeybinds(Minecraft minecraft, Player player) {
+        var handler = SpellUtil.getSpellHandler(player);
+        if (handler.inCastMode()) {
+            while (minecraft.options.keyAttack.consumeClick()) {
+                Constants.LOG.info("Test Click");
+            }
+        }
+    }
+
+    public static void handleClientActionPostTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
@@ -128,10 +137,6 @@ public class SpellCastEvents {
             spell = spellType.createSpellWithData(player);
             handler.setCurrentlyCastingSpell(spell);
             createContext(spell);
-        }
-
-        while (KeyBinds.getAttackMapping().consumeClick()) {
-            Constants.LOG.info("Test Click");
         }
     }
 

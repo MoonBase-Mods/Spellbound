@@ -3,7 +3,7 @@ package com.ombremoon.spellbound.common.events;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
-import com.ombremoon.spellbound.client.event.SpellCastEvents;
+import com.ombremoon.spellbound.client.event.PlayerInputActionEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
@@ -227,7 +227,6 @@ public class NeoForgeEvents {
             Level level = entity.level();
             var handler = SpellUtil.getSpellHandler(entity);
             handler.tick();
-            SpellUtil.getFamiliarHandler(entity).tick();
 
             EffectManager status = entity.getData(SBData.STATUS_EFFECTS);
             if (status.isInitialised())
@@ -243,14 +242,13 @@ public class NeoForgeEvents {
                     }
                 }
 
-                if (player.level().isClientSide) {
+                if (level.isClientSide) {
                     if (player.tickCount % 60 == 0) {
                         GuideBlockAndTintGetter.tickStructureCache();
                     }
 
-                    SpellCastEvents.handleClientActionTick(event);
+                    PlayerInputActionEvents.handleClientActionPostTick(event);
                 }
-
             }
 
             if (entity instanceof Mob mob) {

@@ -197,6 +197,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
+        this.familiars.tick();
 
         if (/*!this.isClientSide() && */this.caster instanceof Player/* && this.caster.tickCount % 20 == 0*/) {
 //            this.caster.setIsInPowderSnow(true);

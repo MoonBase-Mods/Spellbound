@@ -98,6 +98,16 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         return imbuement != null && imbuement.spellInstance().isPresent();
     }
 
+    public static Imbuement getPriorityImbuement(LivingEntity living) {
+        ItemStack stack = living.getMainHandItem();
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        if (imbuement == null) {
+            imbuement = living.getData(SBData.ENTITY_IMBUEMENT);
+        }
+
+        return imbuement;
+    }
+
     /*public static boolean hasImbuement(Imbuement imbuement, ItemStack stack) {
         Imbuement other = stack.get(SBData.IMBUEMENT);
         return other != null && imbuement.spellInstance == other.spellInstance;
