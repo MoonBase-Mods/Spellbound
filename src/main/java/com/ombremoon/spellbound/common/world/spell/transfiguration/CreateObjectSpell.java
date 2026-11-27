@@ -59,8 +59,12 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.CREATE_OBJECT,
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.MAX_CASTS.tooltip(this.getSpellNumberCap()),
                 SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.DURATION.tooltip(this.getDuration()));
+                SkillTooltip.WEAPON_IMBUEMENT.tooltip(),
+                SkillTooltip.CAST_SCALES.tooltip());
         this.addSkillDetails(SBSkills.LUMBERJACK,
                 SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.EXCAVATOR,
@@ -152,7 +156,7 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
     }
 
     @Override
-    public int getSpellNumberCap(SpellContext context) {
+    public int getSpellNumberCap() {
         int level = this.level();
         if (level == 5) {
             return 3;

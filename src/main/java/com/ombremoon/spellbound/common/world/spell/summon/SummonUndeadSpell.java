@@ -4,7 +4,7 @@ import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
@@ -111,20 +111,16 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 SkillTooltip.CAST_SCALES.tooltip()
         );
         this.addSkillDetails(SBSkills.SUMMON_SKELETON,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.SUMMON_DROWNED,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.SUMMON_PHANTOM,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.SUMMON_ZOMBIFIED_PIGLIN,
-                SkillTooltip.CHOICE.tooltip(),
-                SkillTooltip.CHARGED.tooltip()
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.CRIMSON_PACT,
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SUNKEN_BREATH, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
@@ -196,10 +192,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                         CommonClass.customLocation("summon_general"),
                         spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.5, 0));
 
-                this.triggerSpellFX(EffectData.Entity.of(
-                        CommonClass.customLocation("summon_undead_ground"),
-                        spawnedEntity.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -1, 0));
-
             }
 
             if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
@@ -256,7 +248,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         LivingEntity target = event.getEntity();
         float amount = event.getNewDamage();
         if (mob instanceof Zombie zombie && context.hasSkill(SBSkills.ROTTEN_SOLDIERS)) {
-            this.incrementEffect(zombie, EffectManager.Effect.DISEASE, amount);
+            this.incrementEffect(zombie, BuildUpEffect.DISEASE, amount);
         }
 
         if (mob instanceof Phantom && context.hasSkill(SBSkills.SILENT_NIGHT)) {

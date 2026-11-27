@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.util;
 
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -332,5 +333,21 @@ public class SpellUtil {
 
     public static boolean hasScrap(Player player, ResourceLocation scrap) {
         return player.getData(SBData.BOOK_SCRAPS).contains(scrap);
+    }
+
+    public static void triggerEntityEffect(Entity entity, EffectData builder) {
+        PayloadHandler.triggerEntityFx(entity, builder);
+    }
+
+    public static void removeEntityEffect(Entity entity, ResourceLocation effect) {
+        PayloadHandler.removeEntityFX(entity, effect);
+    }
+
+    public static void triggerBlockEffect(ServerLevel level, BlockPos pos, EffectData builder) {
+        PayloadHandler.triggerBlockFx(level, pos, builder);
+    }
+
+    public static void removeBlockEffect(ServerLevel level, BlockPos pos, ResourceLocation effect) {
+        PayloadHandler.removeBlockFX(level, pos, effect);
     }
 }

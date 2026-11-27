@@ -124,7 +124,9 @@ public class SolarRaySpell extends ChanneledSpell {
         this.addSkillDetails(SBSkills.SOLAR_RAY,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
                 SkillTooltip.RANGE.tooltip(7.7F),
-                SkillTooltip.PROC_DURATION.tooltip(20)
+                SkillTooltip.PROC_DURATION.tooltip(20),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.CHANNELED.tooltip()
         );
         this.addSkillDetails(SBSkills.SUNSHINE, SkillTooltip.MODIFY_RANGE.tooltip(100F));
         this.addSkillDetails(SBSkills.HEALING_LIGHT,

@@ -1,9 +1,11 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.DealtDamageEvent;
@@ -22,6 +24,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -52,7 +55,34 @@ public class ShadowVeilSpell extends AnimatedSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SHADOW_VEIL,
+                SkillTooltip.MOB_EFFECT.tooltip(MobEffects.BLINDNESS),
+                SkillTooltip.RADIUS.tooltip(2.25F),
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()));
+        this.addSkillDetails(SBSkills.DARK_SHROUD,
+                SkillTooltip.MODIFY_DURATION.tooltip(50F));
+        this.addSkillDetails(SBSkills.EXPANDING_SHADOWS,
+                SkillTooltip.MODIFY_RADIUS.tooltip(100F));
+        this.addSkillDetails(SBSkills.IN_THE_SHADOWS,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.EFFECT_DURATION.tooltip(40),
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.INVISIBILITY_NO_STACK.tooltip());
+        this.addSkillDetails(SBSkills.HIDDEN_WOUNDS,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.OBFUSCATED));
+        this.addSkillDetails(SBSkills.WEIGHTED_VEIL,
+                SkillTooltip.PROJECTILE_SPEED.tooltip(-25F));
+        this.addSkillDetails(SBSkills.SAPPING_FEAR,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.FEAR),
+                SkillTooltip.EFFECT_DURATION.tooltip(40));
+        this.addSkillDetails(SBSkills.CLOUDED_SENSES,
+                SkillTooltip.DODGE_CHANCE.tooltip(25F));
+        this.addSkillDetails(SBSkills.DEEP_NIGHT,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.INVISIBILITY_NO_STACK.tooltip());
     }
 
     @Override
@@ -107,8 +137,9 @@ public class ShadowVeilSpell extends AnimatedSpell {
         return context.hasSkill(SBSkills.DARK_SHROUD) ? 300 : super.getDuration(context);
     }
 
-    public void addVeilEffects(SpellContext context, LivingEntity entity, ShadowVeil veil) {
+    public void addVeilEffects(SpellContext context, LivingEntity entity) {
         LivingEntity caster = context.getCaster();
+        var targetHandler = SpellUtil.getSpellHandler(entity);
         if (SpellUtil.CAN_ATTACK_ENTITY.test(caster, entity)) {
             this.addSkillBuff(
                     entity,
@@ -143,7 +174,7 @@ public class ShadowVeilSpell extends AnimatedSpell {
                         new MobEffectInstance(SBEffects.OBFUSCATED, -1)
                 );
             }
-        } else if (SpellUtil.IS_ALLIED.test(caster, entity) && context.hasSkill(SBSkills.DEEP_NIGHT)) {
+        } else if (SpellUtil.IS_ALLIED.test(caster, entity) && context.hasSkill(SBSkills.DEEP_NIGHT) && !targetHandler.isInvisible()) {
             this.addSkillBuff(
                     entity,
                     SBSkills.DEEP_NIGHT,

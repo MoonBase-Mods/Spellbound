@@ -28,9 +28,6 @@ public interface ConfigurableEffect {
 //                Constants.LOG.info("{}", emitter.config.serializeNBT(registries));
             }
 //            Constants.LOG.info("{}", runtime.fxData.objects().stream().map(IFXObject::getName).toList());
-            if (fx.getFxLocation().equals(CommonClass.customLocation("siphon_caster"))) {
-                Constants.LOG.info("{}", runtime.fxData.serializeNBT(registries));
-            }
             return runtime;
 //            return fx.createRuntime();
         }

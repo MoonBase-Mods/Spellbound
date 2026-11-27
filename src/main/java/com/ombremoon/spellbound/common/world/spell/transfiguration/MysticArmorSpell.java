@@ -98,7 +98,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         );
         this.addSkillDetails(SBSkills.SOUL_RECHARGE,
                 SkillTooltip.HP_THRESHOLD.tooltip(10F),
-                SkillTooltip.COOLDOWN.tooltip(1800),
+                SkillTooltip.COOLDOWN.tooltip(6000),
                 SkillTooltip.CATALYST.tooltip(SBItems.FLUX_SHARD.get())
         );
     }
@@ -126,7 +126,7 @@ public class MysticArmorSpell extends AnimatedSpell {
                         pre.setNewDamage(0);
                         caster.setHealth(caster.getMaxHealth());
                         context.useCatalyst(SBItems.SOUL_SHARD.get());
-                        addCooldown(SBSkills.SOUL_RECHARGE, 3600);
+                        addCooldown(SBSkills.SOUL_RECHARGE, 6000);
                     } else if (context.hasSkillReady(SBSkills.ELDRITCH_INTERVENTION) && caster.getHealth() - pre.getNewDamage() < caster.getMaxHealth() * 0.2F) {
                         caster.heal(caster.getMaxHealth() / 2 - caster.getHealth());
                         addCooldown(SBSkills.ELDRITCH_INTERVENTION, 2400);

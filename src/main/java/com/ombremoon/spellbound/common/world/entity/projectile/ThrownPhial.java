@@ -250,9 +250,9 @@ public class ThrownPhial extends ThrowableItemProjectile implements ItemSupplier
                 if (!level.isClientSide) {
                     ResourceLocation fx = type.isCursedProperty() ? DivineShrineBlock.CURSED_FX : DivineShrineBlock.DIVINE_FX;
                     ResourceLocation activeFX = type.isCursedProperty() ? DivineShrineBlock.DIVINE_ACTIVE_FX : DivineShrineBlock.CURSED_ACTIVE_FX;
-                    RenderUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
+                    SpellUtil.triggerBlockEffect((ServerLevel) level, center, EffectData.Block.of(fx, center)
                             .setOffset(0, -0.49, 0));
-                    RenderUtil.removeBlockEffect((ServerLevel) level, center, activeFX);
+                    SpellUtil.removeBlockEffect((ServerLevel) level, center, activeFX);
                 }
             }
 

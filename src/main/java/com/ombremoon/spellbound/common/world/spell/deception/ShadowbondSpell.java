@@ -81,40 +81,33 @@ public class ShadowbondSpell extends AnimatedSpell {
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
                 SkillTooltip.DURATION.tooltip(200),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
-                SkillTooltip.INVISIBILITY_OVERRIDE.tooltip()
-        );
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.INVISIBILITY_OVERRIDE.tooltip(),
+                SkillTooltip.NO_BOSS_EFFECT.tooltip());
         this.addSkillDetails(SBSkills.EVERLASTING_BOND,
-                SkillTooltip.MODIFY_DURATION.tooltip(100F)
-        );
+                SkillTooltip.MODIFY_DURATION.tooltip(100F));
+        this.addSkillDetails(SBSkills.SHADOW_STEP,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(SHADOW_STEP, 0.3F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))));
         this.addSkillDetails(SBSkills.SILENT_EXCHANGE,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
-                SkillTooltip.EFFECT_DURATION.tooltip(100)
-        );
+                SkillTooltip.EFFECT_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.SNARE,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.ROOTED),
-                SkillTooltip.EFFECT_DURATION.tooltip(100)
-        );
+                SkillTooltip.EFFECT_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.DISORIENTED,
                 SkillTooltip.MOB_EFFECT.tooltip(MobEffects.CONFUSION),
-                SkillTooltip.EFFECT_DURATION.tooltip(200),
-                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.TARGET_DAMAGE.tooltip(potency(-20F)),
                 SkillTooltip.EFFECT_DURATION.tooltip(100),
-                SkillTooltip.POTENCY_SCALING.tooltip()
-        );
+                SkillTooltip.POTENCY_SCALING.tooltip());
         this.addSkillDetails(SBSkills.OBSERVANT,
-                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TARGET_AURA)
-        );
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.TARGET_AURA));
         this.addSkillDetails(SBSkills.SNEAK_ATTACK,
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SNEAK_ATTACK, potency(0.5F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.EFFECT_DURATION.tooltip(100)
-        );
+                SkillTooltip.EFFECT_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.LIVING_SHADOW,
-                SkillTooltip.EFFECT_DURATION.tooltip(100)
-        );
+                SkillTooltip.EFFECT_DURATION.tooltip(100));
         this.addSkillDetails(SBSkills.REVERSAL,
-                SkillTooltip.PROC_DURATION.tooltip(100)
-        );
+                SkillTooltip.PROC_DURATION.tooltip(100));
     }
 
     @Override
@@ -283,7 +276,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     SHADOW_STEP,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CommonClass.customLocation("shadow_step"), 1.3F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(SHADOW_STEP, 0.3F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                     100);
 
         if (context.hasSkill(SBSkills.SNEAK_ATTACK)) {
@@ -351,7 +344,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                             SpellEventListener.Events.PRE_DAMAGE,
                             DISORIENTED,
                             pre -> pre.setNewDamage(pre.getOriginalDamage() * invertedPotency(0.8F)),
-                            100);
+                            200);
 
                 }
             }

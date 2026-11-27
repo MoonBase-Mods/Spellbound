@@ -66,7 +66,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.tslat.smartbrainlib.util.RandomUtil;
@@ -397,9 +396,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return The spells sub path
      */
     public SpellPath getSubPath() {
-        if (this.spellType.getPath() != SpellPath.RUIN || this.spellType.getPath().isSubPath())
-            return null;
-
         return this.spellType().getSubPath();
     }
 
@@ -450,8 +446,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.context.getSkills().getSpellLevel(this.spellType);
     }
 
-    public int getSpellNumberCap(SpellContext context) {
-        return context.getSpellLevel() + 1;
+    public int getSpellNumberCap() {
+        return this.context.getSpellLevel() + 1;
     }
 
     /**
@@ -775,6 +771,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             this.incrementEffect(targetEntity, damageType, damageAfterResistance);
         }
+
         return flag;
     }
 
@@ -922,14 +919,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param effect The effect type
      * @param amount The amount of damage dealt
      */
-    public void incrementEffect(LivingEntity targetEntity, EffectManager.Effect effect, float amount) {
+    public void incrementEffect(LivingEntity targetEntity, BuildUpEffect effect, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
-        effects.incrementBuildEffects(effect, amount);
+        effects.incrementBuildEffects(this.caster, effect, amount);
     }
 
     protected void incrementEffect(LivingEntity targetEntity, ResourceKey<DamageType> key, float amount) {
         var effects = SpellUtil.getSpellEffects(targetEntity);
-        EffectManager.Effect effect = effects.getEffectFromDamageType(key);
+        BuildUpEffect effect = effects.getEffectFromDamageType(key);
 
         if (effect == null)
             return;
@@ -1152,7 +1149,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public float potencyWithLevel(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
-        return initialAmount * getModifier(ModifierType.POTENCY, livingEntity, target) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
+        return potency(livingEntity, target, initialAmount) * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * this.level());
     }
 
     public float potencyWithLevel(LivingEntity target, float initialAmount) {
@@ -1752,13 +1749,17 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 return;
             }
 
-            int spellCap = this.getSpellNumberCap(this.context);
+            int spellCap = this.getSpellNumberCap();
             if (!this.fullRecast && this.hasSummonStaffBuff(this.context))
                 spellCap++;
 
             int spellsActive = this.context.getActiveSpells();
             if (!this.fullRecast && spellsActive >= spellCap) {
                 this.endFirstSpell();
+            }
+
+            if (caster.hasEffect(SBEffects.BLEED)) {
+                caster.hurt(SpellUtil.damageSource(level, SBDamageTypes.BLEED, null, null), caster.getMaxHealth() * 0.05F);
             }
 
             CompoundTag initTag = this.initTag(false);

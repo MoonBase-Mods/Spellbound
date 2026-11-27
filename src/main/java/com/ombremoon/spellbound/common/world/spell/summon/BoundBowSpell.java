@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBItems;
@@ -11,19 +13,28 @@ import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.projectile.BoundArrow;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.CreateObjectSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BoundBowSpell extends SummonSpell implements RadialSpell {
     public static final ResourceLocation FIRE_ARROW = CommonClass.customLocation("fire_arrow");
@@ -55,7 +66,24 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.BOUND_BOW,
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                ARROW_COST.tooltip(7F),
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, potencyWithLevel(2F))),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.WEAPON_IMBUEMENT.tooltip());
+        this.addSkillDetails(SBSkills.QUICKDRAW,
+                DRAW_SPEED.tooltip(-50F));
+        this.addSkillDetails(SBSkills.SPECTRAL_VOLLEY,
+                SkillTooltip.PROJECTILE_COUNT.tooltip(3));
+        this.addSkillDetails(SBSkills.PIERCING_SHOT,
+                SkillTooltip.PIERCE_COUNT.tooltip(this.level()));
+        this.addSkillDetails(SBSkills.INFUSED_SHOT,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.MYSTIC_MARKSMAN,
+                ARROW_COST.tooltip(0F));
+//        this.addSkillDetails(SBSkills.BOUND_ARROW);
     }
 
     @Override
@@ -165,4 +193,38 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
     public void incrementShotsFired() {
         this.shotCount++;
     }
+
+    public static SkillTooltip<Float> ARROW_COST = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.arrow_cost", sign(arg)).withStyle(color(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> DRAW_SPEED = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.draw_speed", sign(arg)).withStyle(invertedColor(arg))));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
 }

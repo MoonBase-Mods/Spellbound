@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -55,7 +56,7 @@ public class SpellDamageSource extends DamageSource {
     }
 
     public void modifyDamage(LivingDamageEvent.Pre event) {
-        float damage = event.getNewDamage();
+        float damage = event.getOriginalDamage();
         LivingEntity entity = event.getEntity();
         for (DamageInstance instance : this.extraDamage) {
             var optional = instance.exclusiveTo();
@@ -66,6 +67,12 @@ public class SpellDamageSource extends DamageSource {
                 }
 
                 damage += amount;
+
+                if (instance.additionalBuildUp().isPresent()) {
+                    var buildUp = instance.additionalBuildUp().get();
+                    var effects = SpellUtil.getSpellEffects(entity);
+                    effects.incrementBuildEffects(this.getEntity() instanceof LivingEntity livingEntity ? livingEntity : null, buildUp.effect(), buildUp.amount());
+                }
             }
         }
 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "^": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "#^#",
+    "^D^",
+    "#^#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:divine_charm"
+  }
+}

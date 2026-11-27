@@ -6,7 +6,9 @@ import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
+import com.ombremoon.spellbound.common.magic.skills.PseudoSkillProvider;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.world.item.ChalkItem;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
@@ -81,7 +83,15 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void skillLang(DeferredHolder<Skill, ? extends Skill> entry) {
-        add(entry.get().getNameId(), checkReplace(entry));
+        Skill skill = entry.get();
+        add(skill.getNameId(), checkReplace(entry));
+
+        for (SkillProvider provider : skill.getPseudoChoices()) {
+            if (provider instanceof PseudoSkillProvider pseudo) {
+                ResourceLocation location = pseudo.location();
+                add("skill." + location.getNamespace() + "." + location.getPath(), checkReplace(location));
+            }
+        }
     }
 
     protected void attributeLang(DeferredHolder<Attribute,? extends Attribute> entry) {
@@ -132,6 +142,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.toast.spell_level_up", "%s has reached Level %s");
         add("spellbound.toast.path_level_up", "%s path has reached Level %s");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
+        add("spellbound.toast.book_acquired", "New book acquired");
 
         add("spellbound.familiar_type.utility", "Utility");
         add("spellbound.familiar_type.hybrid", "Hybrid");
@@ -144,11 +155,13 @@ public class ModLangProvider extends LanguageProvider {
         add("tooltip.spelltome.testing", "DO NOT USE. This spell is WIP and may change.");
         add("tooltip.skill.testing", "DO NOT USE. This skill is WIP and may change.");
 
+        add("spellbound.default_damage", "Damage");
         add("spellbound.sb_generic", "Magic Damage");
         add("spellbound.physical_damage", "Physical Damage");
         add("spellbound.ruin_fire", "Fire Damage");
         add("spellbound.ruin_frost", "Frost Damage");
         add("spellbound.ruin_shock", "Shock Damage");
+        add("spellbound.holy", "Holy Damage");
 
         add("spellbound.path.level", "Lvl");
 
@@ -209,6 +222,8 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
         add("guide.element.multiblock.open", "Click to open Multiblock inspector.");
         add("guide.general.path_items", "Path Items");
+        add("guide.basic.locked_book", "Discover this book to unlock the shortcut.");
+        add("guide.basic.open_book", "Open %1$s");
 
         basicContents();
         ruinContents();
@@ -253,7 +268,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana required significantly increases. §lMana Tears§r are the way to permanently increase your §omana reserves.§r");
         add("guide.basic.mana_bottle", "When low on mana, §lBottles o' Mana§r are a quick way to replenish it. These can be found around the world or collected from §oMana Siphons.§r");
         add("guide.basic.general_items_cont", "General Items Cont.");
-        add("guide.basic.magic_shield", "A regular shield is not enough to mitigate the damage from magic. With a Magic Shield, Magi can not only block spell damage, but §odeflect projectiles§r if timed properly.");
+        add("guide.basic.magic_shield", "A regular shield is not enough to mitigate the damage from magic. With a Magic Shield, Magi can not only block spell damage, but §odeflect projectiles§r if timed properly in the offhand.");
         add("guide.basic.mana_siphon", "§lMana Siphons§r collect mana from nearby entities when activated with §oMagic Essence.§r Mana stored can be collected directly or in §oBottles o' Mana§r");
         add("guide.basic.workbench1", "A §lMagi's Workbench§r it's the most important tool for spell growth. There you can §oview, swap out, and §lupgrade§r your spells as you progress through the world.");
         add("guide.basic.book_recipes", "Book Recipes");
@@ -699,13 +714,16 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.proc_range", "%s Proc Range");
         add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
         add("spellbound.skill_tooltip.max_charges", "%s Charges");
+        add("spellbound.skill_tooltip.max_stacks", "%s Stacks");
         add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
+        add("spellbound.skill_tooltip.modify_overall_damage", "%s%% Damage");
         add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
         add("spellbound.skill_tooltip.modify_mana_cost", "%s%% Mana Cost");
         add("spellbound.skill_tooltip.modify_radius", "%s%% Radius");
         add("spellbound.skill_tooltip.modify_range", "%s%% Range");
         add("spellbound.skill_tooltip.modify_spell_xp", "%s%% Spell XP");
         add("spellbound.skill_tooltip.health_to_damage", "%s%% Health to Damage");
+        add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
         add("spellbound.skill_tooltip.mana_to_health", "%s%% Mana to Health");
         add("spellbound.skill_tooltip.health_to_mana", "%s%% Health to Mana");
         add("spellbound.skill_tooltip.percent_damage_per_charge", "%s%% %s per Charge");
@@ -722,19 +740,27 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.random_mana", "%s-%s Mana");
         add("spellbound.skill_tooltip.max_health_damage", "%s%% Max Health Damage");
         add("spellbound.skill_tooltip.damage_reflection", "%s%% Damage Reflection");
+        add("spellbound.skill_tooltip.dodge_chance", "%s%% Dodge Chance");
         add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
         add("spellbound.skill_tooltip.fire_build_up", "%s Fire Build Up");
         add("spellbound.skill_tooltip.frost_build_up", "%s Frost Build Up");
         add("spellbound.skill_tooltip.shock_build_up", "%s Shock Build Up");
+        add("spellbound.skill_tooltip.bleed_build_up", "%s Bleed Build Up");
+        add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
         add("spellbound.skill_tooltip.fire_build_up_per_charge", "%s Fire Build Up per Charge");
         add("spellbound.skill_tooltip.frost_build_up_per_charge", "%s Frost Build Up per Charge");
         add("spellbound.skill_tooltip.shock_build_up_per_charge", "%s Shock Build Up per Charge");
-        add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
+        add("spellbound.skill_tooltip.damage_to_undead", "%s %s to Undead");
         add("spellbound.skill_tooltip.target_damage", "%s%% Target Damage");
         add("spellbound.skill_tooltip.target_physical_damage", "%s%% Target Physical Damage");
         add("spellbound.skill_tooltip.target_spell_damage", "%s%% Target Spell Damage");
         add("spellbound.skill_tooltip.target_spell_potency", "%s%% Target Spell Potency");
         add("spellbound.skill_tooltip.target_cast_chance", "%s%% Target Cast Chance");
+        add("spellbound.skill_tooltip.magic_resist", "%s%% Magic Resistance");
+        add("spellbound.skill_tooltip.fire_resist", "%s%% Fire Resistance");
+        add("spellbound.skill_tooltip.frost_resist", "%s%% Frost Resistance");
+        add("spellbound.skill_tooltip.shock_resist", "%s%% Shock Resistance");
+        add("spellbound.skill_tooltip.target_magic_resist", "%s%% Magic Resist on Target");
         add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
         add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
         add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
@@ -742,25 +768,34 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.knockback", "%s Knockback Strength");
         add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
         add("spellbound.skill_tooltip.projectile_count", "%s Projectile Count");
+        add("spellbound.skill_tooltip.projectile_speed", "%s%% Projectile Speed");
+        add("spellbound.skill_tooltip.projectile_size", "%sx Projectile Size");
         add("spellbound.skill_tooltip.random_projectile_count", "+%s-%s Projectile Count");
         add("spellbound.skill_tooltip.projectile_count_per_charge", "%s Projectile Count per Charge");
+        add("spellbound.skill_tooltip.projectile_size_per_charge", "%sx Projectile Size per Charge");
         add("spellbound.skill_tooltip.damage_redux", "%s%% Damage Reduction");
         add("spellbound.skill_tooltip.physical_damage_redux", "%s%% Physical Damage Reduction");
         add("spellbound.skill_tooltip.spell_damage_redux", "%s%% Spell Damage Reduction");
         add("spellbound.skill_tooltip.projectile_damage_redux", "%s%% Projectile Damage Reduction");
         add("spellbound.skill_tooltip.pierce_count", "Pierce Level %s");
         add("spellbound.skill_tooltip.hp_threshold", "%s%% HP Threshold");
+        add("spellbound.skill_tooltip.max_casts", "%s Casts");
         add("spellbound.skill_tooltip.mob_effect", "Applies ");
         add("spellbound.skill_tooltip.spell", "Casts ");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
         add("spellbound.skill_tooltip.choice", "Choice Upgrade");
+        add("spellbound.skill_tooltip.weapon_imbuement", "Weapon Imbuement");
+        add("spellbound.skill_tooltip.body_imbuement", "Body Imbuement");
         add("spellbound.skill_tooltip.requires", "Requires ");
+        add("spellbound.skill_tooltip.requires_lvl", "Requires Lvl %s");
         add("spellbound.skill_tooltip.cast_scales", "Max Cast Scales with Level");
         add("spellbound.skill_tooltip.condition", "If ");
         add("spellbound.skill_tooltip.channeled", "Channeled Cast");
         add("spellbound.skill_tooltip.charged", "Charged Cast");
+        add("spellbound.skill_tooltip.no_boss_effect", "Does Not Affect Bosses");
         add("spellbound.skill_tooltip.invisibility_no_stack", "Invisibility Does Not Stack");
         add("spellbound.skill_tooltip.invisibility_override", "Overrides Invisibility");
+        add("spellbound.skill_tooltip.effect_stacks", "Overrides Invisibility");
         add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
         add("spellbound.skill_tooltip.burning_adhesive", "%s Damage to Armor");
         add("spellbound.skill_tooltip.molten_core", "%s%% Damage per Pierce");
@@ -771,6 +806,8 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
         add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
         add("spellbound.skill_tooltip.modify_skate_speed", "%s%% Skate Speed");
+        add("spellbound.skill_tooltip.arrow_cost", "%s Arrow Mana Cost");
+        add("spellbound.skill_tooltip.draw_speed", "%s%% Draw Speed");
 
         /* TEMPLATE
         addSkillTooltip(SBSkills., "");
@@ -959,7 +996,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.MASTERWORK_GEAR, "Tools and gear are increased by +2 tiers.");
         addSkillTooltip(SBSkills.MYSTIC_TOOLSMITH, "All tools and gear are given a random enchantment.");
 
-        addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
+        addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
         addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed.");
         addSkillTooltip(SBSkills.SHADOW_ESCAPE, "When the caster enters the portal at low health, they gain invisibility after exiting.");
@@ -1043,18 +1080,6 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
         addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
-/*        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the entity location, periodically expelling magic spores, dealing damage to nearby enemies.");
-        addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
-        addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
-        addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
-        addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
-        addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a entity dies to a mushroom, the spell temporarily gains potency.");
-        addSkillTooltip(SBSkills.SYNTHESIS, "If a entity dies to a mushroom, the casting cost of the spell is temporarily decreased.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
-        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");*/
-
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
         addSkillTooltip(SBSkills.FERAL_FURY, "In cat form, the spirit gains increase attack damage and speed.");
@@ -1092,7 +1117,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the entity takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
 
         addSkillTooltip(SBSkills.SMITE, "The caster imbues their weapon with light Divine energy, dealing extra damage to undead.");
-        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby undead.");
+        addSkillTooltip(SBSkills.PRAYERFUL_STRIKE, "Raise and slam the weapon into the ground, dealing damage to nearby undead and healing allies.");
         addSkillTooltip(SBSkills.SACRED_BLADE, "Fire off a golden blade projectile from the weapon.");
         addSkillTooltip(SBSkills.GOLDEN_PARRY, "Weapon gains the ability to parry melee hits/projectiles and gains increased knockback.");
         addSkillTooltip(SBSkills.OATHSWORN, "Increases the buff duration.");

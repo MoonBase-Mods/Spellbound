@@ -58,8 +58,9 @@ public class UnnamedWorkbenchBlock extends AbstractMultiBlock implements IPrevie
     }
 
     @Override
-    public BlockState getDefaultStateForPreviews(Direction direction) {
-        return IPreviewableMultiblock.super.getDefaultStateForPreviews(direction).setValue(FACING, direction.getClockWise());
+    public BlockState getDefaultStateForPreviews(BlockState state, BlockPlaceContext blockPlaceContext) {
+        Direction direction = blockPlaceContext.getHorizontalDirection();
+        return IPreviewableMultiblock.super.getDefaultStateForPreviews(state, blockPlaceContext).setValue(FACING, direction.getClockWise());
     }
 
     @Override

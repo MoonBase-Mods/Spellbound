@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity.living.familiars;
 
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -233,10 +234,10 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
             }
             if (entity instanceof LivingEntity livingEntity) {
                 var effectManager = SpellUtil.getSpellEffects(livingEntity);
-                EffectManager.Effect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
+                BuildUpEffect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
 
                 if (effect != null)
-                    effectManager.incrementBuildEffects(effect, f);
+                    effectManager.incrementBuildEffects(this, effect, f);
             }
             float f1 = this.getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {

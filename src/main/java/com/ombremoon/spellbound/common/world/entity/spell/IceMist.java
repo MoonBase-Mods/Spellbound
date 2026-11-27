@@ -1,9 +1,9 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
-import com.ombremoon.spellbound.common.init.SBSpells;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
@@ -47,7 +47,7 @@ public class IceMist extends SpellEntity<ShatteringCrystalSpell> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity livingEntity && this.tickCount % 20 == 0) {
                         spell.hurt(this, livingEntity, 2);
-                        spell.incrementEffect(livingEntity, EffectManager.Effect.FROST, 34);
+                        spell.incrementEffect(livingEntity, BuildUpEffect.FROST, 34);
                         livingEntity.setIsInPowderSnow(true);
                     }
                 }

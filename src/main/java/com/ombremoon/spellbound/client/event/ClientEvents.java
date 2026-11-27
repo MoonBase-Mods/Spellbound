@@ -64,7 +64,6 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -79,7 +78,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -345,7 +343,7 @@ public class ClientEvents {
             );
 
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    SpellAnimation.SPELL_CAST_ANIMATION,
+                    SpellAnimation.ACTION_ANIMATION,
                     1000,
                     player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
             );

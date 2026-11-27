@@ -72,7 +72,7 @@ public class BlessingSpell extends AnimatedSpell implements RadialSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.BLESSING,
-                SkillTooltip.HEAL.tooltip(this.getModifiedHeal(this.getJudgementFactor())),
+                SkillTooltip.HEAL.tooltip(this.getModifiedHeal(1)),
                 SkillTooltip.DURATION.tooltip(100),
                 SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
                 SkillTooltip.CHOICE.tooltip()
@@ -182,7 +182,7 @@ public class BlessingSpell extends AnimatedSpell implements RadialSpell {
             this.resource = resource;
             float modifier = extended ? 1.5F : 1.0F;
             float judgementFactor = this.getJudgementFactor();
-            this.amount = potency(amount * modifier * judgementFactor);
+            this.amount = this.isChoice(SBSkills.BLESSING) ? this.getModifiedHeal(amount) : potency(amount * modifier * judgementFactor);
 
             if (context.hasSkill(SBSkills.UPLIFTING_CHORUS) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) {
                 for (LivingEntity entity : this.targets) {

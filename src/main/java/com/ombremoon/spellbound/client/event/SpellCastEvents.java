@@ -2,7 +2,6 @@ package com.ombremoon.spellbound.client.event;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.KeyBinds;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -10,7 +9,6 @@ import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -56,7 +54,7 @@ public class SpellCastEvents {
         }
     }
 
-    public static void chargeOrChannelSpell(EntityTickEvent.Post event) {
+    public static void handleClientActionTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
@@ -131,6 +129,10 @@ public class SpellCastEvents {
             handler.setCurrentlyCastingSpell(spell);
             createContext(spell);
         }
+
+        while (KeyBinds.getAttackMapping().consumeClick()) {
+            Constants.LOG.info("Test Click");
+        }
     }
 
     public static SpellContext createContext(AbstractSpell spell) {
@@ -177,8 +179,8 @@ public class SpellCastEvents {
     }
 
     private static boolean isPlayingCastingAnimation(AbstractClientPlayer player, SpellHandler handler) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.SPELL_CAST_ANIMATION);
-        SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.SPELL_CAST_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.ACTION_ANIMATION);
+        SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.ACTION_ANIMATION);
         return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 

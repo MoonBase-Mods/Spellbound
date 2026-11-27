@@ -1,7 +1,10 @@
 package com.ombremoon.spellbound.common.world.entity.living;
 
+import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -36,7 +39,9 @@ public class SpectralWolf extends SummonedWolf {
     public boolean doHurtTarget(Entity entity) {
         float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         AbstractSpell spell = SpellUtil.getActiveSpell(this);
-        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this));
+        SpellDamageSource source = SpellDamageSource.fromVanillaSource(spell, this.damageSources().mobAttack(this))
+                .addDamageInstance(DamageInstance.ofType(SBDamageTypes.RUIN_FROST));
+
         if (this.level() instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, source, f);
         }
@@ -49,7 +54,7 @@ public class SpectralWolf extends SummonedWolf {
 
             if (context.hasSkill(SBSkills.SHARP_CLAWS)) {
                 var effects = SpellUtil.getSpellEffects(living);
-                effects.incrementBuildEffects(EffectManager.Effect.BLOOD, 10 + context.getSpellLevel());
+                effects.incrementBuildEffects(this, BuildUpEffect.BLEED, 7 + context.getSpellLevel());
             }
         }
 

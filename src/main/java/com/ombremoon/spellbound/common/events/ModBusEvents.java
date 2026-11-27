@@ -105,6 +105,7 @@ public class ModBusEvents {
         event.add(entityType, SBAttributes.FIRE_SPELL_RESIST);
         event.add(entityType, SBAttributes.FROST_SPELL_RESIST);
         event.add(entityType, SBAttributes.SHOCK_SPELL_RESIST);
+        event.add(entityType, SBAttributes.BLOOD_LOSS_RESIST);
     }
 
     private static void magicEntity(EntityType<? extends LivingEntity> entityType, float mana, EntityAttributeModificationEvent event) {
@@ -117,6 +118,7 @@ public class ModBusEvents {
         magicEntity(entityType, 100, event);
         event.add(entityType, SBAttributes.CAST_RANGE);
         event.add(entityType, SBAttributes.CAST_SPEED);
+        event.add(entityType, SBAttributes.DODGE_CHANCE);
     }
 
     @SubscribeEvent

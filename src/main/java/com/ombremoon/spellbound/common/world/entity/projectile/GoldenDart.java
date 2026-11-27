@@ -36,7 +36,6 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
     public static final ResourceLocation DARK_VFX = CommonClass.customLocation("smite_golden_dart_dark");
     private static final EntityDataAccessor<Integer> ANIMATION_TICKS = SynchedEntityData.defineId(GoldenDart.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(GoldenDart.class, EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation SHARDS_OF_PURITY = CommonClass.customLocation("shards_of_purity");
     private static final int ANIMATION_DURATION = 20;
     @Nullable
     private Vec3 startPos;
@@ -113,8 +112,8 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
             this.setHomingTarget(target);
             this.setSplineController(SplineController.createSpline(this.getSummoner().position(), target.position())
                     .addControlPoint(0.005, new Vec3(RandomUtil.randomValueBetween(-0.02, 0.02), RandomUtil.randomValueBetween(0, 0.02), RandomUtil.randomValueBetween(0.02, 0.05))));
-        } else if (this.getSummoner() instanceof LivingEntity living) {
-            this.setHomingTarget(living);
+        } else {
+            this.discard();
         }
     }
 
@@ -196,18 +195,18 @@ public class GoldenDart extends VFXSpellProjectile<SmiteSpell> {
         if (smiteSpell != null) {
             var handler = SpellUtil.getSpellHandler(target);
             var optional = handler.getSkillBuff(SBSkills.SHARDS_OF_PURITY.value());
-            double debuff = -0.5F;
+            double debuff = -0.05F;
             if (optional.isPresent() && optional.get().object() instanceof ModifierData modifierData) {
-                debuff = Math.max(debuff, modifierData.attributeModifier().amount() + debuff);
+                debuff = Math.max(-0.25, modifierData.attributeModifier().amount() + debuff);
             }
 
             smiteSpell.addSkillBuff(
                     target,
                     SBSkills.SHARDS_OF_PURITY,
-                    SHARDS_OF_PURITY,
+                    SmiteSpell.SHARDS_OF_PURITY,
                     BuffCategory.HARMFUL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(SBAttributes.ATTACK_POWER, new AttributeModifier(SHARDS_OF_PURITY, debuff, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                    new ModifierData(SBAttributes.ATTACK_POWER, new AttributeModifier(SmiteSpell.SHARDS_OF_PURITY, debuff, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                     200
             );
         }

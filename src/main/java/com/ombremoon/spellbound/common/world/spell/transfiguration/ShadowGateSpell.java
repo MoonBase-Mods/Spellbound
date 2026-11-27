@@ -91,6 +91,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                 SkillTooltip.HP_THRESHOLD.tooltip(50F),
                 SkillTooltip.EFFECT_DURATION.tooltip(100),
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
         );
         this.addSkillDetails(SBSkills.QUICK_RECHARGE,
@@ -133,6 +134,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
         super.onSpellTick(context);
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         if (!level.isClientSide()) {
             if (!this.portalMap.isEmpty()) {
                 for (var entry : this.portalMap.entrySet()) {
@@ -165,7 +167,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     addCooldown(SBSkills.QUICK_RECHARGE, 200);
                                 }
 
-                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !caster.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !handler.isInvisible()) {
                                     addSkillBuff(
                                             caster,
                                             SBSkills.SHADOW_ESCAPE,

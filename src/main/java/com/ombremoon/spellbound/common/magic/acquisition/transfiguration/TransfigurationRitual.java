@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Keys;
+import com.ombremoon.spellbound.util.SerializationUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -19,6 +20,7 @@ import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.*;
 
@@ -44,6 +46,12 @@ public class TransfigurationRitual {
                             EffectHolder.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
                     )
                     .apply(p_344998_, TransfigurationRitual::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, TransfigurationRitual> DIRECT_STREAM_CODEC = StreamCodec.composite(
+            RitualDefinition.STREAM_CODEC, TransfigurationRitual::definition,
+            SerializationUtil.VALUE_LIST_STREAM_CODEC, TransfigurationRitual::clientMaterials,
+            EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list()), TransfigurationRitual::effects,
+            TransfigurationRitual::new
     );
     public static final Codec<Holder<TransfigurationRitual>> CODEC = RegistryFixedCodec.create(Keys.RITUAL);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<TransfigurationRitual>> STREAM_CODEC = ByteBufCodecs.holderRegistry(Keys.RITUAL);
@@ -165,6 +173,14 @@ public class TransfigurationRitual {
                         )
                         .apply(p_344890_, RitualDefinition::new)
         );
+        public static final StreamCodec<RegistryFriendlyByteBuf, RitualDefinition> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, RitualDefinition::tier,
+                ByteBufCodecs.VAR_INT, RitualDefinition::duration,
+                ByteBufCodecs.VAR_INT, RitualDefinition::pathXP,
+                ByteBufCodecs.VAR_INT, RitualDefinition::manaCost,
+                NeoForgeStreamCodecs.enumCodec(SpellMastery.class), RitualDefinition::mastery,
+                RitualDefinition::new
+        );
     }
 
     public record Value(Ingredient ingredient, int count) {
@@ -178,7 +194,7 @@ public class TransfigurationRitual {
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Value> STREAM_CODEC = StreamCodec.composite(
                 Ingredient.CONTENTS_STREAM_CODEC, Value::ingredient,
-                ByteBufCodecs.INT, Value::count,
+                ByteBufCodecs.VAR_INT, Value::count,
                 Value::new
         );
 

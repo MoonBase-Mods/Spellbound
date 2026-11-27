@@ -96,6 +96,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
         this.addSkillDetails(SBSkills.STEP_INTO_SHADOW,
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.MAGI_INVISIBILITY),
                 SkillTooltip.EFFECT_DURATION.tooltip(80),
+                SkillTooltip.NEW_LINE.tooltip(),
                 SkillTooltip.INVISIBILITY_NO_STACK.tooltip()
         );
         this.addSkillDetails(SBSkills.BLINDING_MIRAGE,
@@ -118,6 +119,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         if (!level.isClientSide) {
             if (context.hasSkill(SBSkills.HALL_OF_MIRRORS) && context.isRecast())
                 return;
@@ -149,7 +151,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                 }
 
                 caster.teleportTo(vec3.x, vec3.y, vec3.z);
-                if (context.hasSkill(SBSkills.STEP_INTO_SHADOW) && !caster.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+                if (context.hasSkill(SBSkills.STEP_INTO_SHADOW) && !handler.isInvisible()) {
                     this.addSkillBuff(
                             caster,
                             SBSkills.STEP_INTO_SHADOW,

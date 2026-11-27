@@ -1,15 +1,18 @@
 package com.ombremoon.spellbound.common.events;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.GuideBlockAndTintGetter;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
@@ -35,6 +38,7 @@ import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.RenderUtil;
@@ -50,13 +54,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
@@ -131,6 +134,7 @@ public class NeoForgeEvents {
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         PayloadHandler.sendGuideBooks(serverPlayer);
+                        PayloadHandler.updateRituals(serverPlayer, RitualHelper.getRituals());
 
                         if (!PuzzleDungeonData.isDungeon(level) && serverPlayer.getData(SBData.NO_FLY_DUNGEON)) {
                             serverPlayer.setData(SBData.NO_FLY_DUNGEON, false);
@@ -146,23 +150,44 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onPlayerLeaveWorld(EntityLeaveLevelEvent event) {
         Level level = event.getLevel();
-        if (event.getEntity() instanceof Player player && !level.isClientSide) {
-            ServerLevel serverLevel = (ServerLevel) level;
-            var handler = SpellUtil.getSpellHandler(player);
-            handler.endSpells();
-            var famHandler = SpellUtil.getFamiliarHandler(player);
-            if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
+        if (!level.isClientSide) {
+            if (event.getEntity() instanceof Player player) {
+                ServerLevel serverLevel = (ServerLevel) level;
+                var handler = SpellUtil.getSpellHandler(player);
+                handler.endSpells();
+                var famHandler = SpellUtil.getFamiliarHandler(player);
+                if (famHandler.hasActiveFamiliar()) famHandler.discardFamiliar();
 
-            if (ArenaSavedData.isArena(serverLevel)) {
-                ArenaSavedData data = ArenaSavedData.get(serverLevel);
-                if (handler.isArenaOwner(data.getCurrentId())) {
-                    data.destroyDimension(serverLevel);
+                if (ArenaSavedData.isArena(serverLevel)) {
+                    ArenaSavedData data = ArenaSavedData.get(serverLevel);
+                    if (handler.isArenaOwner(data.getCurrentId())) {
+                        data.destroyDimension(serverLevel);
+                    }
                 }
-            }
 
-            if (PuzzleDungeonData.isDungeon(serverLevel)) {
-                PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
-                puzzle.destroyDimension(serverLevel);
+                if (PuzzleDungeonData.isDungeon(serverLevel)) {
+                    PuzzleDungeonData puzzle = PuzzleDungeonData.get(serverLevel);
+                    puzzle.destroyDimension(serverLevel);
+                }
+            } else if (event.getEntity() instanceof LivingEntity livingEntity && SpellUtil.isSummon(livingEntity) && livingEntity.isAlive()) {
+                Entity entity = SpellUtil.getOwner(livingEntity);
+                if (!(entity instanceof LivingEntity owner))
+                    return;
+
+                var handler = SpellUtil.getSpellHandler(owner);
+                AbstractSpell spell;
+                if (livingEntity instanceof ISpellEntity<?> spellEntity) {
+                    spell = spellEntity.getOrCreateSpell();
+                } else {
+                    SpellType<?> spellType = SBSpells.REGISTRY.get(livingEntity.getData(SBData.SPELL_TYPE));
+                    int id = livingEntity.getData(SBData.SPELL_ID);
+                    spell = handler.getSpell(spellType, id);
+                }
+
+                if (spell instanceof SummonSpell summonSpell) {
+                    summonSpell.onMobRemoved(livingEntity, spell.getContext(), null, Entity.RemovalReason.CHANGED_DIMENSION);
+                    summonSpell.removeSummon(livingEntity);
+                }
             }
         }
     }
@@ -219,8 +244,11 @@ public class NeoForgeEvents {
                 }
 
                 if (player.level().isClientSide) {
-                    if (player.tickCount % 60 == 0) GuideBlockAndTintGetter.tickStructureCache();
-                    SpellCastEvents.chargeOrChannelSpell(event);
+                    if (player.tickCount % 60 == 0) {
+                        GuideBlockAndTintGetter.tickStructureCache();
+                    }
+
+                    SpellCastEvents.handleClientActionTick(event);
                 }
 
             }
@@ -489,11 +517,12 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLivingAttack(AttackEntityEvent event) {
-        if (event.getEntity().level().isClientSide)
+        Player player = event.getEntity();
+        Level level = player.level();
+        if (level.isClientSide)
             return;
 
-        Player player = event.getEntity();
-        player.setData(SBData.ATTACK_START, player.level().getGameTime());
+        player.setData(SBData.ATTACK_START, level.getGameTime());
 
         ItemStack stack = player.getMainHandItem();
         Imbuement imbuement = stack.get(SBData.IMBUEMENT);
@@ -507,6 +536,10 @@ public class NeoForgeEvents {
             if (imbuement.outOfCharge()) {
                 stack.remove(SBData.IMBUEMENT);
             }
+        }
+
+        if (player.hasEffect(SBEffects.BLEED)) {
+            player.hurt(SpellUtil.damageSource(level, SBDamageTypes.BLEED, null, null), player.getMaxHealth() * 0.05F);
         }
 
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(player, event));
@@ -588,6 +621,18 @@ public class NeoForgeEvents {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(livingEntity);
             handler.getListener().fireEvent(SpellEventListener.Events.INCOMING_DAMAGE, new IncomingDamageEvent(livingEntity, event));
+
+            AttributeInstance dodgeChance = livingEntity.getAttribute(SBAttributes.DODGE_CHANCE);
+            if (EventFactory.onLivingDodge(livingEntity, event.getContainer()) && dodgeChance != null && level.random.nextDouble() <= dodgeChance.getValue()) {
+                SpellUtil.triggerEntityEffect(
+                        livingEntity,
+                        EffectData.Entity.of(CommonClass.customLocation("evasive_stance"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                .setOffset(0, -0.3, 0)
+                                .setAllowMulti(true)
+                );
+
+                event.setCanceled(true);
+            }
 
             if (livingEntity.isBlocking() && livingEntity.getOffhandItem().is(SBItems.MAGIC_SHIELD.get())) {
                 handler.handleMagicShield(event);

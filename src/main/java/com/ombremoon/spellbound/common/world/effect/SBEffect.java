@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.RenderUtil;
+import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -32,7 +33,7 @@ public class SBEffect extends MobEffect {
         super.onEffectAdded(livingEntity, amplifier);
         if (!livingEntity.level().isClientSide) {
             if (this == SBEffects.SILENCED.value()) {
-                RenderUtil.triggerEntityEffect(livingEntity, EffectData.Entity.of(CommonClass.customLocation("purge_magic_dominant"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                SpellUtil.triggerEntityEffect(livingEntity, EffectData.Entity.of(CommonClass.customLocation("purge_magic_dominant"), livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, -0.3, 0)
                         .setDelay(5));
             }

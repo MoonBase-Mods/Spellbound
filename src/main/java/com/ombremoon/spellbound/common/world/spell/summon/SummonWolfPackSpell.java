@@ -1,14 +1,17 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.living.SummonedWolf;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, ChargeableSpell {
+    private static final ResourceLocation THICK_FUR = CommonClass.customLocation("thick_fur");
     private static final ResourceLocation LONE_WOLF_ATTACK = CommonClass.customLocation("lone_wolf_attack");
     private static final ResourceLocation LONE_WOLF_SPEED = CommonClass.customLocation("lone_wolf_speed");
     private static final ResourceLocation LONE_WOLF_JUMP = CommonClass.customLocation("lone_wolf_jump");
@@ -51,7 +55,50 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.SUMMON_WOLF_PACK,
+                SkillTooltip.DURATION.tooltip(this.getDuration()),
+                SkillTooltip.MANA_COST.tooltip(this.getManaCost()),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CAST_SCALES.tooltip());
+        this.addSkillDetails(SBSkills.HELLHOUND,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.SHADOW_WOLF,
+                SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.BLOOD_SCENT,
+                SkillTooltip.MODIFY_OVERALL_DAMAGE.tooltip(50F));
+        this.addSkillDetails(SBSkills.THICK_FUR,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(THICK_FUR, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(THICK_FUR, 5, AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.MAGIC_RESIST.tooltip(50F),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.HELLHOUND, SkillTooltip.FIRE_RESIST.tooltip(50F))
+                ),
+                SkillTooltip.CONDITION.tooltip(
+                        new SkillTooltip.UnlockedTooltip(SBSkills.SUMMON_WOLF_PACK, SkillTooltip.FROST_RESIST.tooltip(50F))
+                ));
+        this.addSkillDetails(SBSkills.PACK_LEADER,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(THICK_FUR, 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.MODIFY_OVERALL_DAMAGE.tooltip(25F));
+        this.addSkillDetails(SBSkills.SHARP_CLAWS,
+                SkillTooltip.BLEED_BUILD_UP.tooltip(7F + this.level()));
+        this.addSkillDetails(SBSkills.BRIMSTONE,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage(3))),
+                SkillTooltip.RADIUS.tooltip(2F));
+        this.addSkillDetails(SBSkills.ASSASSINATE,
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
+                SkillTooltip.EFFECT_DURATION.tooltip(60));
+        this.addSkillDetails(SBSkills.LONE_WOLF,
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, potency(3.0F), AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(LONE_WOLF_SPEED, 0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.JUMP_STRENGTH, new AttributeModifier(LONE_WOLF_JUMP, 0.35, AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(LONE_WOLF_FALL, 2, AttributeModifier.Operation.ADD_VALUE))),
+                SkillTooltip.BLEED_BUILD_UP.tooltip(this.getModifiedDamage(3) + potency(3F)),
+                SkillTooltip.POTENCY_SCALING.tooltip(),
+                SkillTooltip.CATALYST.tooltip(SBItems.SOUL_SHARD.get()),
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.BODY_IMBUEMENT.tooltip());
+        this.addSkillDetails(SBSkills.FENRIR,
+                SkillTooltip.CHOICE.tooltip());
     }
 
     @Override
@@ -68,7 +115,7 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                         LONE_WOLF_ATTACK,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
-                        new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, 3.0, AttributeModifier.Operation.ADD_VALUE))
+                        new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(LONE_WOLF_ATTACK, potency(3.0F), AttributeModifier.Operation.ADD_VALUE))
                 );
                 this.addSkillBuff(
                         caster,
@@ -95,7 +142,7 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                         new ModifierData(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(LONE_WOLF_FALL, 2, AttributeModifier.Operation.ADD_VALUE))
                 );
 
-                Imbuement imbuement = Imbuement.create(this, DamageInstance.of(SBDamageTypes.BLEED, potencyWithLevel(3F)), -1);
+                Imbuement imbuement = Imbuement.create(this, DamageInstance.of(SBDamageTypes.BLEED, 3F, new DamageInstance.BuildUp(BuildUpEffect.BLEED, potency(3))), -1);
                 caster.setData(SBData.ENTITY_IMBUEMENT, imbuement);
                 this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("lone_wolf_cast"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
                         .setOffset(0, -0.5, 0));

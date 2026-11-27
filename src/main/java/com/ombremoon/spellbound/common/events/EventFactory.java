@@ -1,9 +1,6 @@
 package com.ombremoon.spellbound.common.events;
 
-import com.ombremoon.spellbound.common.events.custom.BuildSpellEvent;
-import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
-import com.ombremoon.spellbound.common.events.custom.MobInteractEvent;
-import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
+import com.ombremoon.spellbound.common.events.custom.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -17,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 
 public class EventFactory {
 
@@ -54,5 +52,9 @@ public class EventFactory {
 
     public static void onSpellCast(LivingEntity caster, AbstractSpell spell, SpellContext context) {
         NeoForge.EVENT_BUS.post(new SpellCastEvent(caster, spell, context));
+    }
+
+    public static boolean onLivingDodge(LivingEntity caster, DamageContainer container) {
+        return !NeoForge.EVENT_BUS.post(new LivingDodgeEvent(caster, container)).isCanceled();
     }
 }

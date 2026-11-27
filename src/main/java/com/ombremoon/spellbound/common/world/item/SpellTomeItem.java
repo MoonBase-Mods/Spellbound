@@ -36,6 +36,10 @@ public class SpellTomeItem extends Item {
             return InteractionResultHolder.fail(itemStack);
 
         if (!level.isClientSide) {
+            AbstractSpell spell = spellType.createSpell();
+            if (spell.inTestingPhase())
+                return InteractionResultHolder.fail(itemStack);
+
             var handler = SpellUtil.getSpellHandler(player);
             if (handler.getSpellList().contains(spellType)) {
                 player.displayClientMessage(Component.translatable("chat.spelltome.awardxp"), true);
@@ -44,10 +48,6 @@ public class SpellTomeItem extends Item {
                     itemStack.shrink(1);
                 return InteractionResultHolder.fail(itemStack);
             }
-
-            AbstractSpell spell = spellType.createSpell();
-            if (!spell.inTestingPhase())
-                return InteractionResultHolder.fail(itemStack);
 
             player.displayClientMessage(Component.translatable("chat.spelltome.spellunlocked").append(spell.getName()), true);
             handler.learnSpell(spellType);

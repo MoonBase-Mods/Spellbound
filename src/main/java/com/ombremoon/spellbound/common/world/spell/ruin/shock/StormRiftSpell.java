@@ -88,40 +88,34 @@ public class StormRiftSpell extends AnimatedSpell {
         this.addSkillDetails(SBSkills.STORM_RIFT,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage())),
                 SkillTooltip.MANA_DAMAGE.tooltip(this.getModifiedDamage()),
-                SkillTooltip.DURATION.tooltip(500)
-        );
+                SkillTooltip.DURATION.tooltip(500));
         this.addSkillDetails(SBSkills.DISPLACEMENT_FIELD,
-                SkillTooltip.RADIUS.tooltip(10.0F)
-        );
+                SkillTooltip.RADIUS.tooltip(10.0F),
+                SkillTooltip.NEW_LINE.tooltip(),
+                SkillTooltip.NO_BOSS_EFFECT.tooltip());
         this.addSkillDetails(SBSkills.STORM_FURY,
-                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 100F))
-        );
+                SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 100F)));
         this.addSkillDetails(SBSkills.MAGNETIC_FIELD,
-                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, -0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
-        );
+                SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, -0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))));
         this.addSkillDetails(SBSkills.EVENT_HORIZON,
-                SkillTooltip.RADIUS.tooltip(10.0F)
-        );
+                SkillTooltip.RADIUS.tooltip(10.0F));
         this.addSkillDetails(SBSkills.CHARGED_RIFT,
                 SkillTooltip.FLAT_DAMAGE_PER_CHARGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 1.0F)),
-                SkillTooltip.MAX_CHARGES.tooltip(5)
-        );
+                SkillTooltip.MAX_CHARGES.tooltip(5));
         this.addSkillDetails(SBSkills.MOTION_SICKNESS,
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOTION_SICKNESS_MOVEMENT, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOTION_SICKNESS_ATTACK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(MOTION_SICKNESS_BLOCK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
-                SkillTooltip.EFFECT_DURATION.tooltip(200)
-        );
+                SkillTooltip.EFFECT_DURATION.tooltip(200));
         this.addSkillDetails(SBSkills.STORM_CALLER,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage(5)))
-        );
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage(5))));
         this.addSkillDetails(SBSkills.IMPLOSION,
                 SkillTooltip.EXPLOSION_RADIUS.tooltip(6F),
-                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.STORMSTRIKE)
-        );
+                SkillTooltip.MOB_EFFECT.tooltip(SBEffects.STORMSTRIKE),
+                SkillTooltip.CATALYST.tooltip(SBItems.STORM_SHARD.get()));
         this.addSkillDetails(SBSkills.ORBITAL_SHELL,
-                SkillTooltip.RADIUS.tooltip(3F)
-        );
+                SkillTooltip.RADIUS.tooltip(3F),
+                SkillTooltip.CATALYST.tooltip(SBItems.STORM_SHARD.get()));
     }
 
     @Override

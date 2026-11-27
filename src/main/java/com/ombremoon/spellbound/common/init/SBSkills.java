@@ -394,7 +394,7 @@ public class SBSkills {
     public static final Holder<Skill> SUMMON_WOLF_PACK = registerRadialSkill("summon_wolf_pack");
     public static final Holder<Skill> HELLHOUND = registerRadialSkill("hellhound", -75, 50, preReqs(SUMMON_WOLF_PACK));
     public static final Holder<Skill> SHADOW_WOLF = registerRadialSkill("shadow_wolf", 75, 50, preReqs(SUMMON_WOLF_PACK));
-    public static final Holder<Skill> SHARP_CLAWS = registerSkill("sharp_claws", 0, 100, preReqs(SUMMON_WOLF_PACK));
+    public static final Holder<Skill> SHARP_CLAWS = registerSkill("sharp_claws", 0, 50, preReqs(SUMMON_WOLF_PACK));
     public static final Holder<Skill> BRIMSTONE = registerSkill("brimstone", -75, 100, preReqs(HELLHOUND));
     public static final Holder<Skill> ASSASSINATE = registerSkill("assassinate", 75, 100, preReqs(SHADOW_WOLF));
     public static final Holder<Skill> BLOOD_SCENT = registerSkill("blood_scent", -25, 100, preReqs(SUMMON_WOLF_PACK));

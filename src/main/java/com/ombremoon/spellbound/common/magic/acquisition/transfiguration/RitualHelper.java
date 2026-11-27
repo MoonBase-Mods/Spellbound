@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic.acquisition.transfiguration;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -13,6 +14,7 @@ import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
@@ -45,8 +47,9 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = Constants.LOG;
     private final HolderLookup.Provider registries;
-    private static Map<ResourceLocation, TransfigurationRitual> RITUALS = ImmutableMap.of();
+    public static Map<ResourceLocation, TransfigurationRitual> RITUALS = ImmutableMap.of();
     private static Multimap<Integer, TransfigurationRitual> byTier = ImmutableMultimap.of();
+    public static List<RitualHolder> RITUAL_LIST = ImmutableList.of();
 
     private static RitualHelper instance;
 
@@ -66,6 +69,7 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
         ImmutableMap.Builder<ResourceLocation, TransfigurationRitual> builder = ImmutableMap.builder();
         ImmutableMultimap.Builder<Integer, TransfigurationRitual> builder1 = ImmutableMultimap.builder();
+        ImmutableList.Builder<RitualHolder> builder2 = ImmutableList.builder();
 
         for (var entry : object.entrySet()) {
             ResourceLocation location = entry.getKey();
@@ -73,6 +77,7 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
                 TransfigurationRitual ritual = TransfigurationRitual.DIRECT_CODEC.parse(this.registries.createSerializationContext(JsonOps.INSTANCE), entry.getValue()).getOrThrow(JsonParseException::new);
                 builder.put(location, ritual);
                 builder1.put(ritual.definition().tier(), ritual);
+                builder2.add(new RitualHolder(location, ritual));
             } catch (IllegalArgumentException | JsonParseException jsonParseException) {
                 LOGGER.error("Parsing error loading ritual {}", location, jsonParseException);
             }
@@ -80,6 +85,7 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
 
         RITUALS = builder.build();
         byTier = builder1.build();
+        RITUAL_LIST = builder2.build();
         LOGGER.info("Loaded {} rituals", RITUALS.size());
     }
 
@@ -99,6 +105,10 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
 
     public static TransfigurationRitual getRitualFor(ResourceKey<TransfigurationRitual> ritual) {
         return RITUALS.get(ritual.location());
+    }
+
+    public static List<RitualHolder> getRituals() {
+        return RITUAL_LIST;
     }
 
     private static Collection<TransfigurationRitual> byTier(int tier) {

@@ -4,7 +4,7 @@ import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.EffectManager;
+import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
@@ -17,7 +17,6 @@ import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
-import com.ombremoon.spellbound.common.world.entity.spell.StormstrikeBolt;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
@@ -97,8 +96,8 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
         this.addSkillDetails(SBSkills.GLACIAL_VOLLEY,
                 SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, -50)),
                 SkillTooltip.MANA_TICK_COST.tooltip(this.getManaCost() / 2),
-                SkillTooltip.CHANNELED.tooltip(),
-                SkillTooltip.CHOICE.tooltip());
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHANNELED.tooltip());
         this.addSkillDetails(SBSkills.ICY_JAVELIN,
                 SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.ICE_RING,
@@ -110,15 +109,15 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                 SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(this.location(), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))),
                 SkillTooltip.CHARGE_DURATION.tooltip(60),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
-                SkillTooltip.CHARGED.tooltip(),
-                SkillTooltip.CHOICE.tooltip());
+                SkillTooltip.CHOICE.tooltip(),
+                SkillTooltip.CHARGED.tooltip());
         this.addSkillDetails(SBSkills.HAIL_STRIKE,
                 SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FROST, -50)),
                 SkillTooltip.DURATION.tooltip(100),
                 SkillTooltip.RADIUS.tooltip(2F),
                 SkillTooltip.CHOICE.tooltip());
         this.addSkillDetails(SBSkills.FROST_PIERCER,
-                SkillTooltip.PIERCE_COUNT.tooltip(2));
+                SkillTooltip.PIERCE_COUNT.tooltip(this.level()));
         this.addSkillDetails(SBSkills.WINTER_IS_COMING,
                 SkillTooltip.ATTRIBUTE_PER_CHARGE.tooltip(new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(this.location(), -0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))));
         this.addSkillDetails(SBSkills.SHATTERING_IMPACT,
@@ -185,7 +184,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                     this.shootProjectile(context, SBEntities.ICE_BOLT.get(), xRot, yRot, 1.25F, 1.0F, iceBolt -> {
                         iceBolt.setSize(Mth.clamp(this.getCharges(), 1, 3));
                         if (context.hasSkill(SBSkills.FROST_PIERCER))
-                            iceBolt.setPierceLevel((byte) 2);
+                            iceBolt.setPierceLevel((byte) this.level());
 
                         if (count > 1)
                             iceBolt.split();
@@ -217,7 +216,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                 this.shootProjectile(context, SBEntities.ICE_BOLT.get(), 1.5F, 1.0F, iceBolt -> {
                     iceBolt.split();
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
-                        iceBolt.setPierceLevel((byte) 2);
+                        iceBolt.setPierceLevel((byte) this.level());
                 });
 
                 EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("ice_bolt"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
@@ -235,7 +234,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
                 this.shootProjectile(context, SBEntities.ICE_BOLT.get(), pos, 90, 0, 1.25F, 1.0F, iceBolt -> {
                     iceBolt.split();
                     if (context.hasSkill(SBSkills.FROST_PIERCER))
-                        iceBolt.setPierceLevel((byte) 2);
+                        iceBolt.setPierceLevel((byte) this.level());
                 });
 
             }
@@ -300,7 +299,7 @@ public class IceBoltSpell extends AnimatedSpell implements RadialSpell, Chargeab
 
                         if (context.hasSkill(SBSkills.SHATTERING_IMPACT)) {
                             var effects = SpellUtil.getSpellEffects(livingEntity);
-                            effects.incrementBuildEffects(EffectManager.Effect.FROST, potency(5));
+                            effects.incrementBuildEffects(context.getCaster(), BuildUpEffect.FROST, potency(5));
                         }
 
                         if (bolt.getPierceLevel() <= 0) {
