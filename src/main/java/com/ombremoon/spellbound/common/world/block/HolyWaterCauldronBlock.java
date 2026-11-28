@@ -188,7 +188,10 @@ public class HolyWaterCauldronBlock extends LayeredCauldronBlock {
                                     SBTriggers.USE_HOLY_CAULDRON.get().trigger(serverPlayer, stack, PhialItem.PhialType.DIVINE);
                                 }
 
-                                imbuement = Imbuement.create(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F, EntityTypeTags.UNDEAD), 24, CommonClass.customLocation("smite"));
+                                imbuement = Imbuement.create()
+                                        .addDamage(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F, EntityTypeTags.UNDEAD))
+                                        .addCharges(24)
+                                        .addGlint(CommonClass.customLocation("smite"));
                                 stack.set(SBData.IMBUEMENT, imbuement);
                                 player.awardStat(SBStats.WEAPONS_IMBUED.get());
                                 LayeredCauldronBlock.lowerFillLevel(state, level, pos);

@@ -35,7 +35,7 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
@@ -311,7 +311,7 @@ public class ClientEvents {
 
         event.enqueueWork(() -> {
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    SpellAnimation.MOVEMENT_ANIMATION,
+                    SBAnimation.MOVEMENT_ANIMATION,
                     1,
                     player -> new PlayerAnimationController(player, (controller, state, setter) -> {
                         var handler = SpellUtil.getSpellHandler(player);
@@ -343,7 +343,7 @@ public class ClientEvents {
             );
 
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    SpellAnimation.ACTION_ANIMATION,
+                    SBAnimation.ACTION_ANIMATION,
                     1000,
                     player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
             );

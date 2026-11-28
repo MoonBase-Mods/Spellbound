@@ -4,7 +4,6 @@ import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -158,7 +157,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
-        return Imbuement.create(this);
+        return Imbuement.spellImbuement(this);
     }
 
     protected ItemStack getImbuementStack(LivingEntity entity) {
@@ -225,13 +224,13 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
             return this;
         }
 
-        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimationName) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SBAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
             return this;
         }
 
         public Builder<T> selfBuffCast() {
-            this.castAnimation = (context, spell) -> new SpellAnimation("self_buff", SpellAnimation.Type.CAST, true);
+            this.castAnimation = (context, spell) -> new SBAnimation("self_buff", SBAnimation.Type.CAST, true);
             return this;
         }
 

@@ -8,7 +8,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHolder;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
@@ -22,7 +22,6 @@ import com.ombremoon.spellbound.networking.serverbound.*;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.ombremoon.spellbound.util.StructureInfo;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -31,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +37,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -155,7 +152,7 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new UpdateCastModePayload(player.getId(), castMode));
     }
 
-    public static void handleAnimation(Player player, SpellAnimation animation, float animationSpeed, boolean stopAnimation) {
+    public static void handleAnimation(Player player, SBAnimation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 

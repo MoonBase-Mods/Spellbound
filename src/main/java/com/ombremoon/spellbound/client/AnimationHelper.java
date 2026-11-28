@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client;
 
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -12,7 +13,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 
 public class AnimationHelper {
 
-    public static void playAnimation(AbstractClientPlayer player, SpellAnimation animation, float animationSpeed) {
+    public static void playAnimation(AbstractClientPlayer player, SBAnimation animation, float animationSpeed) {
         PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
         if (controller != null) {
             if (!animation.canPlayAnotherAnimation() && controller.isPlayingTriggeredAnimation()) {
@@ -24,7 +25,7 @@ public class AnimationHelper {
         }
     }
 
-    public static void stopAnimation(AbstractClientPlayer player, SpellAnimation animation) {
+    public static void stopAnimation(AbstractClientPlayer player, SBAnimation animation) {
         PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
         if (controller == null)
             return;
@@ -35,7 +36,7 @@ public class AnimationHelper {
     }
 
     public static void tick(AbstractClientPlayer player) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.ACTION_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SBAnimation.ACTION_ANIMATION);
         if (spellController != null) {
             if (!spellController.isActive() && spellController.getModifierCount() > 0) {
                 spellController.removeAllModifiers();
@@ -43,14 +44,14 @@ public class AnimationHelper {
                 player.setYBodyRot(player.getYHeadRot());
                 PayloadHandler.updateRotation(player.yBodyRot);
                 var handler = SpellUtil.getSpellHandler(player);
-                SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.ACTION_ANIMATION);
+                SBAnimation animation = handler.getAnimationForLayer(SBAnimation.ACTION_ANIMATION);
                 if (animation != null && isAnimationPlaying(spellController, animation) && animation.stationary())
                     handler.setStationaryTicks(1);
             }
         }
     }
 
-    public static boolean isAnimationPlaying(PlayerAnimationController controller, SpellAnimation animation) {
+    public static boolean isAnimationPlaying(PlayerAnimationController controller, SBAnimation animation) {
         return controller != null && controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animation().getNameOrId().equals(animation.animation().getPath());
     }
 }

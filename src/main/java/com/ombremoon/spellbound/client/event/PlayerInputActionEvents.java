@@ -7,7 +7,7 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -184,8 +184,8 @@ public class PlayerInputActionEvents {
     }
 
     private static boolean isPlayingCastingAnimation(AbstractClientPlayer player, SpellHandler handler) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.ACTION_ANIMATION);
-        SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.ACTION_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SBAnimation.ACTION_ANIMATION);
+        SBAnimation animation = handler.getAnimationForLayer(SBAnimation.ACTION_ANIMATION);
         return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 

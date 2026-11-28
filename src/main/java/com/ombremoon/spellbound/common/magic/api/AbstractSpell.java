@@ -978,7 +978,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     protected boolean giveSpellItem(ItemStack stack) {
-        return this.giveSpellItem(stack, Imbuement.create(this));
+        return this.giveSpellItem(stack, Imbuement.spellImbuement(this));
     }
 
     protected void removeSpellItem(LivingEntity caster, int index) {

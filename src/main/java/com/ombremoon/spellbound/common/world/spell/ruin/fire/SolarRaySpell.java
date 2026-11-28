@@ -8,7 +8,7 @@ import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -110,9 +110,9 @@ public class SolarRaySpell extends ChanneledSpell {
                 .manaTickCost(10)
                 .baseDamage(4)
                 .castTime(23)
-                .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
-                .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, !context.hasSkill(SBSkills.OVERPOWER)))
-                .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
+                .castAnimation((context, spell) -> new SBAnimation("solar_ray_cast", SBAnimation.Type.CAST, true))
+                .channelAnimation(context -> new SBAnimation("solar_ray_channel", SBAnimation.Type.CHANNEL, !context.hasSkill(SBSkills.OVERPOWER)))
+                .stopChannelAnimation(new SBAnimation("solar_ray_end", SBAnimation.Type.CAST, true));
     }
 
     public SolarRaySpell() {
@@ -247,7 +247,7 @@ public class SolarRaySpell extends ChanneledSpell {
         boolean overPower = context.hasSkill(SBSkills.OVERPOWER);
         if (caster instanceof Player player) {
             if (overPower) {
-                playMovementAnimation(player, CommonClass.customLocation("solar_walk"), new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, false));
+                playMovementAnimation(player, CommonClass.customLocation("solar_walk"), new SBAnimation("solar_ray_channel", SBAnimation.Type.CHANNEL, false));
             }
 
             if (context.getLevel().isClientSide) {

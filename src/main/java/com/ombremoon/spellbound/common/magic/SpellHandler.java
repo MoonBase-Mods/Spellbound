@@ -2,7 +2,6 @@ package com.ombremoon.spellbound.common.magic;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
@@ -11,7 +10,6 @@ import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
-import com.ombremoon.spellbound.common.magic.api.events.IncomingDamageEvent;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -42,14 +40,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -102,7 +96,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private float zoomModifier = 1.0F;
     private boolean initialized;
     private boolean receivedBook;
-    private Map<ResourceLocation, SpellAnimation> animationForLayer = new Object2ObjectOpenHashMap<>();
+    private Map<ResourceLocation, SBAnimation> animationForLayer = new Object2ObjectOpenHashMap<>();
     @Nullable
     private Entity cachedTarget;
     private int cachedTargetTimer;
@@ -752,21 +746,21 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param player The player performing the animation
      * @param animation The animation information
      */
-    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
+    public void playAnimation(Player player, SBAnimation animation, float animationSpeed) {
         this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
         if (!isClientSide()) {
             PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
         }
     }
 
-    public void stopAnimation(Player player, SpellAnimation animation) {
+    public void stopAnimation(Player player, SBAnimation animation) {
         this.animationForLayer.remove(animation.type().getAnimationLayer());
         if (!isClientSide()) {
             PayloadHandler.handleAnimation(player, animation, 0.0F, true);
         }
     }
 
-    public SpellAnimation getAnimationForLayer(ResourceLocation layer) {
+    public SBAnimation getAnimationForLayer(ResourceLocation layer) {
         return this.animationForLayer.get(layer);
     }
 

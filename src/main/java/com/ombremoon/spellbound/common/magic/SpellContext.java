@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.magic;
 
 import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -198,8 +198,8 @@ public class SpellContext {
         return this.spellHandler.hasSkillBuff(skill.value());
     }
 
-    public SpellAnimation quickOrSimpleCast(boolean isInstant) {
+    public SBAnimation quickOrSimpleCast(boolean isInstant) {
         String animation = isInstant ? "instant_cast" : "simple_cast";
-        return new SpellAnimation(animation, SpellAnimation.Type.CAST, true);
+        return new SBAnimation(animation, SBAnimation.Type.CAST, true);
     }
 }

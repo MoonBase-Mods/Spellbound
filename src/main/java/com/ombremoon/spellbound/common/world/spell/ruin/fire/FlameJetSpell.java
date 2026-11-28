@@ -7,7 +7,6 @@ import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.init.SBItems;
@@ -17,13 +16,12 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -83,7 +81,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 .castAnimation((context, spell) -> {
                     boolean flag = !context.hasSkill(SBSkills.JET_STABILIZATION);
                     String castPrefix = flag ? "" : "walking_";
-                    return new SpellAnimation(castPrefix + "instant_cast", SpellAnimation.Type.CAST, flag);
+                    return new SBAnimation(castPrefix + "instant_cast", SBAnimation.Type.CAST, flag);
                 })
                 .fullRecast(true)
                 .updateInterval(1);

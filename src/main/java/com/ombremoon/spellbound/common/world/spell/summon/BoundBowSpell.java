@@ -93,7 +93,7 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
         Level level = context.getLevel();
         ItemStack boundBow = SBItems.BOUND_BOW.get().getDefaultInstance();
         if (!level.isClientSide) {
-            Imbuement imbuement = Imbuement.create(this);
+            Imbuement imbuement = Imbuement.spellImbuement(this);
             if (context.isChoice(SBSkills.BOUND_MARKSMAN)) {
 
             } else if (this.giveSpellItem(boundBow, imbuement) && caster instanceof Player player) {
@@ -143,7 +143,8 @@ public class BoundBowSpell extends SummonSpell implements RadialSpell {
     }
 
     public Imbuement createInfusedShot() {
-        return Imbuement.create(this, DamageInstance.of(this.variant.getDamageType(), potencyWithLevel(2F)), -1);
+        return Imbuement.spellImbuement(this)
+                .addDamage(DamageInstance.of(this.variant.getDamageType(), potencyWithLevel(2F)));
     }
 
     public void assignVariant(SpellContext context) {

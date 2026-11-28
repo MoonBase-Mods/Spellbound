@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.world.spell.divine.SmiteSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class ImbuementRenderers extends RenderType {
-    public static final ResourceLocation BLACK_BLADE = CommonClass.customLocation("smite_black_blade");
     private static final Map<ResourceLocation, RenderType> IMBUEMENTS = new Object2ObjectArrayMap<>();
 
     private static final RenderType SMITE_GLINT = create("smite_glint");
@@ -31,7 +31,7 @@ public class ImbuementRenderers extends RenderType {
 
     public static void registerImbuements() {
         put(SBSpells.SMITE, getSmiteGlint());
-        put(BLACK_BLADE, getBlackBladeGlint());
+        put(SmiteSpell.BLACK_BLADE, getBlackBladeGlint());
         put(SBSpells.NIGHTBLADE, getNightbladeGlint());
         put(SBSpells.BOUND_BOW, getBoundBowGlint());
         put(SBSpells.CREATE_OBJECT, getCreateObjectGlint());

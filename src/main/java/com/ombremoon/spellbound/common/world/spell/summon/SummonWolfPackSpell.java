@@ -140,7 +140,9 @@ public class SummonWolfPackSpell extends SummonSpell implements RadialSpell, Cha
                         new ModifierData(Attributes.SAFE_FALL_DISTANCE, new AttributeModifier(LONE_WOLF_FALL, 2, AttributeModifier.Operation.ADD_VALUE))
                 );
 
-                Imbuement imbuement = Imbuement.create(this, DamageInstance.of(SBDamageTypes.BLEED, 3F, new DamageInstance.BuildUp(BuildUpEffect.BLEED, potency(3))), -1);
+                Imbuement imbuement = Imbuement.spellImbuement(this)
+                        .addDamage(DamageInstance.of(SBDamageTypes.BLEED, 3F, new DamageInstance.BuildUp(BuildUpEffect.BLEED, potency(3))));
+
                 caster.setData(SBData.ENTITY_IMBUEMENT, imbuement);
             } else if (context.isChoice(SBSkills.FENRIR) && this.hasFilledSoulShard(context)) {
 

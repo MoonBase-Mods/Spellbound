@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.magic.SpellInstance;
+import com.ombremoon.spellbound.common.magic.api.combat.AttackMoveset;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,11 +18,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageInstance> instance, int charges, ResourceLocation glint) {
+public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageInstance> instance, Optional<AttackMoveset> moveset, int charges, ResourceLocation glint) {
+    private static final ResourceLocation DEFAULT_GLINT = CommonClass.customLocation("imbuement");
+    public static final Imbuement EMPTY = new Imbuement(Optional.empty(), Optional.empty(), Optional.empty(), -1, DEFAULT_GLINT);
     public static final Codec<Imbuement> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     SpellInstance.CODEC.optionalFieldOf("spell").forGetter(Imbuement::spellInstance),
                     DamageInstance.CODEC.optionalFieldOf("instance").forGetter(Imbuement::instance),
+                    AttackMoveset.CODEC.optionalFieldOf("moveset").forGetter(Imbuement::moveset),
                     Codec.INT.fieldOf("charges").forGetter(Imbuement::charges),
                     ResourceLocation.CODEC.fieldOf("glint").forGetter(Imbuement::glint)
             ).apply(instance, Imbuement::new)
@@ -34,35 +38,31 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
     );
 
     private static Imbuement forStreamCodec(Optional<SpellInstance> spellType, int charges, ResourceLocation glint) {
-        return new Imbuement(spellType, Optional.empty(), charges, glint);
+        return new Imbuement(spellType, Optional.empty(), Optional.empty(), charges, glint);
     }
 
-    public static Imbuement empty() {
-        return new Imbuement(Optional.empty(), Optional.empty(), -1, CommonClass.customLocation("imbuement"));
+    public static Imbuement spellImbuement(@NotNull AbstractSpell spell) {
+        return new Imbuement(Optional.of(SpellInstance.fromSpell(spell)), Optional.empty(), Optional.empty(), -1, spell.location());
     }
 
-    public static Imbuement create(@NotNull AbstractSpell spell, DamageInstance instance, int charges, ResourceLocation glint) {
-        return new Imbuement(Optional.of(SpellInstance.fromSpell(spell)), Optional.ofNullable(instance), charges, glint);
+    public static Imbuement create() {
+        return Imbuement.EMPTY;
     }
 
-    public static Imbuement create(AbstractSpell spell, int charges, ResourceLocation glint) {
-        return create(spell, null, charges, glint);
+    public Imbuement addDamage(DamageInstance instance) {
+        return new Imbuement(this.spellInstance, Optional.of(instance), this.moveset, this.charges, this.glint);
     }
 
-    public static Imbuement create(AbstractSpell spell, DamageInstance instance, int charges) {
-        return create(spell, instance, charges, spell.location());
+    public Imbuement addMoveset(AttackMoveset moveset) {
+        return new Imbuement(this.spellInstance, this.instance, Optional.of(moveset), this.charges, this.glint);
     }
 
-    public static Imbuement create(AbstractSpell spell, int charges) {
-        return create(spell, charges, spell.location());
+    public Imbuement addCharges(int charges) {
+        return new Imbuement(this.spellInstance, this.instance, this.moveset, charges, this.glint);
     }
 
-    public static Imbuement create(AbstractSpell spell) {
-        return create(spell, -1);
-    }
-
-    public static Imbuement create(DamageInstance instance, int charges, ResourceLocation glint) {
-        return new Imbuement(Optional.empty(), Optional.of(instance), charges, glint);
+    public Imbuement addGlint(ResourceLocation glint) {
+        return new Imbuement(this.spellInstance, this.instance, this.moveset, this.charges, glint);
     }
 
     public AbstractSpell getSpellFromInstance(LivingEntity caster) {
@@ -85,10 +85,6 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         return imbuement == null || (imbuement.spellInstance.isPresent() && this.spellInstance.isPresent() && imbuement.spellInstance.get().isSameSpell(this.spellInstance().get()));
     }
 
-    public Imbuement setCharges(int charges) {
-        return new Imbuement(this.spellInstance, this.instance, charges, this.glint);
-    }
-
     public boolean outOfCharge() {
         return this.charges == 0;
     }
@@ -108,18 +104,13 @@ public record Imbuement(Optional<SpellInstance> spellInstance, Optional<DamageIn
         return imbuement;
     }
 
-    /*public static boolean hasImbuement(Imbuement imbuement, ItemStack stack) {
-        Imbuement other = stack.get(SBData.IMBUEMENT);
-        return other != null && imbuement.spellInstance == other.spellInstance;
-    }*/
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Imbuement imbuement)) {
             return false;
         }
 
-        if (this.charges != imbuement.charges()/* || !this.glint.equals(imbuement.glint())*/) {
+        if (this.charges != imbuement.charges()) {
             return false;
         }
 

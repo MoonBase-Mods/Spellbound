@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.common.DamageInstance;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.world.item.PhialItem;
+import com.ombremoon.spellbound.common.world.spell.divine.SmiteSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -133,7 +134,10 @@ public class CursedWaterCauldronBlock extends LayeredCauldronBlock {
                                     SBTriggers.USE_HOLY_CAULDRON.get().trigger(serverPlayer, stack, PhialItem.PhialType.CURSED);
                                 }
 
-                                imbuement = Imbuement.create(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F), 24, CommonClass.customLocation("black_blade"));
+                                imbuement = Imbuement.create()
+                                        .addDamage(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F))
+                                        .addCharges(24)
+                                        .addGlint(SmiteSpell.BLACK_BLADE);
                                 stack.set(SBData.IMBUEMENT, imbuement);
                                 player.awardStat(SBStats.WEAPONS_IMBUED.get());
                                 LayeredCauldronBlock.lowerFillLevel(state, level, pos);

@@ -240,7 +240,9 @@ public class NightbladeSpell extends ImbuementSpell {
         int charges = context.hasSkill(SBSkills.LINGERING_EDGE) ? 3 : 1;
         this.bonusDamage = potency(3.0F + this.level() * 0.5F);
         DamageInstance instance = DamageInstance.of(SBDamageTypes.SB_GENERIC, this.bonusDamage);
-        return Imbuement.create(this, instance, charges);
+        return Imbuement.spellImbuement(this)
+                .addDamage(instance)
+                .addCharges(charges);
     }
 
     private boolean isAttackFromBehind(LivingEntity target, DamageSource source) {

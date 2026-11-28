@@ -3,25 +3,20 @@ package com.ombremoon.spellbound.common.magic.api;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public abstract class ChanneledSpell extends AnimatedSpell {
     protected float manaTickCost;
-    protected Function<SpellContext, SpellAnimation> channelAnimation;
-    protected SpellAnimation channelStopAnimation;
+    protected Function<SpellContext, SBAnimation> channelAnimation;
+    protected SBAnimation channelStopAnimation;
 
     public static <T extends ChanneledSpell> Builder<T> createChannelledSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -48,7 +43,7 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(true);
 
-        SpellAnimation animation = this.channelAnimation.apply(context);
+        SBAnimation animation = this.channelAnimation.apply(context);
         if (animation != null && context.getCaster() instanceof Player player)
             playAnimation(player, animation);
     }
@@ -81,14 +76,14 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             KeyBinds.getSpellCastMapping().setDown(false);
         }
     }
-    public SpellAnimation getChannelAnimation(SpellContext context) {
+    public SBAnimation getChannelAnimation(SpellContext context) {
         return this.channelAnimation.apply(context);
     }
 
     public static class Builder<T extends ChanneledSpell> extends AnimatedSpell.Builder<T> {
         protected float manaTickCost = 5;
-        protected Function<SpellContext, SpellAnimation> channelAnimation;
-        protected SpellAnimation channelStopAnimation;
+        protected Function<SpellContext, SBAnimation> channelAnimation;
+        protected SBAnimation channelStopAnimation;
 
         public Builder() {
             this.castType = CastType.CHANNEL;
@@ -119,17 +114,17 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimation) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SBAnimation> castAnimation) {
             this.castAnimation = castAnimation;
             return this;
         }
 
-        public Builder<T> channelAnimation(Function<SpellContext, SpellAnimation> channelAnimation) {
+        public Builder<T> channelAnimation(Function<SpellContext, SBAnimation> channelAnimation) {
             this.channelAnimation = channelAnimation;
             return this;
         }
 
-        public Builder<T> stopChannelAnimation(SpellAnimation channelStopAnimation) {
+        public Builder<T> stopChannelAnimation(SBAnimation channelStopAnimation) {
             this.channelStopAnimation = channelStopAnimation;
             return this;
         }

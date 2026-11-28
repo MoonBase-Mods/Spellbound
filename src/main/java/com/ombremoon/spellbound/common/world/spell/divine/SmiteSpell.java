@@ -8,7 +8,7 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.ImbuementSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
@@ -34,11 +34,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class SmiteSpell extends ImbuementSpell {
-    private static final ResourceLocation GOLDEN_PARRY = CommonClass.customLocation("golden_parry");
+    public static final ResourceLocation GOLDEN_PARRY = CommonClass.customLocation("golden_parry");
     public static final ResourceLocation SHARDS_OF_PURITY = CommonClass.customLocation("shards_of_purity");
-    private static final ResourceLocation REFLECTIVE_JUDGEMENT = CommonClass.customLocation("reflective_judgement");
-    private static final ResourceLocation BLACK_BLADE = CommonClass.customLocation("black_blade");
-    private static final ResourceLocation BLACK_BLADE_DEBUFF = CommonClass.customLocation("black_blade_debuff");
+    public static final ResourceLocation REFLECTIVE_JUDGEMENT = CommonClass.customLocation("reflective_judgement");
+    public static final ResourceLocation BLACK_BLADE = CommonClass.customLocation("black_blade");
+    public static final ResourceLocation BLACK_BLADE_DEBUFF = CommonClass.customLocation("black_blade_debuff");
     private long parryTick;
 
     public static Builder<SmiteSpell> createSmiteBuilder() {
@@ -265,7 +265,7 @@ public class SmiteSpell extends ImbuementSpell {
             if (context.isChoice(SBSkills.GOLDEN_PARRY) || !handler.inCastMode() && context.hasSkill(SBSkills.GOLDEN_PARRY)) {
                 this.parryTick = level.getGameTime();
                 if (!handler.inCastMode() && caster instanceof Player player) {
-                    SpellAnimation anim = new SpellAnimation("simple_cast", SpellAnimation.Type.CAST, true, false);
+                    SBAnimation anim = new SBAnimation("simple_cast", SBAnimation.Type.CAST, true, false);
                     this.playAnimation(player, anim);
                 }
             } else if (context.isChoice(SBSkills.SACRED_BLADE) && context.hasSkillReady(SBSkills.SACRED_BLADE)) {
@@ -323,9 +323,13 @@ public class SmiteSpell extends ImbuementSpell {
 
     @Override
     protected Imbuement createImbuement(SpellContext context) {
-        return context.isChoice(SBSkills.BLACK_BLADE)
-                ? Imbuement.create(this, DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F), -1, CommonClass.customLocation("smite_black_blade"))
-                : Imbuement.create(this, DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F, EntityTypeTags.UNDEAD), -1, this.location());
+        Imbuement smite = Imbuement.spellImbuement(this)
+                .addDamage(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F, EntityTypeTags.UNDEAD));
+        Imbuement blackBlade = Imbuement.spellImbuement(this)
+                .addDamage(DamageInstance.of(SBDamageTypes.SB_GENERIC, 3F))
+                .addGlint(BLACK_BLADE);
+
+        return context.isChoice(SBSkills.BLACK_BLADE) ? blackBlade : smite;
     }
 
     @Override

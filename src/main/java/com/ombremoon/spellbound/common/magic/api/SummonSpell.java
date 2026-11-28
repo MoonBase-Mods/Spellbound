@@ -7,7 +7,6 @@ import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
-import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.HurtSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.SummonerAttackGoal;
@@ -20,12 +19,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -265,7 +262,7 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimationName) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SBAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
             return this;
         }

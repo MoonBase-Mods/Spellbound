@@ -8,7 +8,7 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
@@ -49,7 +49,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                 .castAnimation((context, spell) -> {
                     boolean flag = !context.hasSkill(SBSkills.SWIFT_SHADOWS);
                     String castPrefix = flag ? "" : "walking_";
-                    return new SpellAnimation(castPrefix + "instant_cast", SpellAnimation.Type.CAST, flag);
+                    return new SBAnimation(castPrefix + "instant_cast", SBAnimation.Type.CAST, flag);
                 })
                 .castCondition((context, flickerSpell) -> {
                     double range = flickerSpell.getCastRange();

@@ -527,7 +527,7 @@ public class NeoForgeEvents {
         if (imbuement != null) {
             int charges = imbuement.charges();
             if (charges > 0) {
-                imbuement = imbuement.setCharges(charges - 1);
+                imbuement = imbuement.addCharges(charges - 1);
                 stack.set(SBData.IMBUEMENT, imbuement);
             }
 

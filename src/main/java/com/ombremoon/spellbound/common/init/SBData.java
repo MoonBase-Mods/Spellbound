@@ -85,7 +85,7 @@ public class SBData {
 
     //Misc
     public static final Supplier<AttachmentType<Imbuement>> ENTITY_IMBUEMENT = ATTACHMENT_TYPES.register(
-            "entity_imbuement", () -> AttachmentType.builder(Imbuement::empty).serialize(Imbuement.CODEC).build());
+            "entity_imbuement", () -> AttachmentType.builder(() -> Imbuement.EMPTY).serialize(Imbuement.CODEC).build());
     public static final Supplier<AttachmentType<Integer>> RUNE_COLOR = ATTACHMENT_TYPES.register(
             "rune_color", () -> AttachmentType.builder(Color.WHITE::argbInt).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> INTERACT_HEAL_TARGET = ATTACHMENT_TYPES.register(

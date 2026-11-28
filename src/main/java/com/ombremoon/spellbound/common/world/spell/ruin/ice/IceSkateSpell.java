@@ -11,7 +11,7 @@ import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.BuildUpEffect;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.api.SBAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.block.entity.IceSheetBlockEntity;
@@ -97,10 +97,10 @@ public class IceSkateSpell extends ChanneledSpell {
     public static Builder<IceSkateSpell> createIceSkateBuilder() {
         return createChannelledSpellBuilder(IceSkateSpell.class)
                 .castCondition((context, iceSkateSpell) -> context.getCaster().onGround() && !context.getLevel().dimensionType().ultraWarm())
-                .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
-                .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, true))
+                .castAnimation((context, spell) -> new SBAnimation("solar_ray_cast", SBAnimation.Type.CAST, true))
+                .channelAnimation(context -> new SBAnimation("solar_ray_channel", SBAnimation.Type.CHANNEL, true))
                 .spellLayer((context, spell) -> CommonClass.customLocation("ice_skate"))
-                .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
+                .stopChannelAnimation(new SBAnimation("solar_ray_end", SBAnimation.Type.CAST, true));
 
     }
     public IceSkateSpell() {

@@ -100,7 +100,7 @@ public class CreateObjectSpell extends AnimatedSpell implements RadialSpell {
                         }
                     });
 
-                Imbuement imbuement = Imbuement.create(this);
+                Imbuement imbuement = Imbuement.spellImbuement(this);
                 for (int i = 0; i < ARMOR_SLOTS.length; i++) {
                     EquipmentSlot slot = ARMOR_SLOTS[i];
                     ItemStack stack = armorSet.get(i);
